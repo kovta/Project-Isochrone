@@ -1,0 +1,1 @@
+copy /Y build\libs\stratagem.ear D:\Programs\Jboss-eap-6.4\standalone\deployments;

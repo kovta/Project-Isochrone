@@ -1,0 +1,133 @@
+html,
+body,
+.view {
+    height: 100%;
+}
+
+.control-view {
+    height: 50%;
+}
+
+.navbar-transparent {
+    background-color: transparent;
+}
+
+.navbar-full {
+	background-color: #293547
+}
+
+.scrolling-navbar {
+    -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
+    -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
+    transition: background .5s ease-in-out, padding .5s ease-in-out;
+    box-shadow: none;
+}
+
+.top-nav-collapse {
+    background-color: #293547;
+}
+
+footer.page-footer {
+    background-color: #293547;
+    margin-top: 2rem;
+}
+.wrapper {
+    min-height: 94%;
+    height: auto !important;
+    height: 100%;
+    margin: -40px auto -96px;
+}
+.footer, .push {
+    height: 150px;
+}
+
+@media only screen and (max-width: 768px) {
+    .navbar {
+        background-color: #2e3850;
+    }
+}
+
+.flex-center {
+    color: #fff;
+}
+
+.space-bottom {
+	padding-bottom: 20px;
+}
+
+.view {
+    background: url("../img/connections.jpg")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.control-view {
+    background: url("../img/connections.jpg")no-repeat center center fixed;
+    height: 50%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.card-header {
+	padding: 1rem;
+    text-align: center;
+    margin-left: 4%;
+    margin-right: 4%;
+    margin-top: -20px;
+    padding-bottom: 1%;
+}
+
+.brand-name {
+    font-size: 4rem;
+}
+
+.brand-control {
+    font-size: 3rem;
+}
+
+.font-bold {
+    font-weight: 500;
+}
+
+.icon-companion {
+	padding-left: 3px;
+}
+
+.btn-download {
+	border: 1px solid #fff;
+    color: #fff !important;
+	opacity: 0.6;
+    min-width: 330px;
+}
+
+#alertErrorMessage {
+    position: fixed;
+    top: 10%;
+    right: 2%;
+    width: 22%;
+    background: #CC0000;
+}
+#inner-message {
+    margin: 0 auto;
+    color: #ffffff;
+}
+
+#alertSuccessMessage {
+	position: fixed;
+    top: 10%;
+    right: 2%;
+    width: 22%;
+    background: #00d555;
+}
+#inner-message {
+    margin: 0 auto;
+    color: #ffffff;
+}
+
+.close {
+	color: #ffffff !important;
+}

@@ -1,0 +1,86 @@
+apply plugin: 'eclipse'
+apply plugin: 'ear'
+
+ear {
+    archiveName 'stratagem.ear'
+}
+
+ext {
+	log4jVersion = '1.2.17'
+	jeeVersion = '6.0'
+	jbossjee6Version = '3.0.3.Final'
+	servletapiVersion = '3.0.1'
+	hibernateVersion = '4.3.10.Final'
+	jstlVersion = '1.2'
+	jaxrsVersion = '2.0.1'
+	resteasyVersion = '2.3.7.Final'
+	
+	webapplicationName = 'strat-weblayer.war'
+	webapplicationContextPath = 'stratagem'
+	webserviceArchiveName = 'strat-webservice.war'
+	webserviceContextPath = 'stratagem-svc'
+}
+
+allprojects {
+	apply plugin: 'eclipse'
+	apply plugin: 'java'
+
+	repositories { 
+		mavenCentral() 
+		maven { url "http://central.maven.org/maven2/" }
+		maven { url "http://repository.pentaho.org/artifactory/repo" }
+		maven { url "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/" }
+	}
+	
+	dependencies {
+		runtime group: 'org.mindrot', name: 'jbcrypt', version: '0.3m', ext: 'jar'
+        compile group: 'org.picketbox', name: 'picketbox', version: '4.1.5.Final'
+		compile group: 'log4j', name: 'log4j', version: log4jVersion
+		compile group: 'javax', name: 'javaee-api', version: jeeVersion
+		compile group: 'org.apache.activemq', name: 'activemq-jaas', version: '5.14.4'
+	}
+}
+
+ear {
+    deploymentDescriptor { 
+    	webModule( webapplicationName, webapplicationContextPath ) 
+    	webModule( webserviceArchiveName, webserviceContextPath )
+    }
+}
+
+dependencies {
+	deploy project('strat-ejbservice')
+	deploy project('strat-persistence')
+	deploy project('strat-security')
+	deploy project(path: 'strat-weblayer', configuration: 'archives')
+	deploy project(path: 'strat-webservice', configuration: 'archives')
+	earlib ( project('strat-ejbserviceclient') ) {
+		transitive = false
+	}
+	earlib group: 'org.mindrot', name: 'jbcrypt', version: '0.3m', ext: 'jar'
+	earlib group: 'org.picketbox', name: 'picketbox', version: '4.1.5.Final'
+}
+
+// Inspired by https://gist.github.com/abesto/cdcdd38263eacf1cbb51
+// Task creates a .dot file with all inter-module dependencies
+// Supports any depth of nested modules
+
+task moduleDependencyReport {
+    doLast {
+        def file = new File("project-dependencies.dot")
+        file.delete()
+        file << "digraph {\n"
+        file << "splines=ortho\n"
+        printDeps(file, rootProject)
+        file << "}\n"
+    }
+}
+
+// recursively print dependencies to file and move on to child projects 
+def printDeps(file, project) {
+    project.configurations.compile.dependencies
+        .matching { it in ProjectDependency }
+        .each { to -> file << ("\"${project.name}\" -> \"${to.name}\"\n")}
+
+    project.childProjects.each { child -> printDeps(file, child.value) }
+}

@@ -1,0 +1,80 @@
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">   
+
+	<security-constraint>
+		<display-name>Stratagem protected security constraint</display-name>
+		<web-resource-collection>
+			<web-resource-name>Protected Area</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>HEAD</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>TRACE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>pristine_user</role-name>
+			<role-name>general_user</role-name>
+			<role-name>general_manager</role-name>
+			<role-name>department_manager</role-name>
+			<role-name>central_manager</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>Stratagem public security constraint</display-name>
+		<web-resource-collection>
+			<web-resource-name>Public</web-resource-name>
+			<url-pattern>/css/*</url-pattern>
+			<url-pattern>/font/*</url-pattern>
+			<url-pattern>/js/*</url-pattern>
+			<url-pattern>/img/*</url-pattern>
+			<url-pattern>/partial/*</url-pattern>
+			<url-pattern>/Logout</url-pattern>
+			<url-pattern>/Register</url-pattern>
+			<!-- <url-pattern>/Home</url-pattern> -->
+			<http-method>GET</http-method>
+		</web-resource-collection>
+	</security-constraint>	
+
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/Home</form-login-page>
+			<form-error-page>/LoginError</form-error-page>
+		</form-login-config>
+	</login-config>
+	
+	<security-role>
+		<description>Pristine user</description>
+		<role-name>pristine_user</role-name>
+	</security-role>
+	<security-role>
+		<description>General user</description>
+		<role-name>general_user</role-name>
+	</security-role>
+	<security-role>
+		<description>Generak manager</description>
+		<role-name>general_manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Department manager</description>
+		<role-name>department_manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Central manager</description>
+		<role-name>central_manager</role-name>
+	</security-role>
+	
+	<error-page>
+		<error-code>403</error-code>
+		<location>/Error</location>
+	</error-page>
+	
+</web-app>

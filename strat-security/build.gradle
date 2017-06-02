@@ -1,0 +1,7 @@
+jar {
+    archiveName 'strat-security.jar'
+}
+
+dependencies {
+    compile project(':strat-persistence')
+}
