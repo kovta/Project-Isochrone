@@ -1,6 +1,28 @@
-/build/
-/bin/
+*.class
 
-/.gradle/
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
-/.settings/
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs
+hs_err_pid*
+
+# Eclipse related files
+.classpath
+.project
+.settings
+.gradle
+
+# IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+
+**/bin/*
+**/build/*
+**/test-output/*
