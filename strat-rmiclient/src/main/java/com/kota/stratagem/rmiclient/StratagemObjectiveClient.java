@@ -1,4 +1,4 @@
-package com.kota.stratagem.client;
+package com.kota.stratagem.rmiclient;
 
 import java.util.Hashtable;
 
