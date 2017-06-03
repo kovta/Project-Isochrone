@@ -12,6 +12,8 @@ public interface ObjectiveConverter {
 
 	ObjectiveRepresentor to(Objective objective);
 
+	ObjectiveRepresentor toElementary(Objective objective);
+
 	Set<ObjectiveRepresentor> to(Set<Objective> objectives);
 
 }

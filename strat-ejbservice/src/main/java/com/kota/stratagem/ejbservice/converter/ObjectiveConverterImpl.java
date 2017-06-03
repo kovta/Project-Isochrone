@@ -29,13 +29,10 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 
 	@Override
 	public ObjectiveRepresentor to(Objective objective) {
-		final ObjectiveStatusRepresentor status = ObjectiveStatusRepresentor.valueOf(objective.getStatus().toString());
-		final ObjectiveRepresentor representor = objective.getId() != null
-				? new ObjectiveRepresentor(objective.getId(), objective.getName(), objective.getDescription(), objective.getPriority(), status)
-				: new ObjectiveRepresentor(objective.getName(), objective.getDescription(), objective.getPriority(), status);
+		final ObjectiveRepresentor representor = this.toElementary(objective);
 		if (objective.getProjects() != null) {
 			for (final Project project : objective.getProjects()) {
-				representor.addProject(this.projectConverter.to(project));
+				representor.addProject(this.projectConverter.toElementary(project));
 			}
 		}
 		if (objective.getTasks() != null) {
@@ -53,6 +50,15 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 		// representor.addUser(this.appUserConverter.to(user));
 		// }
 		// }
+		return representor;
+	}
+
+	@Override
+	public ObjectiveRepresentor toElementary(Objective objective) {
+		final ObjectiveStatusRepresentor status = ObjectiveStatusRepresentor.valueOf(objective.getStatus().toString());
+		final ObjectiveRepresentor representor = objective.getId() != null
+				? new ObjectiveRepresentor(objective.getId(), objective.getName(), objective.getDescription(), objective.getPriority(), status)
+				: new ObjectiveRepresentor(objective.getName(), objective.getDescription(), objective.getPriority(), status);
 		return representor;
 	}
 
