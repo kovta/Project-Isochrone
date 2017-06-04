@@ -63,7 +63,7 @@
 			</table>
 			
 			<!-- Modals -->
-			<jsp:include page="../../modal/add-objective.jsp"></jsp:include>
+			<jsp:include page="add-objective.jsp"></jsp:include>
 			<jsp:include page="../../partial/alert.jsp"></jsp:include>
 			<!-- /Modals -->
 			

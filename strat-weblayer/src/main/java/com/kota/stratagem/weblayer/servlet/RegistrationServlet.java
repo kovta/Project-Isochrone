@@ -58,7 +58,7 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 				} else if ((password == null) || "".equals(password)) {
 					request.setAttribute(ATTR_REG_ERROR, "Password required");
 				} else if (!(password.equals(password_confirmation))) {
-					request.setAttribute(ATTR_REG_ERROR, "Passwords do not match");
+					request.setAttribute(ATTR_REG_ERROR, "Unmatching passwords");
 				}
 				final AppUserRepresentor user = new AppUserRepresentor(username, "", email, RoleRepresentor.PRISTINE_USER, null, null);
 				this.forward(request, response, user, false);
@@ -66,11 +66,12 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 				AppUserRepresentor user = null;
 				try {
 					LOGGER.info("Registration successful for user: " + username);
-					request.setAttribute(ATTR_REG_SUCCESS, "Registration successful!");
 					user = this.protocol.saveAppUser(null, username, password, email, RoleRepresentor.PRISTINE_USER, null, null, null, null, null, null, null,
 							null);
+					request.setAttribute(ATTR_REG_SUCCESS, "Registration successful!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
+					request.setAttribute(ATTR_REG_ERROR, "Different username required");
 				}
 				this.forward(request, response, user, true);
 			}
