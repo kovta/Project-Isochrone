@@ -32,7 +32,7 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final AppUserRepresentor user = new AppUserRepresentor("", "", "", RoleRepresentor.PRISTINE_USER);
+		final AppUserRepresentor user = new AppUserRepresentor("", "", "", RoleRepresentor.PRISTINE_USER, null, null);
 		this.forward(request, response, user, false);
 	}
 
@@ -60,14 +60,15 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 				} else if (!(password.equals(password_confirmation))) {
 					request.setAttribute(ATTR_REG_ERROR, "Passwords do not match");
 				}
-				final AppUserRepresentor user = new AppUserRepresentor(username, "", email, RoleRepresentor.PRISTINE_USER);
+				final AppUserRepresentor user = new AppUserRepresentor(username, "", email, RoleRepresentor.PRISTINE_USER, null, null);
 				this.forward(request, response, user, false);
 			} else {
 				AppUserRepresentor user = null;
 				try {
 					LOGGER.info("Registration successful for user: " + username);
 					request.setAttribute(ATTR_REG_SUCCESS, "Registration successful!");
-					user = this.protocol.saveAppUser(null, username, password, email, RoleRepresentor.PRISTINE_USER, null, null, null, null, null, null, null);
+					user = this.protocol.saveAppUser(null, username, password, email, RoleRepresentor.PRISTINE_USER, null, null, null, null, null, null, null,
+							null);
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
 				}

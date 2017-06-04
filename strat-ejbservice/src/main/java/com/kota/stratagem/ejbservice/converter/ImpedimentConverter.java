@@ -12,6 +12,8 @@ public interface ImpedimentConverter {
 
 	ImpedimentRepresentor to(Impediment impediment);
 
+	ImpedimentRepresentor toElementary(Impediment impediment);
+
 	List<ImpedimentRepresentor> to(List<Impediment> impediments);
 
 }

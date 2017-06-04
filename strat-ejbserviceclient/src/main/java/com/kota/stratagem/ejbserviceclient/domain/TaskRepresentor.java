@@ -2,6 +2,7 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TaskRepresentor implements Serializable {
@@ -12,6 +13,11 @@ public class TaskRepresentor implements Serializable {
 	private final String name;
 	private final String description;
 	private final double completion;
+	private final Date deadline;
+	private final AppUserRepresentor creator;
+	private final Date creationDate;
+	private final AppUserRepresentor modifier;
+	private final Date modificationDate;
 	private final List<TeamRepresentor> assignedTeams;
 	private final List<AppUserRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
@@ -21,14 +27,22 @@ public class TaskRepresentor implements Serializable {
 	private ProjectRepresentor project;
 
 	public TaskRepresentor() {
-		this(null, "", "", 0);
+		this(null, "", "", 0, new Date(), null, new Date(), null, new Date());
 	}
 
-	public TaskRepresentor(Long id, String name, String description, double completion) {
+	// Projects and Objectives removed from constructor due to structure ambiguity
+	public TaskRepresentor(Long id, String name, String description, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
+			AppUserRepresentor modifier, Date modificationDate) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.completion = completion;
+		this.deadline = deadline;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.impediments = new ArrayList<>();
@@ -38,10 +52,17 @@ public class TaskRepresentor implements Serializable {
 		this.project = null;
 	}
 
-	public TaskRepresentor(String name, String description, double completion) {
+	public TaskRepresentor(String name, String description, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
+			AppUserRepresentor modifier, Date modificationDate) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.completion = completion;
+		this.deadline = deadline;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.impediments = new ArrayList<>();
@@ -57,58 +78,6 @@ public class TaskRepresentor implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public double getCompletion() {
-		return this.completion;
-	}
-
-	public List<TeamRepresentor> getAssignedTeams() {
-		return this.assignedTeams;
-	}
-
-	public void addTeam(TeamRepresentor team) {
-		this.assignedTeams.add(team);
-	}
-
-	public List<AppUserRepresentor> getAssignedUsers() {
-		return this.assignedUsers;
-	}
-
-	public void addUser(AppUserRepresentor user) {
-		this.assignedUsers.add(user);
-	}
-
-	public List<ImpedimentRepresentor> getImpediments() {
-		return this.impediments;
-	}
-
-	public void addImpediment(ImpedimentRepresentor impediment) {
-		this.impediments.add(impediment);
-	}
-
-	public List<TaskRepresentor> getDependantTasks() {
-		return this.dependantTasks;
-	}
-
-	public void addDependantTask(TaskRepresentor task) {
-		this.dependantTasks.add(task);
-	}
-
-	public List<TaskRepresentor> getTaskDependencies() {
-		return this.taskDependencies;
-	}
-
-	public void addTaskDependency(TaskRepresentor task) {
-		this.taskDependencies.add(task);
 	}
 
 	public ObjectiveRepresentor getObjective() {
@@ -127,13 +96,65 @@ public class TaskRepresentor implements Serializable {
 		this.project = project;
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public double getCompletion() {
+		return this.completion;
+	}
+
+	public Date getDeadline() {
+		return this.deadline;
+	}
+
+	public AppUserRepresentor getCreator() {
+		return this.creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public AppUserRepresentor getModifier() {
+		return this.modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public List<TeamRepresentor> getAssignedTeams() {
+		return this.assignedTeams;
+	}
+
+	public List<AppUserRepresentor> getAssignedUsers() {
+		return this.assignedUsers;
+	}
+
+	public List<ImpedimentRepresentor> getImpediments() {
+		return this.impediments;
+	}
+
+	public List<TaskRepresentor> getDependantTasks() {
+		return this.dependantTasks;
+	}
+
+	public List<TaskRepresentor> getTaskDependencies() {
+		return this.taskDependencies;
+	}
+
 	@Override
 	public String toString() {
-		return "\n\tTaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", comlpetion=" + this.completion
-				+ ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks="
-				+ this.dependantTasks + ", taskDependencies=" + this.taskDependencies
-				// + ", objective=" + this.objective + ", project=" + this.project
-				+ "]";
+		return "\nTaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", completion=" + this.completion
+				+ ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier
+				+ ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers
+				+ ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies=" + this.taskDependencies
+				+ ", objective=" + this.objective + ", project=" + this.project + "]\n";
 	}
 
 }

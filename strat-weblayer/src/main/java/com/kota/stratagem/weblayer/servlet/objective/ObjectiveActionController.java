@@ -1,6 +1,7 @@
 package com.kota.stratagem.weblayer.servlet.objective;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -45,7 +46,7 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 			ObjectiveRepresentor objective = null;
 			boolean isNew = false;
 			if (NEW_OBJECTIVE_ID_FLAG.equals(id)) {
-				objective = new ObjectiveRepresentor("", "", 0, ObjectiveStatusRepresentor.PLANNED);
+				objective = new ObjectiveRepresentor("", "", 0, ObjectiveStatusRepresentor.PLANNED, new Date(), false, null, null, null, null);
 				isNew = true;
 			} else {
 				try {
@@ -83,14 +84,16 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
-				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status);
+				// new attributes must be requested
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, new Date(), false, null, null, null, null);
 				this.forward(request, response, objective, false, false, true);
 			} else {
 				ObjectiveRepresentor objective = null;
 				try {
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
-					objective = this.protocol.saveObjective(id, name, description, priority, status, null, null, null, null);
+					// new attributes must be requested
+					objective = this.protocol.saveObjective(id, name, description, priority, status, new Date(), false, null, null, null, null, null);
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
 				}

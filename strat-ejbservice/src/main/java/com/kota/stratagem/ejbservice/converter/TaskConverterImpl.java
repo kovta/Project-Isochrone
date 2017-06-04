@@ -29,9 +29,7 @@ public class TaskConverterImpl implements TaskConverter {
 
 	@Override
 	public TaskRepresentor to(Task task) {
-		final TaskRepresentor representor = task.getId() != null
-				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription(), task.getCompletion())
-				: new TaskRepresentor(task.getName(), task.getDescription(), task.getCompletion());
+		final TaskRepresentor representor = this.toElementary(task);
 		// if (task.getAssignedTeams() != null) {
 		// for (final Team team : task.getAssignedTeams()) {
 		// representor.addTeam(this.teamConverter.to(team));
@@ -53,16 +51,28 @@ public class TaskConverterImpl implements TaskConverter {
 		// }
 		// }
 		// if (task.getTaskDependencies() != null) {
-		// for (final Task dependencies : task.getTaskDependencies()) {
-		// representor.addTaskDependency(this.to(dependencies));
+		// for (final Task dependency : task.getTaskDependencies()) {
+		// representor.addTaskDependency(this.toElementary(dependency));
 		// }
 		// }
-		// if (task.getObjective() != null) {
-		// representor.setObjective(this.objectiveConverter.to(task.getObjective()));
-		// }
-		// if(task.getProject() != null) {
-		// representor.setProject(this.projectConverter.to(task.getProject()));
-		// }
+		if (task.getObjective() != null) {
+			representor.setObjective(this.objectiveConverter.toElementary(task.getObjective()));
+		}
+		if (task.getProject() != null) {
+			representor.setProject(this.projectConverter.toElementary(task.getProject()));
+		}
+		return representor;
+	}
+
+	@Override
+	public TaskRepresentor toElementary(Task task) {
+		final TaskRepresentor representor = task.getId() != null
+				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription(), task.getCompletion(), task.getDeadline(),
+						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
+						task.getModificationDate())
+				: new TaskRepresentor(task.getName(), task.getDescription(), task.getCompletion(), task.getDeadline(),
+						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
+						task.getModificationDate());
 		return representor;
 	}
 

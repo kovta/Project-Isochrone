@@ -22,18 +22,18 @@ INSERT INTO roles (role_id, role_name) VALUES
 (5, 'system_administrator');
 SELECT SETVAL('roles_role_id_seq', COALESCE(MAX(role_id), 0) ) FROM roles;
 
-INSERT INTO app_users (user_id, user_name, user_password_hash, user_role) VALUES 
-(0, 'adam', '$2a$10$FPiPKeyDIYEHTu1Nx7GCJOO5.A4agR15rHiham3pgzhE5yNjshBJ.', 3),
-(1, 'brent', '$2a$10$cRxiTtzegqpCu6ArnTNQ2et3l2bPIHzTuCvnyd89T/93VwZTW4jim', 3),
-(2, 'chris', '$2a$10$Oer1r4GqXVbtjc5auNJcTeUaCmis2gVUmO1UiDitM5GkhQdenJHmm', 1),
-(3, 'dennis', '$2a$10$xjom.FGpOcDDCoa2YcrFhuvR6W/hgHEwRJu4oFJ.Do6D8eMu8gN/m', 1),
-(4, 'ellie', '$2a$10$3TxZKVQuSD.s9K.P/i1uX.vIk9HG9Q2vzjL0xanTZuEBqbsXwJBpm', 1),
-(5, 'frank', '$2a$10$0Z9B1Z5GiJ0DFXwVHpYCBOkannkyArcKeZX1.DHDwNX/kweZ.vOTy', 1),
-(6, 'gabrille', '$2a$10$g3tlhM1JGx.rckAiFiWT.Ok5xyvz1a878l41lVZuIilRzBa/FFjfa', 1),
-(7, 'holly', '$2a$10$W/nRkIKvfZ.3cCbJCxghKujWqAIzf/meL2g2DEQKv9pLpkPq9YvaC', 1),
-(8, 'ike', '$2a$10$q2DRoc37d30C9i2t6gLCGO7vAA2bJw2b4cjxZyD0Df9PDCTP0LWC2', 1),
-(9, 'jenny', '$2a$10$R80wTRvd1xSdlyafWnt4HeVKaF7z239JY9Gb6G5WPIUShlMyWGLwq', 1),
-(10, 'Kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 1);
+INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_registration_date, user_account_modification_date, user_account_modifier) VALUES 
+(0, 'adam', '$2a$10$FPiPKeyDIYEHTu1Nx7GCJOO5.A4agR15rHiham3pgzhE5yNjshBJ.', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(1, 'brent', '$2a$10$cRxiTtzegqpCu6ArnTNQ2et3l2bPIHzTuCvnyd89T/93VwZTW4jim', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(2, 'chris', '$2a$10$Oer1r4GqXVbtjc5auNJcTeUaCmis2gVUmO1UiDitM5GkhQdenJHmm', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(3, 'dennis', '$2a$10$xjom.FGpOcDDCoa2YcrFhuvR6W/hgHEwRJu4oFJ.Do6D8eMu8gN/m', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(4, 'ellie', '$2a$10$3TxZKVQuSD.s9K.P/i1uX.vIk9HG9Q2vzjL0xanTZuEBqbsXwJBpm', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(5, 'frank', '$2a$10$0Z9B1Z5GiJ0DFXwVHpYCBOkannkyArcKeZX1.DHDwNX/kweZ.vOTy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(6, 'gabrille', '$2a$10$g3tlhM1JGx.rckAiFiWT.Ok5xyvz1a878l41lVZuIilRzBa/FFjfa', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(7, 'holly', '$2a$10$W/nRkIKvfZ.3cCbJCxghKujWqAIzf/meL2g2DEQKv9pLpkPq9YvaC', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(8, 'ike', '$2a$10$q2DRoc37d30C9i2t6gLCGO7vAA2bJw2b4cjxZyD0Df9PDCTP0LWC2', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(9, 'jenny', '$2a$10$R80wTRvd1xSdlyafWnt4HeVKaF7z239JY9Gb6G5WPIUShlMyWGLwq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(10, 'Kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0);
 SELECT SETVAL('app_users_user_id_seq', COALESCE(MAX(user_id), 0) ) FROM app_users;
 
 INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES 
@@ -49,12 +49,12 @@ INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES
 (9, 1),
 (10, 2);
 
-INSERT INTO teams (team_id, team_name, team_leader) VALUES
-(0, 'Management', 0),
-(1, 'DevOps', 2),
-(2, 'Back-end development', 3),
-(3, 'Front-end development', 8),
-(4, 'Quality assurance', 3);
+INSERT INTO teams (team_id, team_name, team_leader, team_creator, team_creation_date, team_modifier, team_modification_date) VALUES
+(0, 'Management', 0, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'DevOps', 2, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Back-end development', 3, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Front-end development', 8, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Quality assurance', 3, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 
 INSERT INTO team_members (team_member_team_id, team_member_user_id) VALUES
 (0, 0),
@@ -79,18 +79,21 @@ INSERT INTO objective_statuses (status_id, status_name) VALUES
 (3, 'DISCONTINUED'),
 (4, 'COMPLETED');
 
-INSERT INTO objectives (objective_id, objective_name, objective_description, objective_priority, objective_status_id) VALUES 
-(0, 'Integration with augmented reality', '', 2, 1),
-(1, 'Increase influence in market', 'Completing projects for our esteemed contacts', 1, 1),
-(2, 'Processing of product incidents', 'The continuous fixing of occurring reported product problems', 3, 2),
-(3, 'Upskilling of new colleagues', 'The newcomers must be involved in project work as soon as possible, therfore trainings are absolutely neccesary', 5, 0),
-(4, 'Develop cross-platfrom worflow management system', 'Due to competitors lack in flexibility and structure handling the creation of revisioned management system could give us a leading edge on the market', 1, 1),
-(5, 'Clone specific customer architectures into a more flexible microservice-based solution', 'Efforts to follow new trends', 4, 3),
-(6, 'Recreating designated legacy control systems into the cloud', 'Software preconditions and multiple high end requests have led to the descision to move solutions to a cloud platfrom', 6, 0);
+INSERT INTO objectives (objective_id, objective_name, objective_description, objective_priority, objective_status_id, objective_deadline, objective_confidentiality, objective_creator, objective_creation_date, objective_modifier, objective_modification_date) VALUES 
+(0, 'Integration with augmented reality', '', 2, 1, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Increase influence in market', 'Completing projects for our esteemed contacts', 1, 1, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Processing of product incidents', 'The continuous fixing of occurring reported product problems', 3, 2, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Upskilling of new colleagues', 'The newcomers must be involved in project work as soon as possible, therfore trainings are absolutely neccesary', 5, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Develop cross-platfrom worflow management system', 'Due to competitors lack in flexibility and structure handling the creation of revisioned management system could give us a leading edge on the market', 1, 1, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(5, 'Clone specific customer architectures into a more flexible microservice-based solution', 'Efforts to follow new trends', 4, 3, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Recreating designated legacy control systems into the cloud', 'Software preconditions and multiple high end requests have led to the descision to move solutions to a cloud platfrom', 6, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('objectives_objective_id_seq', COALESCE(MAX(objective_id), 0) ) FROM objectives;
 
 INSERT INTO objective_missions (mission_id, mission_name, mission_description, mission_objective, mission_stage_id) VALUES
 (0, 'Steps towards growing technologies', '', 0, 4);
+
+INSERT INTO objective_supervisors (objective_supervisor_objective_id, objective_supervisor_user_id) VALUES
+(0, 1);
 
 INSERT INTO objective_status_alterations (alteration_id, alteration_objective_id, alteration_status_id, alteration_date) VALUES
 (0, 0, 0, '2016/03/20 15:45:00'),
@@ -122,15 +125,15 @@ INSERT INTO project_statuses (status_id, status_name) VALUES
 (15, 'UPGRADING'),
 (16, 'DISPOSED');
 
-INSERT INTO projects (project_id, project_name, project_description, project_status_id, project_deadline, project_visibility) VALUES 
-(0, 'Ceraphis data deployment', 'Deployment of Ceraphis Solutions buisness data to data warehouse in India', 10, '2015/11/30 00:00:00', TRUE),
-(1, 'QuickExtract app', 'Develop mobile app for QuickExtract', 7, NULL, TRUE),
-(2, 'Grove BI outsourcing', '', 0, NULL, TRUE),
-(3, 'Codename -NOVA-', 'Augmented reality utility tool for enterprise management', 5, '2017/05/26 00:00:00', FALSE),
-(4, 'Reopening not cinfirmed tickets', 'Revisioning questionable tickets', 0, NULL, TRUE),
-(5, 'Resolving of Very High level tickets due to schema migration', 'Our last service migration caused problems in push sub-module. The problem is more complex than just a quick refactor', 0, NULL, TRUE),
-(6, 'Back-end training orginization', 'Training for the future developers', 0, NULL, TRUE),
-(7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, FALSE);
+INSERT INTO projects (project_id, project_name, project_description, project_status_id, project_deadline, project_confidentiality, project_creator, project_creation_date, project_modifier, project_modification_date) VALUES 
+(0, 'Ceraphis data deployment', 'Deployment of Ceraphis Solutions buisness data to data warehouse in India', 10, '2015/11/30 00:00:00', TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'QuickExtract app', 'Develop mobile app for QuickExtract', 7, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Grove BI outsourcing', '', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Codename -NOVA-', 'Augmented reality utility tool for enterprise management', 5, '2017/05/26 00:00:00', TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Reopening unconfirmed tickets', 'Revisioning questionable tickets', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(5, 'Resolving of Very High level tickets due to schema migration', 'Our last service migration caused problems in push sub-module. The problem is more complex than just a quick refactor', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Back-end training orginization', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('projects_project_id_seq', COALESCE(MAX(project_id), 0) ) FROM projects;
 
 INSERT INTO project_missions (mission_id, mission_name, mission_description, mission_project, mission_stage_id) VALUES
@@ -175,16 +178,16 @@ INSERT INTO objective_projects (objective_project_objective, objective_project_p
 
 -- ###########################################################################################
 
-INSERT INTO tasks (task_id, task_name, task_description, task_completion_percentage, task_deadline) VALUES 
-(0, 'Use-case test tool', 'Creating tool for efficient use-case testing', 30, NULL),
-(1, 'Print matching', 'Matching watermark prints', 85, '2016/08/14 00:00:00'),
-(2, 'Extraction planning', 'Planning extraction approach', 60, NULL),
-(3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 100, '2016/09/10 00:00:00'),
-(4, 'Incident wrap up', 'Closing all end-to-end test incidents', 0, NULL),
-(5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 100, NULL),
-(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 0, '2017/12/01 00:00:00'),
-(7, 'REST', 'Create REST API module', 0, '2017/12/01 00:00:00'),
-(8, 'RMI', 'Create Remote EJB module', 0, '2017/12/01 00:00:00');
+INSERT INTO tasks (task_id, task_name, task_description, task_completion_percentage, task_deadline, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
+(0, 'Use-case test tool', 'Creating tool for efficient use-case testing', 30, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Print matching', 'Matching watermark prints', 85, '2016/08/14 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Extraction planning', 'Planning extraction approach', 60, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 100, '2016/09/10 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Incident wrap up', 'Closing all end-to-end test incidents', 0, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'REST', 'Create REST API module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'RMI', 'Create Remote EJB module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 
 -- INSERT INTO task_alterations
 
@@ -215,10 +218,10 @@ INSERT INTO impediment_statuses (status_id, status_name) VALUES
 (5, 'DISMISSED'),
 (6, 'CONFIRMED');
 
-INSERT INTO impediments (impediment_id, impediment_name, impediment_description, impediment_priority_id, impediment_status_id, impediment_report_date, impediment_reporter, impediment_processor) VALUES
-(0, 'Insufficient tools', 'ARPA SDK would serve as a huge advantage with development', 2, 1, '2016/10/25 14:45:00', 3, 5),
-(1, 'Data connection', 'Unable to establish connection with service endpoint with OData componenet', 3, 6, '2015/12/11 16:10:00', 4, 1),
-(2, 'Lingering numpad', 'A High level incident is not recreatable with our build, and transition at this point is not possible', 0, 2, '2016/09/03 10:40:00', 9, 0);
+INSERT INTO impediments (impediment_id, impediment_name, impediment_description, impediment_priority_id, impediment_status_id, impediment_report_date, impediment_reporter, impediment_processor, impediment_creator, impediment_creation_date, impediment_modifier, impediment_modification_date) VALUES
+(0, 'Insufficient tools', 'ARPA SDK would serve as a huge advantage with development', 2, 1, '2016/10/25 14:45:00', 3, 5, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Data connection', 'Unable to establish connection with service endpoint with OData componenet', 3, 6, '2015/12/11 16:10:00', 4, 1, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Lingering numpad', 'A High level incident is not recreatable with our build, and transition at this point is not possible', 0, 2, '2016/09/03 10:40:00', 9, 0, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 
 INSERT INTO project_impediments (project_impediment_project_id, project_impediment_impediment_id) VALUES
 (3, 0),
@@ -227,8 +230,8 @@ INSERT INTO project_impediments (project_impediment_project_id, project_impedime
 INSERT INTO task_impediments (task_impediment_task_id, task_impediment_impediment_id) VALUES
 (4, 2);
 
-INSERT INTO remedies (remedy_id, remedy_description, remedy_impediment_id, remedy_submission_date, remedy_provider) VALUES
-(0, 'Use service control tool to generate project structure from existing endpoint meta data', 1, '2015/12/13 14:20:00', 1); 
+INSERT INTO remedies (remedy_id, remedy_description, remedy_impediment_id, remedy_submission_date, remedy_provider, remedy_creator, remedy_creation_date, remedy_modifier, remedy_modification_date) VALUES
+(0, 'Use service control tool to generate project structure from existing endpoint meta data', 1, '2015/12/13 14:20:00', 1, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'); 
 
 -- ###########################################################################################
 

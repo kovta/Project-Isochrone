@@ -32,6 +32,7 @@ DROP TABLE project_statuses;
 
 DROP TABLE objective_status_alterations;
 DROP TABLE objective_appointments;
+DROP TABLE objective_supervisors;
 DROP TABLE objective_missions;
 DROP TABLE objectives;
 DROP TABLE objective_statuses;

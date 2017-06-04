@@ -1,5 +1,6 @@
 package com.kota.stratagem.ejbservice.protocol;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +22,9 @@ public interface ObjectiveProtocol {
 
 	List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException;
 
-	ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status,
-			Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers)
-			throws AdaptorException;
+	ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
+			Boolean confidentiality, AppUserRepresentor operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks,
+			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers) throws AdaptorException;
 
 	void removeObjective(Long id) throws AdaptorException;
 

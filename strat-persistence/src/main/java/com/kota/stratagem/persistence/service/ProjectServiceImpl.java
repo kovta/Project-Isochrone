@@ -38,15 +38,15 @@ public class ProjectServiceImpl implements ProjectService {
 	private EntityManager entityManager;
 
 	@Override
-	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean visible, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException {
+	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator, Set<Task> tasks,
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Create Project (name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks + ", visible: "
-					+ visible + ")");
+			LOGGER.debug("Create Project (name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks + ", confidentiality: "
+					+ confidentiality + ")");
 		}
 		try {
-			final Project project = new Project(name, description, status, deadline, visible, tasks, assignedTeams, assignedUsers, impediments,
-					objective != null ? objective : null);
+			final Project project = new Project(name, description, status, deadline, confidentiality, creator, new Date(), creator, new Date(), tasks,
+					assignedTeams, assignedUsers, impediments, objective != null ? objective : null);
 			this.entityManager.persist(project);
 			this.entityManager.flush();
 			return project;
@@ -114,11 +114,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean visible, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException {
+	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier,
+			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective)
+			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Project (id: " + id + ", name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks
-					+ ", visible: " + visible + ")");
+					+ ", confidentiality: " + confidentiality + ")");
 		}
 		try {
 			final Project project = this.readElementary(id);
@@ -126,7 +127,9 @@ public class ProjectServiceImpl implements ProjectService {
 			project.setDescription(description);
 			project.setStatus(status);
 			project.setDeadline(deadline);
-			project.setVisible(visible);
+			project.setConfidential(confidentiality);
+			project.setModifier(modifier);
+			project.setModificationDate(new Date());
 			project.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			project.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			project.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());

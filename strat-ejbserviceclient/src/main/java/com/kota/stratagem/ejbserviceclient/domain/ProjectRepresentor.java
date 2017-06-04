@@ -14,7 +14,11 @@ public class ProjectRepresentor implements Serializable {
 	private final String description;
 	private final ProjectStatusRepresentor status;
 	private final Date deadline;
-	private final Boolean visible;
+	private final Boolean confidential;
+	private final AppUserRepresentor creator;
+	private final Date creationDate;
+	private final AppUserRepresentor modifier;
+	private final Date modificationDate;
 	private final List<TaskRepresentor> tasks;
 	private final List<TeamRepresentor> assignedTeams;
 	private final List<AppUserRepresentor> assignedUsers;
@@ -22,17 +26,22 @@ public class ProjectRepresentor implements Serializable {
 	private final ObjectiveRepresentor objective;
 
 	public ProjectRepresentor() {
-		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), true, null);
+		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null, new Date(), null, new Date(), null);
 	}
 
-	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean visible,
-			ObjectiveRepresentor objective) {
+	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidentiality,
+			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.deadline = deadline;
-		this.visible = visible;
+		this.confidential = confidentiality;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
@@ -40,13 +49,18 @@ public class ProjectRepresentor implements Serializable {
 		this.objective = objective;
 	}
 
-	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean visible,
-			ObjectiveRepresentor objective) {
+	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential, AppUserRepresentor creator,
+			Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.deadline = deadline;
-		this.visible = visible;
+		this.confidential = confidential;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
@@ -78,40 +92,40 @@ public class ProjectRepresentor implements Serializable {
 		return this.deadline;
 	}
 
-	public Boolean getVisible() {
-		return this.visible;
+	public Boolean getConfidential() {
+		return this.confidential;
+	}
+
+	public AppUserRepresentor getCreator() {
+		return this.creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public AppUserRepresentor getModifier() {
+		return this.modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
 	}
 
 	public List<TaskRepresentor> getTasks() {
 		return this.tasks;
 	}
 
-	public void addTask(TaskRepresentor task) {
-		this.tasks.add(task);
-	}
-
 	public List<TeamRepresentor> getAssignedTeams() {
 		return this.assignedTeams;
-	}
-
-	public void addTeam(TeamRepresentor team) {
-		this.assignedTeams.add(team);
 	}
 
 	public List<AppUserRepresentor> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
-	public void addUser(AppUserRepresentor user) {
-		this.assignedUsers.add(user);
-	}
-
 	public List<ImpedimentRepresentor> getImpediments() {
 		return this.impediments;
-	}
-
-	public void addImpediment(ImpedimentRepresentor impediment) {
-		this.impediments.add(impediment);
 	}
 
 	public ObjectiveRepresentor getObjective() {
@@ -121,8 +135,25 @@ public class ProjectRepresentor implements Serializable {
 	@Override
 	public String toString() {
 		return "\nProjectRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
-				+ this.deadline + ", visible=" + this.visible + ", \n\ttasks=" + this.tasks + ", \n\tassignedTeams=" + this.assignedTeams
-				+ ", \n\tassignedUsers=" + this.assignedUsers + ", \n\timpediments=" + this.impediments + ", \n\tobjective=" + this.objective + "]\t";
+				+ this.deadline + ", confidential=" + this.confidential + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
+				+ this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
+				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]\n";
+	}
+
+	public void addTask(TaskRepresentor task) {
+		this.tasks.add(task);
+	}
+
+	public void addTeam(TeamRepresentor team) {
+		this.assignedTeams.add(team);
+	}
+
+	public void addUser(AppUserRepresentor user) {
+		this.assignedUsers.add(user);
+	}
+
+	public void addImpediment(ImpedimentRepresentor impediment) {
+		this.impediments.add(impediment);
 	}
 
 }

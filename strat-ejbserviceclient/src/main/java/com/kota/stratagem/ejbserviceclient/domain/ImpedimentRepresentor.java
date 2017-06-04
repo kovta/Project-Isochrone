@@ -17,16 +17,23 @@ public class ImpedimentRepresentor implements Serializable {
 	private final Date reportDate;
 	private final AppUserRepresentor reporter;
 	private final AppUserRepresentor processor;
+	private final AppUserRepresentor creator;
+	private final Date creationDate;
+	private final AppUserRepresentor modifier;
+	private final Date modificationDate;
 	private final List<RemedyRepresentor> remedies;
-	private final ProjectRepresentor project;
-	private final TaskRepresentor task;
+	private ProjectRepresentor project;
+	private TaskRepresentor task;
 
 	public ImpedimentRepresentor() {
-		this(null, "", "", PriorityRepresentor.MEDIUM, ImpedimentStatusRepresentor.OPEN, new Date(), null, null, null, null);
+		this(null, "", "", PriorityRepresentor.MEDIUM, ImpedimentStatusRepresentor.OPEN, new Date(), null, null, null, new Date(), null, new Date());
 	}
 
+	// Projects and Objectives removed from constructor due to structure ambiguity
 	public ImpedimentRepresentor(Long id, String name, String description, PriorityRepresentor priority, ImpedimentStatusRepresentor status, Date reportDate,
-			AppUserRepresentor reporter, AppUserRepresentor processor, ProjectRepresentor project, TaskRepresentor task) {
+			AppUserRepresentor reporter, AppUserRepresentor processor, AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier,
+			Date modificationDate) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -35,13 +42,19 @@ public class ImpedimentRepresentor implements Serializable {
 		this.reportDate = reportDate;
 		this.reporter = reporter;
 		this.processor = processor;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.remedies = new ArrayList<>();
-		this.project = project;
-		this.task = task;
+		this.project = null;
+		this.task = null;
 	}
 
 	public ImpedimentRepresentor(String name, String description, PriorityRepresentor priority, ImpedimentStatusRepresentor status, Date reportDate,
-			AppUserRepresentor reporter, AppUserRepresentor processor, ProjectRepresentor project, TaskRepresentor task) {
+			AppUserRepresentor reporter, AppUserRepresentor processor, AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier,
+			Date modificationDate) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
@@ -49,9 +62,13 @@ public class ImpedimentRepresentor implements Serializable {
 		this.reportDate = reportDate;
 		this.reporter = reporter;
 		this.processor = processor;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.remedies = new ArrayList<>();
-		this.project = project;
-		this.task = task;
+		this.project = null;
+		this.task = null;
 	}
 
 	public Long getId() {
@@ -90,27 +107,52 @@ public class ImpedimentRepresentor implements Serializable {
 		return this.processor;
 	}
 
-	public List<RemedyRepresentor> getRemedies() {
-		return this.remedies;
+	public AppUserRepresentor getCreator() {
+		return this.creator;
 	}
 
-	public void addRemedy(RemedyRepresentor remedy) {
-		this.remedies.add(remedy);
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public AppUserRepresentor getModifier() {
+		return this.modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public List<RemedyRepresentor> getRemedies() {
+		return this.remedies;
 	}
 
 	public ProjectRepresentor getProject() {
 		return this.project;
 	}
 
+	public void setProject(ProjectRepresentor project) {
+		this.project = project;
+	}
+
 	public TaskRepresentor getTask() {
 		return this.task;
 	}
 
+	public void setTask(TaskRepresentor task) {
+		this.task = task;
+	}
+
 	@Override
 	public String toString() {
-		return "ImpedimentRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
-				+ ", status=" + this.status + ", reportDate=" + this.reportDate + ", reporter=" + this.reporter + ", processor=" + this.processor
-				+ ", remedies=" + this.remedies + ", project=" + this.project + ", task=" + this.task + "]";
+		return "\nImpedimentRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
+				+ ", status=" + this.status + ", reportDate=" + this.reportDate + ", reporter=" + this.reporter + ", processor=" + this.processor + ", creator="
+				+ this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate
+				+ ", remedies=" + this.remedies + ", project=" + this.project + ", task=" + this.task + "]\n";
+	}
+
+	public void addRemedy(RemedyRepresentor remedy) {
+		this.remedies.add(remedy);
 	}
 
 }

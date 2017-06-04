@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -75,6 +76,22 @@ public class Impediment implements Serializable {
 	@JoinColumn(name = "impediment_processor", nullable = true)
 	private AppUser processor;
 
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "impediment_creator", nullable = false)
+	private AppUser creator;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "impediment_creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "impediment_modifier", nullable = false)
+	private AppUser modifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "impediment_modification_date", nullable = false)
+	private Date modificationDate;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Remedy.class, mappedBy = "impediment")
 	private Set<Remedy> remedies;
 
@@ -91,7 +108,8 @@ public class Impediment implements Serializable {
 	}
 
 	public Impediment(Long id, String name, String description, Priority priority, ImpedimentStatus status, Date reportDate, AppUser reporter,
-			AppUser processor, Set<Remedy> remedies, Project project, Task task) {
+			AppUser processor, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate, Set<Remedy> remedies, Project project, Task task) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -100,13 +118,18 @@ public class Impediment implements Serializable {
 		this.reportDate = reportDate;
 		this.reporter = reporter;
 		this.processor = processor;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.remedies = remedies;
 		this.project = project;
 		this.task = task;
 	}
 
 	public Impediment(String name, String description, Priority priority, ImpedimentStatus status, Date reportDate, AppUser reporter, AppUser processor,
-			Set<Remedy> remedies, Project project, Task task) {
+			AppUser creator, Date creationDate, AppUser modifier, Date modificationDate, Set<Remedy> remedies, Project project, Task task) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
@@ -114,6 +137,10 @@ public class Impediment implements Serializable {
 		this.reportDate = reportDate;
 		this.reporter = reporter;
 		this.processor = processor;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.remedies = remedies;
 		this.project = project;
 		this.task = task;
@@ -183,6 +210,38 @@ public class Impediment implements Serializable {
 		this.processor = processor;
 	}
 
+	public AppUser getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public AppUser getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(AppUser modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+
 	public Set<Remedy> getRemedies() {
 		return this.remedies;
 	}
@@ -209,14 +268,10 @@ public class Impediment implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Impediment [id=" + this.id + ", name=" + this.name + "]";
+		return "Impediment [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", status="
+				+ this.status + ", reportDate=" + this.reportDate + ", reporter=" + this.reporter + ", processor=" + this.processor + ", creator="
+				+ this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate
+				+ ", remedies=" + this.remedies + ", project=" + this.project + ", task=" + this.task + "]";
 	}
-
-	/*
-	 * @Override public String toString() { return "Impediment [id=" + id + ", name=" + name + ", description=" +
-	 * description + ", priority=" + priority + ", status=" + status + ", reportDate=" + reportDate + ", reporter=" +
-	 * reporter + ", processor=" + processor + ", remedies=" + remedies + ", project=" + project + ", task=" + task +
-	 * "]"; }
-	 */
 
 }

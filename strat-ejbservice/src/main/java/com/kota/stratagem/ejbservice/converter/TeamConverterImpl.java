@@ -30,8 +30,7 @@ public class TeamConverterImpl implements TeamConverter {
 
 	@Override
 	public TeamRepresentor to(Team team) {
-		final TeamRepresentor representor = team.getId() != null ? new TeamRepresentor(team.getId(), team.getName(), this.appUserConverter.to(team.getLeader()))
-				: new TeamRepresentor(team.getName(), this.appUserConverter.to(team.getLeader()));
+		final TeamRepresentor representor = this.toElementary(team);
 		if (team.getMembers() != null) {
 			for (final AppUser user : team.getMembers()) {
 				representor.addMember(this.appUserConverter.to(user));
@@ -52,6 +51,17 @@ public class TeamConverterImpl implements TeamConverter {
 				representor.addTask(this.taskConverter.to(task));
 			}
 		}
+		return representor;
+	}
+
+	@Override
+	public TeamRepresentor toElementary(Team team) {
+		final TeamRepresentor representor = team.getId() != null
+				? new TeamRepresentor(team.getId(), team.getName(), this.appUserConverter.to(team.getLeader()),
+						this.appUserConverter.toElementary(team.getCreator()), team.getCreationDate(), this.appUserConverter.toElementary(team.getModifier()),
+						team.getModificationDate())
+				: new TeamRepresentor(team.getName(), this.appUserConverter.to(team.getLeader()), this.appUserConverter.toElementary(team.getCreator()),
+						team.getCreationDate(), this.appUserConverter.toElementary(team.getModifier()), team.getModificationDate());
 		return representor;
 	}
 

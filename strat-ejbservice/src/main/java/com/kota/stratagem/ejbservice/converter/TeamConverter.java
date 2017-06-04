@@ -12,6 +12,8 @@ public interface TeamConverter {
 
 	TeamRepresentor to(Team team);
 
+	TeamRepresentor toElementary(Team team);
+
 	List<TeamRepresentor> to(List<Team> teams);
 
 }

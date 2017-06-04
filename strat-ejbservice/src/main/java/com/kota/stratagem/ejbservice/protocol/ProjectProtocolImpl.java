@@ -99,9 +99,9 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	}
 
 	@Override
-	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean visible,
-			Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
-			ObjectiveRepresentor objective) throws AdaptorException {
+	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
+			AppUserRepresentor operator, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers,
+			Set<ImpedimentRepresentor> impediments, ObjectiveRepresentor objective) throws AdaptorException {
 		try {
 			Project project = null;
 			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
@@ -125,14 +125,14 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				for (final ImpedimentRepresentor impediment : impediments) {
 					projectImpediments.add(this.impedimentService.read(impediment.getId()));
 				}
-				project = this.projectService.update(id, name, description, projectStatus, deadline, visible, projectTasks, teams, users, projectImpediments,
-						this.objectiveService.readElementary(objective.getId()));
+				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator.getId()),
+						projectTasks, teams, users, projectImpediments, this.objectiveService.readElementary(objective.getId()));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project");
 				}
-				project = this.projectService.create(name, description, projectStatus, deadline, visible, null, null, null, null,
-						objective != null ? this.objectiveService.readElementary(objective.getId()) : null);
+				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator.getId()), null,
+						null, null, null, objective != null ? this.objectiveService.readElementary(objective.getId()) : null);
 			}
 			return this.converter.to(project);
 		} catch (final PersistenceServiceException e) {

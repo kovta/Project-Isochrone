@@ -1,5 +1,6 @@
 package com.kota.stratagem.persistence.service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,14 +35,15 @@ public class TaskServiceImpl implements TaskService {
 	private EntityManager entityManager;
 
 	@Override
-	public Task create(String name, String description, double completion, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
-			Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project) throws PersistenceServiceException {
+	public Task create(String name, String description, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
+			Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
+			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, completion, assignedTeams, assignedUsers, impediments, dependantTasks, taskDependencies, objective,
-					project);
+			final Task task = new Task(name, description, completion, deadline, creator, new Date(), creator, new Date(), assignedTeams, assignedUsers,
+					impediments, dependantTasks, taskDependencies, objective, project);
 			this.entityManager.persist(task);
 			this.entityManager.flush();
 			return task;
@@ -79,8 +81,8 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task update(Long id, String name, String description, double completion, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
-			Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
+	public Task update(Long id, String name, String description, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
+			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
@@ -90,6 +92,9 @@ public class TaskServiceImpl implements TaskService {
 			task.setName(name);
 			task.setDescription(description);
 			task.setCompletion(completion);
+			task.setDeadline(deadline);
+			task.setModifier(modifier);
+			task.setModificationDate(new Date());
 			task.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			task.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
 			task.setImpediments(impediments != null ? impediments : new HashSet<Impediment>());

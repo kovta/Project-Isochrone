@@ -1,5 +1,6 @@
 package com.kota.stratagem.persistence.service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,14 +37,15 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	private EntityManager entityManager;
 
 	@Override
-	public Objective create(String name, String description, int priority, ObjectiveStatus status, Set<Project> projects, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
+	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator,
+			Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Objective (name: " + name + ", description: " + description + ", priority: " + priority + ", status: " + status + ", tasks: "
 					+ tasks + ")");
 		}
 		try {
-			final Objective objective = new Objective(name, description, priority, status, projects, tasks, assignedTeams, assignedUsers);
+			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, creator, new Date(), creator, new Date(),
+					projects, tasks, assignedTeams, assignedUsers);
 			this.entityManager.persist(objective);
 			this.entityManager.flush();
 			return objective;
@@ -96,8 +98,8 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	}
 
 	@Override
-	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Set<Project> projects, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
+	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality,
+			AppUser modifier, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Objective (id: " + id + ", name: " + name + ", description: " + description + ", priority: " + priority + ", status: " + status
 					+ ", tasks: " + tasks + ")");
@@ -108,6 +110,10 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			objective.setDescription(description);
 			objective.setPriority(priority);
 			objective.setStatus(status);
+			objective.setDeadline(deadline);
+			objective.setConfidential(confidentiality);
+			objective.setModifier(modifier);
+			objective.setModificationDate(new Date());
 			objective.setProjects(projects != null ? projects : new HashSet<Project>());
 			objective.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			objective.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());

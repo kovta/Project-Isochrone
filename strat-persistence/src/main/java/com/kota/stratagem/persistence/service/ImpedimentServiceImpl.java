@@ -39,13 +39,14 @@ public class ImpedimentServiceImpl implements ImpedimentService {
 
 	@Override
 	public Impediment create(String name, String description, Priority priority, ImpedimentStatus status, Date reportDate, AppUser reporter, AppUser processor,
-			Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException {
+			AppUser creator, Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Impediment (name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status + ", reportDate="
 					+ reportDate + ", reporter=" + reporter + ")");
 		}
 		try {
-			final Impediment impediment = new Impediment(name, description, priority, status, reportDate, processor, processor, remedies, project, task);
+			final Impediment impediment = new Impediment(name, description, priority, status, reportDate, processor, processor, creator, new Date(), creator,
+					new Date(), remedies, project, task);
 			this.entityManager.persist(impediment);
 			this.entityManager.flush();
 			return impediment;
@@ -85,7 +86,7 @@ public class ImpedimentServiceImpl implements ImpedimentService {
 
 	@Override
 	public Impediment update(Long id, String name, String description, Priority priority, ImpedimentStatus status, Date reportDate, AppUser reporter,
-			AppUser processor, Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException {
+			AppUser processor, AppUser modifier, Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Impediment (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
 					+ ", reportDate=" + reportDate + ", reporter=" + reporter + ")");
@@ -99,6 +100,8 @@ public class ImpedimentServiceImpl implements ImpedimentService {
 			impediment.setReportDate(reportDate);
 			impediment.setReporter(reporter);
 			impediment.setProcessor(processor);
+			impediment.setModifier(modifier);
+			impediment.setModificationDate(new Date());
 			impediment.setRemedies(remedies);
 			impediment.setProject(project);
 			impediment.setTask(task);

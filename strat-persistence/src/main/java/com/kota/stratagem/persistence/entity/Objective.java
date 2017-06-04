@@ -1,6 +1,7 @@
 package com.kota.stratagem.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +20,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.parameter.ObjectiveParameter;
@@ -60,6 +64,29 @@ public class Objective implements Serializable {
 	@Column(name = "objective_status_id", nullable = false)
 	private ObjectiveStatus status;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "objective_deadline", nullable = true)
+	private Date deadline;
+
+	@Column(name = "objective_confidentiality", nullable = false)
+	private Boolean confidential;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "objective_creator", nullable = false)
+	private AppUser creator;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "objective_creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "objective_modifier", nullable = false)
+	private AppUser modifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "objective_modification_date", nullable = false)
+	private Date modificationDate;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Project.class)
 	@JoinTable(name = "objective_projects", joinColumns = @JoinColumn(name = "objective_project_objective", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_project_project", nullable = false))
 	private Set<Project> projects;
@@ -83,25 +110,41 @@ public class Objective implements Serializable {
 		this.assignedUsers = new HashSet<>();
 	}
 
-	public Objective(Long id, String name, String description, int priority, ObjectiveStatus status, Set<Project> projects, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers) {
+	public Objective(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, AppUser creator,
+			Date creationDate, AppUser modifier, Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams,
+			Set<AppUser> assignedUsers) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.status = status;
+		this.deadline = deadline;
+		this.confidential = confidential;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.projects = projects;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
 	}
 
-	public Objective(String name, String description, int priority, ObjectiveStatus status, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams,
+	public Objective(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, AppUser creator,
+			Date creationDate, AppUser modifier, Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams,
 			Set<AppUser> assignedUsers) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.status = status;
+		this.deadline = deadline;
+		this.confidential = confidential;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.projects = projects;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
@@ -148,6 +191,54 @@ public class Objective implements Serializable {
 		this.status = status;
 	}
 
+	public Date getDeadline() {
+		return this.deadline;
+	}
+
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
+	}
+
+	public Boolean getConfidential() {
+		return this.confidential;
+	}
+
+	public void setConfidential(Boolean confidential) {
+		this.confidential = confidential;
+	}
+
+	public AppUser getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public AppUser getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(AppUser modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+
 	public Set<Project> getProjects() {
 		return this.projects;
 	}
@@ -183,13 +274,9 @@ public class Objective implements Serializable {
 	@Override
 	public String toString() {
 		return "Objective [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", status="
-				+ this.status + "]";
+				+ this.status + ", deadline=" + this.deadline + ", confidential=" + this.confidential + ", creator=" + this.creator + ", creationDate="
+				+ this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", projects=" + this.projects + ", tasks="
+				+ this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + "]";
 	}
-
-	/*
-	 * @Override public String toString() { return "Objective [id=" + id + ", name=" + name + ", description=" +
-	 * description + ", priority=" + priority + ", status=" + status + ", projects=" + projects + ", tasks=" + tasks +
-	 * ", assignedTeams=" + assignedTeams + ", assignedUsers=" + assignedUsers + "]"; }
-	 */
 
 }

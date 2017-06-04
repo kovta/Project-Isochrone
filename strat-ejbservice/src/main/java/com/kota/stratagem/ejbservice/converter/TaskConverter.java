@@ -12,6 +12,8 @@ public interface TaskConverter {
 
 	TaskRepresentor to(Task task);
 
+	TaskRepresentor toElementary(Task task);
+
 	Set<TaskRepresentor> to(Set<Task> tasks);
 
 }

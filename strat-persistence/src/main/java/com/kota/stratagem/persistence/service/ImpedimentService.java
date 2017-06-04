@@ -18,14 +18,14 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 public interface ImpedimentService {
 
 	Impediment create(String name, String description, Priority priority, ImpedimentStatus status, Date reportDate, AppUser reporter, AppUser processor,
-			Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException;
+			AppUser creator, Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException;
 
 	Impediment read(Long id) throws PersistenceServiceException;
 
 	Set<Impediment> readAll() throws PersistenceServiceException;
 
 	Impediment update(Long id, String name, String description, Priority priority, ImpedimentStatus status, Date reportDate, AppUser reporter,
-			AppUser processor, Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException;
+			AppUser processor, AppUser modifier, Set<Remedy> remedies, Project project, Task task) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

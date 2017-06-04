@@ -95,8 +95,8 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
-	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, Set<ObjectiveRepresentor> objectives,
-			Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<ImpedimentRepresentor> reportedImpediments,
+	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, AppUserRepresentor operator,
+			Set<ObjectiveRepresentor> objectives, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<ImpedimentRepresentor> reportedImpediments,
 			Set<ImpedimentRepresentor> processedImpediments, Set<TeamRepresentor> supervisedTeams, Set<TeamRepresentor> teamMemberships)
 			throws AdaptorException {
 		try {
@@ -131,11 +131,11 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				for (final TeamRepresentor team : teamMemberships) {
 					memberships.add(this.teamService.read(team.getId()));
 				}
-				user = this.appUserSerive.update(id, name, password, email, userRole, userObjectives, userProjects, userTasks, impedimentsReported,
-						impedimentsProcessed, teamsSupervised, memberships);
+				user = this.appUserSerive.update(id, name, password, email, userRole, operator != null ? this.appUserSerive.read(operator.getId()) : null,
+						userObjectives, userProjects, userTasks, impedimentsReported, impedimentsProcessed, teamsSupervised, memberships);
 			} else {
-				user = this.appUserSerive.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole, null, null, null, null, null,
-						null, null);
+				user = this.appUserSerive.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
+						operator != null ? this.appUserSerive.read(operator.getId()) : null, null, null, null, null, null, null, null);
 			}
 			return this.converter.to(user);
 		} catch (final PersistenceServiceException e) {

@@ -1,5 +1,6 @@
 package com.kota.stratagem.ejbservice.protocol;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -20,9 +21,10 @@ public interface TaskProtocol {
 
 	List<TaskRepresentor> getAllTasks() throws AdaptorException;
 
-	TaskRepresentor saveTask(Long id, String name, String description, double completion, Set<TeamRepresentor> assignedTeams,
-			Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments, Set<TaskRepresentor> dependantTasks,
-			Set<TaskRepresentor> taskDependencies, ObjectiveRepresentor objective, ProjectRepresentor project) throws AdaptorException;
+	TaskRepresentor saveTask(Long id, String name, String description, double completion, Date deadline, AppUserRepresentor operator,
+			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
+			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, ObjectiveRepresentor objective, ProjectRepresentor project)
+			throws AdaptorException;
 
 	void removeTask(Long id) throws AdaptorException;
 

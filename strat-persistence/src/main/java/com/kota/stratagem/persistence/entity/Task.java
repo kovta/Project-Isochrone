@@ -1,6 +1,7 @@
 package com.kota.stratagem.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,8 +19,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -31,7 +35,7 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 @Table(name = "tasks")
 @NamedQueries(value = { //
 		@NamedQuery(name = TaskQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Task t WHERE t.id=:" + TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t ORDER BY t.name"),
+		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks LEFT JOIN FETCH t.taskDependencies ORDER BY t.name"),
 		@NamedQuery(name = TaskQuery.GET_BY_ID, query = "SELECT t FROM Task t WHERE t.id=:" + TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.REMOVE_BY_ID, query = "DELETE FROM Task t WHERE t.id=:" + TaskParameter.ID)
 		//
@@ -55,6 +59,26 @@ public class Task implements Serializable {
 	@Column(name = "task_completion_percentage", nullable = false)
 	private double completion;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "task_deadline", nullable = true)
+	private Date deadline;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "task_creator", nullable = false)
+	private AppUser creator;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "task_creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "task_modifier", nullable = false)
+	private AppUser modifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "task_modification_date", nullable = false)
+	private Date modificationDate;
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
 	@JoinTable(name = "team_task_assignments", joinColumns = @JoinColumn(name = "assignment_task", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
 	private Set<Team> assignedTeams;
@@ -75,12 +99,12 @@ public class Task implements Serializable {
 	@JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "dependency_dependent", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false))
 	private Set<Task> taskDependencies;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Objective.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Objective.class)
 	@JoinTable(name = "objective_tasks", joinColumns = @JoinColumn(name = "objective_task_task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_task_objective_id", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Objective objective;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Project.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Project.class)
 	@JoinTable(name = "project_tasks", joinColumns = @JoinColumn(name = "project_task_task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_task_project_id", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
@@ -93,12 +117,19 @@ public class Task implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, double completion, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
-			Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project) {
+	public Task(Long id, String name, String description, double completion, Date deadline, AppUser creator, Date creationDate, AppUser modifier,
+			Date modificationDate, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks,
+			Set<Task> taskDependencies, Objective objective, Project project) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.completion = completion;
+		this.deadline = deadline;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
 		this.impediments = impediments;
@@ -108,11 +139,18 @@ public class Task implements Serializable {
 		this.project = project;
 	}
 
-	public Task(String name, String description, double completion, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
-			Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project) {
+	public Task(String name, String description, double completion, Date deadline, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate,
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies,
+			Objective objective, Project project) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.completion = completion;
+		this.deadline = deadline;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
 		this.impediments = impediments;
@@ -152,6 +190,46 @@ public class Task implements Serializable {
 
 	public void setCompletion(double completion) {
 		this.completion = completion;
+	}
+
+	public Date getDeadline() {
+		return this.deadline;
+	}
+
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
+	}
+
+	public AppUser getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public AppUser getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(AppUser modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 
 	public Set<Team> getAssignedTeams() {
@@ -212,9 +290,11 @@ public class Task implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", completion=" + this.completion + ", assignedTeams="
-				+ this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
-				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + "]";
+		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", completion=" + this.completion + ", deadline="
+				+ this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate="
+				+ this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments="
+				+ this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective
+				+ ", project=" + this.project + "]";
 	}
 
 }

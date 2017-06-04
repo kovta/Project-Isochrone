@@ -22,9 +22,11 @@ public class RemedyConverterImpl implements RemedyConverter {
 	public RemedyRepresentor to(Remedy remedy) {
 		final RemedyRepresentor representor = remedy.getId() != null
 				? new RemedyRepresentor(remedy.getId(), remedy.getDescription(), this.impedimentConverter.to(remedy.getImpediment()),
-						remedy.getSubmissionDate(), this.appUserConverter.to(remedy.getProvider()))
+						remedy.getSubmissionDate(), this.appUserConverter.to(remedy.getProvider()), this.appUserConverter.toElementary(remedy.getCreator()),
+						remedy.getCreationDate(), this.appUserConverter.toElementary(remedy.getModifier()), remedy.getModificationDate())
 				: new RemedyRepresentor(remedy.getDescription(), this.impedimentConverter.to(remedy.getImpediment()), remedy.getSubmissionDate(),
-						this.appUserConverter.to(remedy.getProvider()));
+						this.appUserConverter.to(remedy.getProvider()), this.appUserConverter.toElementary(remedy.getCreator()), remedy.getCreationDate(),
+						this.appUserConverter.toElementary(remedy.getModifier()), remedy.getModificationDate());
 		return representor;
 	}
 

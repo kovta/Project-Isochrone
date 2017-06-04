@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -55,26 +56,51 @@ public class Remedy implements Serializable {
 	@Column(name = "remedy_provider", nullable = false)
 	private AppUser provider;
 
-	public Remedy() {
-		this(null, null, null, null, null);
-	}
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "remedy_creator", nullable = false)
+	private AppUser creator;
 
-	public Remedy(Long id, String description, Impediment impediment, Date submissionDate, AppUser provider) {
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "remedy_creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "remedy_modifier", nullable = false)
+	private AppUser modifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "remedy_modification_date", nullable = false)
+	private Date modificationDate;
+
+	public Remedy(Long id, String description, Impediment impediment, Date submissionDate, AppUser provider, AppUser creator, Date creationDate,
+			AppUser modifier, Date modificationDate) {
+		super();
+		this.id = id;
 		this.description = description;
 		this.impediment = impediment;
 		this.submissionDate = submissionDate;
 		this.provider = provider;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 	}
 
-	public Remedy(String description, Impediment impediment, Date submissionDate, AppUser provider) {
+	public Remedy(String description, Impediment impediment, Date submissionDate, AppUser provider, AppUser creator, Date creationDate, AppUser modifier,
+			Date modificationDate) {
+		super();
 		this.description = description;
 		this.impediment = impediment;
 		this.submissionDate = submissionDate;
 		this.provider = provider;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -82,7 +108,7 @@ public class Remedy implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -90,7 +116,7 @@ public class Remedy implements Serializable {
 	}
 
 	public Impediment getImpediment() {
-		return impediment;
+		return this.impediment;
 	}
 
 	public void setImpediment(Impediment impediment) {
@@ -98,7 +124,7 @@ public class Remedy implements Serializable {
 	}
 
 	public Date getSubmissionDate() {
-		return submissionDate;
+		return this.submissionDate;
 	}
 
 	public void setSubmissionDate(Date submissionDate) {
@@ -106,16 +132,50 @@ public class Remedy implements Serializable {
 	}
 
 	public AppUser getProvider() {
-		return provider;
+		return this.provider;
 	}
 
 	public void setProvider(AppUser provider) {
 		this.provider = provider;
 	}
 
+	public AppUser getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public AppUser getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(AppUser modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+
 	@Override
 	public String toString() {
-		return "Remedy [id=" + id + ", description=" + description + ", impediment=" + impediment + ", submissionDate=" + submissionDate + ", provider=" + provider + "]";
+		return "Remedy [id=" + this.id + ", description=" + this.description + ", impediment=" + this.impediment + ", submissionDate=" + this.submissionDate
+				+ ", provider=" + this.provider + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier
+				+ ", modificationDate=" + this.modificationDate + "]";
 	}
 
 }

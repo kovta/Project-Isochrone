@@ -21,8 +21,8 @@ public interface AppUserProtocol {
 
 	List<AppUserRepresentor> getAllAppUsers() throws AdaptorException;
 
-	AppUserRepresentor saveAppUser(Long id, String name, String passwordHash, String email, RoleRepresentor role, Set<ObjectiveRepresentor> objectives,
-			Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<ImpedimentRepresentor> reportedImpediments,
+	AppUserRepresentor saveAppUser(Long id, String name, String passwordHash, String email, RoleRepresentor role, AppUserRepresentor operator,
+			Set<ObjectiveRepresentor> objectives, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<ImpedimentRepresentor> reportedImpediments,
 			Set<ImpedimentRepresentor> processedImpediments, Set<TeamRepresentor> supervisedTeams, Set<TeamRepresentor> teamMemberships)
 			throws AdaptorException;
 

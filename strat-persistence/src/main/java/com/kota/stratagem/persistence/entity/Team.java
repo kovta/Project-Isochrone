@@ -1,6 +1,7 @@
 package com.kota.stratagem.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,8 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.kota.stratagem.persistence.parameter.TeamParameter;
 import com.kota.stratagem.persistence.query.TeamQuery;
@@ -49,6 +53,22 @@ public class Team implements Serializable {
 	@JoinColumn(name = "team_leader", nullable = false)
 	private AppUser leader;
 
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "team_creator", nullable = false)
+	private AppUser creator;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "team_creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "team_modifier", nullable = false)
+	private AppUser modifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "team_modification_date", nullable = false)
+	private Date modificationDate;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_member_team_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "team_member_user_id", nullable = false))
 	private Set<AppUser> members;
@@ -72,19 +92,31 @@ public class Team implements Serializable {
 		this.tasks = new HashSet<>();
 	}
 
-	public Team(Long id, String name, AppUser leader, Set<AppUser> members, Set<Objective> objectives, Set<Project> projects, Set<Task> tasks) {
+	public Team(Long id, String name, AppUser leader, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate, Set<AppUser> members,
+			Set<Objective> objectives, Set<Project> projects, Set<Task> tasks) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.leader = leader;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.members = members;
 		this.objectives = objectives;
 		this.projects = projects;
 		this.tasks = tasks;
 	}
 
-	public Team(String name, AppUser leader, Set<AppUser> members, Set<Objective> objectives, Set<Project> projects, Set<Task> tasks) {
+	public Team(String name, AppUser leader, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate, Set<AppUser> members,
+			Set<Objective> objectives, Set<Project> projects, Set<Task> tasks) {
+		super();
 		this.name = name;
 		this.leader = leader;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.members = members;
 		this.objectives = objectives;
 		this.projects = projects;
@@ -113,6 +145,38 @@ public class Team implements Serializable {
 
 	public void setLeader(AppUser leader) {
 		this.leader = leader;
+	}
+
+	public AppUser getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public AppUser getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(AppUser modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 
 	public Set<AppUser> getMembers() {
@@ -149,8 +213,9 @@ public class Team implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Team [id=" + this.id + ", name=" + this.name + ", leader=" + this.leader + ", members=" + this.members + ", objectives=" + this.objectives
-				+ ", projects=" + this.projects + ", tasks=" + this.tasks + "]";
+		return "Team [id=" + this.id + ", name=" + this.name + ", leader=" + this.leader + ", creator=" + this.creator + ", creationDate=" + this.creationDate
+				+ ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", members=" + this.members + ", objectives="
+				+ this.objectives + ", projects=" + this.projects + ", tasks=" + this.tasks + "]";
 	}
 
 }

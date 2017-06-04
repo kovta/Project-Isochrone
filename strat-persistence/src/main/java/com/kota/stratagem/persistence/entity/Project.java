@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -22,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -69,8 +69,24 @@ public class Project implements Serializable {
 	@Column(name = "project_deadline", nullable = true)
 	private Date deadline;
 
-	@Column(name = "project_visibility", nullable = false)
-	private Boolean visible;
+	@Column(name = "project_confidentiality", nullable = false)
+	private Boolean confidential;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "project_creator", nullable = false)
+	private AppUser creator;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "project_creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "project_modifier", nullable = false)
+	private AppUser modifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "project_modification_date", nullable = false)
+	private Date modificationDate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Task.class)
 	@JoinTable(name = "project_tasks", joinColumns = @JoinColumn(name = "project_task_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_task_task_id", nullable = false))
@@ -100,14 +116,20 @@ public class Project implements Serializable {
 		this.impediments = new HashSet<>();
 	}
 
-	public Project(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean visible, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
+	public Project(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidential, AppUser creator, Date creationDate,
+			AppUser modifier, Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
+			Objective objective) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.deadline = deadline;
-		this.visible = visible;
+		this.confidential = confidential;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
@@ -115,13 +137,19 @@ public class Project implements Serializable {
 		this.objective = objective;
 	}
 
-	public Project(String name, String description, ProjectStatus status, Date deadline, Boolean visible, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
+	public Project(String name, String description, ProjectStatus status, Date deadline, Boolean confidential, AppUser creator, Date creationDate,
+			AppUser modifier, Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
+			Objective objective) {
+		super();
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.deadline = deadline;
-		this.visible = visible;
+		this.confidential = confidential;
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.modifier = modifier;
+		this.modificationDate = modificationDate;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
@@ -169,12 +197,44 @@ public class Project implements Serializable {
 		this.deadline = deadline;
 	}
 
-	public Boolean getVisible() {
-		return this.visible;
+	public Boolean getConfidential() {
+		return this.confidential;
 	}
 
-	public void setVisible(Boolean visible) {
-		this.visible = visible;
+	public void setConfidential(Boolean confidential) {
+		this.confidential = confidential;
+	}
+
+	public AppUser getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public AppUser getModifier() {
+		return this.modifier;
+	}
+
+	public void setModifier(AppUser modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 
 	public Set<Task> getTasks() {
@@ -210,11 +270,7 @@ public class Project implements Serializable {
 	}
 
 	public Objective getObjective() {
-		try {
-			return this.objective;
-		} catch (final EntityNotFoundException e) {
-			return null;
-		}
+		return this.objective;
 	}
 
 	public void setObjective(Objective objective) {
@@ -224,8 +280,9 @@ public class Project implements Serializable {
 	@Override
 	public String toString() {
 		return "Project [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
-				+ this.deadline + ", visible=" + this.visible + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
-				+ this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]";
+				+ this.deadline + ", confidential=" + this.confidential + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
+				+ this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
+				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]";
 	}
 
 }

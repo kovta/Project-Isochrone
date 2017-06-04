@@ -30,18 +30,15 @@ public class AppUserConverterImpl implements AppUserConverter {
 
 	@Override
 	public AppUserRepresentor to(AppUser user) {
-		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
-		final AppUserRepresentor representor = user.getId() != null
-				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role)
-				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role);
+		final AppUserRepresentor representor = this.toElementary(user);
 		// if (user.getObjectives() != null) {
 		// for (final Objective objective : user.getObjectives()) {
-		// representor.addObjective(this.objectiveConverter.to(objective));
+		// representor.addObjective(this.objectiveConverter.toElementary(objective));
 		// }
 		// }
 		// if (user.getProjects() != null) {
 		// for (final Project project : user.getProjects()) {
-		// representor.addProject(this.projectConverter.to(project));
+		// representor.addProject(this.projectConverter.toElementary(project));
 		// }
 		// }
 		// if (user.getTasks() != null) {
@@ -69,6 +66,20 @@ public class AppUserConverterImpl implements AppUserConverter {
 		// representor.addSupervisedTeam(this.teamConverter.to(team));
 		// }
 		// }
+		if (user.getAccountModifier() != null) {
+			representor.setAccountModifier(this.toElementary(user.getAccountModifier()));
+		}
+		return representor;
+	}
+
+	@Override
+	public AppUserRepresentor toElementary(AppUser user) {
+		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
+		final AppUserRepresentor representor = user.getId() != null
+				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
+						user.getAcountModificationDate())
+				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
+						user.getAcountModificationDate());
 		return representor;
 	}
 

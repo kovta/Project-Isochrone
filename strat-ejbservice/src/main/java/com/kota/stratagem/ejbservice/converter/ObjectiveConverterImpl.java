@@ -57,8 +57,12 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 	public ObjectiveRepresentor toElementary(Objective objective) {
 		final ObjectiveStatusRepresentor status = ObjectiveStatusRepresentor.valueOf(objective.getStatus().toString());
 		final ObjectiveRepresentor representor = objective.getId() != null
-				? new ObjectiveRepresentor(objective.getId(), objective.getName(), objective.getDescription(), objective.getPriority(), status)
-				: new ObjectiveRepresentor(objective.getName(), objective.getDescription(), objective.getPriority(), status);
+				? new ObjectiveRepresentor(objective.getId(), objective.getName(), objective.getDescription(), objective.getPriority(), status,
+						objective.getDeadline(), objective.getConfidential(), this.appUserConverter.toElementary(objective.getCreator()),
+						objective.getCreationDate(), this.appUserConverter.toElementary(objective.getModifier()), objective.getModificationDate())
+				: new ObjectiveRepresentor(objective.getName(), objective.getDescription(), objective.getPriority(), status, objective.getDeadline(),
+						objective.getConfidential(), this.appUserConverter.toElementary(objective.getCreator()), objective.getCreationDate(),
+						this.appUserConverter.toElementary(objective.getModifier()), objective.getModificationDate());
 		return representor;
 	}
 

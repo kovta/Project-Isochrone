@@ -1,6 +1,7 @@
 package com.kota.stratagem.persistence.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +20,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.parameter.AppUserParameter;
@@ -58,6 +62,18 @@ public class AppUser implements Serializable {
 	@Column(name = "user_role", nullable = false)
 	private Role role;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "user_registration_date", nullable = false)
+	private Date registrationDate;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "user_account_modifier", nullable = true)
+	private AppUser accountModifier;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "user_account_modification_date", nullable = false)
+	private Date acountModificationDate;
+
 	@OneToMany(fetch = FetchType.LAZY, targetEntity = Objective.class)
 	@JoinTable(name = "user_objective_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_objective", nullable = false))
 	private Set<Objective> objectives;
@@ -93,13 +109,18 @@ public class AppUser implements Serializable {
 		this.teamMemberships = new HashSet<>();
 	}
 
-	public AppUser(Long id, String name, String passwordHash, String email, Role role, Set<Objective> objectives, Set<Project> projects, Set<Task> tasks,
-			Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
+			Date acountModificationDate, Set<Objective> objectives, Set<Project> projects, Set<Task> tasks, Set<Impediment> reportedImpediments,
+			Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.passwordHash = passwordHash;
 		this.email = email;
 		this.role = role;
+		this.registrationDate = registrationDate;
+		this.accountModifier = accountModifier;
+		this.acountModificationDate = acountModificationDate;
 		this.objectives = objectives;
 		this.projects = projects;
 		this.tasks = tasks;
@@ -109,12 +130,17 @@ public class AppUser implements Serializable {
 		this.teamMemberships = teamMemberships;
 	}
 
-	public AppUser(String name, String passwordHash, String email, Role role, Set<Objective> objectives, Set<Project> projects, Set<Task> tasks,
-			Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate,
+			Set<Objective> objectives, Set<Project> projects, Set<Task> tasks, Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments,
+			Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
 		this.email = email;
 		this.role = role;
+		this.registrationDate = registrationDate;
+		this.accountModifier = accountModifier;
+		this.acountModificationDate = acountModificationDate;
 		this.objectives = objectives;
 		this.projects = projects;
 		this.tasks = tasks;
@@ -162,6 +188,30 @@ public class AppUser implements Serializable {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public Date getRegistrationDate() {
+		return this.registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
+	public AppUser getAccountModifier() {
+		return this.accountModifier;
+	}
+
+	public void setAccountModifier(AppUser accountModifier) {
+		this.accountModifier = accountModifier;
+	}
+
+	public Date getAcountModificationDate() {
+		return this.acountModificationDate;
+	}
+
+	public void setAcountModificationDate(Date acountModificationDate) {
+		this.acountModificationDate = acountModificationDate;
 	}
 
 	public Set<Objective> getObjectives() {
@@ -222,7 +272,11 @@ public class AppUser implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role + "]";
+		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role
+				+ ", registrationDate=" + this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate="
+				+ this.acountModificationDate + ", objectives=" + this.objectives + ", projects=" + this.projects + ", tasks=" + this.tasks
+				+ ", reportedImpediments=" + this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams="
+				+ this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + "]";
 	}
 
 }

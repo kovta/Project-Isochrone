@@ -1,6 +1,7 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,9 +88,10 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
-	public TaskRepresentor saveTask(Long id, String name, String description, double completion, Set<TeamRepresentor> assignedTeams,
-			Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments, Set<TaskRepresentor> dependantTasks,
-			Set<TaskRepresentor> taskDependencies, ObjectiveRepresentor objective, ProjectRepresentor project) throws AdaptorException {
+	public TaskRepresentor saveTask(Long id, String name, String description, double completion, Date deadline, AppUserRepresentor operator,
+			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
+			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, ObjectiveRepresentor objective, ProjectRepresentor project)
+			throws AdaptorException {
 		try {
 			Task task = null;
 			if (this.taskService.exists(id)) {
@@ -113,11 +115,12 @@ public class TaskProtocolImpl implements TaskProtocol {
 				for (final TaskRepresentor taskRepresentor : taskDependencies) {
 					dependants.add(this.taskService.read(taskRepresentor.getId()));
 				}
-				task = this.taskService.update(id, name, description, completion, teams, users, taskImpediments, dependants, dependencies,
-						this.objectiveService.readElementary(objective.getId()), this.projectSerivce.readElementary(project.getId()));
+				task = this.taskService.update(id, name, description, completion, deadline, this.appUserService.read(operator.getId()), teams, users,
+						taskImpediments, dependants, dependencies, this.objectiveService.readElementary(objective.getId()),
+						this.projectSerivce.readElementary(project.getId()));
 			} else {
-				task = this.taskService.create(name, description, completion, null, null, null, null, null,
-						this.objectiveService.readElementary(objective.getId()), this.projectSerivce.readElementary(project.getId()));
+				task = this.taskService.create(name, description, completion, deadline, this.appUserService.read(operator.getId()), null, null, null, null,
+						null, this.objectiveService.readElementary(objective.getId()), this.projectSerivce.readElementary(project.getId()));
 			}
 			return this.converter.to(task);
 		} catch (final PersistenceServiceException e) {

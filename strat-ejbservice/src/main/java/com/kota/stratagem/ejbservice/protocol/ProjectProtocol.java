@@ -23,9 +23,9 @@ public interface ProjectProtocol {
 
 	List<ProjectRepresentor> getAllProjects(ProjectCriteria criteria) throws AdaptorException;
 
-	ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean visible,
-			Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
-			ObjectiveRepresentor objective) throws AdaptorException;
+	ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
+			AppUserRepresentor operator, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers,
+			Set<ImpedimentRepresentor> impediments, ObjectiveRepresentor objective) throws AdaptorException;
 
 	void removeProject(Long id) throws AdaptorException;
 
