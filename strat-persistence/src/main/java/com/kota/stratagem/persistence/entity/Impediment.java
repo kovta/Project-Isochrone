@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -76,7 +75,7 @@ public class Impediment implements Serializable {
 	@JoinColumn(name = "impediment_processor", nullable = true)
 	private AppUser processor;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "impediment_creator", nullable = false)
 	private AppUser creator;
 
@@ -84,7 +83,7 @@ public class Impediment implements Serializable {
 	@Column(name = "impediment_creation_date", nullable = false)
 	private Date creationDate;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "impediment_modifier", nullable = false)
 	private AppUser modifier;
 

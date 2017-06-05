@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -36,16 +37,19 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	@PersistenceContext(unitName = "strat-persistence-unit")
 	private EntityManager entityManager;
 
+	@EJB
+	private AppUserService appUserService;
+
 	@Override
 	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator,
 			Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Create Objective (name: " + name + ", description: " + description + ", priority: " + priority + ", status: " + status + ", tasks: "
-					+ tasks + ")");
+			LOGGER.debug("Create Objective (name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status + ", deadline="
+					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ", projects=" + projects + ", tasks=" + tasks + ")");
 		}
 		try {
-			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, creator, new Date(), creator, new Date(),
-					projects, tasks, assignedTeams, assignedUsers);
+			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, this.appUserService.read(creator.getId()),
+					new Date(), this.appUserService.read(creator.getId()), new Date(), projects, tasks, assignedTeams, assignedUsers);
 			this.entityManager.persist(objective);
 			this.entityManager.flush();
 			return objective;
@@ -101,8 +105,9 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality,
 			AppUser modifier, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Update Objective (id: " + id + ", name: " + name + ", description: " + description + ", priority: " + priority + ", status: " + status
-					+ ", tasks: " + tasks + ")");
+			LOGGER.debug("Update Objective (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
+					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ", modifier=" + modifier.getName() + ", projects=" + projects
+					+ ", tasks=" + tasks + ")");
 		}
 		try {
 			final Objective objective = this.readElementary(id);
@@ -112,7 +117,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			objective.setStatus(status);
 			objective.setDeadline(deadline);
 			objective.setConfidential(confidentiality);
-			objective.setModifier(modifier);
+			objective.setModifier(this.appUserService.read(modifier.getId()));
 			objective.setModificationDate(new Date());
 			objective.setProjects(projects != null ? projects : new HashSet<Project>());
 			objective.setTasks(tasks != null ? tasks : new HashSet<Task>());

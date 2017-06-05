@@ -17,4 +17,10 @@
 
 <script>
    	new WOW().init();
+   	
+   	Template.editPrediction.onRendered(()=>{
+   	   Materialize.updateTextFields()
+   	})
+   	
+   	$('.datepicker').pickadate();
 </script>

@@ -98,8 +98,10 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Objective (id: " + id + ")");
 				}
-				final Set<Project> objectiveProjects = new HashSet<Project>();
-				final Set<Task> objectiveTasks = new HashSet<Task>();
+				// Original sets should not be deleted on null parameters
+				final Objective target = this.objectiveService.readWithProjectsAndTasks(id);
+				final Set<Project> objectiveProjects = target.getProjects();
+				final Set<Task> objectiveTasks = target.getTasks();
 				final Set<Team> teams = new HashSet<Team>();
 				final Set<AppUser> users = new HashSet<AppUser>();
 				if (projects != null) {

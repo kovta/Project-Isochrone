@@ -71,6 +71,21 @@ public class AppUserServiceImpl implements AppUserService {
 	}
 
 	@Override
+	public AppUser read(String username) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get AppUser by username (" + username + ")");
+		}
+		AppUser result = null;
+		try {
+			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
 	public Set<AppUser> readAll() throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Fetching all AppUsers");

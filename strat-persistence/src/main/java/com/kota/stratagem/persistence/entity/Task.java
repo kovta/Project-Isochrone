@@ -19,7 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -63,7 +62,7 @@ public class Task implements Serializable {
 	@Column(name = "task_deadline", nullable = true)
 	private Date deadline;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "task_creator", nullable = false)
 	private AppUser creator;
 
@@ -71,7 +70,7 @@ public class Task implements Serializable {
 	@Column(name = "task_creation_date", nullable = false)
 	private Date creationDate;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "task_modifier", nullable = false)
 	private AppUser modifier;
 

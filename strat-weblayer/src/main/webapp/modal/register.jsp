@@ -25,7 +25,7 @@
             	
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-envelope prefix"></i>
-	                    <input type="text" id="form32" class="form-control" name="email" placeholder="Email address" value="${user.email}">
+	                    <input type="email" id="form32" class="form-control validate" name="email" placeholder="Email address" value="${user.email}">
 	                </div>
 	
 	                <div class="md-form form-sm">

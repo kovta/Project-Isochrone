@@ -18,7 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -53,7 +52,7 @@ public class Team implements Serializable {
 	@JoinColumn(name = "team_leader", nullable = false)
 	private AppUser leader;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "team_creator", nullable = false)
 	private AppUser creator;
 
@@ -61,7 +60,7 @@ public class Team implements Serializable {
 	@Column(name = "team_creation_date", nullable = false)
 	private Date creationDate;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "team_modifier", nullable = false)
 	private AppUser modifier;
 

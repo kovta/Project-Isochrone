@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor;
@@ -34,6 +35,9 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 
 	@EJB
 	private ObjectiveProtocol protocol;
+
+	@EJB
+	private AppUserProtocol userProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -85,17 +89,21 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
 				// new attributes must be requested
-				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, new Date(), false, null, null, null, null);
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, new Date(), false,
+						this.userProtocol.getAppUser(request.getUserPrincipal().getName()), null, null, null);
 				this.forward(request, response, objective, false, false, true);
 			} else {
 				ObjectiveRepresentor objective = null;
 				try {
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
-					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
 					// new attributes must be requested
-					objective = this.protocol.saveObjective(id, name, description, priority, status, new Date(), false, null, null, null, null, null);
+					// operator must be resolved
+					objective = this.protocol.saveObjective(id, name, description, priority, status, new Date(), false,
+							this.userProtocol.getAppUser(request.getUserPrincipal().getName()), null, null, null, null);
+					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
+					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
 				this.forward(request, response, objective, false, false, true);
 			}

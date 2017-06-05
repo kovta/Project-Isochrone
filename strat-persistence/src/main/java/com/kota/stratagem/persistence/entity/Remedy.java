@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -56,7 +55,7 @@ public class Remedy implements Serializable {
 	@Column(name = "remedy_provider", nullable = false)
 	private AppUser provider;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "remedy_creator", nullable = false)
 	private AppUser creator;
 
@@ -64,7 +63,7 @@ public class Remedy implements Serializable {
 	@Column(name = "remedy_creation_date", nullable = false)
 	private Date creationDate;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "remedy_modifier", nullable = false)
 	private AppUser modifier;
 

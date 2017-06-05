@@ -81,6 +81,20 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
+	public AppUserRepresentor getAppUser(String username) throws AdaptorException {
+		try {
+			final AppUserRepresentor representor = this.converter.to(this.appUserSerive.read(username));
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Get AppUser (username: " + username + ") --> " + representor);
+			}
+			return representor;
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+	}
+
+	@Override
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
 		Set<AppUserRepresentor> representors = new HashSet<AppUserRepresentor>();
 		try {

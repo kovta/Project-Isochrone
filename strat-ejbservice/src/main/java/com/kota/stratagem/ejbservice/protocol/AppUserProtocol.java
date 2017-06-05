@@ -19,6 +19,8 @@ public interface AppUserProtocol {
 
 	AppUserRepresentor getAppUser(Long id) throws AdaptorException;
 
+	AppUserRepresentor getAppUser(String username) throws AdaptorException;
+
 	List<AppUserRepresentor> getAllAppUsers() throws AdaptorException;
 
 	AppUserRepresentor saveAppUser(Long id, String name, String passwordHash, String email, RoleRepresentor role, AppUserRepresentor operator,
