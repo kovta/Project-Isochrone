@@ -52,11 +52,12 @@ public class Remedy implements Serializable {
 	@Column(name = "remedy_submission_date", nullable = false)
 	private Date submissionDate;
 
-	@Column(name = "remedy_provider", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "remedy_provider", referencedColumnName = "user_id", nullable = false)
 	private AppUser provider;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "remedy_creator", nullable = false)
+	@JoinColumn(name = "remedy_creator", referencedColumnName = "user_id", nullable = false)
 	private AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -64,7 +65,7 @@ public class Remedy implements Serializable {
 	private Date creationDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "remedy_modifier", nullable = false)
+	@JoinColumn(name = "remedy_modifier", referencedColumnName = "user_id", nullable = false)
 	private AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)

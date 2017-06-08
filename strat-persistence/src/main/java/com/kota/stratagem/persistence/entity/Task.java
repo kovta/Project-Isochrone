@@ -63,7 +63,7 @@ public class Task implements Serializable {
 	private Date deadline;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "task_creator", nullable = false)
+	@JoinColumn(name = "task_creator", referencedColumnName = "user_id", nullable = false)
 	private AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -71,7 +71,7 @@ public class Task implements Serializable {
 	private Date creationDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "task_modifier", nullable = false)
+	@JoinColumn(name = "task_modifier", referencedColumnName = "user_id", nullable = false)
 	private AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)

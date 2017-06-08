@@ -71,8 +71,8 @@ public class Objective implements Serializable {
 	@Column(name = "objective_confidentiality", nullable = false)
 	private Boolean confidential;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "objective_creator", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = AppUser.class)
+	@JoinColumn(name = "objective_creator", referencedColumnName = "user_id", nullable = false)
 	private AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -80,7 +80,7 @@ public class Objective implements Serializable {
 	private Date creationDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "objective_modifier", nullable = false)
+	@JoinColumn(name = "objective_modifier", referencedColumnName = "user_id", nullable = false)
 	private AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -110,9 +110,8 @@ public class Objective implements Serializable {
 		this.assignedUsers = new HashSet<>();
 	}
 
-	public Objective(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, AppUser creator,
-			Date creationDate, AppUser modifier, Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers) {
+	public Objective(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, Date creationDate,
+			Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -121,9 +120,7 @@ public class Objective implements Serializable {
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
 		this.projects = projects;
 		this.tasks = tasks;
@@ -131,9 +128,8 @@ public class Objective implements Serializable {
 		this.assignedUsers = assignedUsers;
 	}
 
-	public Objective(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, AppUser creator,
-			Date creationDate, AppUser modifier, Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers) {
+	public Objective(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, Date creationDate,
+			Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -141,9 +137,7 @@ public class Objective implements Serializable {
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
 		this.projects = projects;
 		this.tasks = tasks;

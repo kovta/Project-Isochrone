@@ -72,7 +72,7 @@ public class Project implements Serializable {
 	private Boolean confidential;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "project_creator", nullable = false)
+	@JoinColumn(name = "project_creator", referencedColumnName = "user_id", nullable = false)
 	private AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -80,7 +80,7 @@ public class Project implements Serializable {
 	private Date creationDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "project_modifier", nullable = false)
+	@JoinColumn(name = "project_modifier", referencedColumnName = "user_id", nullable = false)
 	private AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -68,15 +68,15 @@ public class Impediment implements Serializable {
 	private Date reportDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "impediment_reporter", nullable = false)
+	@JoinColumn(name = "impediment_reporter", referencedColumnName = "user_id", nullable = false)
 	private AppUser reporter;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "impediment_processor", nullable = true)
+	@JoinColumn(name = "impediment_processor", referencedColumnName = "user_id", nullable = true)
 	private AppUser processor;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "impediment_creator", nullable = false)
+	@JoinColumn(name = "impediment_creator", referencedColumnName = "user_id", nullable = false)
 	private AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -84,7 +84,7 @@ public class Impediment implements Serializable {
 	private Date creationDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "impediment_modifier", nullable = false)
+	@JoinColumn(name = "impediment_modifier", referencedColumnName = "user_id", nullable = false)
 	private AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -95,7 +95,7 @@ public class Impediment implements Serializable {
 	private Set<Remedy> remedies;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Project.class)
-	@JoinTable(name = "project_impediments", joinColumns = @JoinColumn(name = "task_impediment_impediment_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_impediment_project_id", nullable = false))
+	@JoinTable(name = "project_impediments", joinColumns = @JoinColumn(name = "project_impediment_impediment_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_impediment_project_id", nullable = false))
 	private Project project;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Task.class)

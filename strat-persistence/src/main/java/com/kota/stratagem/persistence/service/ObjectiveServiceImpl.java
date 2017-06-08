@@ -48,8 +48,12 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ", projects=" + projects + ", tasks=" + tasks + ")");
 		}
 		try {
-			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, this.appUserService.read(creator.getId()),
-					new Date(), this.appUserService.read(creator.getId()), new Date(), projects, tasks, assignedTeams, assignedUsers);
+			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, new Date(), new Date(), projects, tasks,
+					assignedTeams, assignedUsers);
+			creator.addCreatedObjective(objective);
+			this.entityManager.merge(creator);
+			objective.setCreator(creator);
+			objective.setModifier(creator);
 			this.entityManager.persist(objective);
 			this.entityManager.flush();
 			return objective;

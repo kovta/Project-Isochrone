@@ -48,12 +48,12 @@ public class Team implements Serializable {
 	@Column(name = "team_name", nullable = false)
 	private String name;
 
-	@ManyToOne
-	@JoinColumn(name = "team_leader", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@JoinColumn(name = "team_leader", referencedColumnName = "user_id", nullable = false)
 	private AppUser leader;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "team_creator", nullable = false)
+	@JoinColumn(name = "team_creator", referencedColumnName = "user_id", nullable = false)
 	private AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -61,7 +61,7 @@ public class Team implements Serializable {
 	private Date creationDate;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "team_modifier", nullable = false)
+	@JoinColumn(name = "team_modifier", referencedColumnName = "user_id", nullable = false)
 	private AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)
