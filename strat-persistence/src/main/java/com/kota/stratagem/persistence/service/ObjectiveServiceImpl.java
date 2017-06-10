@@ -48,13 +48,12 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ", projects=" + projects + ", tasks=" + tasks + ")");
 		}
 		try {
+			final AppUser operator = this.appUserService.read(creator.getId());
 			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, new Date(), new Date(), projects, tasks,
 					assignedTeams, assignedUsers);
-			creator.addCreatedObjective(objective);
-			this.entityManager.merge(creator);
-			objective.setCreator(creator);
-			objective.setModifier(creator);
-			this.entityManager.persist(objective);
+			objective.setCreator(operator);
+			objective.setModifier(operator);
+			this.entityManager.merge(objective);
 			this.entityManager.flush();
 			return objective;
 		} catch (final Exception e) {
@@ -115,13 +114,21 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 		}
 		try {
 			final Objective objective = this.readElementary(id);
+			final AppUser operator = this.appUserService.read(modifier.getId());
 			objective.setName(name);
 			objective.setDescription(description);
 			objective.setPriority(priority);
 			objective.setStatus(status);
 			objective.setDeadline(deadline);
 			objective.setConfidential(confidentiality);
-			objective.setModifier(this.appUserService.read(modifier.getId()));
+			// For bypassing Hibernate's Multiple representation error
+			if (!(objective.getModifier().equals(operator))) {
+				if (!(objective.getCreator().equals(objective.getModifier()))) {
+					objective.setModifier(operator);
+				} else if (objective.getCreator().equals(operator)) {
+					objective.setModifier(objective.getCreator());
+				}
+			}
 			objective.setModificationDate(new Date());
 			objective.setProjects(projects != null ? projects : new HashSet<Project>());
 			objective.setTasks(tasks != null ? tasks : new HashSet<Task>());

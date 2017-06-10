@@ -35,9 +35,9 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = AppUserQuery.COUNT_BY_ID, query = "SELECT COUNT(u) FROM AppUser u WHERE u.id=:" + AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_ALL_USERS, query = "SELECT u FROM AppUser u ORDER BY u.name"),
-		@NamedQuery(name = AppUserQuery.GET_BY_ID, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.createdObjectives LEFT JOIN FETCH u.objectives WHERE u.id=:"
+		@NamedQuery(name = AppUserQuery.GET_BY_ID, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives LEFT JOIN FETCH u.projects LEFT JOIN FETCH u.tasks WHERE u.id=:"
 				+ AppUserParameter.ID),
-		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.createdObjectives LEFT JOIN FETCH u.objectives WHERE u.name=:"
+		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives LEFT JOIN FETCH u.projects LEFT JOIN FETCH u.tasks WHERE u.name=:"
 				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.REMOVE_BY_ID, query = "DELETE FROM AppUser u WHERE u.id=:" + AppUserParameter.ID)
 		//
@@ -102,9 +102,6 @@ public class AppUser implements Serializable {
 	@JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_member_user_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "team_member_team_id", nullable = false))
 	private Set<Team> teamMemberships;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = Objective.class, mappedBy = "creator")
-	private Set<Objective> createdObjectives;
-
 	public AppUser() {
 		this.objectives = new HashSet<>();
 		this.projects = new HashSet<>();
@@ -113,7 +110,6 @@ public class AppUser implements Serializable {
 		this.processedImpediments = new HashSet<>();
 		this.supervisedTeams = new HashSet<>();
 		this.teamMemberships = new HashSet<>();
-		this.createdObjectives = new HashSet<>();
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
@@ -277,24 +273,20 @@ public class AppUser implements Serializable {
 		this.teamMemberships = teamMemberships;
 	}
 
-	public Set<Objective> getCreatedObjectives() {
-		return this.createdObjectives;
-	}
-
-	public void setCreatedObjectives(Set<Objective> createdObjectives) {
-		this.createdObjectives = createdObjectives;
-	}
-
 	@Override
 	public String toString() {
 		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role
 				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + ", objectives=" + this.objectives
-				+ ", projects=" + this.projects + ", tasks=" + this.tasks + ", reportedImpediments=" + this.reportedImpediments + ", processedImpediments="
-				+ this.processedImpediments + ", supervisedTeams=" + this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + "]";
+				+ ", projects=" + this.projects + ", tasks=" + this.tasks + "]";
 	}
 
-	public void addCreatedObjective(Objective objective) {
-		this.createdObjectives.add(objective);
-	}
+	/*
+	 * @Override public String toString() { return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash="
+	 * + this.passwordHash + ", email=" + this.email + ", role=" + this.role + ", registrationDate=" +
+	 * this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + ", objectives=" +
+	 * this.objectives + ", projects=" + this.projects + ", tasks=" + this.tasks + ", reportedImpediments=" +
+	 * this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams=" +
+	 * this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + "]"; }
+	 */
 
 }

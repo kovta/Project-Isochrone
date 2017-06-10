@@ -33,7 +33,7 @@
 			</div>
 			<div>
 				<label for="Visibility">Visible: </label>
-				<input type="checkbox" name="visibility" id="visibility" value="<% out.print(project.getVisible()); %>" />
+				<input type="checkbox" name="visibility" id="visibility" value="<% out.print(project.getConfidential()); %>" />
 			</div>
 			<br/><br/>
 			<div>
