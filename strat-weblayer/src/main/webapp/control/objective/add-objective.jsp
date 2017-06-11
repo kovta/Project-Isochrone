@@ -61,6 +61,11 @@
 		                </div>
 	                </div>
             	
+            		<div class="md-form form-sm" id="sandbox-container">
+	                    <i class="fa fa-calendar-check-o prefix"></i>
+						<input placeholder="Deadline" type='text' class="form-control" name="deadline"/>
+	                </div>
+            	
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 

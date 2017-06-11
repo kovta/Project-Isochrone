@@ -1,7 +1,10 @@
 package com.kota.stratagem.weblayer.servlet.objective;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -14,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
-import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor;
@@ -35,9 +37,6 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 
 	@EJB
 	private ObjectiveProtocol protocol;
-
-	@EJB
-	private AppUserProtocol userProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,14 +82,23 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 			}
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
-			final int priority = Integer.parseInt(request.getParameter(PRIORITY));
+			int priorityTemp = 0;
+			if (request.getParameter(PRIORITY) != "") {
+				priorityTemp = Integer.parseInt(request.getParameter(PRIORITY));
+			}
+			final int priority = priorityTemp;
 			final ObjectiveStatusRepresentor status = ObjectiveStatusRepresentor.valueOf(request.getParameter(STATUS));
+			Date deadlineTemp = null;
+			final DateFormat format = new SimpleDateFormat("MM/dd/YYYY", Locale.ENGLISH);
+			if (request.getParameter(DEADLINE) != "") {
+				deadlineTemp = format.parse(request.getParameter(DEADLINE));
+			}
+			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
 				// new attributes must be requested
-				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, new Date(), false,
-						this.userProtocol.getAppUser(request.getUserPrincipal().getName()), null, null, null);
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, false, null, null, null, null);
 				this.forward(request, response, objective, false, false, true);
 			} else {
 				ObjectiveRepresentor objective = null;
@@ -98,8 +106,8 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
 					// new attributes must be requested
 					// operator must be resolved
-					objective = this.protocol.saveObjective(id, name, description, priority, status, new Date(), false,
-							this.userProtocol.getAppUser(request.getUserPrincipal().getName()), null, null, null, null);
+					objective = this.protocol.saveObjective(id, name, description, priority, status, deadline, false, request.getUserPrincipal().getName(),
+							null, null, null, null);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

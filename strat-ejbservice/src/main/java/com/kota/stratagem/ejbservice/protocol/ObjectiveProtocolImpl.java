@@ -89,8 +89,8 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@Override
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
-			Boolean confidentiality, AppUserRepresentor operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks,
-			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers) throws AdaptorException {
+			Boolean confidentiality, String operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams,
+			Set<AppUserRepresentor> assignedUsers) throws AdaptorException {
 		try {
 			Objective objective = null;
 			final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
@@ -125,13 +125,13 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 					}
 				}
 				objective = this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator.getId()), objectiveProjects, objectiveTasks, teams, users);
+						this.appUserService.read(operator), objectiveProjects, objectiveTasks, teams, users);
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Objective");
 				}
 				objective = this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator.getId()), null, null, null, null);
+						this.appUserService.read(operator), null, null, null, null);
 			}
 			return this.converter.to(objective);
 		} catch (final PersistenceServiceException e) {

@@ -7,6 +7,8 @@ public interface ObjectiveParameter {
 	public static final String DESCRIPTION = "description";
 	public static final String PRIORITY = "priority";
 	public static final String STATUS = "status";
+	public static final String DEADLINE = "deadline";
+	public static final String CONFIDENTIALITY = "confidentiality";
 
 	public static final String EDIT_FLAG = "edit";
 

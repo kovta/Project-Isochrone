@@ -74,6 +74,19 @@
 		                        <!--First column-->
 		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
+				               			<label>The deadline of the Objective</label><br/>
+	                  				</div>
+		                            <div class="md-form" id="sandbox-container">
+										<input placeholder="Deadline" type='text' class="form-control" value="${objective.deadline}"/>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <!--/.Third row-->
+   		                    <!--Fourth row-->
+		                    <div class="row">
+		                        <!--First column-->
+		                        <div class="col-md-12">
+		                        	<div class="md-form form-sm">
 				               			<label>The description of the Objective</label><br/>
 	                  				</div>
 		                            <div class="md-form">
@@ -81,8 +94,8 @@
 		                            </div>
 		                        </div>
 		                    </div>
-		                    <!--/.Third row-->
-		                    <!-- Fourth row -->
+		                    <!--/.Fourth row-->
+		                    <!-- Fifth row -->
 		                    <div class="row">
 		                        <div class="col-md-12 text-center">
 									<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto">
@@ -90,7 +103,7 @@
 		            				</button>
 		                        </div>
 		                    </div>
-		                    <!-- /.Fourth row -->
+		                    <!-- /.Fifth row -->
 		                </form>
 		                <!-- Edit Form -->
 		            </div>

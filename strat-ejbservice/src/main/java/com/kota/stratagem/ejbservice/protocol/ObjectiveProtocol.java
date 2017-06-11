@@ -23,8 +23,8 @@ public interface ObjectiveProtocol {
 	List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException;
 
 	ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
-			Boolean confidentiality, AppUserRepresentor operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks,
-			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers) throws AdaptorException;
+			Boolean confidentiality, String operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams,
+			Set<AppUserRepresentor> assignedUsers) throws AdaptorException;
 
 	void removeObjective(Long id) throws AdaptorException;
 

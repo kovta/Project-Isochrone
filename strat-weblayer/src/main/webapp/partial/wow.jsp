@@ -1,4 +1,8 @@
 <script>
+	Template.editPrediction.onRendered(()=>{
+		Materialize.updateTextFields()
+   	})
+
     function init_map() {
         var var_location = new google.maps.LatLng(40.725118, -73.997699);
 
@@ -17,10 +21,12 @@
 
 <script>
    	new WOW().init();
-   	
-   	Template.editPrediction.onRendered(()=>{
-   	   Materialize.updateTextFields()
-   	})
-   	
-   	$('.datepicker').pickadate();
+</script>
+
+<script>
+	$('#sandbox-container input').datepicker({
+	    todayBtn: "linked",
+	    clearBtn: true,
+	    todayHighlight: true
+	});
 </script>

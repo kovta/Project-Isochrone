@@ -9,6 +9,8 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <!-- Material Design Bootstrap -->
 <link href="css/mdb.min.css" rel="stylesheet">
+<!-- Datepicker styles -->
+<link href="css/bootstrap-datepicker3.min.css" rel="stylesheet">
 <!-- Custom styles -->
 <link href="css/stratagem.css" rel="stylesheet">
 <!-- JQuery -->
@@ -19,5 +21,8 @@
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
 <script type="text/javascript" src="js/mdb.min.js"></script>
+<!-- Datepicker JavaScript -->
+<script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
 <!--Google Maps-->
 <script src="http://maps.google.com/maps/api/js"></script>
+
