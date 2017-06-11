@@ -2,9 +2,9 @@ package com.kota.stratagem.weblayer.servlet.objective;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -89,9 +89,17 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 			final int priority = priorityTemp;
 			final ObjectiveStatusRepresentor status = ObjectiveStatusRepresentor.valueOf(request.getParameter(STATUS));
 			Date deadlineTemp = null;
-			final DateFormat format = new SimpleDateFormat("MM/dd/YYYY", Locale.ENGLISH);
-			if (request.getParameter(DEADLINE) != "") {
-				deadlineTemp = format.parse(request.getParameter(DEADLINE));
+			try {
+				final DateFormat extractionFormat = new SimpleDateFormat("MM/dd/yyyy");
+				if (request.getParameter(DEADLINE) != "") {
+					deadlineTemp = extractionFormat.parse(request.getParameter(DEADLINE));
+				}
+				LOGGER.info(deadlineTemp + ", input: " + request.getParameter(DEADLINE));
+			} catch (final ParseException e) {
+				LOGGER.info("Failed attempt to modify Objective : (" + name + ") because of unusable date format");
+				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, null, false, null, null, null, null);
+				this.forward(request, response, objective, false, false, true);
 			}
 			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {

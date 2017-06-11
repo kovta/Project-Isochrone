@@ -63,7 +63,7 @@
             	
             		<div class="md-form form-sm" id="sandbox-container">
 	                    <i class="fa fa-calendar-check-o prefix"></i>
-						<input placeholder="Deadline" type='text' class="form-control" name="deadline"/>
+						<input placeholder="Deadline" type='text' class="form-control" name="deadline" value="${objective.deadline}"/>
 	                </div>
             	
 	                <div class="md-form form-sm">
