@@ -54,6 +54,9 @@ footer.page-footer {
 .space-bottom {
 	padding-bottom: 20px;
 }
+.space-left {
+	padding-left: 20px;
+}
 
 .view {
     background: url("../img/connections.jpg")no-repeat center center fixed;
@@ -130,4 +133,12 @@ footer.page-footer {
 
 .close {
 	color: #ffffff !important;
+}
+#radioBtn .active {
+    color: #ffffff;
+    background-color: #2e3850;
+}
+#radioBtn .notActive {
+    color: #ffffff;
+    background-color: #c0c0c0;
 }

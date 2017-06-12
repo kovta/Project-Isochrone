@@ -102,11 +102,14 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 				this.forward(request, response, objective, false, false, true);
 			}
 			final Date deadline = deadlineTemp;
+			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
+			LOGGER.info("Extracted confidentiality: " + request.getParameter(CONFIDENTIALITY));
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
 				// new attributes must be requested
-				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, false, null, null, null, null);
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality, null, null,
+						null, null);
 				this.forward(request, response, objective, false, false, true);
 			} else {
 				ObjectiveRepresentor objective = null;
@@ -114,8 +117,8 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
 					// new attributes must be requested
 					// operator must be resolved
-					objective = this.protocol.saveObjective(id, name, description, priority, status, deadline, false, request.getUserPrincipal().getName(),
-							null, null, null, null);
+					objective = this.protocol.saveObjective(id, name, description, priority, status, deadline, confidentiality,
+							request.getUserPrincipal().getName(), null, null, null, null);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

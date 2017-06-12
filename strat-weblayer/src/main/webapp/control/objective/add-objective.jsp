@@ -29,7 +29,6 @@
 		               			<label>Set priority</label>
 		               			<br/>
 		                  	</div>
-            			
 		               		<div class="md-form form-sm">
 		               			<c:choose>
 			      			      	<c:when test = "${objective != null}">
@@ -43,14 +42,12 @@
 				                </c:choose>
 			                </div>
 		                </div>
-		                
 		                <div class="col-md-6">
 							<div class="md-form form-sm">
 								<i class="fa fa-lightbulb-o prefix"></i>
 		               			<label>Set status</label>
 		               			<br/>
 		                  	</div>
-			                
 			                <div class="md-form form-sm">
 								<select class="form-control" id="objform33" name="status">
 									<% for ( ObjectiveStatusRepresentor status : ObjectiveStatusRepresentor.values()) { %>
@@ -60,12 +57,36 @@
 			                </div>
 		                </div>
 	                </div>
-            	
-            		<div class="md-form form-sm" id="sandbox-container">
-	                    <i class="fa fa-calendar-check-o prefix"></i>
-						<input placeholder="Deadline" type='text' class="form-control" name="deadline" value="${objective.deadline}"/>
-	                </div>
-            	
+
+            		<div class="row">
+	            		<div class="col-md-6">
+	            			<div class="md-form form-sm">
+								<i class="fa fa-calendar-check-o prefix"></i>
+		               			<label>Set Deadline</label>
+		               			<br/>
+	                  		</div>
+		            		<div class="md-form form-sm" id="sandbox-container">
+								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${objective.deadline}"/>
+			                </div>
+		                </div>
+            			<div class="col-md-6">
+							<div class="md-form form-sm">
+								<div class="md-form form-sm">
+									<i class="fa fa-shield prefix"></i>
+			               			<label>Set Confidentiality</label>
+			               			<br/>
+			                  	</div>
+								<div class="input-group">
+				    				<div id="radioBtn" class="btn-group">
+				    					<a class="btn-sm active" data-toggle="confidentiality" data-title="0">Public</a>
+				    					<a class="btn-sm notActive" data-toggle="confidentiality" data-title="1">Private</a>
+				    				</div>
+				    				<input type="hidden" name="confidentiality" id="confidentiality">
+				    			</div>
+			                </div>
+		                </div>
+            		</div>
+            		
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 
