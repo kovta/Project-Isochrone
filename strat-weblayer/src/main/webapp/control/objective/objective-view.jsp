@@ -26,17 +26,33 @@
                         <br/>
                         <div class="card">
                             <div class="card-block">
-                                <h5>${objective.name}</h5>
+                                <h5><strong>${objective.name}</strong></h5>
                                 <hr class="extra-margins">
+                                <!--
+                                <div class="md-form">
+                                	<table border=1>
+                                		<tr>
+                                			<td><p><strong>Status:</strong></td>
+                                			<td><span>${objective.status.label}</span></td>
+                                		</tr>
+                                		<tr>
+                                			<td><p><strong>Priority:</strong></td>
+                                			<td><span>${objective.priority}</span></td>
+                                		</tr>
+                                		<tr>
+                                			<td><p><strong>Deadline:</strong></td>
+                                			<td><span>${objective.deadline}</span></td>
+                                		</tr>
+                                		<tr>
+                                			<td><p><strong>Description:</strong></td>
+                                			<td><span>${objective.description}</span></td>
+                                		</tr>
+                                	</table>
+                                --> 
                                 <div class="md-form">
                                     <p><strong>Status:</strong> <span style="padding-left: 12px">${objective.status.label}</span></p>
-                                </div>
-                                <div class="md-form">
                                     <p><strong>Priority:</strong> <span style="padding-left: 6px">${objective.priority}</span></p>
-                                </div>
-                                <div class="md-form">
-                                    <p><strong>Description:</strong> </p>
-                                    <p>${objective.description}</p>
+                                    <p><strong>Description:</strong> </p><p>${objective.description}</p>
                                 </div>
                             </div>
                         </div>
@@ -71,6 +87,7 @@
 	                                </div>
 	                                <!--/.Card content-->
 	                            </div>
+	                            <br/>
 	                            <!--/.Card-->
 	                        </div>
 						</c:forEach>
@@ -99,6 +116,7 @@
 	                                </div>
 	                                <!--/.Card content-->
 	                            </div>
+	                            <br/>
 	                            <!--/.Card-->
 	                        </div>
 						</c:forEach>

@@ -187,7 +187,13 @@ INSERT INTO tasks (task_id, task_name, task_description, task_completion_percent
 (5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'REST', 'Create REST API module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'RMI', 'Create Remote EJB module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(8, 'RMI', 'Create Remote EJB module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(10, 'Olingo error', 'Default implementation in client system not sufficient', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(13, 'UI response bug', 'Responsive forms of client software not working after component update', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+
 
 -- INSERT INTO task_alterations
 
@@ -204,8 +210,11 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 
 INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id) VALUES
 (0, 2),
-(2, 3),
-(2, 3);
+(2, 9),
+(2, 10),
+(2, 11),
+(2, 12),
+(2, 13);
 
 -- ###########################################################################################
 
