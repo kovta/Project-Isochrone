@@ -22,40 +22,58 @@
                 <div class="col-lg-4 wow fadeIn" data-wow-delay="0.1s">
 					<br/><br/>
                     <div class="widget-wrapper wow fadeIn" data-wow-delay="0.2s">
-                        <h4>Objective details:</h4>
+						<h2>${objective.name}</h2>
                         <br/>
                         <div class="card">
                             <div class="card-block">
-                                <h5><strong>${objective.name}</strong></h5>
+                                <h5><i class="fa fa-info-circle center-element-vertical detail-icon font-strat-blue"></i></h5>
                                 <hr class="extra-margins">
-                                <!--
                                 <div class="md-form">
-                                	<table border=1>
+                                	<table class="strat-detail-table">
                                 		<tr>
-                                			<td><p><strong>Status:</strong></td>
-                                			<td><span>${objective.status.label}</span></td>
+                                			<td class="strat-detail-attribute-name">Status</td>
+                                			<td class="strat-detail-attribute-value">${objective.status.label}</td>
                                 		</tr>
                                 		<tr>
-                                			<td><p><strong>Priority:</strong></td>
-                                			<td><span>${objective.priority}</span></td>
+                                			<td class="strat-detail-attribute-name">Priority</td>
+                                			<td class="strat-detail-attribute-value">${objective.priority}</td>
                                 		</tr>
                                 		<tr>
-                                			<td><p><strong>Deadline:</strong></td>
-                                			<td><span>${objective.deadline}</span></td>
+                                			<td class="strat-detail-attribute-name">Deadline</td>
+                                			<td class="strat-detail-attribute-value">
+											<c:choose>
+											    <c:when test="${empty objective.deadline}"><span class="font-no-content">None</span></c:when>
+										        <c:otherwise>${objective.deadline}</c:otherwise>
+											</c:choose>
+                                			</td>
                                 		</tr>
                                 		<tr>
-                                			<td><p><strong>Description:</strong></td>
-                                			<td><span>${objective.description}</span></td>
+                                			<td class="strat-detail-attribute-name">Confidentiality</td>
+                                			<td class="strat-detail-attribute-value">
+                               			    <c:choose>
+											    <c:when test="${requestScope.objective.confidential}">Private</c:when>
+										        <c:otherwise>Public</c:otherwise>
+											</c:choose>
+											</td>
                                 		</tr>
+										<c:choose>
+										    <c:when test="${empty objective.description}">
+										    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+										    	<tr><td colspan="2" class="strat-detail-description">
+										    		<p class="center-text"><span class="font-no-content">No Description</span></p>
+									    		</td></tr>
+										    </c:when>
+									        <c:otherwise>
+									        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+										        <tr><td colspan="2" class="strat-detail-description">
+											        <p class="center-text">Description<br/>...<br/>${objective.description}</p>
+				                                </td></tr>
+									        </c:otherwise>
+										</c:choose>
                                 	</table>
-                                --> 
-                                <div class="md-form">
-                                    <p><strong>Status:</strong> <span style="padding-left: 12px">${objective.status.label}</span></p>
-                                    <p><strong>Priority:</strong> <span style="padding-left: 6px">${objective.priority}</span></p>
-                                    <p><strong>Description:</strong> </p><p>${objective.description}</p>
                                 </div>
-                            </div>
-                        </div>
+	                        </div>
+	                    </div>
                     </div>
                 </div>
                 <!--/.Sidebar-->

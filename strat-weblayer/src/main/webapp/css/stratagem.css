@@ -11,18 +11,15 @@ body,
 .navbar-transparent {
     background-color: transparent;
 }
-
 .navbar-full {
-	background-color: #293547
+	background-color: #293547;
 }
-
 .scrolling-navbar {
     -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
     -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
     transition: background .5s ease-in-out, padding .5s ease-in-out;
     box-shadow: none;
 }
-
 .top-nav-collapse {
     background-color: #293547;
 }
@@ -50,12 +47,23 @@ footer.page-footer {
 .flex-center {
     color: #fff;
 }
-
 .space-bottom {
 	padding-bottom: 20px;
 }
 .space-left {
 	padding-left: 20px;
+}
+.center-element-vertical {
+	padding-left: 50%;
+}
+.center-text {
+	text-align: center; 
+}
+.absolutely-positioned {
+	position: absolute;
+}
+.bottom-content {
+	float: bottom;
 }
 
 .view {
@@ -87,19 +95,25 @@ footer.page-footer {
 .brand-name {
     font-size: 4rem;
 }
-
 .brand-control {
     font-size: 3rem;
 }
-
 .font-bold {
     font-weight: 500;
+}
+.font-strat-blue {
+	color: #293547;
+}
+.font-no-content {
+	color: #c0c0c0;
+}
+.detail-icon {
+	font-size: 25px;
 }
 
 .icon-companion {
 	padding-left: 3px;
 }
-
 .btn-download {
 	border: 1px solid #fff;
     color: #fff !important;
@@ -118,7 +132,6 @@ footer.page-footer {
     margin: 0 auto;
     color: #ffffff;
 }
-
 #alertSuccessMessage {
 	position: fixed;
     top: 10%;
@@ -141,4 +154,35 @@ footer.page-footer {
 #radioBtn .notActive {
     color: #ffffff;
     background-color: #c0c0c0;
+}
+
+.strat-detail-table {
+    float: left;
+}
+.strat-detail-table .strat-detail-name {
+    font-weight: bold;
+    color: #373333;
+    padding-bottom: 20px;
+}
+.strat-detail-table > tbody > .strat-detail-attribute {
+    color: #4B4B4B;
+    width: 60%;
+}
+.strat-detail-table .strat-detail-attribute-name {
+    padding-right: 10px;
+    background: #eee;
+    height: 15px;
+    text-align: right;
+    vertical-align: top;
+    width: 50%;
+}
+.strat-detail-table .strat-detail-attribute-value {
+    padding-left: 10px;
+}
+.strat-detail-table .strat-detail-description {
+    width: 100%;
+    align: center;
+}
+tr > td:first-child {
+    width: 200px;
 }

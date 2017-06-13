@@ -194,7 +194,6 @@ INSERT INTO tasks (task_id, task_name, task_description, task_completion_percent
 (12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (13, 'UI response bug', 'Responsive forms of client software not working after component update', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 
-
 -- INSERT INTO task_alterations
 
 INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
