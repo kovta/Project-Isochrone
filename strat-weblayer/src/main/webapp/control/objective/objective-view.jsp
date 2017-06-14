@@ -26,50 +26,68 @@
                         <br/>
                         <div class="card">
                             <div class="card-block">
-                                <h5><i class="fa fa-info-circle center-element-vertical detail-icon font-strat-blue"></i></h5>
+                                <h5 class="center-text"><i class="fa fa-info-circle detail-icon font-strat-blue"></i></h5>
                                 <hr class="extra-margins">
                                 <div class="md-form">
                                 	<table class="strat-detail-table">
-                                		<tr>
-                                			<td class="strat-detail-attribute-name">Status</td>
-                                			<td class="strat-detail-attribute-value">${objective.status.label}</td>
-                                		</tr>
-                                		<tr>
-                                			<td class="strat-detail-attribute-name">Priority</td>
-                                			<td class="strat-detail-attribute-value">${objective.priority}</td>
-                                		</tr>
-                                		<tr>
-                                			<td class="strat-detail-attribute-name">Deadline</td>
-                                			<td class="strat-detail-attribute-value">
+	                                	<tbody>
+	                                		<tr>
+	                                			<td class="strat-detail-attribute-name">Status</td>
+	                                			<td class="strat-detail-attribute-value">${objective.status.label}</td>
+	                                		</tr>
+	                                		<tr>
+	                                			<td class="strat-detail-attribute-name">Priority</td>
+	                                			<td class="strat-detail-attribute-value">${objective.priority}</td>
+	                                		</tr>
+	                                		<tr>
+	                                			<td class="strat-detail-attribute-name">Deadline</td>
+	                                			<td class="strat-detail-attribute-value">
+												<c:choose>
+												    <c:when test="${empty objective.deadline}"><span class="font-no-content">None</span></c:when>
+											        <c:otherwise>${objective.deadline}</c:otherwise>
+												</c:choose>
+	                                			</td>
+	                                		</tr>
+	                                		<tr>
+	                                			<td class="strat-detail-attribute-name">Confidentiality</td>
+	                                			<td class="strat-detail-attribute-value">
+	                               			    <c:choose>
+												    <c:when test="${requestScope.objective.confidential}">Private</c:when>
+											        <c:otherwise>Public</c:otherwise>
+												</c:choose>
+												</td>
+	                                		</tr>
+                           			 		<tr>
+	                                			<td class="strat-detail-attribute-name">Created by</td>
+	                                			<td class="strat-detail-attribute-value">${objective.creator.name}</td>
+	                                		</tr>
+                                		    <tr>
+	                                			<td class="strat-detail-attribute-name">Creation date</td>
+	                                			<td class="strat-detail-attribute-value">${objective.creationDate}</td>
+	                                		</tr>
+	                                		<tr>
+	                                			<td class="strat-detail-attribute-name">Modified by</td>
+	                                			<td class="strat-detail-attribute-value">${objective.modifier.name}</td>
+	                                		</tr>
+                                		    <tr>
+	                                			<td class="strat-detail-attribute-name">Modification date</td>
+	                                			<td class="strat-detail-attribute-value">${objective.modificationDate}</td>
+	                                		</tr>
 											<c:choose>
-											    <c:when test="${empty objective.deadline}"><span class="font-no-content">None</span></c:when>
-										        <c:otherwise>${objective.deadline}</c:otherwise>
+											    <c:when test="${empty objective.description}">
+											    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+											    	<tr><td colspan="2" class="strat-detail-description">
+											    		<p class="center-text"><span class="font-no-content">No Description</span></p>
+										    		</td></tr>
+											    </c:when>
+										        <c:otherwise>
+										        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+											        <tr><td colspan="2" class="strat-detail-description"><p class="center-text">Description</p></td></tr>
+											        <tr><td colspan="2" class="strat-detail-description"><p class="center-text">...</p></td></tr>
+											        <tr><td colspan="2" class="strat-detail-description"><p class="center-text">${objective.description}</p></td></tr>
+										        </c:otherwise>
 											</c:choose>
-                                			</td>
-                                		</tr>
-                                		<tr>
-                                			<td class="strat-detail-attribute-name">Confidentiality</td>
-                                			<td class="strat-detail-attribute-value">
-                               			    <c:choose>
-											    <c:when test="${requestScope.objective.confidential}">Private</c:when>
-										        <c:otherwise>Public</c:otherwise>
-											</c:choose>
-											</td>
-                                		</tr>
-										<c:choose>
-										    <c:when test="${empty objective.description}">
-										    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-										    	<tr><td colspan="2" class="strat-detail-description">
-										    		<p class="center-text"><span class="font-no-content">No Description</span></p>
-									    		</td></tr>
-										    </c:when>
-									        <c:otherwise>
-									        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-										        <tr><td colspan="2" class="strat-detail-description">
-											        <p class="center-text">Description<br/>...<br/>${objective.description}</p>
-				                                </td></tr>
-									        </c:otherwise>
-										</c:choose>
+										</tbody>
                                 	</table>
                                 </div>
 	                        </div>

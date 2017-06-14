@@ -53,9 +53,6 @@ footer.page-footer {
 .space-left {
 	padding-left: 20px;
 }
-.center-element-vertical {
-	padding-left: 50%;
-}
 .center-text {
 	text-align: center; 
 }
@@ -73,7 +70,6 @@ footer.page-footer {
     -o-background-size: cover;
     background-size: cover;
 }
-
 .control-view {
     background: url("../img/connections.jpg")no-repeat center center fixed;
     height: 50%;
@@ -157,6 +153,7 @@ footer.page-footer {
 }
 
 .strat-detail-table {
+	width: 100%;
     float: left;
 }
 .strat-detail-table .strat-detail-name {
@@ -166,7 +163,7 @@ footer.page-footer {
 }
 .strat-detail-table > tbody > .strat-detail-attribute {
     color: #4B4B4B;
-    width: 60%;
+    width: 50%;
 }
 .strat-detail-table .strat-detail-attribute-name {
     padding-right: 10px;
