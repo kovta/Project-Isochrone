@@ -7,7 +7,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON
 objectives, projects, tasks, task_dependencies, 
 objective_projects, objective_tasks, project_tasks TO stratagem_std_user;
 GRANT USAGE, SELECT, UPDATE ON 
-objectives_objective_id_seq, projects_project_id_seq, tasks_task_id_seq TO stratagem_std_user;
+objectives_objective_id_seq, projects_project_id_seq, tasks_task_id_seq,
+objective_projects_objective_project_id_seq, objective_tasks_objective_task_id_seq, project_tasks_project_task_id_seq TO stratagem_std_user;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
 impediments, remedies, project_impediments, task_impediments TO stratagem_std_user;

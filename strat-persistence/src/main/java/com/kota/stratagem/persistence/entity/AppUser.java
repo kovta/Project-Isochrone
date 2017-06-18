@@ -276,8 +276,7 @@ public class AppUser implements Serializable {
 	@Override
 	public String toString() {
 		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role
-				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + ", objectives=" + this.objectives
-				+ ", projects=" + this.projects + ", tasks=" + this.tasks + "]";
+				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + "]";
 	}
 
 	/*

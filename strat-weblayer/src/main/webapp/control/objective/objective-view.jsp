@@ -14,7 +14,6 @@
 	<jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
 	<jsp:useBean id="objective" class="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor" scope="request" />
 	<br/><br/><br/><br/>
-	
 	<div class="wrapper">
 		<div class="container">
 			<div class="row">
@@ -23,11 +22,12 @@
 					<br/><br/>
                     <div class="widget-wrapper wow fadeIn" data-wow-delay="0.2s">
 						<h2>${objective.name}</h2>
-                        <br/>
+                        <br/><br/>
                         <div class="card">
                             <div class="card-block">
-                                <h5 class="center-text"><i class="fa fa-info-circle detail-icon font-strat-blue"></i></h5>
-                                <hr class="extra-margins">
+                            	<div class="form-header mdb-color darken-1">
+                                	<h5><i class="fa fa-info-circle"></i><span class="icon-companion"> Information</span></h5>
+                                </div>
                                 <div class="md-form">
                                 	<table class="strat-detail-table">
 	                                	<tbody>
@@ -92,7 +92,38 @@
                                 </div>
 	                        </div>
 	                    </div>
+
+	       			    <br/><br/><br/>
+	       			    <div class="card">
+                            <div class="card-block">
+                            	<div class="form-header mdb-color darken-1">
+                                	<h5><i class="fa fa-exclamation-circle"></i><span class="icon-companion"> Actions</span></h5>
+                                </div>
+                                <div class="md-form">
+                                	<table class="strat-detail-table">
+	                                	<tbody>
+	                                		<tr class="match-row"><td class="center-text">
+						  		   			    <a href="ObjectiveAction?id=<c:out value="${objective.id}"/>&edit=1" class="vertical-align-middle center-text full-width">
+							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Objective
+							       			    </a>
+											</td></tr>
+											<tr class="match-row"><td>
+			         	                       <button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-toggle="modal" data-target="#addProject">
+											    	<i class="fa fa-sitemap tile-icon"></i><span class="icon-companion">Create Project</span>
+												</button>
+											</td></tr>
+											<tr class="match-row"><td>
+												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-toggle="modal" data-target="#addProject">
+											    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
+												</button>
+											</td></tr>
+										</tbody>
+                                	</table>
+                                </div>
+	                        </div>
+	                    </div>
                     </div>
+
                 </div>
                 <!--/.Sidebar-->
 
@@ -112,14 +143,14 @@
 						<c:forEach items="${requestScope.objective.projects}" var="project">
 							<div class="col-lg-4">
 	                            <!--Card-->
-	                            <div class="card  wow fadeIn" data-wow-delay="0.2s">
+	                            <div class="card wow fadeIn" data-wow-delay="0.2s">
 	                                <!--Card content-->
 	                                <div class="card-block">
 	                                    <!--Title-->
 	                                    <h4 class="card-title"><c:out value="${project.name}" /></h4>
 	                                    <!--Text-->
 	                                    <p class="card-text"><c:out value="${project.status.label}" /></p>
-	                                    <a href="ProjectAction?id=<c:out value="${project.id}" />" class="btn btn-default">Inspect project</a>
+	                                    <a href="ProjectAction?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect project</a>
 	                                </div>
 	                                <!--/.Card content-->
 	                            </div>
@@ -141,14 +172,14 @@
 						<c:forEach items="${requestScope.objective.tasks}" var="task">
 							<div class="col-lg-4">
 	                            <!--Card-->
-	                            <div class="card  wow fadeIn" data-wow-delay="0.2s">
+	                            <div class="card wow fadeIn" data-wow-delay="0.2s">
 	                                <!--Card content-->
 	                                <div class="card-block">
 	                                    <!--Title-->
 	                                    <h4 class="card-title"><c:out value="${task.name}" /></h4>
 	                                    <!--Text-->
 	                                    <p class="card-text"><c:out value="${task.completion}" />%</p>
-	                                    <a href="#" class="btn btn-default">Inspect task</a>
+	                                    <a href="#" class="btn btn-primary">Inspect task</a>
 	                                </div>
 	                                <!--/.Card content-->
 	                            </div>
@@ -159,8 +190,13 @@
 					</div>
                 </div>
                 <!--/.Main column-->
-
             </div>
+            
+   			<!-- Modals -->
+			<jsp:include page="../project/add-project.jsp"></jsp:include>
+			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<!-- /Modals -->
+            
 		</div>
 		<div class="push"></div>
 	</div>

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -37,6 +38,9 @@ public class ProjectServiceImpl implements ProjectService {
 	@PersistenceContext(unitName = "strat-persistence-unit")
 	private EntityManager entityManager;
 
+	@EJB
+	private AppUserService appUserService;
+
 	@Override
 	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator, Set<Task> tasks,
 			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException {
@@ -45,9 +49,18 @@ public class ProjectServiceImpl implements ProjectService {
 					+ confidentiality + ")");
 		}
 		try {
-			final Project project = new Project(name, description, status, deadline, confidentiality, creator, new Date(), creator, new Date(), tasks,
-					assignedTeams, assignedUsers, impediments, objective != null ? objective : null);
-			this.entityManager.persist(project);
+			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), tasks, assignedTeams,
+					assignedUsers, impediments, objective);
+			AppUser operatorTemp;
+			if (objective.getCreator().getId() == creator.getId()) {
+				operatorTemp = objective.getCreator();
+			} else {
+				operatorTemp = this.appUserService.read(creator.getId());
+			}
+			final AppUser operator = operatorTemp;
+			project.setCreator(operator);
+			project.setModifier(operator);
+			this.entityManager.merge(project);
 			this.entityManager.flush();
 			return project;
 		} catch (final Exception e) {
@@ -123,12 +136,19 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		try {
 			final Project project = this.readElementary(id);
+			final AppUser operator = this.appUserService.read(modifier.getId());
 			project.setName(name);
 			project.setDescription(description);
 			project.setStatus(status);
 			project.setDeadline(deadline);
 			project.setConfidential(confidentiality);
-			project.setModifier(modifier);
+			if (!(project.getModifier().equals(operator))) {
+				if (!(project.getCreator().equals(project.getModifier()))) {
+					project.setModifier(operator);
+				} else if (project.getCreator().equals(operator)) {
+					project.setModifier(project.getCreator());
+				}
+			}
 			project.setModificationDate(new Date());
 			project.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			project.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());

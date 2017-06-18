@@ -47,6 +47,12 @@ footer.page-footer {
 .flex-center {
     color: #fff;
 }
+.white-text {
+	color: #fff;
+}
+.space-top {
+	padding-top: 20px;
+}
 .space-bottom {
 	padding-bottom: 20px;
 }
@@ -56,11 +62,20 @@ footer.page-footer {
 .center-text {
 	text-align: center; 
 }
+.full-width {
+	width: 100%;
+}
+.full-height {
+	height: 100%;
+}
 .absolutely-positioned {
 	position: absolute;
 }
 .bottom-content {
 	float: bottom;
+}
+.square-tile{
+	height: 185px;
 }
 
 .view {
@@ -106,9 +121,12 @@ footer.page-footer {
 .detail-icon {
 	font-size: 25px;
 }
+.tile-icon {
+	font-size: 35px;
+}
 
 .icon-companion {
-	padding-left: 3px;
+	padding-left: 6px;
 }
 .btn-download {
 	border: 1px solid #fff;
@@ -182,4 +200,7 @@ footer.page-footer {
 }
 tr > td:first-child {
     width: 200px;
+}
+.match-row {
+	height: 72px;
 }

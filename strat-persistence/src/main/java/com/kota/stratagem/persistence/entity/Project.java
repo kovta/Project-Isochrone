@@ -115,9 +115,8 @@ public class Project implements Serializable {
 		this.impediments = new HashSet<>();
 	}
 
-	public Project(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidential, AppUser creator, Date creationDate,
-			AppUser modifier, Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
-			Objective objective) {
+	public Project(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidential, Date creationDate,
+			Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -125,9 +124,7 @@ public class Project implements Serializable {
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
@@ -136,18 +133,15 @@ public class Project implements Serializable {
 		this.objective = objective;
 	}
 
-	public Project(String name, String description, ProjectStatus status, Date deadline, Boolean confidential, AppUser creator, Date creationDate,
-			AppUser modifier, Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
-			Objective objective) {
+	public Project(String name, String description, ProjectStatus status, Date deadline, Boolean confidential, Date creationDate, Date modificationDate,
+			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;

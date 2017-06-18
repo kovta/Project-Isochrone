@@ -9,24 +9,21 @@
 </head>
 <body>
 	<jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
-	
 	<br/><br/>
 	
     <div class="divider-new">
         <h2 class="h2-responsive wow fadeIn">List of Objectives</h2>
     </div>
-	
+    
 	<div class="wrapper">
 		<div class="container">
-		
 	       	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager")) { %>
 			<div class="space-bottom">
-			    <button type="button" class="btn mdb-color darken-1 btn-lg" data-toggle="modal" data-target="#addObjective">
+			    <button type="button" class="btn mdb-color darken-1" data-toggle="modal" data-target="#addObjective">
 			    	<i class="fa fa-plus right"></i><span class="icon-companion"> Set new Objective</span>
 				</button>
 			</div>
 			<% } %>
-		
 			<table class="table table-hover">
 			    <thead>
 			        <tr>

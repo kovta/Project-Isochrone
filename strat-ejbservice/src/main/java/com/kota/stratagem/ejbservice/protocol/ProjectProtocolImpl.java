@@ -16,7 +16,6 @@ import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
@@ -100,8 +99,8 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 
 	@Override
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
-			AppUserRepresentor operator, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers,
-			Set<ImpedimentRepresentor> impediments, ObjectiveRepresentor objective) throws AdaptorException {
+			String operator, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers,
+			Set<ImpedimentRepresentor> impediments, Long objective) throws AdaptorException {
 		try {
 			Project project = null;
 			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
@@ -125,14 +124,14 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				for (final ImpedimentRepresentor impediment : impediments) {
 					projectImpediments.add(this.impedimentService.read(impediment.getId()));
 				}
-				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator.getId()),
-						projectTasks, teams, users, projectImpediments, this.objectiveService.readElementary(objective.getId()));
+				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator),
+						projectTasks, teams, users, projectImpediments, this.objectiveService.readElementary(objective));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project");
 				}
-				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator.getId()), null,
-						null, null, null, objective != null ? this.objectiveService.readElementary(objective.getId()) : null);
+				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null, null,
+						null, null, objective != null ? this.objectiveService.readElementary(objective) : null);
 			}
 			return this.converter.to(project);
 		} catch (final PersistenceServiceException e) {

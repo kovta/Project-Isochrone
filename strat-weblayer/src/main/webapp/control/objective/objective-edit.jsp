@@ -2,6 +2,7 @@
 <%@ page import="java.util.Set" %>  
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
 <%@page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
@@ -62,7 +63,7 @@
 		                            <div class="md-form">
 	                       				<select class="form-control" id="form89" name="status">
 											<% for ( ObjectiveStatusRepresentor status : ObjectiveStatusRepresentor.values()) { %>
-												<option value="<% out.print(status.name()); %>" <% out.print( status == objective.getStatus() ? "selected=\"selected\"" : "" ); %> ><% out.print(status.getLabel()); %></option>
+												<option value="<% out.print(status.name()); %>" <% out.print( status == objective.getStatus() ? "selected=\"selected\"" : "" ); %>><% out.print(status.getLabel()); %></option>
 											<% } %>
 										</select>
 		                            </div>
@@ -72,13 +73,35 @@
 		                    <!--Third row-->
 		                    <div class="row">
 		                        <!--First column-->
-		                        <div class="col-md-12">
+		                        <div class="col-md-6">
 		                        	<div class="md-form form-sm">
 				               			<label>The deadline of the Objective</label><br/>
 	                  				</div>
 		                            <div class="md-form" id="sandbox-container">
-										<input placeholder="Deadline" type='text' class="form-control" value="${objective.deadline}"/>
+										<input placeholder="None" type="text" class="form-control" name="deadline" 
+											value="<fmt:formatDate type="date" value="${objective.deadline}" pattern="MM/dd/yyyy" />"/>
 		                            </div>
+		                        </div>
+		                        <div class="col-md-6">
+		                        	<div class="md-form form-sm">
+				               			<label>The confidentiality of the Objective</label><br/>
+	                  				</div>
+
+									<div class="input-group">
+					    				<div id="radioBtn" class="btn-group">
+		  			            			<c:choose>
+						      			      	<c:when test = "${objective.confidential == false}">
+							    					<a class="btn-sm active" data-toggle="confidentiality" data-title="0">Public</a>
+							    					<a class="btn-sm notActive" data-toggle="confidentiality" data-title="1">Private</a>
+								                </c:when>
+								                <c:otherwise>
+							    					<a class="btn-sm notActive" data-toggle="confidentiality" data-title="0">Public</a>
+							    					<a class="btn-sm active" data-toggle="confidentiality" data-title="1">Private</a>
+								                </c:otherwise>
+							                </c:choose>
+					    				</div>
+					    				<input type="hidden" name="confidentiality" id="confidentiality">
+					    			</div>
 		                        </div>
 		                    </div>
 		                    <!--/.Third row-->
@@ -90,7 +113,9 @@
 				               			<label>The description of the Objective</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <textarea type="text" id="form78" class="md-textarea" name="description" value="${objective.description}"></textarea>
+		                                <textarea type="text" id="form78" class="md-textarea" name="description" value="${objective.description}">
+		                                <c:out value="${objective.description}"/>
+		                                </textarea>
 		                            </div>
 		                        </div>
 		                    </div>

@@ -115,8 +115,6 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 				ObjectiveRepresentor objective = null;
 				try {
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
-					// new attributes must be requested
-					// operator must be resolved
 					objective = this.protocol.saveObjective(id, name, description, priority, status, deadline, confidentiality,
 							request.getUserPrincipal().getName(), null, null, null, null);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
