@@ -273,4 +273,8 @@ public class Objective implements Serializable {
 				+ this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + "]";
 	}
 
+	public void addProject(Project project) {
+		this.getProjects().add(project);
+	}
+
 }

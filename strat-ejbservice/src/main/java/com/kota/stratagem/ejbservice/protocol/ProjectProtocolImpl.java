@@ -23,6 +23,7 @@ import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
+import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
@@ -125,13 +126,15 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 					projectImpediments.add(this.impedimentService.read(impediment.getId()));
 				}
 				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator),
-						projectTasks, teams, users, projectImpediments, this.objectiveService.readElementary(objective));
+						projectTasks, teams, users, projectImpediments, this.objectiveService.readWithProjectsAndTasks(objective));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create Project");
+					LOGGER.debug("Create Project (name: " + name + ")");
 				}
+				final Objective parentObjective = this.objectiveService.readWithProjectsAndTasks(objective);
 				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null, null,
-						null, null, objective != null ? this.objectiveService.readElementary(objective) : null);
+						null, null, parentObjective);
+				// objectiveService
 			}
 			return this.converter.to(project);
 		} catch (final PersistenceServiceException e) {

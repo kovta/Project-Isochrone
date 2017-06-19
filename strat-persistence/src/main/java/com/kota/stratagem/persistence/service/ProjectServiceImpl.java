@@ -60,7 +60,9 @@ public class ProjectServiceImpl implements ProjectService {
 			final AppUser operator = operatorTemp;
 			project.setCreator(operator);
 			project.setModifier(operator);
-			this.entityManager.merge(project);
+			objective.addProject(project);
+			this.entityManager.merge(objective);
+			// this.entityManager.merge(project);
 			this.entityManager.flush();
 			return project;
 		} catch (final Exception e) {
