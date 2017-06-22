@@ -193,7 +193,7 @@
             </div>
             
    			<!-- Modals -->
-			<jsp:include page="../project/add-project.jsp"></jsp:include>
+			<jsp:include page="../project/project-create.jsp"></jsp:include>
 			<jsp:include page="../../partial/alert.jsp"></jsp:include>
 			<!-- /Modals -->
             

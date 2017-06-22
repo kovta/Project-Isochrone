@@ -60,7 +60,7 @@
 			</table>
 			
 			<!-- Modals -->
-			<jsp:include page="add-objective.jsp"></jsp:include>
+			<jsp:include page="objective-create.jsp"></jsp:include>
 			<jsp:include page="../../partial/alert.jsp"></jsp:include>
 			<!-- /Modals -->
 			
