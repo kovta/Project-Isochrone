@@ -1,6 +1,6 @@
 package com.kota.stratagem.weblayer.common.task;
 
-public class TaskAttribute {
+public interface TaskAttribute {
 
 	public static final String ATTR_ISNEW = "isnew";
 	public static final String ATTR_TASK = "task";

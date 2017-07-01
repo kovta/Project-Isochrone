@@ -48,7 +48,7 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 			ProjectRepresentor project = null;
 			boolean isNew = false;
 			if (NEW_PROJECT_ID_FLAG.equals(id)) {
-				project = new ProjectRepresentor(null, "", "", ProjectStatusRepresentor.PROPOSED, null, true, null, null, null, null, null);
+				project = new ProjectRepresentor(null, "", "", ProjectStatusRepresentor.PROPOSED, null, false, null, null, null, null, null);
 				isNew = true;
 			} else {
 				try {

@@ -35,14 +35,14 @@ public class TaskServiceImpl implements TaskService {
 	private EntityManager entityManager;
 
 	@Override
-	public Task create(String name, String description, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
+	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
 			Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, completion, deadline, creator, new Date(), creator, new Date(), assignedTeams, assignedUsers,
+			final Task task = new Task(name, description, priority, completion, deadline, creator, new Date(), creator, new Date(), assignedTeams, assignedUsers,
 					impediments, dependantTasks, taskDependencies, objective, project);
 			this.entityManager.persist(task);
 			this.entityManager.flush();
@@ -81,7 +81,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task update(Long id, String name, String description, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
+	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
 			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
@@ -91,6 +91,7 @@ public class TaskServiceImpl implements TaskService {
 			final Task task = this.read(id);
 			task.setName(name);
 			task.setDescription(description);
+			task.setPriority(priority);
 			task.setCompletion(completion);
 			task.setDeadline(deadline);
 			task.setModifier(modifier);

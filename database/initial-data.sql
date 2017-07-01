@@ -178,21 +178,21 @@ INSERT INTO objective_projects (objective_project_objective, objective_project_p
 
 -- ###########################################################################################
 
-INSERT INTO tasks (task_id, task_name, task_description, task_completion_percentage, task_deadline, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
-(0, 'Use-case test tool', 'Creating tool for efficient use-case testing', 30, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(1, 'Print matching', 'Matching watermark prints', 85, '2016/08/14 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(2, 'Extraction planning', 'Planning extraction approach', 60, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 100, '2016/09/10 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(4, 'Incident wrap up', 'Closing all end-to-end test incidents', 0, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'REST', 'Create REST API module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'RMI', 'Create Remote EJB module', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(10, 'Olingo error', 'Default implementation in client system not sufficient', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(13, 'UI response bug', 'Responsive forms of client software not working after component update', 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_completion_percentage, task_deadline, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
+(0, 'Use-case test tool', 'Creating tool for efficient use-case testing', 2, 30, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Print matching', 'Matching watermark prints', 1, 85, '2016/08/14 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Extraction planning', 'Planning extraction approach', 0, 60, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 1, 100, '2016/09/10 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'REST', 'Create REST API module', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'RMI', 'Create Remote EJB module', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(10, 'Olingo error', 'Default implementation in client system not sufficient', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 
 -- INSERT INTO task_alterations
 

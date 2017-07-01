@@ -229,6 +229,7 @@ CREATE TABLE tasks (
 	task_id SERIAL NOT NULL,
 	task_name CHARACTER VARYING(100) NOT NULL,
 	task_description CHARACTER VARYING(1000) NULL,
+	task_priority INTEGER NOT NULL,
 	task_completion_percentage INTEGER NOT NULL,
 	task_deadline TIMESTAMP WITHOUT TIME ZONE NULL,
 	task_creator INTEGER NOT NULL,

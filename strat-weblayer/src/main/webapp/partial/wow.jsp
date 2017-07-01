@@ -46,3 +46,14 @@
 	    $('input[name="confidentiality"]').val($(this).data('title'))
 	})
 </script>
+
+<script>
+	$(document).ready(function () {
+	    var mySlider = $("#slider-input").slider({
+	        min:0,
+	        max: 100,
+	        value:0,
+	        step:1
+	    });
+	});
+</script>

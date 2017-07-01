@@ -113,7 +113,7 @@
 												</button>
 											</td></tr>
 											<tr class="match-row"><td>
-												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-toggle="modal" data-target="#addProject">
+												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-toggle="modal" data-target="#addTask">
 											    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 												</button>
 											</td></tr>
@@ -194,6 +194,7 @@
             
    			<!-- Modals -->
 			<jsp:include page="../project/project-create.jsp"></jsp:include>
+			<jsp:include page="../task/task-create.jsp"></jsp:include>
 			<jsp:include page="../../partial/alert.jsp"></jsp:include>
 			<!-- /Modals -->
             

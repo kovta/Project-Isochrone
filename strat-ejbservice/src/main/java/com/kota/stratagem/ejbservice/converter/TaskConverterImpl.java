@@ -67,10 +67,10 @@ public class TaskConverterImpl implements TaskConverter {
 	@Override
 	public TaskRepresentor toElementary(Task task) {
 		final TaskRepresentor representor = task.getId() != null
-				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription(), task.getCompletion(), task.getDeadline(),
+				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription(), task.getPriority(), task.getCompletion(), task.getDeadline(),
 						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
 						task.getModificationDate())
-				: new TaskRepresentor(task.getName(), task.getDescription(), task.getCompletion(), task.getDeadline(),
+				: new TaskRepresentor(task.getName(), task.getDescription(), task.getPriority(), task.getCompletion(), task.getDeadline(),
 						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
 						task.getModificationDate());
 		return representor;

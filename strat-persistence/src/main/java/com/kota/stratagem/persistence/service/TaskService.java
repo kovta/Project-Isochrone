@@ -16,7 +16,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 @Local
 public interface TaskService {
 
-	Task create(String name, String description, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
+	Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
 			Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
 			throws PersistenceServiceException;
 
@@ -24,7 +24,7 @@ public interface TaskService {
 
 	Set<Task> readAll() throws PersistenceServiceException;
 
-	Task update(Long id, String name, String description, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
+	Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
 			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
 			throws PersistenceServiceException;
 

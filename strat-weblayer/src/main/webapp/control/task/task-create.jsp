@@ -6,21 +6,22 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!--Modal: Objective Form-->
-<div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="projcetModal" aria-hidden="true">
+<div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="taskModal" aria-hidden="true">
     <div class="modal-dialog cascading-modal" role="document">
         <!--Content-->
         <div class="modal-content">
             <!--Header-->
             <div class="modal-header mdb-color darken-1 white-text">
-0               <h4 class="title"><i class="fa fa-sitemap"></i>New Task</h4>
+				<h4 class="title"><i class="fa fa-tasks"></i>New Task</h4>
             </div>
             <!--Body-->
             <form action="TaskAction" method="post">
 	            <div class="modal-body">
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
+	            	<input type="hidden" name="projectId" value="" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${project.name}">
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}">
 	                </div>
             	
 					<div class="md-form form-sm">
@@ -28,11 +29,27 @@
                			<label>Set status</label>
                			<br/>
                   	</div>
-	                <div class="md-form form-sm">
-
-	                </div>
 
             		<div class="row">
+            			<div class="col-md-6">
+		            		<div class="md-form form-sm">
+		            			<i class="fa fa-exclamation prefix"></i>
+		               			<label>Set Priority</label>
+		               			<br/>
+		                  	</div>
+		               		<div class="md-form form-sm">
+		               			<c:choose>
+			      			      	<c:when test = "${task != null}">
+				         				<input type="number" id="objform32" class="form-control" name="priority" 
+					                    min="0" max="100" value="${task.priority}">
+					                </c:when>
+					                <c:otherwise>
+					                	<input type="number" id="objform32" class="form-control" name="priority" 
+					                    min="0" max="100" value="10">
+					                </c:otherwise>
+				                </c:choose>
+			                </div>
+		                </div>
 	            		<div class="col-md-6">
 	            			<div class="md-form form-sm">
 								<i class="fa fa-calendar-check-o prefix"></i>
@@ -40,31 +57,24 @@
 		               			<br/>
 	                  		</div>
 		            		<div class="md-form form-sm" id="sandbox-container">
-								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${project.deadline}"/>
-			                </div>
-		                </div>
-            			<div class="col-md-6">
-							<div class="md-form form-sm">
-								<div class="md-form form-sm">
-									<i class="fa fa-shield prefix"></i>
-			               			<label>Set Confidentiality</label>
-			               			<br/>
-			                  	</div>
-								<div class="input-group">
-				    				<div id="radioBtn" class="btn-group">
-				    					<a class="btn-sm active" data-toggle="confidentiality" data-title="0">Public</a>
-				    					<a class="btn-sm notActive" data-toggle="confidentiality" data-title="1">Private</a>
-				    				</div>
-				    				<input type="hidden" name="confidentiality" id="confidentiality">
-				    			</div>
+								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${task.deadline}"/>
 			                </div>
 		                </div>
             		</div>
             		
+					<div class="md-form form-sm">
+						<i class="fa fa-lightbulb-o prefix"></i>
+               			<label>Set Completion</label>
+               			<br/>
+                  	</div>
+					<div class="md-form form-sm">
+						<input type="text" id="slider-input" class="slider" value="${task.completion}" />
+	                </div>
+            		
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 
-	                    name="description" placeholder="Description" value="${project.description}"></textarea>
+	                    name="description" placeholder="Description" value="${task.description}"></textarea>
 	                </div>
 	            </div>
 	            <!--Footer-->

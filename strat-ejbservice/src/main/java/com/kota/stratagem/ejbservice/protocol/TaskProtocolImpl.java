@@ -88,9 +88,9 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
-	public TaskRepresentor saveTask(Long id, String name, String description, double completion, Date deadline, AppUserRepresentor operator,
+	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator,
 			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
-			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, ObjectiveRepresentor objective, ProjectRepresentor project)
+			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project)
 			throws AdaptorException {
 		try {
 			Task task = null;
@@ -115,12 +115,12 @@ public class TaskProtocolImpl implements TaskProtocol {
 				for (final TaskRepresentor taskRepresentor : taskDependencies) {
 					dependants.add(this.taskService.read(taskRepresentor.getId()));
 				}
-				task = this.taskService.update(id, name, description, completion, deadline, this.appUserService.read(operator.getId()), teams, users,
-						taskImpediments, dependants, dependencies, this.objectiveService.readElementary(objective.getId()),
-						this.projectSerivce.readElementary(project.getId()));
+				task = this.taskService.update(id, name, description, priority, completion, deadline, this.appUserService.read(operator), teams, users,
+						taskImpediments, dependants, dependencies, this.objectiveService.readElementary(objective),
+						this.projectSerivce.readElementary(project));
 			} else {
-				task = this.taskService.create(name, description, completion, deadline, this.appUserService.read(operator.getId()), null, null, null, null,
-						null, this.objectiveService.readElementary(objective.getId()), this.projectSerivce.readElementary(project.getId()));
+				task = this.taskService.create(name, description, priority, completion, deadline, this.appUserService.read(operator), null, null, null, null,
+						null, this.objectiveService.readElementary(objective), this.projectSerivce.readElementary(project));
 			}
 			return this.converter.to(task);
 		} catch (final PersistenceServiceException e) {

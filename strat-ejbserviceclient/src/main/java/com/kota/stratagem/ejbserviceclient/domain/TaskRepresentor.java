@@ -12,6 +12,7 @@ public class TaskRepresentor implements Serializable {
 	private Long id;
 	private final String name;
 	private final String description;
+	private final int priority;
 	private final double completion;
 	private final Date deadline;
 	private final AppUserRepresentor creator;
@@ -27,16 +28,17 @@ public class TaskRepresentor implements Serializable {
 	private ProjectRepresentor project;
 
 	public TaskRepresentor() {
-		this(null, "", "", 0, new Date(), null, new Date(), null, new Date());
+		this(null, "", "", 5, 0, new Date(), null, new Date(), null, new Date());
 	}
 
 	// Projects and Objectives removed from constructor due to structure ambiguity
-	public TaskRepresentor(Long id, String name, String description, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
+	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
 			AppUserRepresentor modifier, Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
 		this.creator = creator;
@@ -52,11 +54,12 @@ public class TaskRepresentor implements Serializable {
 		this.project = null;
 	}
 
-	public TaskRepresentor(String name, String description, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
+	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
 			AppUserRepresentor modifier, Date modificationDate) {
 		super();
 		this.name = name;
 		this.description = description;
+		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
 		this.creator = creator;
@@ -102,6 +105,10 @@ public class TaskRepresentor implements Serializable {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public int getPriority() {
+		return priority;
 	}
 
 	public double getCompletion() {
@@ -150,11 +157,12 @@ public class TaskRepresentor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "\nTaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", completion=" + this.completion
-				+ ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier
-				+ ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers
-				+ ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies=" + this.taskDependencies
-				+ ", objective=" + this.objective + ", project=" + this.project + "]\n";
+		return "TaskRepresentor [id=" + id + ", name=" + name + ", description=" + description + ", priority="
+				+ priority + ", completion=" + completion + ", deadline=" + deadline + ", creator=" + creator
+				+ ", creationDate=" + creationDate + ", modifier=" + modifier + ", modificationDate=" + modificationDate
+				+ ", assignedTeams=" + assignedTeams + ", assignedUsers=" + assignedUsers + ", impediments="
+				+ impediments + ", dependantTasks=" + dependantTasks + ", taskDependencies=" + taskDependencies
+				+ ", objective=" + objective + ", project=" + project + "]";
 	}
 
 }
