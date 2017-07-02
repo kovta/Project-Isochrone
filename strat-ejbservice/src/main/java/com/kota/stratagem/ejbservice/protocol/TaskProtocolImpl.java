@@ -116,11 +116,11 @@ public class TaskProtocolImpl implements TaskProtocol {
 					dependants.add(this.taskService.read(taskRepresentor.getId()));
 				}
 				task = this.taskService.update(id, name, description, priority, completion, deadline, this.appUserService.read(operator), teams, users,
-						taskImpediments, dependants, dependencies, this.objectiveService.readElementary(objective),
-						this.projectSerivce.readElementary(project));
+						taskImpediments, dependants, dependencies, this.objectiveService.readWithProjectsAndTasks(objective),
+						this.projectSerivce.readWithTasks(project));
 			} else {
 				task = this.taskService.create(name, description, priority, completion, deadline, this.appUserService.read(operator), null, null, null, null,
-						null, this.objectiveService.readElementary(objective), this.projectSerivce.readElementary(project));
+						null, objective != null ? this.objectiveService.readWithProjectsAndTasks(objective) : null,  project != null ? this.projectSerivce.readWithTasks(project) : null);
 			}
 			return this.converter.to(task);
 		} catch (final PersistenceServiceException e) {

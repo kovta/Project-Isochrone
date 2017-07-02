@@ -39,14 +39,14 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 		@NamedQuery(name = TaskQuery.REMOVE_BY_ID, query = "DELETE FROM Task t WHERE t.id=:" + TaskParameter.ID)
 		//
 })
+@SequenceGenerator(name = "taskGenerator", sequenceName = "tasks_task_id_seq", allocationSize = 1)
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = -6357816746519911429L;
 
 	@Id
-	@SequenceGenerator(name = "taskGenerator", sequenceName = "task_task_id_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "taskGenerator")
-	@Column(name = "task_id", nullable = false)
+	@Column(name = "task_id", nullable = false, updatable = false, insertable = false)
 	private Long id;
 
 	@Column(name = "task_name", nullable = false)
@@ -119,7 +119,7 @@ public class Task implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, int priority, double completion, Date deadline, AppUser creator, Date creationDate, AppUser modifier,
+	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Date creationDate,
 			Date modificationDate, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks,
 			Set<Task> taskDependencies, Objective objective, Project project) {
 		super();
@@ -129,9 +129,7 @@ public class Task implements Serializable {
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
@@ -142,7 +140,7 @@ public class Task implements Serializable {
 		this.project = project;
 	}
 
-	public Task(String name, String description, int priority, double completion, Date deadline, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate,
+	public Task(String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate,
 			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies,
 			Objective objective, Project project) {
 		super();
@@ -151,9 +149,7 @@ public class Task implements Serializable {
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;

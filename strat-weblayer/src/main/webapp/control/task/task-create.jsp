@@ -23,12 +23,6 @@
 	                    <i class="fa fa-font prefix"></i>
 	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}">
 	                </div>
-            	
-					<div class="md-form form-sm">
-						<i class="fa fa-lightbulb-o prefix"></i>
-               			<label>Set status</label>
-               			<br/>
-                  	</div>
 
             		<div class="row">
             			<div class="col-md-6">
@@ -63,12 +57,12 @@
             		</div>
             		
 					<div class="md-form form-sm">
-						<i class="fa fa-lightbulb-o prefix"></i>
+						<i class="fa fa-percent prefix"></i>
                			<label>Set Completion</label>
                			<br/>
                   	</div>
 					<div class="md-form form-sm">
-						<input type="text" id="slider-input" class="slider" value="${task.completion}" />
+						<input type="text" id="slider-input" name="completion" class="slider" value="${task.completion}" />
 	                </div>
             		
 	                <div class="md-form form-sm">

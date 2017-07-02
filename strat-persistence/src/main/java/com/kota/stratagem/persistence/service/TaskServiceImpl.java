@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -33,6 +34,9 @@ public class TaskServiceImpl implements TaskService {
 
 	@PersistenceContext(unitName = "strat-persistence-unit")
 	private EntityManager entityManager;
+	
+	@EJB
+	private AppUserService appUserService;
 
 	@Override
 	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
@@ -42,9 +46,34 @@ public class TaskServiceImpl implements TaskService {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, priority, completion, deadline, creator, new Date(), creator, new Date(), assignedTeams, assignedUsers,
+			final Task task = new Task(name, description, priority, completion, deadline, new Date(), new Date(), assignedTeams, assignedUsers,
 					impediments, dependantTasks, taskDependencies, objective, project);
-			this.entityManager.persist(task);
+			AppUser operatorTemp;
+			if(objective != null) {
+				objective.addTask(task);
+				if (objective.getCreator().getId() == creator.getId()) {
+					operatorTemp = objective.getCreator();
+				} else {
+					operatorTemp = this.appUserService.read(creator.getId());
+				}
+			} else if(project != null) {
+				project.addTask(task);
+				if (project.getCreator().getId() == creator.getId()) {
+					operatorTemp = project.getCreator();
+				} else {
+					operatorTemp = this.appUserService.read(creator.getId());
+				}
+			} else {
+				operatorTemp = this.appUserService.read(creator.getId());
+			}
+			final AppUser operator = operatorTemp;
+			task.setCreator(operator);
+			task.setModifier(operator);
+			if(objective != null) {
+				this.entityManager.merge(objective);
+			} else if (project != null) {
+				this.entityManager.merge(project);
+			}
 			this.entityManager.flush();
 			return task;
 		} catch (final Exception e) {
@@ -89,12 +118,19 @@ public class TaskServiceImpl implements TaskService {
 		}
 		try {
 			final Task task = this.read(id);
+			final AppUser operator = this.appUserService.read(modifier.getId());
 			task.setName(name);
 			task.setDescription(description);
 			task.setPriority(priority);
 			task.setCompletion(completion);
 			task.setDeadline(deadline);
-			task.setModifier(modifier);
+			if (!(task.getModifier().equals(operator))) {
+				if (!(task.getCreator().equals(task.getModifier()))) {
+					task.setModifier(operator);
+				} else if (task.getCreator().equals(operator)) {
+					task.setModifier(task.getCreator());
+				}
+			}
 			task.setModificationDate(new Date());
 			task.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			task.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());

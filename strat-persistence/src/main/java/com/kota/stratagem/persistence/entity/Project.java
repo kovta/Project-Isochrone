@@ -277,5 +277,9 @@ public class Project implements Serializable {
 				+ this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
 				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]";
 	}
+	
+	public void addTask(Task task) {
+		this.getTasks().add(task);
+	}
 
 }

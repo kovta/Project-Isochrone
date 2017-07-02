@@ -88,7 +88,7 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 			final Long project_id = projectTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
-				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
+				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
 				// new attributes must be requested
 				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, deadline, null, null, null, null);
 				this.forward(request, response, Task, false, false, true);

@@ -276,5 +276,9 @@ public class Objective implements Serializable {
 	public void addProject(Project project) {
 		this.getProjects().add(project);
 	}
+	
+	public void addTask(Task task) {
+		this.getTasks().add(task);
+	}
 
 }
