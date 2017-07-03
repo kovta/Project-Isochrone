@@ -55,6 +55,7 @@ INSERT INTO teams (team_id, team_name, team_leader, team_creator, team_creation_
 (2, 'Back-end development', 3, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (3, 'Front-end development', 8, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Quality assurance', 3, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+SELECT SETVAL('teams_team_id_seq', COALESCE(MAX(team_id), 0) ) FROM teams;
 
 INSERT INTO team_members (team_member_team_id, team_member_user_id) VALUES
 (0, 0),
@@ -193,6 +194,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
 
@@ -230,6 +232,7 @@ INSERT INTO impediments (impediment_id, impediment_name, impediment_description,
 (0, 'Insufficient tools', 'ARPA SDK would serve as a huge advantage with development', 2, 1, '2016/10/25 14:45:00', 3, 5, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (1, 'Data connection', 'Unable to establish connection with service endpoint with OData componenet', 3, 6, '2015/12/11 16:10:00', 4, 1, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (2, 'Lingering numpad', 'A High level incident is not recreatable with our build, and transition at this point is not possible', 0, 2, '2016/09/03 10:40:00', 9, 0, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+SELECT SETVAL('impediments_impediment_id_seq', COALESCE(MAX(impediment_id), 0) ) FROM impediments;
 
 INSERT INTO project_impediments (project_impediment_project_id, project_impediment_impediment_id) VALUES
 (3, 0),
@@ -239,7 +242,9 @@ INSERT INTO task_impediments (task_impediment_task_id, task_impediment_impedimen
 (4, 2);
 
 INSERT INTO remedies (remedy_id, remedy_description, remedy_impediment_id, remedy_submission_date, remedy_provider, remedy_creator, remedy_creation_date, remedy_modifier, remedy_modification_date) VALUES
-(0, 'Use service control tool to generate project structure from existing endpoint meta data', 1, '2015/12/13 14:20:00', 1, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'); 
+(0, 'Use service control tool to generate project structure from existing endpoint meta data', 1, '2015/12/13 14:20:00', 1, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Request authorization key and administrative user for base64 auth parameter when connecting', 2, '2016/04/20 17:35:00', 4, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+SELECT SETVAL('remedies_remedy_id_seq', COALESCE(MAX(remedy_id), 0) ) FROM remedies;
 
 -- ###########################################################################################
 
@@ -247,7 +252,9 @@ INSERT INTO task_dependencies (dependency_dependent, dependency_maintainer) VALU
 (5, 4);
 
 INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
-(0, 4, '5 0:00:00', '4 0:00:00', '3 0:00:00');
+(0, 4, '5 0:00:00', '4 0:00:00', '3 0:00:00'),
+(1, 6, '7 0:00:00', '5 0:00:00', '3 0:00:00');
+SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id), 0) ) FROM task_estimations;
 
 -- ###########################################################################################
 
@@ -267,7 +274,9 @@ INSERT INTO user_task_assignments (assignment_entrustor, assignment_recipient, a
 -- ###########################################################################################
 
 INSERT INTO reviews (review_id, review_name, review_description, review_organizer, review_date) VALUES
-(0, 'ARPA integration code review', 'Let us analyze our progress made with the new AR SDK', 0, '2016/09/15 14:00:00');
+(0, 'ARPA integration code review', 'Let us analyze our progress made with the new AR SDK', 0, '2016/09/15 14:00:00'),
+(1, 'Sprint review', 'Let us see what we have accomplished in our bi-weekly retrospective', 1, '2016/11/03 10:30:00');
+SELECT SETVAL('reviews_review_id_seq', COALESCE(MAX(review_id), 0) ) FROM reviews;
 
 INSERT INTO review_invitations (invitaion_review, invitation_recipiant) VALUES
 (0, 0),

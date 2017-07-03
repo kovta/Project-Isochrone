@@ -1,1 +1,1 @@
-gradle clean build ear war && deposit-orgrim.bat
+gradle clean build ear war && deposit.bat
