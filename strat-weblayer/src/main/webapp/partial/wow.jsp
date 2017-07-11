@@ -48,12 +48,9 @@
 </script>
 
 <script>
-	$(document).ready(function () {
-	    var mySlider = $("#slider-input").slider({
-	        min:0,
-	        max: 100,
-	        value:0,
-	        step:1
-	    });
+	$("#compslider").slider({
+	    ticks: [0, 25, 50, 75, 100],
+	    ticks_labels: ['0%', '25%', '50%', '75%', '100%'],
+	    ticks_snap_bounds: 7
 	});
 </script>

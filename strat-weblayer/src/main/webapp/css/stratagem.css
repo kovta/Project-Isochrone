@@ -169,6 +169,9 @@ footer.page-footer {
     color: #ffffff;
     background-color: #c0c0c0;
 }
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
 
 .strat-detail-table {
 	width: 100%;
@@ -203,4 +206,12 @@ tr > td:first-child {
 }
 .match-row {
 	height: 72px;
+}
+
+.slider.slider-horizontal {
+    width: 100%;
+}
+.slider.slider-horizontal .slider-track {
+    height: 4px;
+    margin-top: -2px;
 }

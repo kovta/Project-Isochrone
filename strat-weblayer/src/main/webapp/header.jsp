@@ -12,7 +12,7 @@
 <!-- Datepicker styles -->
 <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css">
 <!-- Slider styles -->
-<link rel="stylesheet" href="css/bootstrap-slider.css">
+<link rel="stylesheet" href="css/bootstrap-slider.min.css">
 <!-- Custom styles -->
 <link rel="stylesheet" href="css/stratagem.css">
 <!-- JQuery -->
@@ -26,7 +26,7 @@
 <!-- Datepicker JavaScript -->
 <script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
 <!-- Slider JavaScript -->
-<script type="text/javascript" src="js/bootstrap-slider.js"></script>
+<script type="text/javascript" src="js/bootstrap-slider.min.js"></script>
 <!--Google Maps -->
 <script src="http://maps.google.com/maps/api/js"></script>
 <!-- Respond -->

@@ -62,7 +62,10 @@
                			<br/>
                   	</div>
 					<div class="md-form form-sm">
-						<input type="text" id="slider-input" name="completion" class="slider" value="${task.completion}" />
+						<input class="full-width" id="compslider" type="text" name="completion" value="${task.completion}"
+						data-slider-ticks="[0, 25 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
+						data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]'/>
+						<!-- <input type="text" id="slider-input" name="completion" class="slider" value="${task.completion}" /> -->
 	                </div>
             		
 	                <div class="md-form form-sm">
