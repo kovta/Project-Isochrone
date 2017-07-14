@@ -17,6 +17,7 @@
             <!--Body-->
             <form action="TaskAction" method="post">
 	            <div class="modal-body">
+	            	<!-- TODO: Objective and project parent discerning -->
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
 	            	<input type="hidden" name="projectId" value="" />
 	                <div class="md-form form-sm">

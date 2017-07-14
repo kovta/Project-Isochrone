@@ -34,32 +34,49 @@ public class TaskServiceImpl implements TaskService {
 
 	@PersistenceContext(unitName = "strat-persistence-unit")
 	private EntityManager entityManager;
-	
+
 	@EJB
 	private AppUserService appUserService;
 
+	@EJB
+	private ObjectiveService objectiveService;
+
+	@EJB
+	private ProjectService projectService;
+
 	@Override
-	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams, Set<AppUser> assignedUsers,
-			Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
+	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams,
+			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, priority, completion, deadline, new Date(), new Date(), assignedTeams, assignedUsers,
-					impediments, dependantTasks, taskDependencies, objective, project);
+			final Task task = new Task(name, description, priority, completion, deadline, new Date(), new Date(), assignedTeams, assignedUsers, impediments,
+					dependantTasks, taskDependencies);
+			Objective parentObjective = null;
+			Project parentProject = null;
+			if (objective != null) {
+				// Duplicate join table insertion workaround
+				parentObjective = this.objectiveService.readElementary(objective);
+				task.setObjective(parentObjective);
+			} else if (project != null) {
+				parentProject = this.projectService.readWithTasks(project);
+				task.setProject(parentProject);
+			}
 			AppUser operatorTemp;
-			if(objective != null) {
-				objective.addTask(task);
-				if (objective.getCreator().getId() == creator.getId()) {
-					operatorTemp = objective.getCreator();
+			if (objective != null) {
+				// Duplicate join table insertion workaround
+				// parentObjective.addTask(task);
+				if (parentObjective.getCreator().getId() == creator.getId()) {
+					operatorTemp = parentObjective.getCreator();
 				} else {
 					operatorTemp = this.appUserService.read(creator.getId());
 				}
-			} else if(project != null) {
-				project.addTask(task);
-				if (project.getCreator().getId() == creator.getId()) {
-					operatorTemp = project.getCreator();
+			} else if (project != null) {
+				parentProject.addTask(task);
+				if (parentProject.getCreator().getId() == creator.getId()) {
+					operatorTemp = parentProject.getCreator();
 				} else {
 					operatorTemp = this.appUserService.read(creator.getId());
 				}
@@ -69,11 +86,7 @@ public class TaskServiceImpl implements TaskService {
 			final AppUser operator = operatorTemp;
 			task.setCreator(operator);
 			task.setModifier(operator);
-			if(objective != null) {
-				this.entityManager.merge(objective);
-			} else if (project != null) {
-				this.entityManager.merge(project);
-			}
+			this.entityManager.merge(task);
 			this.entityManager.flush();
 			return task;
 		} catch (final Exception e) {
@@ -111,7 +124,7 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Objective objective, Project project)
+			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
@@ -137,8 +150,11 @@ public class TaskServiceImpl implements TaskService {
 			task.setImpediments(impediments != null ? impediments : new HashSet<Impediment>());
 			task.setDependantTasks(dependantTasks != null ? dependantTasks : new HashSet<Task>());
 			task.setTaskDependencies(taskDependencies != null ? taskDependencies : new HashSet<Task>());
-			task.setObjective(objective);
-			task.setProject(project);
+			if (objective != null) {
+				task.setObjective(this.objectiveService.readWithTasks(objective));
+			} else if (project != null) {
+				task.setProject(this.projectService.readWithTasks(project));
+			}
 			return this.entityManager.merge(task);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when merging Task! " + e.getLocalizedMessage(), e);

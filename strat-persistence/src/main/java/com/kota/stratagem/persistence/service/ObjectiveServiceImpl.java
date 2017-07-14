@@ -76,6 +76,36 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	}
 
 	@Override
+	public Objective readWithProjects(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get Objective with projects by id (" + id + ")");
+		}
+		Objective result = null;
+		try {
+			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, Objective.class).setParameter(ObjectiveParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public Objective readWithTasks(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get Objective with tasks by id (" + id + ")");
+		}
+		Objective result = null;
+		try {
+			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_TASKS, Objective.class).setParameter(ObjectiveParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
 	public Objective readWithProjectsAndTasks(Long id) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Get Objective with projects and tasks by id (" + id + ")");

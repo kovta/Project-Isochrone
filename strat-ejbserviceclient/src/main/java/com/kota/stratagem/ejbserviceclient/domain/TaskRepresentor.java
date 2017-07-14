@@ -32,8 +32,8 @@ public class TaskRepresentor implements Serializable {
 	}
 
 	// Projects and Objectives removed from constructor due to structure ambiguity
-	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
-			AppUserRepresentor modifier, Date modificationDate) {
+	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator,
+			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -108,7 +108,7 @@ public class TaskRepresentor implements Serializable {
 	}
 
 	public int getPriority() {
-		return priority;
+		return this.priority;
 	}
 
 	public double getCompletion() {
@@ -157,12 +157,11 @@ public class TaskRepresentor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TaskRepresentor [id=" + id + ", name=" + name + ", description=" + description + ", priority="
-				+ priority + ", completion=" + completion + ", deadline=" + deadline + ", creator=" + creator
-				+ ", creationDate=" + creationDate + ", modifier=" + modifier + ", modificationDate=" + modificationDate
-				+ ", assignedTeams=" + assignedTeams + ", assignedUsers=" + assignedUsers + ", impediments="
-				+ impediments + ", dependantTasks=" + dependantTasks + ", taskDependencies=" + taskDependencies
-				+ ", objective=" + objective + ", project=" + project + "]";
+		return "TaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
+				+ this.completion + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
+				+ this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
+				+ this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies="
+				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + "]";
 	}
 
 }

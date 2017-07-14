@@ -36,6 +36,10 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 		@NamedQuery(name = ObjectiveQuery.COUNT_BY_ID, query = "SELECT COUNT(o) FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_ALL_OBJECTIVES, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t ORDER BY o.name"),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID, query = "SELECT o FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID),
+		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p WHERE o.id=:"
+				+ ObjectiveParameter.ID),
+		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.tasks t WHERE o.id=:"
+				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t WHERE o.id=:"
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.REMOVE_BY_ID, query = "DELETE FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID)
@@ -87,12 +91,13 @@ public class Objective implements Serializable {
 	@Column(name = "objective_modification_date", nullable = false)
 	private Date modificationDate;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Project.class)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "objective_projects", joinColumns = @JoinColumn(name = "objective_project_objective", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_project_project", nullable = false))
 	private Set<Project> projects;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Task.class)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Task.class)
 	@JoinTable(name = "objective_tasks", joinColumns = @JoinColumn(name = "objective_task_objective_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_task_task_id", nullable = false))
+	// @OneToMany(mappedBy = "objective", targetEntity = Task.class)
 	private Set<Task> tasks;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
@@ -274,11 +279,11 @@ public class Objective implements Serializable {
 	}
 
 	public void addProject(Project project) {
-		this.getProjects().add(project);
+		this.projects.add(project);
 	}
-	
+
 	public void addTask(Task task) {
-		this.getTasks().add(task);
+		this.tasks.add(task);
 	}
 
 }

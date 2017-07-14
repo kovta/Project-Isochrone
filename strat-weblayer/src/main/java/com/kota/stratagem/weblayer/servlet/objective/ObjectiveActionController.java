@@ -94,7 +94,6 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 				if (request.getParameter(DEADLINE) != "") {
 					deadlineTemp = extractionFormat.parse(request.getParameter(DEADLINE));
 				}
-				LOGGER.info(deadlineTemp + ", input: " + request.getParameter(DEADLINE));
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
@@ -103,7 +102,6 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
-			LOGGER.info("Extracted confidentiality: " + request.getParameter(CONFIDENTIALITY));
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");

@@ -7,7 +7,6 @@ import javax.ejb.Local;
 
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
-import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
@@ -18,7 +17,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 public interface ProjectService {
 
 	Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException;
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective) throws PersistenceServiceException;
 
 	Project readElementary(Long id) throws PersistenceServiceException;
 
@@ -29,7 +28,7 @@ public interface ProjectService {
 	Set<Project> readAll() throws PersistenceServiceException;
 
 	Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException;
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

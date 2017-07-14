@@ -89,7 +89,6 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 				if (request.getParameter(DEADLINE) != "") {
 					deadlineTemp = extractionFormat.parse(request.getParameter(DEADLINE));
 				}
-				LOGGER.info(deadlineTemp + ", input: " + request.getParameter(DEADLINE));
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Project : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
@@ -98,7 +97,6 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
-			LOGGER.info("Extracted confidentiality: " + request.getParameter(CONFIDENTIALITY));
 			final Long objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Project : (" + name + ")");

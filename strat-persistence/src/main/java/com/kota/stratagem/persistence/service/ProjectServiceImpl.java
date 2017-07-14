@@ -41,27 +41,31 @@ public class ProjectServiceImpl implements ProjectService {
 	@EJB
 	private AppUserService appUserService;
 
+	@EJB
+	private ObjectiveService objectiveService;
+
 	@Override
 	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) throws PersistenceServiceException {
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Project (name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks + ", confidentiality: "
 					+ confidentiality + ")");
 		}
 		try {
+			final Objective parentObjective = this.objectiveService.readWithProjects(objective);
 			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), tasks, assignedTeams,
-					assignedUsers, impediments, objective);
+					assignedUsers, impediments, parentObjective);
 			AppUser operatorTemp;
-			if (objective.getCreator().getId() == creator.getId()) {
-				operatorTemp = objective.getCreator();
+			if (parentObjective.getCreator().getId() == creator.getId()) {
+				operatorTemp = parentObjective.getCreator();
 			} else {
 				operatorTemp = this.appUserService.read(creator.getId());
 			}
 			final AppUser operator = operatorTemp;
 			project.setCreator(operator);
 			project.setModifier(operator);
-			objective.addProject(project);
-			this.entityManager.merge(objective);
+			parentObjective.addProject(project);
+			this.entityManager.merge(project);
 			this.entityManager.flush();
 			return project;
 		} catch (final Exception e) {
@@ -129,7 +133,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier,
-			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective)
+			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Project (id: " + id + ", name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks
@@ -138,6 +142,7 @@ public class ProjectServiceImpl implements ProjectService {
 		try {
 			final Project project = this.readElementary(id);
 			final AppUser operator = this.appUserService.read(modifier.getId());
+			final Objective parentObjective = this.objectiveService.readWithProjects(objective);
 			project.setName(name);
 			project.setDescription(description);
 			project.setStatus(status);
@@ -155,7 +160,7 @@ public class ProjectServiceImpl implements ProjectService {
 			project.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			project.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
 			project.setImpediments(impediments != null ? impediments : new HashSet<Impediment>());
-			project.setObjective(objective);
+			project.setObjective(parentObjective);
 			return this.entityManager.merge(project);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when merging Project! " + e.getLocalizedMessage(), e);

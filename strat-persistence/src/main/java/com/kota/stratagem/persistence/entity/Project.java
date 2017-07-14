@@ -103,7 +103,7 @@ public class Project implements Serializable {
 	@JoinTable(name = "project_impediments", joinColumns = @JoinColumn(name = "project_impediment_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_impediment_impediment_id", nullable = false))
 	private Set<Impediment> impediments;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Objective.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Objective.class)
 	@JoinTable(name = "objective_projects", joinColumns = @JoinColumn(name = "objective_project_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_project_objective", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Objective objective;
@@ -277,7 +277,7 @@ public class Project implements Serializable {
 				+ this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
 				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]";
 	}
-	
+
 	public void addTask(Task task) {
 		this.getTasks().add(task);
 	}

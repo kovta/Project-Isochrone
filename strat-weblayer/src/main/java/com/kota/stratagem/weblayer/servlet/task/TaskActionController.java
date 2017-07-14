@@ -24,18 +24,18 @@ import com.kota.stratagem.weblayer.common.task.TaskAttribute;
 import com.kota.stratagem.weblayer.common.task.TaskParameter;
 
 @WebServlet("/TaskAction")
-public class TaskActionController extends HttpServlet implements TaskAttribute, TaskParameter{
+public class TaskActionController extends HttpServlet implements TaskAttribute, TaskParameter {
 
 	private static final long serialVersionUID = 319115678364738435L;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(TaskActionController.class);
 
 	private static final String TRUE_VALUE = "1";
 	private static final String NEW_TASK_ID_FLAG = "-1";
-	
+
 	@EJB
 	TaskProtocol protocol;
-	
+
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final TaskRepresentor task, final boolean editFlag,
 			boolean isNew, boolean finishFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_TASK, task);
@@ -70,7 +70,6 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 				if (request.getParameter(DEADLINE) != "") {
 					deadlineTemp = extractionFormat.parse(request.getParameter(DEADLINE));
 				}
-				LOGGER.info(deadlineTemp + ", input: " + request.getParameter(DEADLINE));
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
@@ -96,8 +95,8 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 				TaskRepresentor task = null;
 				try {
 					LOGGER.info(id == null ? "Create Task : (" + name + ")" : "Update Task : (" + id + ")");
-					task = this.protocol.saveTask(id, name, description, priority, completion, deadline, request.getUserPrincipal().getName(), null, null,
-							null, null, null, objective_id, project_id);
+					task = this.protocol.saveTask(id, name, description, priority, completion, deadline, request.getUserPrincipal().getName(), null, null, null,
+							null, null, objective_id, project_id);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Task created succesfully!" : "Task updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

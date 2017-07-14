@@ -54,7 +54,7 @@ public class Task implements Serializable {
 
 	@Column(name = "task_description", nullable = true)
 	private String description;
-	
+
 	@Column(name = "task_priority", nullable = false)
 	private int priority;
 
@@ -101,12 +101,12 @@ public class Task implements Serializable {
 	@JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "dependency_dependent", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false))
 	private Set<Task> taskDependencies;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Objective.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Objective.class)
 	@JoinTable(name = "objective_tasks", joinColumns = @JoinColumn(name = "objective_task_task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_task_objective_id", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Objective objective;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Project.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "project_tasks", joinColumns = @JoinColumn(name = "project_task_task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_task_project_id", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
@@ -119,9 +119,8 @@ public class Task implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Date creationDate,
-			Date modificationDate, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks,
-			Set<Task> taskDependencies, Objective objective, Project project) {
+	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate,
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -136,13 +135,10 @@ public class Task implements Serializable {
 		this.impediments = impediments;
 		this.dependantTasks = dependantTasks;
 		this.taskDependencies = taskDependencies;
-		this.objective = objective;
-		this.project = project;
 	}
 
 	public Task(String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies,
-			Objective objective, Project project) {
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -156,8 +152,6 @@ public class Task implements Serializable {
 		this.impediments = impediments;
 		this.dependantTasks = dependantTasks;
 		this.taskDependencies = taskDependencies;
-		this.objective = objective;
-		this.project = project;
 	}
 
 	public Long getId() {
@@ -185,7 +179,7 @@ public class Task implements Serializable {
 	}
 
 	public int getPriority() {
-		return priority;
+		return this.priority;
 	}
 
 	public void setPriority(int priority) {
@@ -298,12 +292,11 @@ public class Task implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", name=" + name + ", description=" + description + ", priority=" + priority
-				+ ", completion=" + completion + ", deadline=" + deadline + ", creator=" + creator + ", creationDate="
-				+ creationDate + ", modifier=" + modifier + ", modificationDate=" + modificationDate
-				+ ", assignedTeams=" + assignedTeams + ", assignedUsers=" + assignedUsers + ", impediments="
-				+ impediments + ", dependantTasks=" + dependantTasks + ", taskDependencies=" + taskDependencies
-				+ ", objective=" + objective + ", project=" + project + "]";
+		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
+				+ this.completion + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
+				+ this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
+				+ this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies="
+				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + "]";
 	}
 
 }

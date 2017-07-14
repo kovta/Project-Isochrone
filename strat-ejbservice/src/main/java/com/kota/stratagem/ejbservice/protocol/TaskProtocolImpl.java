@@ -16,8 +16,6 @@ import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
@@ -90,11 +88,10 @@ public class TaskProtocolImpl implements TaskProtocol {
 	@Override
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator,
 			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
-			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project)
-			throws AdaptorException {
+			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project) throws AdaptorException {
 		try {
 			Task task = null;
-			if (this.taskService.exists(id)) {
+			if ((id != null) && this.taskService.exists(id)) {
 				final Set<Team> teams = new HashSet<Team>();
 				final Set<AppUser> users = new HashSet<AppUser>();
 				final Set<Impediment> taskImpediments = new HashSet<Impediment>();
@@ -116,11 +113,10 @@ public class TaskProtocolImpl implements TaskProtocol {
 					dependants.add(this.taskService.read(taskRepresentor.getId()));
 				}
 				task = this.taskService.update(id, name, description, priority, completion, deadline, this.appUserService.read(operator), teams, users,
-						taskImpediments, dependants, dependencies, this.objectiveService.readWithProjectsAndTasks(objective),
-						this.projectSerivce.readWithTasks(project));
+						taskImpediments, dependants, dependencies, objective, project);
 			} else {
 				task = this.taskService.create(name, description, priority, completion, deadline, this.appUserService.read(operator), null, null, null, null,
-						null, objective != null ? this.objectiveService.readWithProjectsAndTasks(objective) : null,  project != null ? this.projectSerivce.readWithTasks(project) : null);
+						null, objective, project);
 			}
 			return this.converter.to(task);
 		} catch (final PersistenceServiceException e) {
