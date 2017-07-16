@@ -26,9 +26,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.parameter.ProjectParameter;
 import com.kota.stratagem.persistence.query.ProjectQuery;
@@ -38,7 +35,8 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = ProjectQuery.COUNT_BY_ID, query = "SELECT COUNT(p) FROM Project p WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_ALL_PROJECTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t ORDER BY p.name"),
-		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p WHERE p.status=:" + ProjectParameter.STATUS + " ORDER BY p.name"),
+		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.status=:"
+				+ ProjectParameter.STATUS + " ORDER BY p.name"),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID, query = "SELECT p FROM Project p WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.REMOVE_BY_ID, query = "DELETE FROM Project p WHERE p.id=:" + ProjectParameter.ID)
@@ -105,7 +103,6 @@ public class Project implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Objective.class)
 	@JoinTable(name = "objective_projects", joinColumns = @JoinColumn(name = "objective_project_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_project_objective", nullable = false))
-	@NotFound(action = NotFoundAction.IGNORE)
 	private Objective objective;
 
 	public Project() {

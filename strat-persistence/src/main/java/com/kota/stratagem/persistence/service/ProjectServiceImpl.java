@@ -52,7 +52,7 @@ public class ProjectServiceImpl implements ProjectService {
 					+ confidentiality + ")");
 		}
 		try {
-			final Objective parentObjective = this.objectiveService.readWithProjects(objective);
+			final Objective parentObjective = this.objectiveService.readElementary(objective);
 			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), tasks, assignedTeams,
 					assignedUsers, impediments, parentObjective);
 			AppUser operatorTemp;
@@ -64,7 +64,6 @@ public class ProjectServiceImpl implements ProjectService {
 			final AppUser operator = operatorTemp;
 			project.setCreator(operator);
 			project.setModifier(operator);
-			parentObjective.addProject(project);
 			this.entityManager.merge(project);
 			this.entityManager.flush();
 			return project;
@@ -194,7 +193,8 @@ public class ProjectServiceImpl implements ProjectService {
 			LOGGER.debug("Check Project by id (" + id + ")");
 		}
 		try {
-			return this.entityManager.createNamedQuery(ProjectQuery.COUNT_BY_ID, Long.class).setParameter(ProjectParameter.ID, id).getSingleResult() == 1;
+			// query returns more than 1 result
+			return this.entityManager.createNamedQuery(ProjectQuery.COUNT_BY_ID, Long.class).setParameter(ProjectParameter.ID, id).getSingleResult() > 0;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during Project serach (" + id + ")! " + e.getLocalizedMessage(), e);
 		}

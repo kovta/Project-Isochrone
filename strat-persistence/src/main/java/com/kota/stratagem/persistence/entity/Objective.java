@@ -97,7 +97,6 @@ public class Objective implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Task.class)
 	@JoinTable(name = "objective_tasks", joinColumns = @JoinColumn(name = "objective_task_objective_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_task_task_id", nullable = false))
-	// @OneToMany(mappedBy = "objective", targetEntity = Task.class)
 	private Set<Task> tasks;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)

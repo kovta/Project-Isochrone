@@ -193,6 +193,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean exists(Long id) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Check Objective by id (" + id + ")");
