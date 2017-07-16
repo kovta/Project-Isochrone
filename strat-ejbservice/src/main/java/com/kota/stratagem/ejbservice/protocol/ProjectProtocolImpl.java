@@ -1,6 +1,8 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,16 +13,19 @@ import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
 import com.kota.stratagem.ejbservice.converter.ProjectConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
+import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Project;
@@ -60,12 +65,15 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	private ObjectiveService objectiveService;
 
 	@EJB
-	private ProjectConverter converter;
+	private ProjectConverter projectConverter;
+
+	@EJB
+	private ObjectiveConverter objectiveConverter;
 
 	@Override
 	public ProjectRepresentor getProject(Long id) throws AdaptorException {
 		try {
-			final ProjectRepresentor representor = this.converter.to(this.projectService.readWithTasks(id));
+			final ProjectRepresentor representor = this.projectConverter.to(this.projectService.readWithTasks(id));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Project (id: " + id + ") --> " + representor);
 			}
@@ -77,8 +85,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	}
 
 	@Override
-	public List<ProjectRepresentor> getAllProjects(final ProjectCriteria criteria) {
-		Set<ProjectRepresentor> representors = new HashSet<ProjectRepresentor>();
+	public List<ProjectRepresentor> getAllProjects(final ProjectCriteria criteria) throws AdaptorException {
 		try {
 			Set<Project> projects = null;
 			if (criteria.getStatus() == null) {
@@ -86,15 +93,57 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			} else {
 				projects = this.projectService.readByStatus(ProjectStatus.valueOf(criteria.getStatus().name()));
 			}
-			representors = this.converter.to(projects);
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all projects by criteria (" + criteria + ") --> " + representors.size() + " projects(s)");
+				LOGGER.debug("Fetch all projects by criteria (" + criteria + "): " + projects.size() + " projects(s)");
 			}
+			return new ArrayList<ProjectRepresentor>(this.projectConverter.to(projects));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
-		final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>(representors);
-		return projects;
+	}
+
+	@Override
+	public List<ObjectiveRepresentor> getObjectiveProjectClusters() throws ServiceException {
+		try {
+			final List<ObjectiveRepresentor> clusters = new ArrayList<>();
+			final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>(this.projectConverter.to(this.projectService.readAll()));
+			for (final ProjectRepresentor project : projects) {
+				if (!clusters.contains(project.getObjective())) {
+					clusters.add(this.objectiveConverter.to(this.objectiveService.readWithProjectsAndTasks(project.getObjective().getId())));
+				}
+			}
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Fetch all projects grouped by parent objectives: " + clusters.size() + " cluster(s) | " + projects.size() + " project(s)");
+			}
+			Collections.sort(clusters, new Comparator<ObjectiveRepresentor>() {
+				@Override
+				public int compare(ObjectiveRepresentor obj_a, ObjectiveRepresentor obj_b) {
+					final int c = obj_a.getPriority() - obj_b.getPriority();
+					if (c == 0) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+					return c;
+				}
+			});
+			for (final ObjectiveRepresentor objective : clusters) {
+				Collections.sort(objective.getProjects(), new Comparator<ProjectRepresentor>() {
+					@Override
+					public int compare(ProjectRepresentor obj_a, ProjectRepresentor obj_b) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+				});
+				final List<ProjectRepresentor> expandedProjects = new ArrayList<>();
+				for (final ProjectRepresentor project : objective.getProjects()) {
+					expandedProjects.add(this.projectConverter.to(this.projectService.readWithTasks(project.getId())));
+				}
+				objective.setProjects(expandedProjects);
+			}
+			return clusters;
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new ServiceException(e.getLocalizedMessage());
+		}
 	}
 
 	@Override
@@ -133,7 +182,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null, null,
 						null, null, objective);
 			}
-			return this.converter.to(project);
+			return this.projectConverter.to(project);
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -143,6 +192,9 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	@Override
 	public void removeProject(Long id) throws AdaptorException {
 		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Remove project (id: " + id + ")");
+			}
 			this.projectService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());

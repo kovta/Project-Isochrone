@@ -37,7 +37,7 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 		}
 		if (objective.getTasks() != null) {
 			for (final Task task : objective.getTasks()) {
-				representor.addTask(this.taskConverter.to(task));
+				representor.addTask(this.taskConverter.toElementary(task));
 			}
 		}
 		// if (objective.getAssignedTeams() != null) {

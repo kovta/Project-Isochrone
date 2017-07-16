@@ -1,6 +1,8 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -77,14 +79,26 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	public List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException {
 		Set<ObjectiveRepresentor> representors = new HashSet<ObjectiveRepresentor>();
 		try {
-			representors = this.converter.to(this.objectiveService.readAll());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all Objectives : " + representors.size() + " objective(s)");
 			}
+			representors = this.converter.to(this.objectiveService.readAll());
+			final List<ObjectiveRepresentor> objectives = new ArrayList<ObjectiveRepresentor>(representors);
+			Collections.sort(objectives, new Comparator<ObjectiveRepresentor>() {
+				@Override
+				public int compare(ObjectiveRepresentor obj_a, ObjectiveRepresentor obj_b) {
+					final int c = obj_a.getPriority() - obj_b.getPriority();
+					if (c == 0) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+					return c;
+				}
+			});
+			return objectives;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
-		return new ArrayList<ObjectiveRepresentor>(representors);
 	}
 
 	@Override
@@ -128,7 +142,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 						this.appUserService.read(operator), objectiveProjects, objectiveTasks, teams, users);
 			} else {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create Objective");
+					LOGGER.debug("Create Objective (" + name + ")");
 				}
 				objective = this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality,
 						this.appUserService.read(operator), null, null, null, null);
@@ -144,7 +158,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	public void removeObjective(Long id) throws AdaptorException {
 		try {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Deleting Objective (id: " + id + ")");
+				LOGGER.debug("Remove Objective (id: " + id + ")");
 			}
 			this.objectiveService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {

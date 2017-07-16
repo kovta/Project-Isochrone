@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -42,12 +43,21 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final String id = request.getParameter(ID);
 		LOGGER.info("Get Objective by id (" + id + ")");
-		if ((id == null) || "".equals(id)) {
-			response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
+		boolean valid = false;
+		final Scanner sc = new Scanner(id.trim());
+		if (!sc.hasNextInt(10)) {
+			valid = false;
+		} else {
+			sc.nextInt(10);
+			valid = !sc.hasNext();
+		}
+		sc.close();
+		if ((id == null) || "".equals(id) || !valid) {
+			response.sendRedirect(Page.ERROR.getUrl());
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
 			ObjectiveRepresentor objective = null;
-			boolean isNew = false;
+			boolean isNew = false, errorFlag = false;
 			if (NEW_OBJECTIVE_ID_FLAG.equals(id)) {
 				objective = new ObjectiveRepresentor("", "", 0, ObjectiveStatusRepresentor.PLANNED, new Date(), false, null, null, null, null);
 				isNew = true;
@@ -56,17 +66,21 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 					objective = this.protocol.getObjective(Long.parseLong(id));
 				} catch (final ServiceException e) {
 					LOGGER.error(e, e);
+					errorFlag = true;
 				}
 			}
-			this.forward(request, response, objective, editFlag, isNew, false);
+			this.forward(request, response, objective, editFlag, isNew, false, errorFlag);
 		}
 	}
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ObjectiveRepresentor objective, final boolean editFlag,
-			final boolean isNew, final boolean finishFlag) throws ServletException, IOException {
+			final boolean isNew, final boolean finishFlag, final boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_OBJECTIVE, objective);
 		if (finishFlag) {
 			response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
+		} else if (errorFlag) {
+			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
+			view.forward(request, response);
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.OBJECTIVE_EDIT.getJspName() : Page.OBJECTIVE_VIEW.getJspName());
 			view.forward(request, response);
@@ -98,7 +112,7 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, null, false, null, null, null, null);
-				this.forward(request, response, objective, false, false, true);
+				this.forward(request, response, objective, false, false, true, false);
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
@@ -108,7 +122,7 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 				// new attributes must be requested
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality, null, null,
 						null, null);
-				this.forward(request, response, objective, false, false, true);
+				this.forward(request, response, objective, false, false, true, false);
 			} else {
 				ObjectiveRepresentor objective = null;
 				try {
@@ -120,7 +134,7 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, objective, false, false, true);
+				this.forward(request, response, objective, false, false, true, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

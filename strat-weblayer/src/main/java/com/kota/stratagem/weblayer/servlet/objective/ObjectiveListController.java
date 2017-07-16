@@ -1,8 +1,6 @@
 package com.kota.stratagem.weblayer.servlet.objective;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -37,12 +35,6 @@ public class ObjectiveListController extends HttpServlet implements ObjectiveLis
 		LOGGER.info("Get All Objectives");
 		try {
 			final List<ObjectiveRepresentor> objectives = this.protocol.getAllObjectives();
-			Collections.sort(objectives, new Comparator<ObjectiveRepresentor>() {
-				@Override
-				public int compare(ObjectiveRepresentor obj_a, ObjectiveRepresentor obj_b) {
-					return obj_a.getPriority() - obj_b.getPriority();
-				}
-			});
 			request.setAttribute(ATTR_OBJECTIVES, objectives);
 		} catch (final AdaptorException e) {
 			LOGGER.error(e, e);

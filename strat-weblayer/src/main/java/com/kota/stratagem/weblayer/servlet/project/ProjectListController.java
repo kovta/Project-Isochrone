@@ -15,9 +15,11 @@ import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.ProjectProtocol;
+import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.FormValue;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.project.ProjectListAttribute;
@@ -37,9 +39,9 @@ public class ProjectListController extends HttpServlet implements ProjectListAtt
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get All Projects");
 		try {
-			final List<ProjectRepresentor> projects = this.protocol.getAllProjects(new ProjectCriteria());
-			request.setAttribute(ATTR_PROJECTS, projects);
-		} catch (final AdaptorException e) {
+			final List<ObjectiveRepresentor> objectiveProjectClusters = this.protocol.getObjectiveProjectClusters();
+			request.setAttribute(ATTR_PARENT_OBJECTIVES_CLUSTERS, objectiveProjectClusters);
+		} catch (final ServiceException e) {
 			LOGGER.error(e, e);
 		}
 		this.forward(request, response, new ProjectCriteria(), FILTER_ALL_CATEGORY);

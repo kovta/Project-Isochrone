@@ -34,7 +34,7 @@ public class ProjectConverterImpl implements ProjectConverter {
 		final ProjectRepresentor representor = this.toElementary(project);
 		if (project.getTasks() != null) {
 			for (final Task task : project.getTasks()) {
-				representor.addTask(this.taskConverter.to(task));
+				representor.addTask(this.taskConverter.toElementary(task));
 			}
 		}
 		// if (project.getAssignedTeams() != null) {
@@ -66,7 +66,7 @@ public class ProjectConverterImpl implements ProjectConverter {
 				: new ProjectRepresentor(project.getName(), project.getDescription(), status, project.getDeadline(), project.getConfidential(),
 						this.appUserConverter.toElementary(project.getCreator()), project.getCreationDate(),
 						this.appUserConverter.toElementary(project.getModifier()), project.getModificationDate(),
-						project.getObjective() != null ? this.objectiveConverter.toElementary(project.getObjective()) : null);
+						this.objectiveConverter.toElementary(project.getObjective()));
 		return representor;
 	}
 
