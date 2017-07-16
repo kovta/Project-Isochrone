@@ -173,6 +173,8 @@ INSERT INTO project_status_alterations (alteration_id, alteration_project_id, al
 INSERT INTO objective_projects (objective_project_objective, objective_project_project) VALUES
 (0, 3),
 (1, 0),
+(1, 1),
+(1, 2),
 (2, 4),
 (2, 5),
 (3, 6),
@@ -211,7 +213,6 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (7, 8);
 
 INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id) VALUES
-(0, 2),
 (2, 9),
 (2, 10),
 (2, 11),
