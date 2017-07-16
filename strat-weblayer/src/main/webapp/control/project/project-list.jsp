@@ -1,79 +1,96 @@
-<%@page import="com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor"%>
-<%@page import="com.kota.stratagem.weblayer.common.FormValue"%>
-<%@page import="com.kota.stratagem.weblayer.common.project.ProjectListAttribute"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Set" %>  
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor" %>
+<%@ page import="com.kota.stratagem.weblayer.common.FormValue" %>
+<%@ page import="com.kota.stratagem.weblayer.common.project.ProjectListAttribute" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="style/page.css" />
-<title>:: Projects ::</title>
+	<title>Stratagem - Projects</title>
+	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>
-    <h1>List of Projects</h1>
-    <div>
-    	<% String userName = (String) request.getUserPrincipal().getName(); %>
-	    Welcome <strong><%= userName %></strong>! <a href="Logout">Logout</a>
-	</div>
+    <jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
 	<br/><br/>
-	<form method="post" action="ProjectList">
-		<div>
-			<label for="status">Status: </label>
-			<select name="status" id="status">
-			    <% String statusName = (String) request.getAttribute(ProjectListAttribute.ATTR_STATUS); %>
-				<option value="-1" <% out.print( FormValue.FILTER_ALL_CATEGORY.equals(statusName) ? "selected=\"selected\"" : "" ); %>>-</option>
-			    <c:set var="statusValues" value="<%= ProjectStatusRepresentor.values() %>"/>
-				<c:forEach items="${statusValues}" var="status">
-					<option value="${status.name}" ${status.name eq requestScope.status ? "selected=\"selected\"" : ""}>${status.label}</option>
-				</c:forEach>
-			</select>
-			<input type="submit" value="Filter" />
-		</div>
-	</form>
-	<br/><br/>
+	
 	<c:choose>
 	    <c:when test="${requestScope.projects.isEmpty()}">
-            <span>Project list is <strong>empty</strong>.</span>
+            <div class="divider-new">
+		        <h2 class="h2-responsive wow fadeIn">No Projects have been initiated</h2>
+		    </div>
         </c:when>
         <c:otherwise>
-            <table class="projectstable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Tasks</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach items="${requestScope.projects}" var="project">
-                        <tr>
-                            <td><c:out value="${project.name}" /></td>
-                            <td><c:out value="${project.status.label}" /></td>
-                            <td><c:out value="${project.tasks.size()}" /></td>
-                            <td><a href="ProjectAction?id=<c:out value="${project.id}" />">Details</a></td>
-                            <td><a href="ProjectAction?id=<c:out value="${project.id}" />&edit=1">Edit</a></td>
-                            <td><a href="ProjectDelete?id=<c:out value="${project.id}" />">Delete</a></td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-            <br/>
+    		<div class="divider-new">
+		        <h2 class="h2-responsive wow fadeIn">List of Projects</h2>
+		    </div>    
         </c:otherwise>
-	</c:choose>
-	<br/><br/>
-	<div>
-		<a href="ProjectAction?id=-1&edit=1">Create</a> new project.
-	</div>
-	<% if (request.isUserInRole("department_manager")) { %>
-		<div>
-		    Projects are up to date.
+    </c:choose>
+		
+	<div class="wrapper">
+		<div class="container">
+	       	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager") || request.isUserInRole("general_manager")) { %>
+			<div class="space-bottom">
+			    <button type="button" class="btn mdb-color darken-1" data-toggle="modal" data-target="#addProject">
+			    	<i class="fa fa-plus right"></i><span class="icon-companion"> Start new Project</span>
+				</button>
+			</div>
+			<% } %>
+			
+			<c:forEach items="${requestScope.parentObjectives}" var="parentObjective">
+				<h2>${parentObjective.name}</h2>
+				<table class="table table-hover fixed-table-layout">
+					<colgroup>
+						<col span="1" style="width: 3%;">
+						<col span="1" style="width: 66%;">
+						<col span="1" style="width: 15%;">
+						<col span="1" style="width: 8%;">
+						<col span="1" style="width: 8%;">
+				    </colgroup>
+				    <thead>
+				        <tr>
+				        	<th>#</th>
+					        <th>Name</th>
+					        <th class="center-text">Status</th>
+					        <th class="center-text">Tasks</th>
+					        <th class="center-text">Actions</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				    	<c:set var="count" value="0" scope="page"></c:set>
+						<c:forEach items="${parentObjective.projects}" var="project">
+							<c:set var="count" value="${count + 1}" scope="page"/>
+		                        <tr>
+		                        	<th scope="row"><c:out value="${count}" /></th>
+		                            <td><c:out value="${project.name}" /></td>
+		                            <td class="center-text"><c:out value="${project.status.label}" /></td>
+		                            <td class="center-text"><c:out value="${project.tasks.size()}" /></td>
+		                            <td class="center-text">
+			                            <a href="ProjectAction?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
+		                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager") || request.isUserInRole("general_manager")) { %>
+										<a href="ProjectAction?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
+			                            <a href="ProjectDelete?id=<c:out value="${project.id}" />"><i class="fa fa-trash"  aria-hidden="true"></i></a>
+		                            	<% } %>
+		                            </td>
+		                        </tr>
+						</c:forEach>
+				    </tbody>
+				</table>
+				<br/>
+			</c:forEach>
+			
+			<!-- Modals -->
+			<jsp:include page="project-create.jsp"></jsp:include>
+			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<!-- /Modals -->
+			
 		</div>
-	<% } %>
+		<div class="push"></div>
+	</div>
+	
+	<jsp:include page="../../partial/copyright.jsp"></jsp:include>
+	<jsp:include page="../../partial/wow.jsp"></jsp:include>
+	
 </body>
 </html>

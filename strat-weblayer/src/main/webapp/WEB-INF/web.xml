@@ -31,6 +31,7 @@
 		<display-name>Stratagem public security constraint</display-name>
 		<web-resource-collection>
 			<web-resource-name>Public</web-resource-name>
+			<url-pattern>/</url-pattern>
 			<url-pattern>/css/*</url-pattern>
 			<url-pattern>/font/*</url-pattern>
 			<url-pattern>/js/*</url-pattern>
@@ -60,7 +61,7 @@
 		<role-name>general_user</role-name>
 	</security-role>
 	<security-role>
-		<description>Generak manager</description>
+		<description>General manager</description>
 		<role-name>general_manager</role-name>
 	</security-role>
 	<security-role>
@@ -74,6 +75,11 @@
 	
 	<error-page>
 		<error-code>403</error-code>
+		<location>/Error</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>404</error-code>
 		<location>/Error</location>
 	</error-page>
 	

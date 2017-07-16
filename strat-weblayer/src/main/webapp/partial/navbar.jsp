@@ -5,12 +5,6 @@
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav1" aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <!--
-        <a class="navbar-brand" href="#">
-            <strong>Navbar</strong>
-        </a>
-        -->
-        
         <a class="navbar-brand" href="Home">
         	<strong>Home</strong>
         </a>
@@ -94,5 +88,3 @@
     </div>
 </nav>
  
-
-

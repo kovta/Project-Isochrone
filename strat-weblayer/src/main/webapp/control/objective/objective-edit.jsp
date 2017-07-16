@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>Stratagem - Objectives</title>
 	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>

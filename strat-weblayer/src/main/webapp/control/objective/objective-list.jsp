@@ -5,15 +5,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>Stratagem - Objectives</title>
 	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>
 	<jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
 	<br/><br/>
 	
-    <div class="divider-new">
-        <h2 class="h2-responsive wow fadeIn">List of Objectives</h2>
-    </div>
+	<c:choose>
+	    <c:when test="${requestScope.objectives.isEmpty()}">
+            <div class="divider-new">
+		        <h2 class="h2-responsive wow fadeIn">No Objectives have been set</h2>
+		    </div>
+        </c:when>
+        <c:otherwise>
+    		<div class="divider-new">
+		        <h2 class="h2-responsive wow fadeIn">List of Objectives</h2>
+		    </div>    
+        </c:otherwise>
+    </c:choose>
     
 	<div class="wrapper">
 		<div class="container">
@@ -25,15 +35,24 @@
 			</div>
 			<% } %>
 			<table class="table table-hover">
+				<colgroup>
+					<col span="1" style="width: 3%;">
+					<col span="1" style="width: 45%;">
+					<col span="1" style="width: 15%;">
+					<col span="1" style="width: 8%;">
+					<col span="1" style="width: 8%;">
+					<col span="1" style="width: 8%;">
+					<col span="1" style="width: 8%;">
+			    </colgroup>
 			    <thead>
 			        <tr>
-			            <th>#</th>
-			            <th>Name</th>
-			            <th>Status</th>
-			            <th>Priority</th>
-			            <th>Projects</th>
-			            <th>Tasks</th>
-			            <th>Actions</th>
+				        <th>#</th>
+				        <th>Name</th>
+				        <th class="center-text">Status</th>
+				        <th class="center-text">Priority</th>
+				        <th class="center-text">Projects</th>
+				        <th class="center-text">Tasks</th>
+				        <th class="center-text">Actions</th>
 			        </tr>
 			    </thead>
 			    <tbody>
@@ -43,11 +62,11 @@
 	                        <tr>
 	                        	<th scope="row"><c:out value="${count}" /></th>
 	                            <td><c:out value="${objective.name}" /></td>
-	                            <td><c:out value="${objective.status.label}" /></td>
-	                            <td><c:out value="${objective.priority}" /></td>
-	                            <td><c:out value="${objective.projects.size()}" /></td>
-	                            <td><c:out value="${objective.tasks.size()}" /></td>
-	                            <td>
+	                            <td class="center-text"><c:out value="${objective.status.label}" /></td>
+	                            <td class="center-text"><c:out value="${objective.priority}" /></td>
+	                            <td class="center-text"><c:out value="${objective.projects.size()}" /></td>
+	                            <td class="center-text"><c:out value="${objective.tasks.size()}" /></td>
+	                            <td class="center-text">
 		                            <a href="ObjectiveAction?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
 	                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager")) { %>
 									<a href="ObjectiveAction?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>

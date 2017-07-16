@@ -3,11 +3,12 @@
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
-<%@page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>Stratagem - Objectives</title>
 	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>

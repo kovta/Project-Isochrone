@@ -207,3 +207,6 @@ tr > td:first-child {
 .match-row {
 	height: 72px;
 }
+.fixed-table-layout {
+	table-layout: fixed;
+}
