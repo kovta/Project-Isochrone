@@ -52,9 +52,15 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
-			Long id = null;
+			Long id = null, objective_id = null, project_id = null;
 			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
 				id = Long.parseLong(request.getParameter(ID));
+			} else {
+				if (request.getParameter(PARENT_OBJECTIVE) != "") {
+					objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
+				} else if (request.getParameter(PARENT_PROJECT) != "") {
+					project_id = Long.parseLong(request.getParameter(PARENT_PROJECT));
+				}
 			}
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
@@ -77,14 +83,6 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 				this.forward(request, response, Task, false, false, true);
 			}
 			final Date deadline = deadlineTemp;
-			Long objectiveTemp = null, projectTemp = null;
-			if (request.getParameter(PARENT_OBJECTIVE) != "") {
-				objectiveTemp = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
-			} else if (request.getParameter(PARENT_PROJECT) != "") {
-				projectTemp = Long.parseLong(request.getParameter(PARENT_PROJECT));
-			}
-			final Long objective_id = objectiveTemp;
-			final Long project_id = projectTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");

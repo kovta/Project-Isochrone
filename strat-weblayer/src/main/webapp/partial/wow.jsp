@@ -54,3 +54,9 @@
 	    ticks_snap_bounds: 7
 	});
 </script>
+
+<script>
+function goBack() {
+    window.history.back();
+}
+</script>

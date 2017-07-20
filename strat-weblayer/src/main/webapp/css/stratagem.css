@@ -77,6 +77,9 @@ footer.page-footer {
 .square-tile{
 	height: 185px;
 }
+.full-form-footer-button {
+	width: 230px;
+}
 
 .view {
     background: url("../img/connections.jpg")no-repeat center center fixed;

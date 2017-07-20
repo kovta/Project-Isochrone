@@ -23,6 +23,7 @@ import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.project.ProjectAttribute;
 import com.kota.stratagem.weblayer.common.project.ProjectParameter;
+import com.kota.stratagem.weblayer.util.RequestRefiner;
 
 @WebServlet("/ProjectAction")
 public class ProjectActionController extends HttpServlet implements ProjectParameter, ProjectAttribute {
@@ -30,6 +31,8 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 	private static final long serialVersionUID = -8825015852540069920L;
 
 	private static final Logger LOGGER = Logger.getLogger(ProjectActionController.class);
+
+	private static final RequestRefiner REFINER = new RequestRefiner();
 
 	private static final String TRUE_VALUE = "1";
 	private static final String NEW_PROJECT_ID_FLAG = "-1";
@@ -39,9 +42,9 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LOGGER.info("Get Project by id (" + request.getParameter(ID) + ")");
 		final String id = request.getParameter(ID);
-		LOGGER.info("Get Project by id (" + id + ")");
-		if ((id == null) || "".equals(id)) {
+		if ((id == null) || "".equals(id) || !REFINER.isNumeric(id)) {
 			response.sendRedirect(Page.PROJECT_LIST.getUrl());
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
@@ -76,9 +79,11 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
-			Long id = null;
+			Long id = null, objective_id = null;
 			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
 				id = Long.parseLong(request.getParameter(ID));
+			} else {
+				objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 			}
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
@@ -97,10 +102,9 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
-			final Long objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Project : (" + name + ")");
-				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
+				request.getSession().setAttribute(ATTR_ERROR, "Project name required");
 				// new attributes must be requested
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null, null, null, null, null);
 				this.forward(request, response, project, false, false, true);
@@ -120,21 +124,6 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-
-		/*
-		 * Long id = null; if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) { id =
-		 * Long.parseLong(request.getParameter(ID)); } final String name = request.getParameter(NAME); final String
-		 * description = request.getParameter(DESCRIPTION); final ProjectStatusRepresentor status =
-		 * ProjectStatusRepresentor.valueOf(request.getParameter(STATUS)); final Boolean visible =
-		 * Boolean.valueOf(request.getParameter(VISIBLE)); if ((name == null) || "".equals(name)) {
-		 * LOGGER.info("Failed attempt to modify project : (" + name + ")"); final ProjectRepresentor project = new
-		 * ProjectRepresentor(id, name, description, status, null, visible, null, null, null, null, null);
-		 * this.forward(request, response, project, true, true, false); } else { ProjectRepresentor project = null; try
-		 * { LOGGER.info(id == null ? "Create project : (" + name + ")" : "Update project : (" + id + ")"); project =
-		 * this.protocol.saveProject(id, name, description, status, null, visible, null, null, null, null, null, null);
-		 * } catch (final AdaptorException e) { LOGGER.error(e, e); } this.forward(request, response, project, false,
-		 * false, true); } } catch (final Exception e) { e.printStackTrace(); }
-		 */
 	}
 
 }

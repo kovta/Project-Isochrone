@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -25,6 +24,7 @@ import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveParameter;
+import com.kota.stratagem.weblayer.util.RequestRefiner;
 
 @WebServlet("/ObjectiveAction")
 public class ObjectiveActionController extends HttpServlet implements ObjectiveParameter, ObjectiveAttribute {
@@ -32,6 +32,8 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 	private static final long serialVersionUID = -6240725013473292997L;
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveActionController.class);
+
+	private static final RequestRefiner REFINER = new RequestRefiner();
 
 	private static final String TRUE_VALUE = "1";
 	private static final String NEW_OBJECTIVE_ID_FLAG = "-1";
@@ -41,18 +43,9 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LOGGER.info("Get Objective by id (" + request.getParameter(ID) + ")");
 		final String id = request.getParameter(ID);
-		LOGGER.info("Get Objective by id (" + id + ")");
-		boolean valid = false;
-		final Scanner sc = new Scanner(id.trim());
-		if (!sc.hasNextInt(10)) {
-			valid = false;
-		} else {
-			sc.nextInt(10);
-			valid = !sc.hasNext();
-		}
-		sc.close();
-		if ((id == null) || "".equals(id) || !valid) {
+		if ((id == null) || "".equals(id) || !REFINER.isNumeric(id)) {
 			response.sendRedirect(Page.ERROR.getUrl());
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));

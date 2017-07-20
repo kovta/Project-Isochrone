@@ -19,7 +19,7 @@
 	            <div class="modal-body">
 	            	<!-- TODO: Objective and project parent discerning -->
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
-	            	<input type="hidden" name="projectId" value="" />
+	            	<input type="hidden" name="projectId" value="${project.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
 	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}">
@@ -78,7 +78,7 @@
 	            <!--Footer-->
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-outline-info mr-auto" data-dismiss="modal">
-	                	Close <i class="fa fa-times-circle ml-1"></i>
+	                	Cancel <i class="fa fa-times-circle ml-1"></i>
 	                </button>
 	            	<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto">
 	            		Save <i class="fa fa-save ml-1"></i>

@@ -75,7 +75,7 @@
 	            <!--Footer-->
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-outline-info mr-auto" data-dismiss="modal">
-	                	Close <i class="fa fa-times-circle ml-1"></i>
+	                	Cancel <i class="fa fa-times-circle ml-1"></i>
 	                </button>
 	            	<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto">
 	            		Save <i class="fa fa-save ml-1"></i>

@@ -2,9 +2,9 @@
 <%@ page import="java.util.Set" %>  
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
-<%@page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -123,8 +123,13 @@
 		                    <!--/.Fourth row-->
 		                    <!-- Fifth row -->
 		                    <div class="row">
-		                        <div class="col-md-12 text-center">
-									<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto">
+		                        <div class="col-md-6 text-center">
+									<button type="button" onclick="goBack()" class="btn btn-outline-info mr-auto full-form-footer-button">
+		            					Cancel <i class="fa fa-times-circle ml-1"></i>
+		            				</button>
+		                        </div>
+		                        <div class="col-md-6 text-center">
+									<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto full-form-footer-button">
 		            					Update Objective <i class="fa fa-save ml-1"></i>
 		            				</button>
 		                        </div>

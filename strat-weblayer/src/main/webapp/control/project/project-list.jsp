@@ -19,27 +19,19 @@
 	    <c:when test="${requestScope.projects.isEmpty()}">
             <div class="divider-new">
 		        <h2 class="h2-responsive wow fadeIn">No Projects have been initiated</h2>
-		    </div>
+		    </div><br/>
         </c:when>
         <c:otherwise>
     		<div class="divider-new">
 		        <h2 class="h2-responsive wow fadeIn">List of Projects</h2>
-		    </div>    
+		    </div><br/>
         </c:otherwise>
     </c:choose>
 		
 	<div class="wrapper">
 		<div class="container">
-	       	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager") || request.isUserInRole("general_manager")) { %>
-			<div class="space-bottom">
-			    <button type="button" class="btn mdb-color darken-1" data-toggle="modal" data-target="#addProject">
-			    	<i class="fa fa-plus right"></i><span class="icon-companion"> Start new Project</span>
-				</button>
-			</div>
-			<% } %>
-			
 			<c:forEach items="${requestScope.parentObjectives}" var="parentObjective">
-				<h2>${parentObjective.name}</h2>
+				<h2 class="icon-companion"><a href="ObjectiveAction?id=<c:out value="${parentObjective.id}" />">${parentObjective.name}</a></h2>				
 				<table class="table table-hover fixed-table-layout">
 					<colgroup>
 						<col span="1" style="width: 3%;">

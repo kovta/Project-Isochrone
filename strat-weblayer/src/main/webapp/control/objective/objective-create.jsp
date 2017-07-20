@@ -1,8 +1,8 @@
-<%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
-<%@page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
 
 <!--Modal: Objective Form-->
 <div class="modal fade" id="addObjective" tabindex="-1" role="dialog" aria-labelledby="objectiveModal" aria-hidden="true">
@@ -95,7 +95,7 @@
 	            <!--Footer-->
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-outline-info mr-auto" data-dismiss="modal">
-	                	Close <i class="fa fa-times-circle ml-1"></i>
+	                	Cancel <i class="fa fa-times-circle ml-1"></i>
 	                </button>
 	            	<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto">
 	            		Save <i class="fa fa-save ml-1"></i>
