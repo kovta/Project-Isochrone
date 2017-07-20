@@ -139,10 +139,11 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			AppUser modifier, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Objective (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
-					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ", modifier=" + modifier.getName() + ")");
+					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ")");
 		}
 		try {
-			final Objective objective = this.readElementary(id);
+			// Multiple representation workaround
+			final Objective objective = this.readWithProjectsAndTasks(id);
 			final AppUser operator = this.appUserService.read(modifier.getId());
 			objective.setName(name);
 			objective.setDescription(description);
@@ -150,16 +151,16 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			objective.setStatus(status);
 			objective.setDeadline(deadline);
 			objective.setConfidential(confidentiality);
-			if (!(objective.getModifier().equals(operator))) {
-				if (!(objective.getCreator().equals(objective.getModifier()))) {
+			if ((objective.getModifier().getId() != operator.getId())) {
+				if ((objective.getCreator().getId() != objective.getModifier().getId())) {
 					objective.setModifier(operator);
-				} else if (objective.getCreator().equals(operator)) {
+				} else if (objective.getCreator().getId() == operator.getId()) {
 					objective.setModifier(objective.getCreator());
 				}
 			}
 			objective.setModificationDate(new Date());
-			objective.setProjects(projects != null ? projects : new HashSet<Project>());
-			objective.setTasks(tasks != null ? tasks : new HashSet<Task>());
+			// objective.setProjects(projects != null ? projects : new HashSet<Project>());
+			// objective.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			objective.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			objective.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
 			return this.entityManager.merge(objective);
