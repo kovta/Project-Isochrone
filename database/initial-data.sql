@@ -135,7 +135,8 @@ INSERT INTO projects (project_id, project_name, project_description, project_sta
 (4, 'Reopening unconfirmed tickets', 'Revisioning questionable tickets', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Resolving of Very High level tickets due to schema migration', 'Our last service migration caused problems in push sub-module. The problem is more complex than just a quick refactor', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Back-end training orginization', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'Test Project', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('projects_project_id_seq', COALESCE(MAX(project_id), 0) ) FROM projects;
 
 INSERT INTO project_missions (mission_id, mission_name, mission_description, mission_project, mission_stage_id) VALUES
@@ -178,7 +179,8 @@ INSERT INTO objective_projects (objective_project_objective, objective_project_p
 (2, 4),
 (2, 5),
 (3, 6),
-(4, 7);
+(4, 7),
+(7, 8);
 
 -- ###########################################################################################
 
@@ -190,13 +192,15 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'REST', 'Create REST API module', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'RMI', 'Create Remote EJB module', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'REST', 'Create REST API module', 2, 5, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'RMI', 'Create Remote EJB module', 2, 30, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (10, 'Olingo error', 'Default implementation in client system not sufficient', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(14, 'Addition of submodule work structures', 'Create new project hierarchy unit for task clustering', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(15, 'Project level test Task', '', 10, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -210,7 +214,9 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (3, 5),
 (7, 6),
 (7, 7),
-(7, 8);
+(7, 8),
+(7, 14),
+(8, 15);
 
 INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id) VALUES
 (2, 9),
