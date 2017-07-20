@@ -161,20 +161,28 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				final Set<Team> teams = new HashSet<Team>();
 				final Set<AppUser> users = new HashSet<AppUser>();
 				final Set<Impediment> projectImpediments = new HashSet<Impediment>();
-				for (final TaskRepresentor task : tasks) {
-					projectTasks.add(this.taskService.read(task.getId()));
+				if (tasks != null) {
+					for (final TaskRepresentor task : tasks) {
+						projectTasks.add(this.taskService.read(task.getId()));
+					}
 				}
-				for (final TeamRepresentor team : assignedTeams) {
-					teams.add(this.teamService.read(team.getId()));
+				if (assignedTeams != null) {
+					for (final TeamRepresentor team : assignedTeams) {
+						teams.add(this.teamService.read(team.getId()));
+					}
 				}
-				for (final AppUserRepresentor user : assignedUsers) {
-					users.add(this.appUserService.read(user.getId()));
+				if (assignedUsers != null) {
+					for (final AppUserRepresentor user : assignedUsers) {
+						users.add(this.appUserService.read(user.getId()));
+					}
 				}
-				for (final ImpedimentRepresentor impediment : impediments) {
-					projectImpediments.add(this.impedimentService.read(impediment.getId()));
+				if (impediments != null) {
+					for (final ImpedimentRepresentor impediment : impediments) {
+						projectImpediments.add(this.impedimentService.read(impediment.getId()));
+					}
 				}
 				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator),
-						projectTasks, teams, users, projectImpediments, objective);
+						projectTasks, teams, users, projectImpediments);
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");

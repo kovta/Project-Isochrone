@@ -28,7 +28,7 @@ public interface ProjectService {
 	Set<Project> readAll() throws PersistenceServiceException;
 
 	Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective) throws PersistenceServiceException;
+			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

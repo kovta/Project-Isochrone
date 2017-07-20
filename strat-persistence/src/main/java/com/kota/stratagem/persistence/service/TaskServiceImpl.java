@@ -57,24 +57,20 @@ public class TaskServiceImpl implements TaskService {
 			Objective parentObjective = null;
 			Project parentProject = null;
 			if (objective != null) {
-				// Duplicate join table insertion workaround
 				parentObjective = this.objectiveService.readElementary(objective);
 				task.setObjective(parentObjective);
 			} else if (project != null) {
-				parentProject = this.projectService.readWithTasks(project);
+				parentProject = this.projectService.readElementary(project);
 				task.setProject(parentProject);
 			}
 			AppUser operatorTemp;
 			if (objective != null) {
-				// Duplicate join table insertion workaround
-				// parentObjective.addTask(task);
 				if (parentObjective.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentObjective.getCreator();
 				} else {
 					operatorTemp = this.appUserService.read(creator.getId());
 				}
 			} else if (project != null) {
-				parentProject.addTask(task);
 				if (parentProject.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentProject.getCreator();
 				} else {

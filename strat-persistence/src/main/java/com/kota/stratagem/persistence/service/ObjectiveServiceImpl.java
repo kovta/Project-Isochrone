@@ -139,8 +139,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			AppUser modifier, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Objective (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
-					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ", modifier=" + modifier.getName() + ", projects=" + projects
-					+ ", tasks=" + tasks + ")");
+					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ", modifier=" + modifier.getName() + ")");
 		}
 		try {
 			final Objective objective = this.readElementary(id);
@@ -151,7 +150,6 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			objective.setStatus(status);
 			objective.setDeadline(deadline);
 			objective.setConfidential(confidentiality);
-			// For bypassing Hibernate's Multiple representation error
 			if (!(objective.getModifier().equals(operator))) {
 				if (!(objective.getCreator().equals(objective.getModifier()))) {
 					objective.setModifier(operator);
