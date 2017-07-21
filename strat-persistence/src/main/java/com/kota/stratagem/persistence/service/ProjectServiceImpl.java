@@ -138,7 +138,7 @@ public class ProjectServiceImpl implements ProjectService {
 					+ ", confidentiality: " + confidentiality + ")");
 		}
 		try {
-			final Project project = this.readElementary(id);
+			final Project project = this.readWithTasks(id);
 			final AppUser operator = this.appUserService.read(modifier.getId());
 			project.setName(name);
 			project.setDescription(description);
@@ -153,7 +153,7 @@ public class ProjectServiceImpl implements ProjectService {
 				}
 			}
 			project.setModificationDate(new Date());
-			project.setTasks(tasks != null ? tasks : new HashSet<Task>());
+			// project.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			project.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			project.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
 			project.setImpediments(impediments != null ? impediments : new HashSet<Impediment>());
