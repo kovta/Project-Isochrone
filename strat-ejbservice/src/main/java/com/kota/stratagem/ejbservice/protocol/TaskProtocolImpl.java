@@ -97,20 +97,30 @@ public class TaskProtocolImpl implements TaskProtocol {
 				final Set<Impediment> taskImpediments = new HashSet<Impediment>();
 				final Set<Task> dependants = new HashSet<Task>();
 				final Set<Task> dependencies = new HashSet<Task>();
-				for (final TeamRepresentor team : assignedTeams) {
-					teams.add(this.teamService.read(team.getId()));
+				if (assignedTeams != null) {
+					for (final TeamRepresentor team : assignedTeams) {
+						teams.add(this.teamService.read(team.getId()));
+					}
 				}
-				for (final AppUserRepresentor user : assignedUsers) {
-					users.add(this.appUserService.read(user.getId()));
+				if (assignedUsers != null) {
+					for (final AppUserRepresentor user : assignedUsers) {
+						users.add(this.appUserService.read(user.getId()));
+					}
 				}
-				for (final ImpedimentRepresentor impediment : impediments) {
-					taskImpediments.add(this.impedimentService.read(impediment.getId()));
+				if (impediments != null) {
+					for (final ImpedimentRepresentor impediment : impediments) {
+						taskImpediments.add(this.impedimentService.read(impediment.getId()));
+					}
 				}
-				for (final TaskRepresentor taskRepresentor : dependantTasks) {
-					dependants.add(this.taskService.read(taskRepresentor.getId()));
+				if (dependantTasks != null) {
+					for (final TaskRepresentor taskRepresentor : dependantTasks) {
+						dependants.add(this.taskService.read(taskRepresentor.getId()));
+					}
 				}
-				for (final TaskRepresentor taskRepresentor : taskDependencies) {
-					dependants.add(this.taskService.read(taskRepresentor.getId()));
+				if (taskDependencies != null) {
+					for (final TaskRepresentor taskRepresentor : taskDependencies) {
+						dependants.add(this.taskService.read(taskRepresentor.getId()));
+					}
 				}
 				task = this.taskService.update(id, name, description, priority, completion, deadline, this.appUserService.read(operator), teams, users,
 						taskImpediments, dependants, dependencies, objective, project);
