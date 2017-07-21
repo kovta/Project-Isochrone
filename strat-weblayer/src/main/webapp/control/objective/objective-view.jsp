@@ -104,7 +104,7 @@
                                 	<table class="strat-detail-table">
 	                                	<tbody>
 	                                		<tr class="match-row"><td class="center-text">
-						  		   			    <a href="ObjectiveAction?id=<c:out value="${objective.id}"/>&edit=1" class="vertical-align-middle center-text full-width">
+						  		   			    <a href="Objective?id=<c:out value="${objective.id}"/>&edit=1" class="vertical-align-middle center-text full-width">
 							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Objective
 							       			    </a>
 											</td></tr>
@@ -150,7 +150,7 @@
 	                                    <h4 class="card-title"><c:out value="${project.name}" /></h4>
 	                                    <!--Text-->
 	                                    <p class="card-text"><c:out value="${project.status.label}" /></p>
-	                                    <a href="ProjectAction?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect project</a>
+	                                    <a href="Project?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect project</a>
 	                                </div>
 	                                <!--/.Card content-->
 	                            </div>
@@ -179,7 +179,7 @@
 	                                    <h4 class="card-title"><c:out value="${task.name}" /></h4>
 	                                    <!--Text-->
 	                                    <p class="card-text"><c:out value="${task.completion}" />%</p>
-	                                    <a href="#" class="btn btn-primary">Inspect task</a>
+	                                    <a href="Task?id=<c:out value="${task.id}" />" class="btn btn-primary">Inspect task</a>
 	                                </div>
 	                                <!--/.Card content-->
 	                            </div>

@@ -14,7 +14,7 @@
                 <h4 class="title"><i class="fa fa-flag"></i>New Objective</h4>
             </div>
             <!--Body-->
-            <form action="ObjectiveAction" method="post">
+            <form action="Objective" method="post">
 	            <div class="modal-body">
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>

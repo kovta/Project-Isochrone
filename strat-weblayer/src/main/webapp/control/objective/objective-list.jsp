@@ -67,9 +67,9 @@
 	                            <td class="center-text"><c:out value="${objective.projects.size()}" /></td>
 	                            <td class="center-text"><c:out value="${objective.tasks.size()}" /></td>
 	                            <td class="center-text">
-		                            <a href="ObjectiveAction?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
+		                            <a href="Objective?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
 	                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager")) { %>
-									<a href="ObjectiveAction?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
+									<a href="Objective?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
 		                            <a href="ObjectiveDelete?id=<c:out value="${objective.id}" />"><i class="fa fa-trash"  aria-hidden="true"></i></a>
 	                            	<% } %>
 	                            </td>

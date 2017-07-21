@@ -22,13 +22,13 @@
 		        <div class="admin-panel info-admin-panel">
 		            <!--Card heading-->
 		            <div class="card-header mdb-color darken-1 white-text">
-		                <h5>Edit Project</h5>
+		                <h5><i class="fa fa-edit"></i><span class="icon-companion"> Edit Project</span></h5>
 		            </div>
 		            <!--/Card heading-->
 		            <!--Card content-->
 		            <div class="card-block">
 		                <!-- Edit Form -->
-		                <form action="ProjectAction" method="post">
+		                <form action="Project" method="post">
 		                	
 		                	<c:if test="${requestScope.project.getId() != -1}"><input type="hidden" name="id" value="${project.id}" /></c:if>
 		                    <!--First row-->

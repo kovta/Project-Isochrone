@@ -31,7 +31,7 @@
 	<div class="wrapper">
 		<div class="container">
 			<c:forEach items="${requestScope.parentObjectives}" var="parentObjective">
-				<h2 class="icon-companion"><a href="ObjectiveAction?id=<c:out value="${parentObjective.id}" />">${parentObjective.name}</a></h2>				
+				<h2 class="icon-companion"><a href="Objective?id=<c:out value="${parentObjective.id}" />">${parentObjective.name}</a></h2>				
 				<table class="table table-hover fixed-table-layout">
 					<colgroup>
 						<col span="1" style="width: 3%;">
@@ -59,9 +59,9 @@
 		                            <td class="center-text"><c:out value="${project.status.label}" /></td>
 		                            <td class="center-text"><c:out value="${project.tasks.size()}" /></td>
 		                            <td class="center-text">
-			                            <a href="ProjectAction?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
+			                            <a href="Project?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
 		                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager") || request.isUserInRole("general_manager")) { %>
-										<a href="ProjectAction?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
+										<a href="Project?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
 			                            <a href="ProjectDelete?id=<c:out value="${project.id}" />"><i class="fa fa-trash"  aria-hidden="true"></i></a>
 		                            	<% } %>
 		                            </td>

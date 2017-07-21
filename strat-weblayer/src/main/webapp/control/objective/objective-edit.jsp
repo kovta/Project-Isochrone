@@ -24,13 +24,13 @@
 		        <div class="admin-panel info-admin-panel">
 		            <!--Card heading-->
 		            <div class="card-header mdb-color darken-1 white-text">
-		                <h5>Edit Objective</h5>
+		                <h5><i class="fa fa-edit"></i><span class="icon-companion"> Edit Objective</span></h5>
 		            </div>
 		            <!--/Card heading-->
 		            <!--Card content-->
 		            <div class="card-block">
 		                <!-- Edit Form -->
-		                <form action="ObjectiveAction" method="post">
+		                <form action="Objective" method="post">
 		                	<c:if test="${requestScope.objective.getId() != -1}"><input type="hidden" name="id" value="${objective.id}" /></c:if>
 		                    <!--First row-->
 		                    <div class="row">
@@ -83,11 +83,11 @@
 											value="<fmt:formatDate type="date" value="${objective.deadline}" pattern="MM/dd/yyyy" />"/>
 		                            </div>
 		                        </div>
+		                        <!--Second column-->
 		                        <div class="col-md-6">
 		                        	<div class="md-form form-sm">
 				               			<label>The confidentiality of the Objective</label><br/>
 	                  				</div>
-
 									<div class="input-group">
 					    				<div id="radioBtn" class="btn-group">
 		  			            			<c:choose>

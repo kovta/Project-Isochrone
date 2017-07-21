@@ -16,7 +16,7 @@
                 <h4 class="title"><i class="fa fa-sitemap"></i>New Project</h4>
             </div>
             <!--Body-->
-            <form action="ProjectAction" method="post">
+            <form action="Project" method="post">
 	            <div class="modal-body">
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
 	                <div class="md-form form-sm">

@@ -15,7 +15,7 @@
 				<h4 class="title"><i class="fa fa-tasks"></i>New Task</h4>
             </div>
             <!--Body-->
-            <form action="TaskAction" method="post">
+            <form action="Task" method="post">
 	            <div class="modal-body">
 	            	<!-- TODO: Objective and project parent discerning -->
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
