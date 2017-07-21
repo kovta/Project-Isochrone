@@ -10,7 +10,6 @@ import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,16 +23,14 @@ import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveParameter;
-import com.kota.stratagem.weblayer.util.RequestRefiner;
+import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
-@WebServlet("/ObjectiveAction")
-public class ObjectiveActionController extends HttpServlet implements ObjectiveParameter, ObjectiveAttribute {
+@WebServlet("/Objective")
+public class ObjectiveActionController extends AbstractRefinerServlet implements ObjectiveParameter, ObjectiveAttribute {
 
 	private static final long serialVersionUID = -6240725013473292997L;
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveActionController.class);
-
-	private static final RequestRefiner REFINER = new RequestRefiner();
 
 	private static final String TRUE_VALUE = "1";
 	private static final String NEW_OBJECTIVE_ID_FLAG = "-1";
@@ -45,7 +42,7 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get Objective by id (" + request.getParameter(ID) + ")");
 		final String id = request.getParameter(ID);
-		if ((id == null) || "".equals(id) || !REFINER.isNumeric(id)) {
+		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
 			response.sendRedirect(Page.ERROR.getUrl());
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
@@ -69,11 +66,11 @@ public class ObjectiveActionController extends HttpServlet implements ObjectiveP
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ObjectiveRepresentor objective, final boolean editFlag,
 			final boolean isNew, final boolean finishFlag, final boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_OBJECTIVE, objective);
-		if (finishFlag) {
-			response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
-		} else if (errorFlag) {
+		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
+		} else if (finishFlag) {
+			response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.OBJECTIVE_EDIT.getJspName() : Page.OBJECTIVE_VIEW.getJspName());
 			view.forward(request, response);

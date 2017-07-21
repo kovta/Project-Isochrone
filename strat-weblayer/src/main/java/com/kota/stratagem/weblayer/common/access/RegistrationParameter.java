@@ -1,4 +1,4 @@
-package com.kota.stratagem.weblayer.common;
+package com.kota.stratagem.weblayer.common.access;
 
 public interface RegistrationParameter {
 

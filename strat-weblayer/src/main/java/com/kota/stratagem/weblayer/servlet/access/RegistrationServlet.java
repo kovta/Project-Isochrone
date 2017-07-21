@@ -1,4 +1,4 @@
-package com.kota.stratagem.weblayer.servlet;
+package com.kota.stratagem.weblayer.servlet.access;
 
 import java.io.IOException;
 
@@ -17,8 +17,8 @@ import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.RoleRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
-import com.kota.stratagem.weblayer.common.RegistrationAttribute;
-import com.kota.stratagem.weblayer.common.RegistrationParameter;
+import com.kota.stratagem.weblayer.common.access.RegistrationAttribute;
+import com.kota.stratagem.weblayer.common.access.RegistrationParameter;
 
 @WebServlet("/Register")
 public class RegistrationServlet extends HttpServlet implements RegistrationParameter, RegistrationAttribute {

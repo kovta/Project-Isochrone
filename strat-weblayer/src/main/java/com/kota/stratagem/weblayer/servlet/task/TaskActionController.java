@@ -10,7 +10,6 @@ import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,9 +21,10 @@ import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.task.TaskAttribute;
 import com.kota.stratagem.weblayer.common.task.TaskParameter;
+import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
-@WebServlet("/TaskAction")
-public class TaskActionController extends HttpServlet implements TaskAttribute, TaskParameter {
+@WebServlet("/Task")
+public class TaskActionController extends AbstractRefinerServlet implements TaskAttribute, TaskParameter {
 
 	private static final long serialVersionUID = 319115678364738435L;
 
@@ -36,15 +36,42 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 	@EJB
 	TaskProtocol protocol;
 
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LOGGER.info("Get Task by id (" + request.getParameter(ID) + ")");
+		final String id = request.getParameter(ID);
+		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
+			response.sendRedirect(Page.ERROR.getUrl());
+		} else {
+			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
+			TaskRepresentor project = null;
+			boolean isNew = false, errorFlag = false;
+			if (NEW_TASK_ID_FLAG.equals(id)) {
+				project = new TaskRepresentor(null, "", "", 0, 0, new Date(), null, new Date(), null, new Date());
+				isNew = true;
+			} else {
+				try {
+					project = this.protocol.getTask(Long.parseLong(id));
+				} catch (final AdaptorException e) {
+					LOGGER.error(e, e);
+					errorFlag = true;
+				}
+			}
+			this.forward(request, response, project, editFlag, isNew, false, errorFlag);
+		}
+	}
+
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final TaskRepresentor task, final boolean editFlag,
-			boolean isNew, boolean finishFlag) throws ServletException, IOException {
+			boolean isNew, boolean finishFlag, boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_TASK, task);
 		request.setAttribute(ATTR_ISNEW, isNew);
-		// Routing must be updated after view creation
-		if (finishFlag) {
-			response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
+		if (errorFlag) {
+			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
+			view.forward(request, response);
+		} else if (finishFlag) {
+			response.sendRedirect(Page.PROJECT_LIST.getUrl());
 		} else {
-			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.OBJECTIVE_EDIT.getJspName() : Page.OBJECTIVE_VIEW.getJspName());
+			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.TASK_EDIT.getJspName() : Page.TASK_VIEW.getJspName());
 			view.forward(request, response);
 		}
 	}
@@ -80,15 +107,14 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, null, null, null);
-				this.forward(request, response, Task, false, false, true);
+				this.forward(request, response, Task, false, false, true, false);
 			}
 			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
-				// new attributes must be requested
 				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, deadline, null, null, null, null);
-				this.forward(request, response, Task, false, false, true);
+				this.forward(request, response, Task, false, false, true, false);
 			} else {
 				TaskRepresentor task = null;
 				try {
@@ -100,7 +126,7 @@ public class TaskActionController extends HttpServlet implements TaskAttribute, 
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, task, false, false, true);
+				this.forward(request, response, task, false, false, true, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

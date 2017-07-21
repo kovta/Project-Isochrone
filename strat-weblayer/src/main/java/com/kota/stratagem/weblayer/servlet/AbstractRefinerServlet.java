@@ -1,8 +1,12 @@
-package com.kota.stratagem.weblayer.util;
+package com.kota.stratagem.weblayer.servlet;
 
 import java.util.Scanner;
 
-public class RequestRefiner {
+import javax.servlet.http.HttpServlet;
+
+public abstract class AbstractRefinerServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 3731026449748271832L;
 
 	public boolean isNumeric(String parameter) {
 		boolean valid = false;

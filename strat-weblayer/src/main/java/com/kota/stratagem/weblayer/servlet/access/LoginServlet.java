@@ -1,4 +1,4 @@
-package com.kota.stratagem.weblayer.servlet;
+package com.kota.stratagem.weblayer.servlet.access;
 
 import java.io.IOException;
 
@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.kota.stratagem.weblayer.common.LoginAttribute;
 import com.kota.stratagem.weblayer.common.Page;
+import com.kota.stratagem.weblayer.common.access.LoginAttribute;
 
 public class LoginServlet extends HttpServlet implements LoginAttribute {
 

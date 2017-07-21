@@ -10,7 +10,6 @@ import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,16 +22,14 @@ import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.project.ProjectAttribute;
 import com.kota.stratagem.weblayer.common.project.ProjectParameter;
-import com.kota.stratagem.weblayer.util.RequestRefiner;
+import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
-@WebServlet("/ProjectAction")
-public class ProjectActionController extends HttpServlet implements ProjectParameter, ProjectAttribute {
+@WebServlet("/Project")
+public class ProjectActionController extends AbstractRefinerServlet implements ProjectParameter, ProjectAttribute {
 
 	private static final long serialVersionUID = -8825015852540069920L;
 
 	private static final Logger LOGGER = Logger.getLogger(ProjectActionController.class);
-
-	private static final RequestRefiner REFINER = new RequestRefiner();
 
 	private static final String TRUE_VALUE = "1";
 	private static final String NEW_PROJECT_ID_FLAG = "-1";
@@ -44,12 +41,12 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get Project by id (" + request.getParameter(ID) + ")");
 		final String id = request.getParameter(ID);
-		if ((id == null) || "".equals(id) || !REFINER.isNumeric(id)) {
-			response.sendRedirect(Page.PROJECT_LIST.getUrl());
+		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
+			response.sendRedirect(Page.ERROR.getUrl());
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
 			ProjectRepresentor project = null;
-			boolean isNew = false;
+			boolean isNew = false, errorFlag = false;
 			if (NEW_PROJECT_ID_FLAG.equals(id)) {
 				project = new ProjectRepresentor(null, "", "", ProjectStatusRepresentor.PROPOSED, null, false, null, null, null, null, null);
 				isNew = true;
@@ -58,17 +55,21 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 					project = this.protocol.getProject(Long.parseLong(id));
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
+					errorFlag = true;
 				}
 			}
-			this.forward(request, response, project, editFlag, isNew, false);
+			this.forward(request, response, project, editFlag, isNew, false, errorFlag);
 		}
 	}
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ProjectRepresentor project, final boolean editFlag,
-			boolean isNew, boolean finishFlag) throws ServletException, IOException {
+			boolean isNew, boolean finishFlag, boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_PROJECT, project);
 		request.setAttribute(ATTR_ISNEW, isNew);
-		if (finishFlag) {
+		if (errorFlag) {
+			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
+			view.forward(request, response);
+		} else if (finishFlag) {
 			response.sendRedirect(Page.PROJECT_LIST.getUrl());
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.PROJECT_EDIT.getJspName() : Page.PROJECT_VIEW.getJspName());
@@ -98,7 +99,7 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 				LOGGER.info("Failed attempt to modify Project : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, null, false, null, null, null, null, null);
-				this.forward(request, response, project, false, false, true);
+				this.forward(request, response, project, false, false, true, false);
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
@@ -107,7 +108,7 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 				request.getSession().setAttribute(ATTR_ERROR, "Project name required");
 				// new attributes must be requested
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null, null, null, null, null);
-				this.forward(request, response, project, false, false, true);
+				this.forward(request, response, project, false, false, true, false);
 			} else {
 				ProjectRepresentor project = null;
 				try {
@@ -119,7 +120,7 @@ public class ProjectActionController extends HttpServlet implements ProjectParam
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, project, false, false, true);
+				this.forward(request, response, project, false, false, true, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

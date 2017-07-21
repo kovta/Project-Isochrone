@@ -9,7 +9,9 @@ public enum Page {
 	OBJECTIVE_EDIT("/control/objective/objective-edit.jsp", "Objective"), //
 	PROJECT_LIST("/control/project/project-list.jsp", "ProjectList"), //
 	PROJECT_VIEW("/control/project/project-view.jsp", "Project"), //
-	PROJECT_EDIT("/control/project/project-edit.jsp", "Project"); //
+	PROJECT_EDIT("/control/project/project-edit.jsp", "Project"), //
+	TASK_VIEW("/control/task/task-view.jsp", "Task"), //
+	TASK_EDIT("/control/task/task-edit.jsp", "Task"); //
 
 	private final String jspName;
 	private final String url;
