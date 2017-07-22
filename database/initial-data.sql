@@ -136,7 +136,8 @@ INSERT INTO projects (project_id, project_name, project_description, project_sta
 (5, 'Resolving of Very High level tickets due to schema migration', 'Our last service migration caused problems in push sub-module. The problem is more complex than just a quick refactor', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Back-end training orginization', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'Test Project', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(8, 'Test Project', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('projects_project_id_seq', COALESCE(MAX(project_id), 0) ) FROM projects;
 
 INSERT INTO project_missions (mission_id, mission_name, mission_description, mission_project, mission_stage_id) VALUES
@@ -180,7 +181,26 @@ INSERT INTO objective_projects (objective_project_objective, objective_project_p
 (2, 5),
 (3, 6),
 (4, 7),
+(4, 9),
 (7, 8);
+
+-- ###########################################################################################
+
+INSERT INTO submodules (submodule_id, submodule_name, submodule_description, submodule_deadline, submodule_creator, submodule_creation_date, submodule_modifier, submodule_modification_date) VALUES 
+(0, 'Submodule structure implementation', 'Adding submodules as a new level into the CPM stack', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'User assignment implementation', 'User and team level assignment functionality is imperative for proper delegation of responsibility', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Notification subscription implementation', 'Invested users must be notified on key item modifications', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Adding Project manager and Product owner funcitonality', 'Highest level project responsibility delegation must be clear at least on project level. Other leading elements wil be discerned with the help of assignments', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+
+INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
+(7, 0),
+(7, 1),
+(7, 2),
+(7, 3),
+(7, 4),
+(7, 5);
 
 -- ###########################################################################################
 

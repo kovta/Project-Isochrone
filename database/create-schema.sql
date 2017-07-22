@@ -225,6 +225,34 @@ CREATE TABLE objective_projects (
 
 -- ###########################################################################################
 
+CREATE TABLE submodules (
+	submodule_id SERIAL NOT NULL,
+	submodule_name CHARACTER VARYING(100) NOT NULL,
+	submodule_description CHARACTER VARYING(1000) NULL,
+	submodule_deadline TIMESTAMP WITHOUT TIME ZONE NULL,
+	submodule_creator INTEGER NOT NULL,
+	submodule_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	submodule_modifier INTEGER NOT NULL,
+	submodule_modification_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	CONSTRAINT PK_SUBMODULE_ID PRIMARY KEY (submodule_id),
+	CONSTRAINT FK_SUBMODULE_CREATOR FOREIGN KEY (submodule_creator)
+		REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_SUBMODULE_MODIFIER FOREIGN KEY (submodule_modifier)
+		REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE project_submodules (
+	project_submodule_id SERIAL NOT NULL,
+	project_submodule_project INTEGER NOT NULL,
+	project_submodule_submodule INTEGER NOT NULL,
+	CONSTRAINT PK_PROJECT_SUBMODULE_ID PRIMARY KEY (project_submodule_id),
+	CONSTRAINT FK_PROJECT_SUBMODULE_PROJECT FOREIGN KEY (project_submodule_project)
+	  REFERENCES objectives (objective_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_PROJECT_SUBMODULE_SUBMODULE FOREIGN KEY (project_submodule_submodule)
+	  REFERENCES projects (project_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+-- ###########################################################################################
+
 CREATE TABLE tasks (
 	task_id SERIAL NOT NULL,
 	task_name CHARACTER VARYING(100) NOT NULL,
@@ -254,6 +282,16 @@ CREATE TABLE task_alterations (
 	CONSTRAINT FK_TASK_ALTERATION_USER FOREIGN KEY (alteration_user_id)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+CREATE TABLE objective_tasks (
+	objective_task_id SERIAL NOT NULL,
+	objective_task_objective_id INTEGER NOT NULL,
+	objective_task_task_id INTEGER NOT NULL,
+	CONSTRAINT PK_OBJECTIVE_TASK_ID PRIMARY KEY (objective_task_id),
+	CONSTRAINT FK_OBJECTIVE_TASK_OBJECTIVE FOREIGN KEY (objective_task_objective_id)
+	  REFERENCES objectives (objective_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_OBJECTIVE_TASK_TASK FOREIGN KEY (objective_task_task_id)
+	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
 CREATE TABLE project_tasks (
 	project_task_id SERIAL NOT NULL,
 	project_task_project_id INTEGER NOT NULL,
@@ -264,14 +302,34 @@ CREATE TABLE project_tasks (
 	CONSTRAINT FK_PROJECT_TASK_TASK FOREIGN KEY (project_task_task_id)
 	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
-CREATE TABLE objective_tasks (
-	objective_task_id SERIAL NOT NULL,
-	objective_task_objective_id INTEGER NOT NULL,
-	objective_task_task_id INTEGER NOT NULL,
-	CONSTRAINT PK_OBJECTIVE_TASK_ID PRIMARY KEY (objective_task_id),
-	CONSTRAINT FK_OBJECTIVE_TASK_OBJECTIVE FOREIGN KEY (objective_task_objective_id)
-	  REFERENCES objectives (objective_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT FK_OBJECTIVE_TASK_TASK FOREIGN KEY (objective_task_task_id)
+CREATE TABLE submodule_tasks (
+	submodule_task_id SERIAL NOT NULL,
+	submodule_task_submodule_id INTEGER NOT NULL,
+	submodule_task_task_id INTEGER NOT NULL,
+	CONSTRAINT PK_SUBMODULE_TASK_ID PRIMARY KEY (submodule_task_id),
+	CONSTRAINT FK_SUBMODULE_TASK_SUBMODULE FOREIGN KEY (submodule_task_submodule_id)
+	  REFERENCES projects (project_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_SUBMODULE_TASK_TASK FOREIGN KEY (submodule_task_task_id)
+	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE task_dependencies (
+	dependency_id SERIAL NOT NULL,
+	dependency_dependent INTEGER NOT NULL,
+	dependency_maintainer INTEGER NOT NULL,
+	CONSTRAINT PK_TASK_DEPENDENCY_ID PRIMARY KEY (dependency_id),
+	CONSTRAINT FK_TASK_DEPENDENCY_DEPENDENT FOREIGN KEY (dependency_dependent)
+	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_TASK_DEPENDENCY_MAINTAINER FOREIGN KEY (dependency_maintainer)
+	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE task_estimations (
+	estimation_id SERIAL NOT NULL,
+	estimation_task INTEGER NOT NULL,
+	estimation_pessimist INTERVAL NOT NULL,
+	estimation_realist INTERVAL NOT NULL,
+	estimation_optimist INTERVAL NOT NULL,
+	CONSTRAINT PK_TASK_ESTIMATION_ID PRIMARY KEY (estimation_id),
+	CONSTRAINT FK_TASK_ESTIMATION_TASK FOREIGN KEY (estimation_task)
 	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
@@ -351,29 +409,6 @@ CREATE TABLE remedies (
 );
 	
 -- ###########################################################################################
-	
-CREATE TABLE task_dependencies (
-	dependency_id SERIAL NOT NULL,
-	dependency_dependent INTEGER NOT NULL,
-	dependency_maintainer INTEGER NOT NULL,
-	CONSTRAINT PK_TASK_DEPENDENCY_ID PRIMARY KEY (dependency_id),
-	CONSTRAINT FK_TASK_DEPENDENCY_DEPENDENT FOREIGN KEY (dependency_dependent)
-	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT FK_TASK_DEPENDENCY_MAINTAINER FOREIGN KEY (dependency_maintainer)
-	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
-);
-CREATE TABLE task_estimations (
-	estimation_id SERIAL NOT NULL,
-	estimation_task INTEGER NOT NULL,
-	estimation_pessimist INTERVAL NOT NULL,
-	estimation_realist INTERVAL NOT NULL,
-	estimation_optimist INTERVAL NOT NULL,
-	CONSTRAINT PK_TASK_ESTIMATION_ID PRIMARY KEY (estimation_id),
-	CONSTRAINT FK_TASK_ESTIMATION_TASK FOREIGN KEY (estimation_task)
-	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
-);
-	
--- ###########################################################################################
 
 CREATE TABLE team_objective_assignments (
 	assignment_id SERIAL NOT NULL,
@@ -426,6 +461,32 @@ CREATE TABLE user_project_assignments (
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
 	CONSTRAINT FK_USER_PROJECT_ASSIGNMENTS_PROJECT FOREIGN KEY (assignment_project)
 	  REFERENCES projects (project_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE team_submodule_assignments (
+	assignment_id SERIAL NOT NULL,
+	assignment_entrustor INTEGER NOT NULL,
+	assignment_recipient INTEGER NOT NULL,
+	assignment_submodule INTEGER NOT NULL,
+	CONSTRAINT PK_TEAM_SUBMODULE_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
+	CONSTRAINT FK_TEAM_SUBMODULE_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_TEAM_SUBMODULE_ASSIGNMENTS_RECIPIENT FOREIGN KEY (assignment_recipient)
+	  REFERENCES teams (team_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_TEAM_SUBMODULE_ASSIGNMENTS_SUBMODULE FOREIGN KEY (assignment_submodule)
+	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE user_submodule_assignments (
+	assignment_id SERIAL NOT NULL,
+	assignment_entrustor INTEGER NOT NULL,
+	assignment_recipient INTEGER NOT NULL,
+	assignment_submodule INTEGER NOT NULL,
+	CONSTRAINT PK_USER_SUBMODULE_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
+	CONSTRAINT FK_USER_SUBMODULE_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_USER_SUBMODULE_ASSIGNMENTS_RECIPIENT FOREIGN KEY (assignment_recipient)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_USER_SUBMODULE_ASSIGNMENTS_SUBMODULE FOREIGN KEY (assignment_submodule)
+	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 CREATE TABLE team_task_assignments (
 	assignment_id SERIAL NOT NULL,
@@ -499,10 +560,13 @@ ALTER TABLE project_managers OWNER TO postgres;
 ALTER TABLE product_owners OWNER TO postgres;
 ALTER TABLE project_status_alterations OWNER TO postgres;
 ALTER TABLE objective_projects OWNER TO postgres;
+ALTER TABLE submodules OWNER TO postgres;
+ALTER TABLE project_submodules OWNER TO postgres;
 ALTER TABLE tasks OWNER TO postgres;
 ALTER TABLE task_alterations OWNER TO postgres;
-ALTER TABLE project_tasks OWNER TO postgres;
 ALTER TABLE objective_tasks OWNER TO postgres;
+ALTER TABLE project_tasks OWNER TO postgres;
+ALTER TABLE submodule_tasks OWNER TO postgres;
 ALTER TABLE impediment_statuses OWNER TO postgres;
 ALTER TABLE impediments OWNER TO postgres;
 ALTER TABLE project_impediments OWNER TO postgres;
@@ -512,9 +576,11 @@ ALTER TABLE task_dependencies OWNER TO postgres;
 ALTER TABLE task_estimations OWNER TO postgres;
 ALTER TABLE user_objective_assignments OWNER TO postgres;
 ALTER TABLE user_project_assignments OWNER TO postgres;
+ALTER TABLE user_submodule_assignments OWNER TO postgres;
 ALTER TABLE user_task_assignments OWNER TO postgres;
 ALTER TABLE team_objective_assignments OWNER TO postgres;
 ALTER TABLE team_project_assignments OWNER TO postgres;
+ALTER TABLE team_submodule_assignments OWNER TO postgres;
 ALTER TABLE team_task_assignments OWNER TO postgres;
 ALTER TABLE reviews OWNER TO postgres;
 ALTER TABLE review_invitations OWNER TO postgres;

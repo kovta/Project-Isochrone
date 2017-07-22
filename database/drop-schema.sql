@@ -3,9 +3,11 @@ DROP TABLE reviews;
 
 DROP TABLE user_objective_assignments;
 DROP TABLE user_project_assignments;
+DROP TABLE user_submodule_assignments;
 DROP TABLE user_task_assignments;
 DROP TABLE team_objective_assignments;
 DROP TABLE team_project_assignments;
+DROP TABLE team_submodule_assignments;
 DROP TABLE team_task_assignments;
 
 DROP TABLE task_estimations;
@@ -17,10 +19,14 @@ DROP TABLE task_impediments;
 DROP TABLE impediments;
 DROP TABLE impediment_statuses;
 
+DROP TABLE submodule_tasks;
 DROP TABLE project_tasks;
 DROP TABLE objective_tasks;
 DROP TABLE task_alterations;
 DROP TABLE tasks;
+
+DROP TABLE project_submodules;
+DROP TABLE submodules;
 
 DROP TABLE objective_projects;
 DROP TABLE project_status_alterations;
