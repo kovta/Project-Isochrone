@@ -89,7 +89,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	@Override
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator,
 			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
-			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project) throws AdaptorException {
+			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project, Long submodule) throws AdaptorException {
 		try {
 			Task task = null;
 			if ((id != null) && this.taskService.exists(id)) {
@@ -124,10 +124,10 @@ public class TaskProtocolImpl implements TaskProtocol {
 					}
 				}
 				task = this.taskService.update(id, name, description, priority, completion, deadline, this.appUserService.read(operator), teams, users,
-						taskImpediments, dependants, dependencies, objective, project);
+						taskImpediments, dependants, dependencies, objective, project, submodule);
 			} else {
 				task = this.taskService.create(name, description, priority, completion, deadline, this.appUserService.read(operator), null, null, null, null,
-						null, objective, project);
+						null, objective, project, submodule);
 			}
 			return this.converter.to(task);
 		} catch (final PersistenceServiceException e) {

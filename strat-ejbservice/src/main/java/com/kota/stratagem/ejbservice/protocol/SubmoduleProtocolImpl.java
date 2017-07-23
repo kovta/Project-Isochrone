@@ -87,8 +87,8 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
-	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, Long operator, Set<TaskRepresentor> tasks,
-			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Long objective) throws AdaptorException {
+	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Set<TaskRepresentor> tasks,
+			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Long project) throws AdaptorException {
 		try {
 			Submodule submodule = null;
 			if ((id != null) && this.submoduleSerive.exists(id)) {
@@ -119,7 +119,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
-				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.read(operator), null, null, null, null, null);
+				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.read(operator), null, null, null, null, project);
 			}
 			return this.submoduleConverter.to(submodule);
 		} catch (final PersistenceServiceException e) {

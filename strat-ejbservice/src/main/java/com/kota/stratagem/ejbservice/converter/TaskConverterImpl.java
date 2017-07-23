@@ -25,6 +25,9 @@ public class TaskConverterImpl implements TaskConverter {
 	private ProjectConverter projectConverter;
 
 	@EJB
+	private SubmoduleConverter submoduleConverter;
+
+	@EJB
 	private ImpedimentConverter impedimentConverter;
 
 	@Override
@@ -60,6 +63,9 @@ public class TaskConverterImpl implements TaskConverter {
 		}
 		if (task.getProject() != null) {
 			representor.setProject(this.projectConverter.toElementary(task.getProject()));
+		}
+		if (task.getSubmodule() != null) {
+			representor.setSubmodule(this.submoduleConverter.toElementary(task.getSubmodule()));
 		}
 		return representor;
 	}

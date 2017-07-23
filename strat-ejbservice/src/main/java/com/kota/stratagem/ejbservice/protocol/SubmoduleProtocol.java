@@ -19,8 +19,8 @@ public interface SubmoduleProtocol {
 
 	List<SubmoduleRepresentor> getAllSubmodules() throws AdaptorException;
 
-	SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, Long operator, Set<TaskRepresentor> tasks,
-			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Long objective) throws AdaptorException;
+	SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Set<TaskRepresentor> tasks,
+			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Long project) throws AdaptorException;
 
 	void removeSubmodule(Long id) throws AdaptorException;
 

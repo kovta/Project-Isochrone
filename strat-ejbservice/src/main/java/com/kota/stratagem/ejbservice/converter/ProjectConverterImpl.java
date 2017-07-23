@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 
 @Stateless
@@ -16,6 +17,9 @@ public class ProjectConverterImpl implements ProjectConverter {
 
 	@EJB
 	private ObjectiveConverter objectiveConverter;
+
+	@EJB
+	private SubmoduleConverter submoduleConverter;
 
 	@EJB
 	private TaskConverter taskConverter;
@@ -32,6 +36,11 @@ public class ProjectConverterImpl implements ProjectConverter {
 	@Override
 	public ProjectRepresentor to(Project project) {
 		final ProjectRepresentor representor = this.toElementary(project);
+		if (project.getSubmodules() != null) {
+			for (final Submodule submodule : project.getSubmodules()) {
+				representor.addSubmodules(this.submoduleConverter.to(submodule));
+			}
+		}
 		if (project.getTasks() != null) {
 			for (final Task task : project.getTasks()) {
 				representor.addTask(this.taskConverter.toElementary(task));

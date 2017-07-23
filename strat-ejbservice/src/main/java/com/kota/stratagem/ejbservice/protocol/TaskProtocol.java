@@ -21,7 +21,7 @@ public interface TaskProtocol {
 
 	TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator,
 			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments,
-			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project) throws AdaptorException;
+			Set<TaskRepresentor> dependantTasks, Set<TaskRepresentor> taskDependencies, Long objective, Long project, Long submodule) throws AdaptorException;
 
 	void removeTask(Long id) throws AdaptorException;
 

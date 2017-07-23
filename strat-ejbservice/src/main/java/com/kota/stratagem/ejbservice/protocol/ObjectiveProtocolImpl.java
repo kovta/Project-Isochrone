@@ -68,6 +68,22 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Objective (id: " + id + ") --> " + representor);
 			}
+			Collections.sort(representor.getProjects(), new Comparator<ProjectRepresentor>() {
+				@Override
+				public int compare(ProjectRepresentor obj_a, ProjectRepresentor obj_b) {
+					return obj_a.getName().compareTo(obj_b.getName());
+				}
+			});
+			Collections.sort(representor.getTasks(), new Comparator<TaskRepresentor>() {
+				@Override
+				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+					final int c = (int) obj_a.getCompletion() - (int) obj_b.getCompletion();
+					if (c == 0) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+					return c * -1;
+				}
+			});
 			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
@@ -87,11 +103,19 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			Collections.sort(objectives, new Comparator<ObjectiveRepresentor>() {
 				@Override
 				public int compare(ObjectiveRepresentor obj_a, ObjectiveRepresentor obj_b) {
-					final int c = obj_a.getPriority() - obj_b.getPriority();
-					if (c == 0) {
-						return obj_a.getName().compareTo(obj_b.getName());
+					final int c1 = obj_a.getPriority() - obj_b.getPriority();
+					if (c1 == 0) {
+						final int c2 = obj_a.getProjects().size() - obj_b.getProjects().size();
+						if (c2 == 0) {
+							final int c3 = obj_a.getTasks().size() - obj_b.getTasks().size();
+							if (c3 == 0) {
+								return obj_a.getName().compareTo(obj_b.getName());
+							}
+							return c3 * -1;
+						}
+						return c2 * -1;
 					}
-					return c;
+					return c1;
 				}
 			});
 			return objectives;

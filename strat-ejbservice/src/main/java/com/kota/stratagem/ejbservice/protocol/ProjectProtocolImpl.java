@@ -79,10 +79,30 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	@Override
 	public ProjectRepresentor getProject(Long id) throws AdaptorException {
 		try {
-			final ProjectRepresentor representor = this.projectConverter.to(this.projectService.readWithTasks(id));
+			final ProjectRepresentor representor = this.projectConverter.to(this.projectService.readWithSubmodulesAndTasks(id));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Project (id: " + id + ") --> " + representor);
 			}
+			Collections.sort(representor.getSubmodules(), new Comparator<SubmoduleRepresentor>() {
+				@Override
+				public int compare(SubmoduleRepresentor obj_a, SubmoduleRepresentor obj_b) {
+					final int c = obj_a.getTasks().size() - obj_b.getTasks().size();
+					if (c == 0) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+					return c * -1;
+				}
+			});
+			Collections.sort(representor.getTasks(), new Comparator<TaskRepresentor>() {
+				@Override
+				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+					final int c = (int) obj_a.getCompletion() - (int) obj_b.getCompletion();
+					if (c == 0) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+					return c * -1;
+				}
+			});
 			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
@@ -115,7 +135,13 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			final List<ObjectiveRepresentor> clusters = new ArrayList<>();
 			final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>(this.projectConverter.to(this.projectService.readAll()));
 			for (final ProjectRepresentor project : projects) {
-				if (!clusters.contains(project.getObjective())) {
+				boolean contains = false;
+				for (final ObjectiveRepresentor cluster : clusters) {
+					if (cluster.getId() == project.getObjective().getId()) {
+						contains = true;
+					}
+				}
+				if (!contains) {
 					clusters.add(this.objectiveConverter.to(this.objectiveService.readWithProjectsAndTasks(project.getObjective().getId())));
 				}
 			}
@@ -133,17 +159,25 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				}
 			});
 			for (final ObjectiveRepresentor objective : clusters) {
+				final List<ProjectRepresentor> expandedProjects = new ArrayList<>();
+				for (final ProjectRepresentor project : objective.getProjects()) {
+					expandedProjects.add(this.projectConverter.to(this.projectService.readWithSubmodulesAndTasks(project.getId())));
+				}
+				objective.setProjects(expandedProjects);
 				Collections.sort(objective.getProjects(), new Comparator<ProjectRepresentor>() {
 					@Override
 					public int compare(ProjectRepresentor obj_a, ProjectRepresentor obj_b) {
-						return obj_a.getName().compareTo(obj_b.getName());
+						final int c1 = obj_a.getSubmodules().size() - obj_b.getSubmodules().size();
+						if (c1 == 0) {
+							final int c2 = obj_a.getTasks().size() - obj_b.getTasks().size();
+							if (c2 == 0) {
+								return obj_a.getName().compareTo(obj_b.getName());
+							}
+							return c2 * -1;
+						}
+						return c1 * -1;
 					}
 				});
-				final List<ProjectRepresentor> expandedProjects = new ArrayList<>();
-				for (final ProjectRepresentor project : objective.getProjects()) {
-					expandedProjects.add(this.projectConverter.to(this.projectService.readWithTasks(project.getId())));
-				}
-				objective.setProjects(expandedProjects);
 			}
 			return clusters;
 		} catch (final PersistenceServiceException e) {
