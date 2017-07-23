@@ -85,6 +85,10 @@ public class AppUser implements Serializable {
 	@JoinTable(name = "user_project_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_project", nullable = false))
 	private Set<Project> projects;
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Submodule.class)
+	@JoinTable(name = "user_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_submodule", nullable = false))
+	private Set<Submodule> submodules;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Task.class)
 	@JoinTable(name = "user_task_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_task", nullable = false))
 	private Set<Task> tasks;
@@ -105,6 +109,7 @@ public class AppUser implements Serializable {
 	public AppUser() {
 		this.objectives = new HashSet<>();
 		this.projects = new HashSet<>();
+		this.submodules = new HashSet<>();
 		this.tasks = new HashSet<>();
 		this.reportedImpediments = new HashSet<>();
 		this.processedImpediments = new HashSet<>();
@@ -113,8 +118,8 @@ public class AppUser implements Serializable {
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
-			Date acountModificationDate, Set<Objective> objectives, Set<Project> projects, Set<Task> tasks, Set<Impediment> reportedImpediments,
-			Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+			Date acountModificationDate, Set<Objective> objectives, Set<Project> projects, Set<Submodule> submodules, Set<Task> tasks,
+			Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -126,6 +131,7 @@ public class AppUser implements Serializable {
 		this.acountModificationDate = acountModificationDate;
 		this.objectives = objectives;
 		this.projects = projects;
+		this.submodules = submodules;
 		this.tasks = tasks;
 		this.reportedImpediments = reportedImpediments;
 		this.processedImpediments = processedImpediments;
@@ -134,8 +140,8 @@ public class AppUser implements Serializable {
 	}
 
 	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate,
-			Set<Objective> objectives, Set<Project> projects, Set<Task> tasks, Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments,
-			Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+			Set<Objective> objectives, Set<Project> projects, Set<Submodule> submodules, Set<Task> tasks, Set<Impediment> reportedImpediments,
+			Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
 		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
@@ -146,6 +152,7 @@ public class AppUser implements Serializable {
 		this.acountModificationDate = acountModificationDate;
 		this.objectives = objectives;
 		this.projects = projects;
+		this.submodules = submodules;
 		this.tasks = tasks;
 		this.reportedImpediments = reportedImpediments;
 		this.processedImpediments = processedImpediments;
@@ -231,6 +238,14 @@ public class AppUser implements Serializable {
 
 	public void setProjects(Set<Project> projects) {
 		this.projects = projects;
+	}
+
+	public Set<Submodule> getSubmodules() {
+		return this.submodules;
+	}
+
+	public void setSubmodules(Set<Submodule> submodules) {
+		this.submodules = submodules;
 	}
 
 	public Set<Task> getTasks() {

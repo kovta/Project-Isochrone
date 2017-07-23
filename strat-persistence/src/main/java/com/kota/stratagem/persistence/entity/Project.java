@@ -34,11 +34,15 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 @Table(name = "projects")
 @NamedQueries(value = { //
 		@NamedQuery(name = ProjectQuery.COUNT_BY_ID, query = "SELECT COUNT(p) FROM Project p WHERE p.id=:" + ProjectParameter.ID),
-		@NamedQuery(name = ProjectQuery.GET_ALL_PROJECTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t ORDER BY p.name"),
+		@NamedQuery(name = ProjectQuery.GET_ALL_PROJECTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules s LEFT JOIN FETCH p.tasks t ORDER BY p.name"),
 		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.status=:"
 				+ ProjectParameter.STATUS + " ORDER BY p.name"),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID, query = "SELECT p FROM Project p WHERE p.id=:" + ProjectParameter.ID),
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm WHERE p.id=:"
+				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH p.tasks t WHERE p.id=:"
+				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.REMOVE_BY_ID, query = "DELETE FROM Project p WHERE p.id=:" + ProjectParameter.ID)
 		//
 })
@@ -85,6 +89,10 @@ public class Project implements Serializable {
 	@Column(name = "project_modification_date", nullable = false)
 	private Date modificationDate;
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Submodule.class)
+	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_submodule_id", nullable = false))
+	private Set<Submodule> submodules;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Task.class)
 	@JoinTable(name = "project_tasks", joinColumns = @JoinColumn(name = "project_task_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_task_task_id", nullable = false))
 	private Set<Task> tasks;
@@ -107,13 +115,15 @@ public class Project implements Serializable {
 
 	public Project() {
 		this.tasks = new HashSet<>();
+		this.submodules = new HashSet<>();
 		this.assignedTeams = new HashSet<>();
 		this.assignedUsers = new HashSet<>();
 		this.impediments = new HashSet<>();
 	}
 
 	public Project(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidential, Date creationDate,
-			Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
+			Date modificationDate, Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
+			Objective objective) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -123,6 +133,7 @@ public class Project implements Serializable {
 		this.confidential = confidential;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
+		this.submodules = submodules;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
@@ -131,7 +142,7 @@ public class Project implements Serializable {
 	}
 
 	public Project(String name, String description, ProjectStatus status, Date deadline, Boolean confidential, Date creationDate, Date modificationDate,
-			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
+			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -140,6 +151,7 @@ public class Project implements Serializable {
 		this.confidential = confidential;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
+		this.submodules = submodules;
 		this.tasks = tasks;
 		this.assignedTeams = assignedTeams;
 		this.assignedUsers = assignedUsers;
@@ -227,6 +239,14 @@ public class Project implements Serializable {
 		this.modificationDate = modificationDate;
 	}
 
+	public Set<Submodule> getSubmodules() {
+		return this.submodules;
+	}
+
+	public void setSubmodules(Set<Submodule> submodules) {
+		this.submodules = submodules;
+	}
+
 	public Set<Task> getTasks() {
 		return this.tasks;
 	}
@@ -271,8 +291,13 @@ public class Project implements Serializable {
 	public String toString() {
 		return "Project [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
 				+ this.deadline + ", confidential=" + this.confidential + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
-				+ this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
-				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]";
+				+ this.modifier + ", modificationDate=" + this.modificationDate + ", submodules=" + this.submodules + ", tasks=" + this.tasks
+				+ ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective="
+				+ this.objective + "]";
+	}
+
+	public void addSubmodule(Submodule submodule) {
+		this.getSubmodules().add(submodule);
 	}
 
 	public void addTask(Task task) {

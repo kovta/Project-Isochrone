@@ -19,6 +19,7 @@ import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
@@ -45,15 +46,16 @@ public class ProjectServiceImpl implements ProjectService {
 	private ObjectiveService objectiveService;
 
 	@Override
-	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective) throws PersistenceServiceException {
+	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator,
+			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective)
+			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Project (name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks + ", confidentiality: "
 					+ confidentiality + ")");
 		}
 		try {
 			final Objective parentObjective = this.objectiveService.readElementary(objective);
-			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), tasks, assignedTeams,
+			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), submodules, tasks, assignedTeams,
 					assignedUsers, impediments, parentObjective);
 			AppUser operatorTemp;
 			if (parentObjective.getCreator().getId() == creator.getId()) {
@@ -87,6 +89,21 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
+	public Project readWithSubmodules(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get Project with Submodules by id (" + id + ")");
+		}
+		Project result = null;
+		try {
+			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES, Project.class).setParameter(ProjectParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
 	public Project readWithTasks(Long id) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Get Project with Tasks by id (" + id + ")");
@@ -94,6 +111,21 @@ public class ProjectServiceImpl implements ProjectService {
 		Project result = null;
 		try {
 			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_TASKS, Project.class).setParameter(ProjectParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public Project readWithSubmodulesAndTasks(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get Project with Submodules and Tasks by id (" + id + ")");
+		}
+		Project result = null;
+		try {
+			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, Project.class).setParameter(ProjectParameter.ID, id)
 					.getSingleResult();
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
@@ -132,13 +164,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier,
-			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments) throws PersistenceServiceException {
+			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments)
+			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Project (id: " + id + ", name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks
 					+ ", confidentiality: " + confidentiality + ")");
 		}
 		try {
-			final Project project = this.readWithTasks(id);
+			final Project project = this.readWithSubmodulesAndTasks(id);
 			final AppUser operator = this.appUserService.read(modifier.getId());
 			project.setName(name);
 			project.setDescription(description);
@@ -153,6 +186,7 @@ public class ProjectServiceImpl implements ProjectService {
 				}
 			}
 			project.setModificationDate(new Date());
+			// project.setSubmodules(submodules != null ? submodules : new HashSet<Submodule>());
 			// project.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			project.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
 			project.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());

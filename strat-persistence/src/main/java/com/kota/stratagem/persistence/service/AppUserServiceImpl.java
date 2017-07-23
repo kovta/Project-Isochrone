@@ -18,6 +18,7 @@ import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.Role;
@@ -39,15 +40,15 @@ public class AppUserServiceImpl implements AppUserService {
 
 	@Override
 	public AppUser create(String name, String passwordHash, String email, Role role, AppUser creator, Set<Objective> objectives, Set<Project> projects,
-			Set<Task> tasks, Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships)
-			throws PersistenceServiceException {
+			Set<Submodule> submodules, Set<Task> tasks, Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams,
+			Set<Team> teamMemberships) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug(
 					"Create AppUser (name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role + ", projects=" + projects + ")");
 		}
 		try {
-			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), creator, new Date(), objectives, projects, tasks, reportedImpediments,
-					processedImpediments, supervisedTeams, teamMemberships);
+			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), creator, new Date(), objectives, projects, submodules, tasks,
+					reportedImpediments, processedImpediments, supervisedTeams, teamMemberships);
 			this.entityManager.persist(user);
 			this.entityManager.flush();
 			return user;
@@ -101,8 +102,8 @@ public class AppUserServiceImpl implements AppUserService {
 
 	@Override
 	public AppUser update(Long id, String name, String passwordHash, String email, Role role, AppUser modifier, Set<Objective> objectives,
-			Set<Project> projects, Set<Task> tasks, Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams,
-			Set<Team> teamMemberships) throws PersistenceServiceException {
+			Set<Project> projects, Set<Submodule> submodules, Set<Task> tasks, Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments,
+			Set<Team> supervisedTeams, Set<Team> teamMemberships) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update ApUser (id: " + id + ", name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role
 					+ ", projects=" + projects + ")");
@@ -117,6 +118,7 @@ public class AppUserServiceImpl implements AppUserService {
 			user.setAcountModificationDate(new Date());
 			user.setObjectives(objectives != null ? objectives : new HashSet<Objective>());
 			user.setProjects(projects != null ? projects : new HashSet<Project>());
+			user.setSubmodules(submodules != null ? submodules : new HashSet<Submodule>());
 			user.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			user.setReportedImpediments(reportedImpediments != null ? reportedImpediments : new HashSet<Impediment>());
 			user.setProcessedImpediments(processedImpediments != null ? processedImpediments : new HashSet<Impediment>());

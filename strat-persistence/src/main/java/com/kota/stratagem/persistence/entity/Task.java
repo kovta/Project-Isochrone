@@ -111,6 +111,11 @@ public class Task implements Serializable {
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
 
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Submodule.class)
+	@JoinTable(name = "submodule_tasks", joinColumns = @JoinColumn(name = "submodule_task_task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "submodule_task_submodule_id", nullable = false))
+	@NotFound(action = NotFoundAction.IGNORE)
+	private Submodule submodule;
+
 	public Task() {
 		this.assignedTeams = new HashSet<>();
 		this.assignedUsers = new HashSet<>();
