@@ -193,6 +193,7 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (3, 'Adding Project manager and Product owner funcitonality', 'Highest level project responsibility delegation must be clear at least on project level. Other leading elements wil be discerned with the help of assignments', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
 (7, 0),
@@ -219,11 +220,25 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(14, 'Addition of submodule work structures', 'Create new project hierarchy unit for task clustering', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(15, 'Project level test Task', '', 10, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(14, 'Add default sorting to all lists', 'Collection sizes have higher priority', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(15, 'Project level test Task', '', 10, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(16, 'Add submodules to database', 'Add definitions and initial data, and extend existing tables', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(17, 'Update persistence layer', 'Add Submodule entity, and expand existing ones with associations', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(18, 'Add submodule representors', 'Domain objects must be updated', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(19, 'Add submodule protocols', 'Expand business layer for submodules', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
+
+INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id) VALUES
+(2, 9),
+(2, 10),
+(2, 11),
+(2, 12),
+(2, 13);
 
 INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (0, 1),
@@ -236,14 +251,16 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (7, 7),
 (7, 8),
 (7, 14),
-(8, 15);
+(8, 15),
+(7, 22);
 
-INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id) VALUES
-(2, 9),
-(2, 10),
-(2, 11),
-(2, 12),
-(2, 13);
+INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id) VALUES
+(0, 16),
+(0, 17),
+(0, 18),
+(0, 19),
+(0, 20),
+(0, 21);
 
 -- ###########################################################################################
 

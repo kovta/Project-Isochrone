@@ -246,9 +246,9 @@ CREATE TABLE project_submodules (
 	project_submodule_submodule INTEGER NOT NULL,
 	CONSTRAINT PK_PROJECT_SUBMODULE_ID PRIMARY KEY (project_submodule_id),
 	CONSTRAINT FK_PROJECT_SUBMODULE_PROJECT FOREIGN KEY (project_submodule_project)
-	  REFERENCES objectives (objective_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	  REFERENCES projects (project_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
 	CONSTRAINT FK_PROJECT_SUBMODULE_SUBMODULE FOREIGN KEY (project_submodule_submodule)
-	  REFERENCES projects (project_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 -- ###########################################################################################
