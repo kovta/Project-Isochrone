@@ -34,14 +34,14 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 @Table(name = "projects")
 @NamedQueries(value = { //
 		@NamedQuery(name = ProjectQuery.COUNT_BY_ID, query = "SELECT COUNT(p) FROM Project p WHERE p.id=:" + ProjectParameter.ID),
-		@NamedQuery(name = ProjectQuery.GET_ALL_PROJECTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules s LEFT JOIN FETCH p.tasks t ORDER BY p.name"),
-		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.status=:"
+		@NamedQuery(name = ProjectQuery.GET_ALL_PROJECTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t ORDER BY p.name"),
+		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.status=:"
 				+ ProjectParameter.STATUS + " ORDER BY p.name"),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID, query = "SELECT p FROM Project p WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm WHERE p.id=:"
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
-		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH p.tasks t WHERE p.id=:"
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.id=:"
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.REMOVE_BY_ID, query = "DELETE FROM Project p WHERE p.id=:" + ProjectParameter.ID)
 		//
@@ -90,7 +90,7 @@ public class Project implements Serializable {
 	private Date modificationDate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Submodule.class)
-	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_submodule_id", nullable = false))
+	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_submodule", nullable = false))
 	private Set<Submodule> submodules;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Task.class)

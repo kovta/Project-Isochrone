@@ -19,6 +19,7 @@ import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -44,10 +45,13 @@ public class TaskServiceImpl implements TaskService {
 	@EJB
 	private ProjectService projectService;
 
+	@EJB
+	private SubmoduleService submoduleService;
+
 	@Override
 	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project)
-			throws PersistenceServiceException {
+			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project,
+			Long submodule) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
@@ -56,23 +60,29 @@ public class TaskServiceImpl implements TaskService {
 					dependantTasks, taskDependencies);
 			Objective parentObjective = null;
 			Project parentProject = null;
+			Submodule parentSubmodule = null;
+			AppUser operatorTemp = null;
 			if (objective != null) {
 				parentObjective = this.objectiveService.readElementary(objective);
 				task.setObjective(parentObjective);
-			} else if (project != null) {
-				parentProject = this.projectService.readElementary(project);
-				task.setProject(parentProject);
-			}
-			AppUser operatorTemp;
-			if (objective != null) {
 				if (parentObjective.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentObjective.getCreator();
 				} else {
 					operatorTemp = this.appUserService.read(creator.getId());
 				}
 			} else if (project != null) {
+				parentProject = this.projectService.readElementary(project);
+				task.setProject(parentProject);
 				if (parentProject.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentProject.getCreator();
+				} else {
+					operatorTemp = this.appUserService.read(creator.getId());
+				}
+			} else if (submodule != null) {
+				parentSubmodule = this.submoduleService.readElementary(submodule);
+				task.setSubmodule(parentSubmodule);
+				if (parentSubmodule.getCreator().getId() == creator.getId()) {
+					operatorTemp = parentSubmodule.getCreator();
 				} else {
 					operatorTemp = this.appUserService.read(creator.getId());
 				}
@@ -120,8 +130,8 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project)
-			throws PersistenceServiceException {
+			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project,
+			Long submodule) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
@@ -150,6 +160,8 @@ public class TaskServiceImpl implements TaskService {
 				task.setObjective(this.objectiveService.readWithTasks(objective));
 			} else if (project != null) {
 				task.setProject(this.projectService.readWithTasks(project));
+			} else if (submodule != null) {
+				task.setSubmodule(this.submoduleService.readWithTasks(submodule));
 			}
 			return this.entityManager.merge(task);
 		} catch (final Exception e) {

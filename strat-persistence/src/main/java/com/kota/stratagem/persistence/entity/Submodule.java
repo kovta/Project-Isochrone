@@ -90,7 +90,7 @@ public class Submodule implements Serializable {
 	private Set<AppUser> assignedUsers;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)
-	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_submodule_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_project_id", nullable = false))
+	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_project", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
 

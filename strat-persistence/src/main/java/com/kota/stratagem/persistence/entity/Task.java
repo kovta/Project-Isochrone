@@ -295,6 +295,14 @@ public class Task implements Serializable {
 		this.project = project;
 	}
 
+	public Submodule getSubmodule() {
+		return this.submodule;
+	}
+
+	public void setSubmodule(Submodule submodule) {
+		this.submodule = submodule;
+	}
+
 	@Override
 	public String toString() {
 		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
