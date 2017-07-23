@@ -26,6 +26,7 @@ public class TaskRepresentor implements Serializable {
 	private final List<TaskRepresentor> taskDependencies;
 	private ObjectiveRepresentor objective;
 	private ProjectRepresentor project;
+	private SubmoduleRepresentor submodule;
 
 	public TaskRepresentor() {
 		this(null, "", "", 5, 0, new Date(), null, new Date(), null, new Date());
@@ -52,6 +53,7 @@ public class TaskRepresentor implements Serializable {
 		this.taskDependencies = new ArrayList<>();
 		this.objective = null;
 		this.project = null;
+		this.submodule = null;
 	}
 
 	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
@@ -73,6 +75,7 @@ public class TaskRepresentor implements Serializable {
 		this.taskDependencies = new ArrayList<>();
 		this.objective = null;
 		this.project = null;
+		this.submodule = null;
 	}
 
 	public Long getId() {
@@ -97,6 +100,14 @@ public class TaskRepresentor implements Serializable {
 
 	public void setProject(ProjectRepresentor project) {
 		this.project = project;
+	}
+
+	public SubmoduleRepresentor getSubmodule() {
+		return this.submodule;
+	}
+
+	public void setSubmodule(SubmoduleRepresentor submodule) {
+		this.submodule = submodule;
 	}
 
 	public String getName() {

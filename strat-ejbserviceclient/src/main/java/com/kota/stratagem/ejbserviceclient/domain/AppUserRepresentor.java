@@ -19,6 +19,7 @@ public class AppUserRepresentor implements Serializable {
 	private final Date acountModificationDate;
 	private final List<ObjectiveRepresentor> objectives;
 	private final List<ProjectRepresentor> projects;
+	private final List<SubmoduleRepresentor> submodules;
 	private final List<TaskRepresentor> tasks;
 	private final List<ImpedimentRepresentor> reportedImpediments;
 	private final List<ImpedimentRepresentor> processedImpediments;
@@ -41,6 +42,7 @@ public class AppUserRepresentor implements Serializable {
 		this.acountModificationDate = acountModificationDate;
 		this.objectives = new ArrayList<>();
 		this.projects = new ArrayList<>();
+		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.reportedImpediments = new ArrayList<>();
 		this.processedImpediments = new ArrayList<>();
@@ -58,6 +60,7 @@ public class AppUserRepresentor implements Serializable {
 		this.acountModificationDate = acountModificationDate;
 		this.objectives = new ArrayList<>();
 		this.projects = new ArrayList<>();
+		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.reportedImpediments = new ArrayList<>();
 		this.processedImpediments = new ArrayList<>();
@@ -111,6 +114,10 @@ public class AppUserRepresentor implements Serializable {
 
 	public List<ProjectRepresentor> getProjects() {
 		return this.projects;
+	}
+
+	public List<SubmoduleRepresentor> getSubmodules() {
+		return this.submodules;
 	}
 
 	public List<TaskRepresentor> getTasks() {

@@ -19,6 +19,7 @@ public class ProjectRepresentor implements Serializable {
 	private final Date creationDate;
 	private final AppUserRepresentor modifier;
 	private final Date modificationDate;
+	private final List<SubmoduleRepresentor> submodules;
 	private final List<TaskRepresentor> tasks;
 	private final List<TeamRepresentor> assignedTeams;
 	private final List<AppUserRepresentor> assignedUsers;
@@ -42,6 +43,7 @@ public class ProjectRepresentor implements Serializable {
 		this.creationDate = creationDate;
 		this.modifier = modifier;
 		this.modificationDate = modificationDate;
+		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
@@ -61,6 +63,7 @@ public class ProjectRepresentor implements Serializable {
 		this.creationDate = creationDate;
 		this.modifier = modifier;
 		this.modificationDate = modificationDate;
+		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
@@ -112,6 +115,10 @@ public class ProjectRepresentor implements Serializable {
 		return this.modificationDate;
 	}
 
+	public List<SubmoduleRepresentor> getSubmodules() {
+		return this.submodules;
+	}
+
 	public List<TaskRepresentor> getTasks() {
 		return this.tasks;
 	}
@@ -134,10 +141,15 @@ public class ProjectRepresentor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "\nProjectRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
+		return "ProjectRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
 				+ this.deadline + ", confidential=" + this.confidential + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
-				+ this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
-				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective=" + this.objective + "]\n";
+				+ this.modifier + ", modificationDate=" + this.modificationDate + ", submodules=" + this.submodules + ", tasks=" + this.tasks
+				+ ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective="
+				+ this.objective + "]";
+	}
+
+	public void addSubmodules(SubmoduleRepresentor submodule) {
+		this.submodules.add(submodule);
 	}
 
 	public void addTask(TaskRepresentor task) {
