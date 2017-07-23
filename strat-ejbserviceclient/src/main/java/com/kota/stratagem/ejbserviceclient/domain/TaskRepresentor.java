@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TaskRepresentor implements Serializable {
+public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -552279169521037564L;
 
@@ -35,7 +35,7 @@ public class TaskRepresentor implements Serializable {
 	// Projects and Objectives removed from constructor due to structure ambiguity
 	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator,
 			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
-		super();
+		super(deadline != null ? deadline : new Date());
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -58,7 +58,7 @@ public class TaskRepresentor implements Serializable {
 
 	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
 			AppUserRepresentor modifier, Date modificationDate) {
-		super();
+		super(deadline != null ? deadline : new Date());
 		this.name = name;
 		this.description = description;
 		this.priority = priority;

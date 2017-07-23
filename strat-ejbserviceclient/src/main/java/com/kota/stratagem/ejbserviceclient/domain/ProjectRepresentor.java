@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ProjectRepresentor implements Serializable {
+public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -2331431817299985578L;
 
@@ -32,7 +32,7 @@ public class ProjectRepresentor implements Serializable {
 
 	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidentiality,
 			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
-		super();
+		super(deadline != null ? deadline : new Date());
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -53,7 +53,7 @@ public class ProjectRepresentor implements Serializable {
 
 	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential, AppUserRepresentor creator,
 			Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
-		super();
+		super(deadline != null ? deadline : new Date());
 		this.name = name;
 		this.description = description;
 		this.status = status;

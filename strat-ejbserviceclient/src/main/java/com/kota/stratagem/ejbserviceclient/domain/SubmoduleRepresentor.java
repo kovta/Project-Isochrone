@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SubmoduleRepresentor implements Serializable {
+public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -7646277745869655229L;
 
@@ -21,6 +21,7 @@ public class SubmoduleRepresentor implements Serializable {
 	private final List<TeamRepresentor> assignedTeams;
 	private final List<AppUserRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
+	private final double completion;
 
 	public SubmoduleRepresentor() {
 		this(null, "", "", new Date(), null, new Date(), null, new Date(), null);
@@ -28,7 +29,7 @@ public class SubmoduleRepresentor implements Serializable {
 
 	public SubmoduleRepresentor(Long id, String name, String description, Date deadline, AppUserRepresentor creator, Date creationDate,
 			AppUserRepresentor modifier, Date modificationDate, ProjectRepresentor project) {
-		super();
+		super(deadline != null ? deadline : new Date());
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -41,11 +42,16 @@ public class SubmoduleRepresentor implements Serializable {
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.project = project;
+		int progressSum = 0;
+		for (final TaskRepresentor task : this.getTasks()) {
+			progressSum += task.getCompletion();
+		}
+		this.completion = this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
 	}
 
 	public SubmoduleRepresentor(String name, String description, Date deadline, AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier,
 			Date modificationDate, ProjectRepresentor project) {
-		super();
+		super(deadline != null ? deadline : new Date());
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
@@ -57,6 +63,11 @@ public class SubmoduleRepresentor implements Serializable {
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.project = project;
+		int progressSum = 0;
+		for (final TaskRepresentor task : this.getTasks()) {
+			progressSum += task.getCompletion();
+		}
+		this.completion = this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
 	}
 
 	public Long getId() {
@@ -109,6 +120,10 @@ public class SubmoduleRepresentor implements Serializable {
 
 	public ProjectRepresentor getProject() {
 		return this.project;
+	}
+
+	public double getCompletion() {
+		return this.completion;
 	}
 
 	@Override
