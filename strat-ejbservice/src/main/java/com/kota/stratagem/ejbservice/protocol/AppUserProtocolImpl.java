@@ -18,12 +18,14 @@ import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.RoleRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.Role;
@@ -33,6 +35,7 @@ import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ImpedimentService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
+import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.service.TeamService;
 import com.kota.stratagem.security.encryption.PasswordGenerationService;
@@ -50,6 +53,9 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@EJB
 	private ProjectService projectSerive;
+
+	@EJB
+	private SubmoduleService submoduleSerive;
 
 	@EJB
 	private TaskService taskService;
@@ -110,15 +116,16 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, AppUserRepresentor operator,
-			Set<ObjectiveRepresentor> objectives, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<ImpedimentRepresentor> reportedImpediments,
-			Set<ImpedimentRepresentor> processedImpediments, Set<TeamRepresentor> supervisedTeams, Set<TeamRepresentor> teamMemberships)
-			throws AdaptorException {
+			Set<ObjectiveRepresentor> objectives, Set<ProjectRepresentor> projects, Set<SubmoduleRepresentor> submodules, Set<TaskRepresentor> tasks,
+			Set<ImpedimentRepresentor> reportedImpediments, Set<ImpedimentRepresentor> processedImpediments, Set<TeamRepresentor> supervisedTeams,
+			Set<TeamRepresentor> teamMemberships) throws AdaptorException {
 		try {
 			AppUser user = null;
 			final Role userRole = Role.valueOf(role.getName());
 			if ((id != null) && this.appUserSerive.exists(id)) {
 				final Set<Objective> userObjectives = new HashSet<Objective>();
 				final Set<Project> userProjects = new HashSet<Project>();
+				final Set<Submodule> userSubmodules = new HashSet<Submodule>();
 				final Set<Task> userTasks = new HashSet<Task>();
 				final Set<Impediment> impedimentsReported = new HashSet<Impediment>();
 				final Set<Impediment> impedimentsProcessed = new HashSet<Impediment>();
@@ -129,6 +136,9 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				}
 				for (final ProjectRepresentor project : projects) {
 					userProjects.add(this.projectSerive.readElementary(project.getId()));
+				}
+				for (final SubmoduleRepresentor submodule : submodules) {
+					userSubmodules.add(this.submoduleSerive.readElementary(submodule.getId()));
 				}
 				for (final TaskRepresentor task : tasks) {
 					userTasks.add(this.taskService.read(task.getId()));
@@ -145,11 +155,12 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				for (final TeamRepresentor team : teamMemberships) {
 					memberships.add(this.teamService.read(team.getId()));
 				}
+				// Submodules not passed although link addition method still needs further specification
 				user = this.appUserSerive.update(id, name, password, email, userRole, operator != null ? this.appUserSerive.read(operator.getId()) : null,
-						userObjectives, userProjects, userTasks, impedimentsReported, impedimentsProcessed, teamsSupervised, memberships);
+						userObjectives, userProjects, userSubmodules, userTasks, impedimentsReported, impedimentsProcessed, teamsSupervised, memberships);
 			} else {
 				user = this.appUserSerive.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
-						operator != null ? this.appUserSerive.read(operator.getId()) : null, null, null, null, null, null, null, null);
+						operator != null ? this.appUserSerive.read(operator.getId()) : null, null, null, null, null, null, null, null, null);
 			}
 			return this.converter.to(user);
 		} catch (final PersistenceServiceException e) {
@@ -161,6 +172,9 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@Override
 	public void removeAppUser(Long id) throws AdaptorException {
 		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Remove AppUser (id: " + id + ")");
+			}
 			this.appUserSerive.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());

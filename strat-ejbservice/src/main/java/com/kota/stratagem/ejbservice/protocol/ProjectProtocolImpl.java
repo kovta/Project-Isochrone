@@ -23,12 +23,14 @@ import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
@@ -38,6 +40,7 @@ import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ImpedimentService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
+import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.service.TeamService;
 
@@ -48,6 +51,9 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 
 	@EJB
 	private ProjectService projectService;
+
+	@EJB
+	private SubmoduleService submoduleSerive;
 
 	@EJB
 	private TaskService taskService;
@@ -94,7 +100,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				projects = this.projectService.readByStatus(ProjectStatus.valueOf(criteria.getStatus().name()));
 			}
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all projects by criteria (" + criteria + "): " + projects.size() + " projects(s)");
+				LOGGER.debug("Fetch all Projects by criteria (" + criteria + "): " + projects.size() + " Projects(s)");
 			}
 			return new ArrayList<ProjectRepresentor>(this.projectConverter.to(projects));
 		} catch (final PersistenceServiceException e) {
@@ -148,8 +154,8 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 
 	@Override
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
-			String operator, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers,
-			Set<ImpedimentRepresentor> impediments, Long objective) throws AdaptorException {
+			String operator, Set<SubmoduleRepresentor> submodules, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams,
+			Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments, Long objective) throws AdaptorException {
 		try {
 			Project project = null;
 			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
@@ -157,10 +163,16 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Project (id: " + id + ")");
 				}
+				final Set<Submodule> projectSubmodules = new HashSet<Submodule>();
 				final Set<Task> projectTasks = new HashSet<Task>();
 				final Set<Team> teams = new HashSet<Team>();
 				final Set<AppUser> users = new HashSet<AppUser>();
 				final Set<Impediment> projectImpediments = new HashSet<Impediment>();
+				if (submodules != null) {
+					for (final SubmoduleRepresentor submodule : submodules) {
+						projectSubmodules.add(this.submoduleSerive.readElementary(submodule.getId()));
+					}
+				}
 				if (tasks != null) {
 					for (final TaskRepresentor task : tasks) {
 						projectTasks.add(this.taskService.read(task.getId()));
@@ -181,14 +193,14 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 						projectImpediments.add(this.impedimentService.read(impediment.getId()));
 					}
 				}
-				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator),
+				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null,
 						projectTasks, teams, users, projectImpediments);
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
 				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null, null,
-						null, null, objective);
+						null, null, null, objective);
 			}
 			return this.projectConverter.to(project);
 		} catch (final PersistenceServiceException e) {
@@ -201,7 +213,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	public void removeProject(Long id) throws AdaptorException {
 		try {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Remove project (id: " + id + ")");
+				LOGGER.debug("Remove Project (id: " + id + ")");
 			}
 			this.projectService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {

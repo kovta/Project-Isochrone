@@ -72,15 +72,16 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
-	public List<TaskRepresentor> getAllTasks() {
+	public List<TaskRepresentor> getAllTasks() throws AdaptorException {
 		Set<TaskRepresentor> representors = new HashSet<>();
 		try {
 			representors = this.converter.to(this.taskService.readAll());
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all tasks --> " + representors.size() + " item(s)");
+				LOGGER.debug("Fetch all Tasks --> " + representors.size() + " item(s)");
 			}
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
 		return new ArrayList<TaskRepresentor>(representors);
 	}
@@ -138,6 +139,9 @@ public class TaskProtocolImpl implements TaskProtocol {
 	@Override
 	public void removeTask(Long id) throws AdaptorException {
 		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Remove Task (id: " + id + ")");
+			}
 			this.taskService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());

@@ -13,6 +13,7 @@ import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
@@ -27,8 +28,8 @@ public interface ProjectProtocol {
 	List<ObjectiveRepresentor> getObjectiveProjectClusters() throws ServiceException;
 
 	ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
-			String operator, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers,
-			Set<ImpedimentRepresentor> impediments, Long objective) throws AdaptorException;
+			String operator, Set<SubmoduleRepresentor> submodules, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams,
+			Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments, Long objective) throws AdaptorException;
 
 	void removeProject(Long id) throws AdaptorException;
 
