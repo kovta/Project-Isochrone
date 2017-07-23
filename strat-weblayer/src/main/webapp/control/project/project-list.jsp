@@ -35,8 +35,9 @@
 				<table class="table table-hover fixed-table-layout">
 					<colgroup>
 						<col span="1" style="width: 3%;">
-						<col span="1" style="width: 66%;">
+						<col span="1" style="width: 54%;">
 						<col span="1" style="width: 15%;">
+						<col span="1" style="width: 12%;">
 						<col span="1" style="width: 8%;">
 						<col span="1" style="width: 8%;">
 				    </colgroup>
@@ -45,6 +46,7 @@
 				        	<th>#</th>
 					        <th>Name</th>
 					        <th class="center-text">Status</th>
+					        <th class="center-text">Submodules</th>
 					        <th class="center-text">Tasks</th>
 					        <th class="center-text">Actions</th>
 				        </tr>
@@ -57,6 +59,7 @@
 		                        	<th scope="row"><c:out value="${count}" /></th>
 		                            <td><c:out value="${project.name}" /></td>
 		                            <td class="center-text"><c:out value="${project.status.label}" /></td>
+		                            <td class="center-text"><c:out value="${project.submodules.size()}" /></td>
 		                            <td class="center-text"><c:out value="${project.tasks.size()}" /></td>
 		                            <td class="center-text">
 			                            <a href="Project?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>

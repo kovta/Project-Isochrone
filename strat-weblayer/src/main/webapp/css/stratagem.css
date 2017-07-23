@@ -50,6 +50,18 @@ footer.page-footer {
 .white-text {
 	color: #fff;
 }
+.success-text {
+	color: limegreen;
+}
+.warning-text {
+	color: gold;
+}
+.heavy-warning-text {
+	color: darkorange;	
+}
+.danger-text {
+	color: red;	
+}
 .space-top {
 	padding-top: 20px;
 }

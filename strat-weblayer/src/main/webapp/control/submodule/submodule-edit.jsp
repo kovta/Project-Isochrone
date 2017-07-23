@@ -1,17 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor" %>
-<%@ page import="com.kota.stratagem.weblayer.common.task.TaskAttribute" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor" %>
+<%@ page import="com.kota.stratagem.weblayer.common.submodule.SubmoduleAttribute" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Stratagem - Tasks</title>
+	<title>Stratagem - Submodules</title>
 	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>
 	<jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
-	<jsp:useBean id="task" class="com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor" scope="request" />
+	<jsp:useBean id="submodule" class="com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor" scope="request" />
 	<br/><br/><br/><br/><br/>
 	
 	<div class="wrapper">
@@ -21,24 +21,24 @@
 		        <div class="admin-panel info-admin-panel">
 		            <!--Card heading-->
 		            <div class="card-header mdb-color darken-1 white-text">
-		                <h5><i class="fa fa-edit"></i><span class="icon-companion"> Edit Task</span></h5>
+		                <h5><i class="fa fa-edit"></i><span class="icon-companion"> Edit Submodule</span></h5>
 		            </div>
 		            <!--/Card heading-->
 		            <!--Card content-->
 		            <div class="card-block">
 		                <!-- Edit Form -->
-		                <form action="Task" method="post">
+		                <form action="Submodule" method="post">
 		                	
-		                	<c:if test="${requestScope.task.getId() != -1}"><input type="hidden" name="id" value="${task.id}" /></c:if>
+		                	<c:if test="${requestScope.submodule.getId() != -1}"><input type="hidden" name="id" value="${submodule.id}" /></c:if>
 		                    <!--First row-->
 		                    <div class="row">
 		                        <!--First column-->
 		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
-				               			<label>The name of the Task</label><br/>
+				               			<label>The name of the Submodule</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" id="form1" class="form-control validate" name="name" placeholder="The name of the Task" value="${task.name}">
+		                                <input type="text" id="form1" class="form-control validate" name="name" placeholder="The name of the Submodule" value="${submodule.name}">
 		                            </div>
 		                        </div>
 		                    </div>
@@ -46,58 +46,33 @@
 		                    <!--Second row-->
 		                    <div class="row">
 		                        <!--First column-->
-		                        <div class="col-md-6">
+		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
-				               			<label>The priority of the Task</label><br/>
-	                  				</div>
-		                            <div class="md-form">
-		                                <input type="text" name="priority" id="form81" class="form-control validate" value="${task.priority}">
-		                            </div>
-		                        </div>
-		                        <!--Second column-->
-		                        <div class="col-md-6">
-		                        	<div class="md-form form-sm">
-				               			<label>The deadline of the Task</label><br/>
+				               			<label>The deadline of the Submodule</label><br/>
 	                  				</div>
 		                            <div class="md-form" id="sandbox-container">
 										<input placeholder="None" type="text" class="form-control" name="deadline" 
-											value="<fmt:formatDate type="date" value="${task.deadline}" pattern="MM/dd/yyyy" />"/>
+											value="<fmt:formatDate type="date" value="${submodule.deadline}" pattern="MM/dd/yyyy" />"/>
 		                            </div>
 		                        </div>
 		                    </div>
 		                    <!--/.Second row-->
-		                    <!--Third row-->
+   		                    <!--Third row-->
 		                    <div class="row">
 		                        <!--First column-->
 		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
-				               			<label>The name of the Task</label><br/>
-	                  				</div>
-                       					<div class="md-form form-sm">
-											<input class="full-width" id="compslider" type="text" name="completion" value="${task.completion}"
-											data-slider-ticks="[0, 25 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
-											data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]'/>
-											<!-- <input type="text" id="slider-input" name="completion" class="slider" value="${task.completion}" /> -->
-						                </div>
-		                            </div>
-		                        </div>
-		                    <!--/.Third row-->
-   		                    <!--Fourth row-->
-		                    <div class="row">
-		                        <!--First column-->
-		                        <div class="col-md-12">
-		                        	<div class="md-form form-sm">
-				               			<label>The description of the Task</label><br/>
+				               			<label>The description of the Submodule</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <textarea type="text" id="form78" class="md-textarea" name="description" value="${task.description}">
-		                                <c:out value="${task.description}"/>
+		                                <textarea type="text" id="form78" class="md-textarea" name="description" value="${submodule.description}">
+		                                <c:out value="${submodule.description}"/>
 		                                </textarea>
 		                            </div>
 		                        </div>
 		                    </div>
-		                    <!--/.Fourth row-->
-		                    <!-- Fifth row -->
+		                    <!--/.Third row-->
+		                    <!-- Fourth row -->
 		                    <div class="row">
 		                        <div class="col-md-6 text-center">
 									<button type="button" onclick="goBack()" class="btn btn-outline-info mr-auto full-form-footer-button">
@@ -106,11 +81,11 @@
 		                        </div>
 		                        <div class="col-md-6 text-center">
 									<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto full-form-footer-button">
-		            					Update Task <i class="fa fa-save ml-1"></i>
+		            					Update Submodule <i class="fa fa-save ml-1"></i>
 		            				</button>
 		                        </div>
 		                    </div>
-		                    <!-- /.Fifth row -->
+		                    <!-- /.Fourth row -->
 		                </form>
 		                <!-- Edit Form -->
 		            </div>

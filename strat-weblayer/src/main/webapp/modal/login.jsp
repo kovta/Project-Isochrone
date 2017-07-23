@@ -1,4 +1,4 @@
-<%@ page import="com.kota.stratagem.weblayer.common.LoginAttribute" %>
+<%@ page import="com.kota.stratagem.weblayer.common.access.LoginAttribute" %>
            
 <% 
 	String userName = (String) request.getAttribute(LoginAttribute.ATTR_USERNAME); 

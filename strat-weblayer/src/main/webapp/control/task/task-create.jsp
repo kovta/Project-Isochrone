@@ -1,7 +1,3 @@
-<%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
-<%@ page import="com.kota.stratagem.weblayer.common.task.TaskAttribute" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -17,9 +13,9 @@
             <!--Body-->
             <form action="Task" method="post">
 	            <div class="modal-body">
-	            	<!-- TODO: Objective and project parent discerning -->
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
 	            	<input type="hidden" name="projectId" value="${project.id}" />
+	            	<input type="hidden" name="projectId" value="${submodule.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
 	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}">

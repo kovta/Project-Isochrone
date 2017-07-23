@@ -10,6 +10,8 @@ public enum Page {
 	PROJECT_LIST("/control/project/project-list.jsp", "ProjectList"), //
 	PROJECT_VIEW("/control/project/project-view.jsp", "Project"), //
 	PROJECT_EDIT("/control/project/project-edit.jsp", "Project"), //
+	SUBMODULE_VIEW("/control/submodule/submodule-view.jsp", "Submodule"), //
+	SUBMODULE_EDIT("/control/submodule/submodule-edit.jsp", "Submodule"), //
 	TASK_VIEW("/control/task/task-view.jsp", "Task"), //
 	TASK_EDIT("/control/task/task-edit.jsp", "Task"); //
 

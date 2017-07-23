@@ -79,7 +79,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
-			Long id = null, objective_id = null, project_id = null;
+			Long id = null, objective_id = null, project_id = null, submodule_id = null;
 			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
 				id = Long.parseLong(request.getParameter(ID));
 			} else {
@@ -87,6 +87,8 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 					objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 				} else if (request.getParameter(PARENT_PROJECT) != "") {
 					project_id = Long.parseLong(request.getParameter(PARENT_PROJECT));
+				} else if (request.getParameter(PARENT_PROJECT) != "") {
+					submodule_id = Long.parseLong(request.getParameter(PARENT_SUBMODULE));
 				}
 			}
 			final String name = request.getParameter(NAME);
@@ -113,14 +115,14 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
-				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, deadline, null, null, null, null);
-				this.forward(request, response, Task, false, false, true, false);
+				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, null, null, null);
+				this.forward(request, response, task, false, false, true, false);
 			} else {
 				TaskRepresentor task = null;
 				try {
 					LOGGER.info(id == null ? "Create Task : (" + name + ")" : "Update Task : (" + id + ")");
 					task = this.protocol.saveTask(id, name, description, priority, completion, deadline, request.getUserPrincipal().getName(), null, null, null,
-							null, null, objective_id, project_id);
+							null, null, objective_id, project_id, submodule_id);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Task created succesfully!" : "Task updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

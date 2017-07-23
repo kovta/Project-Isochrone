@@ -2,13 +2,14 @@
 <%@ page import="java.util.Set" %>  
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.project.ProjectAttribute" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Stratagem - projects</title>
+	<title>Stratagem - Projects</title>
 	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>
@@ -107,11 +108,16 @@
 	                                	<tbody>
 	                                		<tr class="match-row"><td class="center-text">
 						  		   			    <a href="Project?id=<c:out value="${project.id}"/>&edit=1" class="vertical-align-middle center-text full-width">
-							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit project
+							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Project
 							       			    </a>
 											</td></tr>
 											<tr class="match-row"><td>
-												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-toggle="modal" data-target="#addTask">
+												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addSubmodule" data-toggle="modal">
+											    	<i class="fa fa-list-alt tile-icon"></i><span class="icon-companion">Define Submodule</span>
+												</button>
+											</td></tr>
+											<tr class="match-row"><td>
+												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addTask" data-toggle="modal">
 											    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 												</button>
 											</td></tr>
@@ -130,6 +136,72 @@
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
                             <div class="divider-new">
+                                <h2 class="h2-responsive">List of Submodules</h2>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class="row">
+						<c:forEach items="${requestScope.project.submodules}" var="submodule">
+							<div class="col-lg-4">
+	                            <!--Card-->
+	                            <div class="card wow fadeIn" data-wow-delay="0.2s">
+	                                <!--Card content-->
+	                                <div class="card-block">
+	                                    <!--Title-->
+	                                    <h4 class="card-title"><c:out value="${submodule.name}" /></h4>
+	                                    <hr/>
+	                                    <!--Text-->
+	                                    <c:if test="${not empty submodule.deadline}">
+	                                    	<p class="card-text">
+	                                    		Deadline:
+	                                    		<c:choose>
+												    <c:when test="${submodule.urgencyLevel == 3}">
+														<span class="danger-text">
+															<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
+														</span>
+												    </c:when>
+												    <c:when test="${submodule.urgencyLevel == 2}">
+														<span class="heavy-warning-text">
+															<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
+														</span>
+												    </c:when>
+												    <c:when test="${submodule.urgencyLevel == 1}">
+														<span class="warning-text">
+															<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
+														</span>
+												    </c:when>
+											        <c:otherwise>
+											        	<span class="success-text">
+											        		<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
+											        	</span>
+											        </c:otherwise>
+												</c:choose>
+	                                    	</p>
+	                                    	<hr/>
+	                                    </c:if>
+                              			<c:choose>
+										    <c:when test="${submodule.tasks.size() == 0}">
+												<p class="card-text"><c:out value="No tasks registered" /></p>
+										    </c:when>
+									        <c:otherwise>
+									        	<p class="card-text"><c:out value="${submodule.tasks.size()} Tasks" /></p>
+									        	<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
+									        </c:otherwise>
+										</c:choose>
+	                                    <a href="Submodule?id=<c:out value="${submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
+	                                </div>
+	                                <!--/.Card content-->
+	                            </div>
+	                            <br/>
+	                            <!--/.Card-->
+	                        </div>
+						</c:forEach>
+					</div>
+
+                    <div class="row wow fadeIn" data-wow-delay="0.2s">
+                        <div class="col-lg-12">
+                            <div class="divider-new">
                                 <h2 class="h2-responsive">List of Tasks</h2>
                             </div>
                         </div>
@@ -144,8 +216,37 @@
 	                                <div class="card-block">
 	                                    <!--Title-->
 	                                    <h4 class="card-title"><c:out value="${task.name}" /></h4>
+	                                    <hr/>
 	                                    <!--Text-->
-	                                    <p class="card-text"><c:out value="${task.completion}" />%</p>
+	                                    <c:if test="${not empty task.deadline}">
+	                                    	<p class="card-text">
+	                                    		Deadline:
+	                                    		<c:choose>
+												    <c:when test="${task.urgencyLevel == 3}">
+														<span class="danger-text">
+															<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
+														</span>
+												    </c:when>
+												    <c:when test="${task.urgencyLevel == 2}">
+														<span class="heavy-warning-text">
+															<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
+														</span>
+												    </c:when>
+												    <c:when test="${task.urgencyLevel == 1}">
+														<span class="warning-text">
+															<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
+														</span>
+												    </c:when>
+											        <c:otherwise>
+											        	<span class="success-text">
+											        		<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
+											        	</span>
+											        </c:otherwise>
+												</c:choose>
+	                                    	</p>
+	                                    	<hr/>
+	                                    </c:if>
+	                                    <p class="card-text"><c:out value="${task.completion} Completed" />%</p>
 	                                    <a href="Task?id=<c:out value="${task.id}" />" class="btn btn-primary">Inspect task</a>
 	                                </div>
 	                                <!--/.Card content-->
@@ -160,6 +261,7 @@
             </div>
             
    			<!-- Modals -->
+			<jsp:include page="../submodule/submodule-create.jsp"></jsp:include>
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
 			<jsp:include page="../../partial/alert.jsp"></jsp:include>
 			<!-- /Modals -->
