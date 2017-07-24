@@ -192,7 +192,8 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (2, 'Notification subscription implementation', 'Invested users must be notified on key item modifications', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (3, 'Adding Project manager and Product owner funcitonality', 'Highest level project responsibility delegation must be clear at least on project level. Other leading elements wil be discerned with the help of assignments', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Test Submodule', '', NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -201,7 +202,8 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (7, 2),
 (7, 3),
 (7, 4),
-(7, 5);
+(7, 5),
+(8, 6);
 
 -- ###########################################################################################
 
@@ -228,7 +230,8 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (19, 'Add submodule protocols', 'Expand business layer for submodules', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(23, 'Submodule level test Task 1', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -260,7 +263,8 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (0, 18),
 (0, 19),
 (0, 20),
-(0, 21);
+(0, 21),
+(6, 23);
 
 -- ###########################################################################################
 
