@@ -184,6 +184,10 @@
 										    <c:when test="${submodule.tasks.size() == 0}">
 												<p class="card-text"><c:out value="No tasks registered" /></p>
 										    </c:when>
+										    <c:when test="${submodule.tasks.size() == 1}">
+												<p class="card-text"><c:out value="${submodule.tasks.size()} Task" /></p>
+									        	<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
+										    </c:when>
 									        <c:otherwise>
 									        	<p class="card-text"><c:out value="${submodule.tasks.size()} Tasks" /></p>
 									        	<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>

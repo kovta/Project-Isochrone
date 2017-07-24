@@ -21,7 +21,8 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final List<TeamRepresentor> assignedTeams;
 	private final List<AppUserRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
-	private final double completion;
+	@SuppressWarnings("unused")
+	private double completion;
 
 	public SubmoduleRepresentor() {
 		this(null, "", "", new Date(), null, new Date(), null, new Date(), null);
@@ -42,11 +43,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.project = project;
-		int progressSum = 0;
-		for (final TaskRepresentor task : this.getTasks()) {
-			progressSum += task.getCompletion();
-		}
-		this.completion = this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
 	}
 
 	public SubmoduleRepresentor(String name, String description, Date deadline, AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier,
@@ -63,11 +59,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.project = project;
-		int progressSum = 0;
-		for (final TaskRepresentor task : this.getTasks()) {
-			progressSum += task.getCompletion();
-		}
-		this.completion = this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
 	}
 
 	public Long getId() {
@@ -123,7 +114,11 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	}
 
 	public double getCompletion() {
-		return this.completion;
+		int progressSum = 0;
+		for (final TaskRepresentor task : this.getTasks()) {
+			progressSum += task.getCompletion();
+		}
+		return this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +66,16 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Submodule (id: " + id + ") --> " + representor);
 			}
+			Collections.sort(representor.getTasks(), new Comparator<TaskRepresentor>() {
+				@Override
+				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+					final int c = (int) obj_a.getCompletion() - (int) obj_b.getCompletion();
+					if (c == 0) {
+						return obj_a.getName().compareTo(obj_b.getName());
+					}
+					return c * -1;
+				}
+			});
 			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
