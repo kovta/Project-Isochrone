@@ -82,11 +82,11 @@ public class Submodule implements Serializable {
 	private Set<Task> tasks;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
-	@JoinTable(name = "team_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
+	@JoinTable(name = "team_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
 	private Set<Team> assignedTeams;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinTable(name = "user_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
+	@JoinTable(name = "user_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
 	private Set<AppUser> assignedUsers;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)

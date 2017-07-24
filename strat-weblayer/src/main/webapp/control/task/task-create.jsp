@@ -15,7 +15,7 @@
 	            <div class="modal-body">
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
 	            	<input type="hidden" name="projectId" value="${project.id}" />
-	            	<input type="hidden" name="projectId" value="${submodule.id}" />
+	            	<input type="hidden" name="submoduleId" value="${submodule.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
 	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}">

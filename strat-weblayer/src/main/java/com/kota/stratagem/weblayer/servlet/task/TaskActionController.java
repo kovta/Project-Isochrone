@@ -87,7 +87,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 					objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 				} else if (request.getParameter(PARENT_PROJECT) != "") {
 					project_id = Long.parseLong(request.getParameter(PARENT_PROJECT));
-				} else if (request.getParameter(PARENT_PROJECT) != "") {
+				} else if (request.getParameter(PARENT_SUBMODULE) != "") {
 					submodule_id = Long.parseLong(request.getParameter(PARENT_SUBMODULE));
 				}
 			}
