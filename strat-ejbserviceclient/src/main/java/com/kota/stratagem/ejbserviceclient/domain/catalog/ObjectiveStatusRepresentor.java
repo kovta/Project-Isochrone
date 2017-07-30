@@ -1,4 +1,4 @@
-package com.kota.stratagem.ejbserviceclient.domain;
+package com.kota.stratagem.ejbserviceclient.domain.catalog;
 
 public enum ObjectiveStatusRepresentor {
 

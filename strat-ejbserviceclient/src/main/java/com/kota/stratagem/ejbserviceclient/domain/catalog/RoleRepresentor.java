@@ -1,4 +1,4 @@
-package com.kota.stratagem.ejbserviceclient.domain;
+package com.kota.stratagem.ejbserviceclient.domain.catalog;
 
 public enum RoleRepresentor {
 
@@ -9,7 +9,18 @@ public enum RoleRepresentor {
 	CENTRAL_MANAGER("Central manager"), //
 	SYSTEM_ADMINISTRATOR("System administrator");
 
+	static {
+		PRISTINE_USER.subordinates = new RoleRepresentor[] {};
+		GENERAL_USER.subordinates = new RoleRepresentor[] { PRISTINE_USER };
+		GENERAL_MANAGER.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER };
+		DEPARTMENT_MANAGER.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER };
+		CENTRAL_MANAGER.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER, DEPARTMENT_MANAGER };
+		SYSTEM_ADMINISTRATOR.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER, DEPARTMENT_MANAGER, CENTRAL_MANAGER };
+	}
+
 	private final String label;
+
+	private RoleRepresentor[] subordinates;
 
 	private RoleRepresentor(String label) {
 		this.label = label;
@@ -21,6 +32,10 @@ public enum RoleRepresentor {
 
 	public String getName() {
 		return this.name();
+	}
+
+	public RoleRepresentor[] getSubordinateRoles() {
+		return this.subordinates;
 	}
 
 }

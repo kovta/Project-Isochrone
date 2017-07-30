@@ -21,7 +21,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final List<TeamRepresentor> assignedTeams;
 	private final List<AppUserRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
-	@SuppressWarnings("unused")
 	private double completion;
 
 	public SubmoduleRepresentor() {

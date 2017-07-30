@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
+
 public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -4038127838789105749L;

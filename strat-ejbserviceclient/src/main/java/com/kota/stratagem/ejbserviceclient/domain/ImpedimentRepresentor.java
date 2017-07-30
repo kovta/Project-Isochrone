@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ImpedimentStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.PriorityRepresentor;
+
 public class ImpedimentRepresentor implements Serializable {
 
 	private static final long serialVersionUID = 3043909154399999429L;

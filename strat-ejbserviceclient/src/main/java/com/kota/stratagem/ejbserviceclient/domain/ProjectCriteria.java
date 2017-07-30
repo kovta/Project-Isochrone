@@ -1,5 +1,7 @@
 package com.kota.stratagem.ejbserviceclient.domain;
 
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
+
 public class ProjectCriteria {
 	private String id;
 	private ProjectStatusRepresentor status;
