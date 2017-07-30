@@ -33,7 +33,7 @@ INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_r
 (7, 'holly', '$2a$10$W/nRkIKvfZ.3cCbJCxghKujWqAIzf/meL2g2DEQKv9pLpkPq9YvaC', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (8, 'ike', '$2a$10$q2DRoc37d30C9i2t6gLCGO7vAA2bJw2b4cjxZyD0Df9PDCTP0LWC2', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (9, 'jenny', '$2a$10$R80wTRvd1xSdlyafWnt4HeVKaF7z239JY9Gb6G5WPIUShlMyWGLwq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(10, 'Kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0);
+(10, 'kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0);
 SELECT SETVAL('app_users_user_id_seq', COALESCE(MAX(user_id), 0) ) FROM app_users;
 
 INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES 
@@ -229,8 +229,8 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (18, 'Add submodule representors', 'Domain objects must be updated', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (19, 'Add submodule protocols', 'Expand business layer for submodules', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 50, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (23, 'Submodule level test Task 1', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
@@ -307,18 +307,18 @@ SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id),
 
 -- ###########################################################################################
 
-INSERT INTO team_objective_assignments (assignment_entrustor, assignment_recipient, assignment_objective) VALUES
-(1, 1, 1);
-INSERT INTO user_objective_assignments (assignment_entrustor, assignment_recipient, assignment_objective) VALUES
-(2, 2, 3);
-INSERT INTO team_project_assignments (assignment_entrustor, assignment_recipient, assignment_project) VALUES
-(2, 2, 3);
-INSERT INTO user_project_assignments (assignment_entrustor, assignment_recipient, assignment_project) VALUES
-(0, 3, 2);
-INSERT INTO team_task_assignments (assignment_entrustor, assignment_recipient, assignment_task) VALUES
-(1, 2, 0);
-INSERT INTO user_task_assignments (assignment_entrustor, assignment_recipient, assignment_task) VALUES
-(0, 7, 1);
+INSERT INTO team_objective_assignments (assignment_entrustor, assignment_recipient, assignment_objective, assignment_creation_date) VALUES
+(1, 1, 1, '2015/12/13 14:20:00');
+INSERT INTO user_objective_assignments (assignment_entrustor, assignment_recipient, assignment_objective, assignment_creation_date) VALUES
+(2, 2, 3, '2015/12/13 14:20:00');
+INSERT INTO team_project_assignments (assignment_entrustor, assignment_recipient, assignment_project, assignment_creation_date) VALUES
+(2, 2, 3, '2015/12/13 14:20:00');
+INSERT INTO user_project_assignments (assignment_entrustor, assignment_recipient, assignment_project, assignment_creation_date) VALUES
+(0, 3, 2, '2015/12/13 14:20:00');
+INSERT INTO team_task_assignments (assignment_entrustor, assignment_recipient, assignment_task, assignment_creation_date) VALUES
+(1, 2, 0, '2015/12/13 14:20:00');
+INSERT INTO user_task_assignments (assignment_entrustor, assignment_recipient, assignment_task, assignment_creation_date) VALUES
+(0, 7, 1, '2015/12/13 14:20:00');
 
 -- ###########################################################################################
 

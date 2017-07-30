@@ -19,3 +19,5 @@ impediments_impediment_id_seq, remedies_remedy_id_seq TO stratagem_std_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
 team_objective_assignments, team_project_assignments, team_submodule_assignments, team_task_assignments, 
 user_objective_assignments, user_project_assignments, user_submodule_assignments, user_task_assignments TO stratagem_std_user;
+GRANT USAGE, SELECT, UPDATE ON 
+team_objective_assignments_assignment_id_seq, user_objective_assignments_assignment_id_seq TO stratagem_std_user;

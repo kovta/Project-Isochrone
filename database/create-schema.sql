@@ -415,6 +415,7 @@ CREATE TABLE team_objective_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_objective INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_TEAM_OBJECTIVE_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_TEAM_OBJECTIVE_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -428,6 +429,7 @@ CREATE TABLE user_objective_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_objective INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_USER_OBJECTIVE_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_USER_OBJECTIVE_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -441,6 +443,7 @@ CREATE TABLE team_project_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_project INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_TEAM_PROJECT_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_TEAM_PROJECT_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -454,6 +457,7 @@ CREATE TABLE user_project_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_project INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_USER_PROJECT_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_USER_PROJECT_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -467,6 +471,7 @@ CREATE TABLE team_submodule_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_submodule INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_TEAM_SUBMODULE_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_TEAM_SUBMODULE_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -480,6 +485,7 @@ CREATE TABLE user_submodule_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_submodule INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_USER_SUBMODULE_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_USER_SUBMODULE_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -493,6 +499,7 @@ CREATE TABLE team_task_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_task INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_TEAM_TASK_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_TEAM_TASK_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -506,6 +513,7 @@ CREATE TABLE user_task_assignments (
 	assignment_entrustor INTEGER NOT NULL,
 	assignment_recipient INTEGER NOT NULL,
 	assignment_task INTEGER NOT NULL,
+	assignment_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	CONSTRAINT PK_USER_TASK_ASSIGNMENTS_ID PRIMARY KEY (assignment_id),
 	CONSTRAINT FK_USER_TASK_ASSIGNMENTS_ENTRUSTOR FOREIGN KEY (assignment_entrustor)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
