@@ -22,10 +22,10 @@ import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
@@ -88,7 +88,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				public int compare(SubmoduleRepresentor obj_a, SubmoduleRepresentor obj_b) {
 					final int c = obj_a.getTasks().size() - obj_b.getTasks().size();
 					if (c == 0) {
-						return obj_a.getName().compareTo(obj_b.getName());
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
 					return c * -1;
 				}
@@ -98,7 +98,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
 					final int c = (int) obj_a.getCompletion() - (int) obj_b.getCompletion();
 					if (c == 0) {
-						return obj_a.getName().compareTo(obj_b.getName());
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
 					return c * -1;
 				}
@@ -153,7 +153,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				public int compare(ObjectiveRepresentor obj_a, ObjectiveRepresentor obj_b) {
 					final int c = obj_a.getPriority() - obj_b.getPriority();
 					if (c == 0) {
-						return obj_a.getName().compareTo(obj_b.getName());
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
 					return c;
 				}
@@ -171,7 +171,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 						if (c1 == 0) {
 							final int c2 = obj_a.getTasks().size() - obj_b.getTasks().size();
 							if (c2 == 0) {
-								return obj_a.getName().compareTo(obj_b.getName());
+								return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 							}
 							return c2 * -1;
 						}

@@ -17,18 +17,14 @@ import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.ObjectiveProtocolRemote;
-import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -71,7 +67,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			Collections.sort(representor.getProjects(), new Comparator<ProjectRepresentor>() {
 				@Override
 				public int compare(ProjectRepresentor obj_a, ProjectRepresentor obj_b) {
-					return obj_a.getName().compareTo(obj_b.getName());
+					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 				}
 			});
 			Collections.sort(representor.getTasks(), new Comparator<TaskRepresentor>() {
@@ -79,7 +75,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
 					final int c = (int) obj_a.getCompletion() - (int) obj_b.getCompletion();
 					if (c == 0) {
-						return obj_a.getName().compareTo(obj_b.getName());
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
 					return c * -1;
 				}
@@ -109,7 +105,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 						if (c2 == 0) {
 							final int c3 = obj_a.getTasks().size() - obj_b.getTasks().size();
 							if (c3 == 0) {
-								return obj_a.getName().compareTo(obj_b.getName());
+								return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 							}
 							return c3 * -1;
 						}
@@ -127,8 +123,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@Override
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
-			Boolean confidentiality, String operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams,
-			Set<AppUserRepresentor> assignedUsers) throws AdaptorException {
+			Boolean confidentiality, String operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks) throws AdaptorException {
 		try {
 			Objective objective = null;
 			final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
@@ -140,8 +135,6 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 				final Objective target = this.objectiveService.readWithProjectsAndTasks(id);
 				final Set<Project> objectiveProjects = target.getProjects();
 				final Set<Task> objectiveTasks = target.getTasks();
-				final Set<Team> teams = new HashSet<Team>();
-				final Set<AppUser> users = new HashSet<AppUser>();
 				if (projects != null) {
 					for (final ProjectRepresentor project : projects) {
 						objectiveProjects.add(this.projectService.readElementary(project.getId()));
@@ -152,24 +145,14 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 						objectiveTasks.add(this.taskService.read(task.getId()));
 					}
 				}
-				if (assignedTeams != null) {
-					for (final TeamRepresentor team : assignedTeams) {
-						teams.add(this.teamService.read(team.getId()));
-					}
-				}
-				if (assignedUsers != null) {
-					for (final AppUserRepresentor user : assignedUsers) {
-						users.add(this.appUserService.read(user.getId()));
-					}
-				}
 				objective = this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator), objectiveProjects, objectiveTasks, teams, users);
+						this.appUserService.read(operator), objectiveProjects, objectiveTasks);
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Objective (" + name + ")");
 				}
 				objective = this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator), null, null, null, null);
+						this.appUserService.read(operator));
 			}
 			return this.converter.to(objective);
 		} catch (final PersistenceServiceException e) {

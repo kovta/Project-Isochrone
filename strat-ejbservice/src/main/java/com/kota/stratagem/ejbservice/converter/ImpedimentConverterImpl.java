@@ -7,8 +7,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ImpedimentStatusRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.PriorityRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ImpedimentStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.PriorityRepresentor;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Remedy;
 

@@ -10,10 +10,10 @@ import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.RoleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 
 @Local
 public interface AppUserProtocol {
@@ -21,6 +21,8 @@ public interface AppUserProtocol {
 	AppUserRepresentor getAppUser(Long id) throws AdaptorException;
 
 	AppUserRepresentor getAppUser(String username) throws AdaptorException;
+
+	List<List<AppUserRepresentor>> getAssignableAppUserClusters() throws AdaptorException;
 
 	List<AppUserRepresentor> getAllAppUsers() throws AdaptorException;
 

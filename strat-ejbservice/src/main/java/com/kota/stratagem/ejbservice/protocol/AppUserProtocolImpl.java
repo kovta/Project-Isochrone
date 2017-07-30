@@ -1,6 +1,8 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +12,7 @@ import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.AppUserConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
@@ -17,10 +20,10 @@ import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.RoleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
@@ -46,16 +49,16 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	private static final Logger LOGGER = Logger.getLogger(AppUserProtocolImpl.class);
 
 	@EJB
-	private AppUserService appUserSerive;
+	private AppUserService appUserService;
 
 	@EJB
-	private ObjectiveService objectiveSerive;
+	private ObjectiveService objectiveService;
 
 	@EJB
-	private ProjectService projectSerive;
+	private ProjectService projectService;
 
 	@EJB
-	private SubmoduleService submoduleSerive;
+	private SubmoduleService submoduleService;
 
 	@EJB
 	private TaskService taskService;
@@ -72,10 +75,13 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@EJB
 	private PasswordGenerationService passwordGenerator;
 
+	@EJB
+	private SessionContextAccessor sessionContextAccessor;
+
 	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
 		try {
-			final AppUserRepresentor representor = this.converter.to(this.appUserSerive.read(id));
+			final AppUserRepresentor representor = this.converter.to(this.appUserService.read(id));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get AppUser (id: " + id + ") --> " + representor);
 			}
@@ -89,7 +95,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@Override
 	public AppUserRepresentor getAppUser(String username) throws AdaptorException {
 		try {
-			final AppUserRepresentor representor = this.converter.to(this.appUserSerive.read(username));
+			final AppUserRepresentor representor = this.converter.to(this.appUserService.read(username));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get AppUser (username: " + username + ") --> " + representor);
 			}
@@ -104,7 +110,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
 		Set<AppUserRepresentor> representors = new HashSet<AppUserRepresentor>();
 		try {
-			representors = this.converter.to(this.appUserSerive.readAll());
+			representors = this.converter.to(this.appUserService.readAll());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all AppUsers : " + representors.size() + " users(s)");
 			}
@@ -115,6 +121,35 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
+	public List<List<AppUserRepresentor>> getAssignableAppUserClusters() throws AdaptorException {
+		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
+		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		try {
+			for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.read(operator).getRole().toString())
+					.getSubordinateRoles()) {
+				clusters.add(new ArrayList<>(this.converter.to(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName())))));
+			}
+			for (final List<AppUserRepresentor> cluster : clusters) {
+				Collections.sort(cluster, new Comparator<AppUserRepresentor>() {
+					@Override
+					public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+					}
+				});
+			}
+			final List<AppUserRepresentor> self = new ArrayList<>();
+			self.add(this.converter.to(this.appUserService.read(operator)));
+			clusters.add(self);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " users(s)");
+			}
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+		}
+		return clusters;
+	}
+
+	@Override
 	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, AppUserRepresentor operator,
 			Set<ObjectiveRepresentor> objectives, Set<ProjectRepresentor> projects, Set<SubmoduleRepresentor> submodules, Set<TaskRepresentor> tasks,
 			Set<ImpedimentRepresentor> reportedImpediments, Set<ImpedimentRepresentor> processedImpediments, Set<TeamRepresentor> supervisedTeams,
@@ -122,7 +157,10 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		try {
 			AppUser user = null;
 			final Role userRole = Role.valueOf(role.getName());
-			if ((id != null) && this.appUserSerive.exists(id)) {
+			if ((id != null) && this.appUserService.exists(id)) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Update AppUser (id: " + id + ")");
+				}
 				final Set<Objective> userObjectives = new HashSet<Objective>();
 				final Set<Project> userProjects = new HashSet<Project>();
 				final Set<Submodule> userSubmodules = new HashSet<Submodule>();
@@ -132,13 +170,13 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				final Set<Team> teamsSupervised = new HashSet<Team>();
 				final Set<Team> memberships = new HashSet<Team>();
 				for (final ObjectiveRepresentor objective : objectives) {
-					userObjectives.add(this.objectiveSerive.readElementary(objective.getId()));
+					userObjectives.add(this.objectiveService.readElementary(objective.getId()));
 				}
 				for (final ProjectRepresentor project : projects) {
-					userProjects.add(this.projectSerive.readElementary(project.getId()));
+					userProjects.add(this.projectService.readElementary(project.getId()));
 				}
 				for (final SubmoduleRepresentor submodule : submodules) {
-					userSubmodules.add(this.submoduleSerive.readElementary(submodule.getId()));
+					userSubmodules.add(this.submoduleService.readElementary(submodule.getId()));
 				}
 				for (final TaskRepresentor task : tasks) {
 					userTasks.add(this.taskService.read(task.getId()));
@@ -156,11 +194,14 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 					memberships.add(this.teamService.read(team.getId()));
 				}
 				// Submodules not passed although link addition method still needs further specification
-				user = this.appUserSerive.update(id, name, password, email, userRole, operator != null ? this.appUserSerive.read(operator.getId()) : null,
+				user = this.appUserService.update(id, name, password, email, userRole, operator != null ? this.appUserService.read(operator.getId()) : null,
 						userObjectives, userProjects, userSubmodules, userTasks, impedimentsReported, impedimentsProcessed, teamsSupervised, memberships);
 			} else {
-				user = this.appUserSerive.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
-						operator != null ? this.appUserSerive.read(operator.getId()) : null, null, null, null, null, null, null, null, null);
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Create AppUser (name: " + name + ")");
+				}
+				user = this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
+						operator != null ? this.appUserService.read(operator.getId()) : null, null, null, null, null, null, null, null, null);
 			}
 			return this.converter.to(user);
 		} catch (final PersistenceServiceException e) {
@@ -175,7 +216,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove AppUser (id: " + id + ")");
 			}
-			this.appUserSerive.delete(id);
+			this.appUserService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());

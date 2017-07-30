@@ -7,7 +7,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.RoleRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
 
 @Stateless
