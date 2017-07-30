@@ -33,7 +33,7 @@ INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_r
 (7, 'holly', '$2a$10$W/nRkIKvfZ.3cCbJCxghKujWqAIzf/meL2g2DEQKv9pLpkPq9YvaC', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (8, 'ike', '$2a$10$q2DRoc37d30C9i2t6gLCGO7vAA2bJw2b4cjxZyD0Df9PDCTP0LWC2', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (9, 'jenny', '$2a$10$R80wTRvd1xSdlyafWnt4HeVKaF7z239JY9Gb6G5WPIUShlMyWGLwq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(10, 'kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0);
+(10, 'kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 2, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0);
 SELECT SETVAL('app_users_user_id_seq', COALESCE(MAX(user_id), 0) ) FROM app_users;
 
 INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES 
