@@ -87,6 +87,21 @@ public class AppUserServiceImpl implements AppUserService {
 	}
 
 	@Override
+	public Set<AppUser> readByRole(Role role) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get AppUsers by Role: " + role);
+		}
+		Set<AppUser> result = null;
+		try {
+			result = new HashSet<AppUser>(
+					this.entityManager.createNamedQuery(AppUserQuery.GET_ALL_BY_ROLE, AppUser.class).setParameter(AppUserParameter.ROLE, role).getResultList());
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching AppUsers! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
 	public Set<AppUser> readAll() throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Fetching all AppUsers");

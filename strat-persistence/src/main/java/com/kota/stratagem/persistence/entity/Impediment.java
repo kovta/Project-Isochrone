@@ -34,8 +34,8 @@ import com.kota.stratagem.persistence.query.ImpedimentQuery;
 @Table(name = "impediments")
 @NamedQueries(value = { //
 		@NamedQuery(name = ImpedimentQuery.COUNT_BY_ID, query = "SELECT COUNT(i) FROM Impediment i WHERE i.id=:" + ImpedimentParameter.ID),
-		@NamedQuery(name = ImpedimentQuery.GET_ALL_IMPEDIMENTS, query = "SELECT i FROM Impediment i ORDER BY i.name"),
 		@NamedQuery(name = ImpedimentQuery.GET_BY_ID, query = "SELECT i FROM Impediment i WHERE i.id=:" + ImpedimentParameter.ID),
+		@NamedQuery(name = ImpedimentQuery.GET_ALL_IMPEDIMENTS, query = "SELECT i FROM Impediment i ORDER BY i.name"),
 		@NamedQuery(name = ImpedimentQuery.REMOVE_BY_ID, query = "DELETE FROM Impediment i WHERE i.id=:" + ImpedimentParameter.ID)
 		//
 })

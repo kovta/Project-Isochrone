@@ -25,6 +25,8 @@ public interface AppUserService {
 
 	AppUser read(String username) throws PersistenceServiceException;
 
+	Set<AppUser> readByRole(Role role) throws PersistenceServiceException;
+
 	Set<AppUser> readAll() throws PersistenceServiceException;
 
 	AppUser update(Long id, String name, String passwordHash, String email, Role role, AppUser modifier, Set<Objective> objectives, Set<Project> projects,

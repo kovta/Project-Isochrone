@@ -9,15 +9,14 @@ import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 
 @Local
 public interface ObjectiveService {
 
-	Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator,
-			Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException;
+	Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator)
+			throws PersistenceServiceException;
 
 	Objective readElementary(Long id) throws PersistenceServiceException;
 
@@ -30,7 +29,7 @@ public interface ObjectiveService {
 	Set<Objective> readAll() throws PersistenceServiceException;
 
 	Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser modifier,
-			Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException;
+			Set<Project> projects, Set<Task> tasks) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

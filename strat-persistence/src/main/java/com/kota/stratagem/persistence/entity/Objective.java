@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,7 +33,6 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 @Table(name = "objectives")
 @NamedQueries(value = { //
 		@NamedQuery(name = ObjectiveQuery.COUNT_BY_ID, query = "SELECT COUNT(o) FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID),
-		@NamedQuery(name = ObjectiveQuery.GET_ALL_OBJECTIVES, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t ORDER BY o.name"),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID, query = "SELECT o FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p WHERE o.id=:"
 				+ ObjectiveParameter.ID),
@@ -42,6 +40,7 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t WHERE o.id=:"
 				+ ObjectiveParameter.ID),
+		@NamedQuery(name = ObjectiveQuery.GET_ALL_OBJECTIVES, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t ORDER BY o.name"),
 		@NamedQuery(name = ObjectiveQuery.REMOVE_BY_ID, query = "DELETE FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID)
 		//
 })
@@ -99,13 +98,11 @@ public class Objective implements Serializable {
 	@JoinTable(name = "objective_tasks", joinColumns = @JoinColumn(name = "objective_task_objective_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_task_task_id", nullable = false))
 	private Set<Task> tasks;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
-	@JoinTable(name = "team_objective_assignments", joinColumns = @JoinColumn(name = "assignment_objective", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<Team> assignedTeams;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamObjectiveAssignment.class, mappedBy = "objective")
+	private Set<TeamObjectiveAssignment> assignedTeams;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinTable(name = "user_objective_assignments", joinColumns = @JoinColumn(name = "assignment_objective", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<AppUser> assignedUsers;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserObjectiveAssignment.class, mappedBy = "objective")
+	private Set<AppUserObjectiveAssignment> assignedUsers;
 
 	public Objective() {
 		this.projects = new HashSet<>();
@@ -115,7 +112,7 @@ public class Objective implements Serializable {
 	}
 
 	public Objective(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, Date creationDate,
-			Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) {
+			Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -126,14 +123,10 @@ public class Objective implements Serializable {
 		this.confidential = confidential;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.projects = projects;
-		this.tasks = tasks;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
 	}
 
 	public Objective(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidential, Date creationDate,
-			Date modificationDate, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) {
+			Date modificationDate) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -143,10 +136,6 @@ public class Objective implements Serializable {
 		this.confidential = confidential;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.projects = projects;
-		this.tasks = tasks;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
 	}
 
 	public Long getId() {
@@ -253,19 +242,19 @@ public class Objective implements Serializable {
 		this.tasks = tasks;
 	}
 
-	public Set<Team> getAssignedTeams() {
+	public Set<TeamObjectiveAssignment> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public void setAssignedTeams(Set<Team> assignedTeams) {
+	public void setAssignedTeams(Set<TeamObjectiveAssignment> assignedTeams) {
 		this.assignedTeams = assignedTeams;
 	}
 
-	public Set<AppUser> getAssignedUsers() {
+	public Set<AppUserObjectiveAssignment> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
-	public void setAssignedUsers(Set<AppUser> assignedUsers) {
+	public void setAssignedUsers(Set<AppUserObjectiveAssignment> assignedUsers) {
 		this.assignedUsers = assignedUsers;
 	}
 

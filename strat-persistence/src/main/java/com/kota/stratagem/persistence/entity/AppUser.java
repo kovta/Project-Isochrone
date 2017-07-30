@@ -34,11 +34,13 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 @Table(name = "app_users")
 @NamedQueries(value = { //
 		@NamedQuery(name = AppUserQuery.COUNT_BY_ID, query = "SELECT COUNT(u) FROM AppUser u WHERE u.id=:" + AppUserParameter.ID),
-		@NamedQuery(name = AppUserQuery.GET_ALL_USERS, query = "SELECT u FROM AppUser u ORDER BY u.name"),
+
 		@NamedQuery(name = AppUserQuery.GET_BY_ID, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.tasks t WHERE u.id=:"
 				+ AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.tasks t WHERE u.name=:"
 				+ AppUserParameter.USERNAME),
+		@NamedQuery(name = AppUserQuery.GET_ALL_BY_ROLE, query = "SELECT u FROM AppUser u WHERE u.role=:" + AppUserParameter.ROLE + " ORDER BY u.name"),
+		@NamedQuery(name = AppUserQuery.GET_ALL_USERS, query = "SELECT u FROM AppUser u ORDER BY u.name"),
 		@NamedQuery(name = AppUserQuery.REMOVE_BY_ID, query = "DELETE FROM AppUser u WHERE u.id=:" + AppUserParameter.ID)
 		//
 })

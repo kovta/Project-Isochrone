@@ -19,7 +19,6 @@ import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -41,16 +40,15 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	private AppUserService appUserService;
 
 	@Override
-	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator,
-			Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
+	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator)
+			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Objective (name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status + ", deadline="
-					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ", projects=" + projects + ", tasks=" + tasks + ")");
+					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ")");
 		}
 		try {
 			final AppUser operator = this.appUserService.read(creator.getId());
-			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, new Date(), new Date(), projects, tasks,
-					assignedTeams, assignedUsers);
+			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, new Date(), new Date());
 			objective.setCreator(operator);
 			objective.setModifier(operator);
 			this.entityManager.merge(objective);
@@ -136,7 +134,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 
 	@Override
 	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality,
-			AppUser modifier, Set<Project> projects, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
+			AppUser modifier, Set<Project> projects, Set<Task> tasks) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Objective (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
 					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ")");
@@ -161,8 +159,6 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			objective.setModificationDate(new Date());
 			// objective.setProjects(projects != null ? projects : new HashSet<Project>());
 			// objective.setTasks(tasks != null ? tasks : new HashSet<Task>());
-			objective.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
-			objective.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
 			return this.entityManager.merge(objective);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when merging Project! " + e.getLocalizedMessage(), e);

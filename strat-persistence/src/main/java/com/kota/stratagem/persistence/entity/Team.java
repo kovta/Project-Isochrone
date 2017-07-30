@@ -30,8 +30,8 @@ import com.kota.stratagem.persistence.query.TeamQuery;
 @Table(name = "teams")
 @NamedQueries(value = { //
 		@NamedQuery(name = TeamQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Team t WHERE t.id=:" + TeamParameter.ID),
-		@NamedQuery(name = TeamQuery.GET_ALL_TEAMS, query = "SELECT t FROM Team t ORDER BY t.name"),
 		@NamedQuery(name = TeamQuery.GET_BY_ID, query = "SELECT t FROM Team t WHERE t.id=:" + TeamParameter.ID),
+		@NamedQuery(name = TeamQuery.GET_ALL_TEAMS, query = "SELECT t FROM Team t ORDER BY t.name"),
 		@NamedQuery(name = TeamQuery.REMOVE_BY_ID, query = "DELETE FROM Team t WHERE t.id=:" + TeamParameter.ID)
 		//
 })

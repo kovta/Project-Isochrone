@@ -26,8 +26,8 @@ import com.kota.stratagem.persistence.query.RemedyQuery;
 @Table(name = "remedies")
 @NamedQueries(value = { //
 		@NamedQuery(name = RemedyQuery.COUNT_BY_ID, query = "SELECT COUNT(r) FROM Remedy r WHERE r.id=:" + RemedyParameter.ID),
-		@NamedQuery(name = RemedyQuery.GET_ALL_REMEDIES, query = "SELECT r FROM Remedy r ORDER BY r.submissionDate"),
 		@NamedQuery(name = RemedyQuery.GET_BY_ID, query = "SELECT r FROM Remedy r WHERE r.id=:" + RemedyParameter.ID),
+		@NamedQuery(name = RemedyQuery.GET_ALL_REMEDIES, query = "SELECT r FROM Remedy r ORDER BY r.submissionDate"),
 		@NamedQuery(name = RemedyQuery.REMOVE_BY_ID, query = "DELETE FROM Remedy r WHERE r.id=:" + RemedyParameter.ID)
 		//
 })

@@ -136,7 +136,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Set<Project> readByStatus(ProjectStatus status) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Projects by Status");
+			LOGGER.debug("Get Projects by Status: " + status);
 		}
 		Set<Project> result = null;
 		try {

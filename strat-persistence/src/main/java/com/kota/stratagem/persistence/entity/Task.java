@@ -34,8 +34,8 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 @Table(name = "tasks")
 @NamedQueries(value = { //
 		@NamedQuery(name = TaskQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Task t WHERE t.id=:" + TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks LEFT JOIN FETCH t.taskDependencies ORDER BY t.name"),
 		@NamedQuery(name = TaskQuery.GET_BY_ID, query = "SELECT t FROM Task t WHERE t.id=:" + TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks LEFT JOIN FETCH t.taskDependencies ORDER BY t.name"),
 		@NamedQuery(name = TaskQuery.REMOVE_BY_ID, query = "DELETE FROM Task t WHERE t.id=:" + TaskParameter.ID)
 		//
 })
