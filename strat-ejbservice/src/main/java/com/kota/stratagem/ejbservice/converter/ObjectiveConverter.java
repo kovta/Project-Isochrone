@@ -10,10 +10,16 @@ import com.kota.stratagem.persistence.entity.Objective;
 @Local
 public interface ObjectiveConverter {
 
-	ObjectiveRepresentor to(Objective objective);
-
 	ObjectiveRepresentor toElementary(Objective objective);
 
-	Set<ObjectiveRepresentor> to(Set<Objective> objectives);
+	ObjectiveRepresentor toSimplified(Objective objective);
+
+	ObjectiveRepresentor toComplete(Objective objective);
+
+	Set<ObjectiveRepresentor> toElementary(Set<Objective> objectives);
+
+	Set<ObjectiveRepresentor> toSimplified(Set<Objective> objectives);
+
+	Set<ObjectiveRepresentor> toComplete(Set<Objective> objectives);
 
 }

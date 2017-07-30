@@ -17,8 +17,6 @@ import org.apache.log4j.Logger;
 
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
-import com.kota.stratagem.persistence.entity.Project;
-import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -119,6 +117,21 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	}
 
 	@Override
+	public Objective readComplete(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get Objective with all attributes by id (" + id + ")");
+		}
+		Objective result = null;
+		try {
+			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_COMPLETE, Objective.class).setParameter(ObjectiveParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
 	public Set<Objective> readAll() throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Fetching all Objectives");
@@ -134,7 +147,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 
 	@Override
 	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality,
-			AppUser modifier, Set<Project> projects, Set<Task> tasks) throws PersistenceServiceException {
+			AppUser modifier) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Objective (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
 					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ")");
@@ -157,8 +170,6 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 				}
 			}
 			objective.setModificationDate(new Date());
-			// objective.setProjects(projects != null ? projects : new HashSet<Project>());
-			// objective.setTasks(tasks != null ? tasks : new HashSet<Task>());
 			return this.entityManager.merge(objective);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when merging Project! " + e.getLocalizedMessage(), e);

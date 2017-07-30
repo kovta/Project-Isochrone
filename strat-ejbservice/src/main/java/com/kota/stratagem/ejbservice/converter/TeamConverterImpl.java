@@ -33,22 +33,22 @@ public class TeamConverterImpl implements TeamConverter {
 		final TeamRepresentor representor = this.toElementary(team);
 		if (team.getMembers() != null) {
 			for (final AppUser user : team.getMembers()) {
-				representor.addMember(this.appUserConverter.to(user));
+				representor.addMember(this.appUserConverter.toElementary(user));
 			}
 		}
 		if (team.getObjectives() != null) {
 			for (final Objective objective : team.getObjectives()) {
-				representor.addObjective(this.objectiveConverter.to(objective));
+				representor.addObjective(this.objectiveConverter.toElementary(objective));
 			}
 		}
 		if (team.getProjects() != null) {
 			for (final Project project : team.getProjects()) {
-				representor.addProject(this.projectConverter.to(project));
+				representor.addProject(this.projectConverter.toElementary(project));
 			}
 		}
 		if (team.getTasks() != null) {
 			for (final Task task : team.getTasks()) {
-				representor.addTask(this.taskConverter.to(task));
+				representor.addTask(this.taskConverter.toElementary(task));
 			}
 		}
 		return representor;

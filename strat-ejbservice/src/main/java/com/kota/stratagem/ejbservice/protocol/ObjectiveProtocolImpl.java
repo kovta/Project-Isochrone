@@ -23,8 +23,6 @@ import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.persistence.entity.Objective;
-import com.kota.stratagem.persistence.entity.Project;
-import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -60,7 +58,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	@Override
 	public ObjectiveRepresentor getObjective(Long id) throws ServiceException {
 		try {
-			final ObjectiveRepresentor representor = this.converter.to(this.objectiveService.readWithProjectsAndTasks(id));
+			final ObjectiveRepresentor representor = this.converter.toComplete(this.objectiveService.readComplete(id));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Objective (id: " + id + ") --> " + representor);
 			}
@@ -94,7 +92,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all Objectives : " + representors.size() + " objective(s)");
 			}
-			representors = this.converter.to(this.objectiveService.readAll());
+			representors = this.converter.toSimplified(this.objectiveService.readAll());
 			final List<ObjectiveRepresentor> objectives = new ArrayList<ObjectiveRepresentor>(representors);
 			Collections.sort(objectives, new Comparator<ObjectiveRepresentor>() {
 				@Override
@@ -123,7 +121,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@Override
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
-			Boolean confidentiality, String operator, Set<ProjectRepresentor> projects, Set<TaskRepresentor> tasks) throws AdaptorException {
+			Boolean confidentiality, String operator) throws AdaptorException {
 		try {
 			Objective objective = null;
 			final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
@@ -131,22 +129,8 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Objective (id: " + id + ")");
 				}
-				// Original sets should not be deleted on null parameters
-				final Objective target = this.objectiveService.readWithProjectsAndTasks(id);
-				final Set<Project> objectiveProjects = target.getProjects();
-				final Set<Task> objectiveTasks = target.getTasks();
-				if (projects != null) {
-					for (final ProjectRepresentor project : projects) {
-						objectiveProjects.add(this.projectService.readElementary(project.getId()));
-					}
-				}
-				if (tasks != null) {
-					for (final TaskRepresentor task : tasks) {
-						objectiveTasks.add(this.taskService.read(task.getId()));
-					}
-				}
 				objective = this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator), objectiveProjects, objectiveTasks);
+						this.appUserService.read(operator));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Objective (" + name + ")");
@@ -154,7 +138,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 				objective = this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality,
 						this.appUserService.read(operator));
 			}
-			return this.converter.to(objective);
+			return this.converter.toComplete(objective);
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

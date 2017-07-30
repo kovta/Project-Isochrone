@@ -142,7 +142,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 					}
 				}
 				if (!contains) {
-					clusters.add(this.objectiveConverter.to(this.objectiveService.readWithProjectsAndTasks(project.getObjective().getId())));
+					clusters.add(this.objectiveConverter.toSimplified(this.objectiveService.readWithProjectsAndTasks(project.getObjective().getId())));
 				}
 			}
 			if (LOGGER.isDebugEnabled()) {

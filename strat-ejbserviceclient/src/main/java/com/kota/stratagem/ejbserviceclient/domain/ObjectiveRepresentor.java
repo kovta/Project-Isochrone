@@ -24,8 +24,8 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final Date modificationDate;
 	private List<ProjectRepresentor> projects;
 	private List<TaskRepresentor> tasks;
-	private List<TeamRepresentor> assignedTeams;
-	private List<AppUserRepresentor> assignedUsers;
+	private List<TeamObjectiveAssignmentRepresentor> assignedTeams;
+	private List<AppUserObjectiveAssignmentRepresentor> assignedUsers;
 
 	public ObjectiveRepresentor() {
 		this(null, "", "", 10, ObjectiveStatusRepresentor.PLANNED, null, false, null, new Date(), null, new Date());
@@ -118,19 +118,19 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.tasks = tasks;
 	}
 
-	public List<TeamRepresentor> getAssignedTeams() {
+	public List<TeamObjectiveAssignmentRepresentor> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public void setAssignedTeams(List<TeamRepresentor> assignedTeams) {
+	public void setAssignedTeams(List<TeamObjectiveAssignmentRepresentor> assignedTeams) {
 		this.assignedTeams = assignedTeams;
 	}
 
-	public List<AppUserRepresentor> getAssignedUsers() {
+	public List<AppUserObjectiveAssignmentRepresentor> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
-	public void setAssignedUsers(List<AppUserRepresentor> assignedUsers) {
+	public void setAssignedUsers(List<AppUserObjectiveAssignmentRepresentor> assignedUsers) {
 		this.assignedUsers = assignedUsers;
 	}
 
@@ -178,11 +178,11 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.tasks.add(task);
 	}
 
-	public void addTeam(TeamRepresentor team) {
+	public void addTeamAssignment(TeamObjectiveAssignmentRepresentor team) {
 		this.assignedTeams.add(team);
 	}
 
-	public void addUserAssignee(AppUserRepresentor user) {
+	public void addUserAssignment(AppUserObjectiveAssignmentRepresentor user) {
 		this.assignedUsers.add(user);
 	}
 
