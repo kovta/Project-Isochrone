@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor"%>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>

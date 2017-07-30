@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor" %>
 <%@ page import="com.kota.stratagem.weblayer.common.project.ProjectAttribute" %>
 <!DOCTYPE html>
 <html lang="en">

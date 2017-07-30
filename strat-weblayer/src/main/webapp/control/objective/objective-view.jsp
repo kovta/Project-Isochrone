@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,6 +119,11 @@
 											    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 												</button>
 											</td></tr>
+											<tr class="match-row"><td>
+												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
+											    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
+												</button>
+											</td></tr>
 										</tbody>
                                 	</table>
                                 </div>
@@ -206,6 +211,11 @@
 	                                <!--Card content-->
 	                                <div class="card-block">
 	                                    <!--Title-->
+	                                    <c:if test="${task.completion == 100}">
+					                      	<div class="form-header success-color success-header">
+			                                	<i class="fa fa-check-circle"></i>
+			                                </div>
+		                                </c:if>
 	                                    <h4 class="card-title"><c:out value="${task.name}" /></h4>
 	                                    <hr/>
 	                                    <!--Text-->
@@ -254,6 +264,7 @@
    			<!-- Modals -->
 			<jsp:include page="../project/project-create.jsp"></jsp:include>
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
+			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
 			<jsp:include page="../../partial/alert.jsp"></jsp:include>
 			<!-- /Modals -->
             

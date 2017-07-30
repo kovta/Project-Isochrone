@@ -2,7 +2,7 @@
 <%@ page import="java.util.Set" %>  
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor" %>
 <%@ page import="com.kota.stratagem.weblayer.common.FormValue" %>
 <%@ page import="com.kota.stratagem.weblayer.common.project.ProjectListAttribute" %>
 <!DOCTYPE html>

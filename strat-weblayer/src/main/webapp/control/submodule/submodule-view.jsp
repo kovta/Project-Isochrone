@@ -130,6 +130,11 @@
 	                                <!--Card content-->
 	                                <div class="card-block">
 	                                    <!--Title-->
+										<c:if test="${task.completion == 100}">
+					                      	<div class="form-header success-color success-header">
+			                                	<i class="fa fa-check-circle"></i>
+			                                </div>
+		                                </c:if>
 	                                    <h4 class="card-title"><c:out value="${task.name}" /></h4>
 	                                    <hr/>
 	                                    <!--Text-->

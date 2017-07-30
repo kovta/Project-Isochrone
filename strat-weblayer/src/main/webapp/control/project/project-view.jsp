@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.project.ProjectAttribute" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor" %>
-<%@ page import="com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor" %>
+<%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -148,6 +148,11 @@
 	                            <div class="card wow fadeIn" data-wow-delay="0.2s">
 	                                <!--Card content-->
 	                                <div class="card-block">
+	                                	<c:if test="${submodule.completion == 100}">
+					                      	<div class="form-header success-color success-header">
+			                                	<i class="fa fa-check-circle"></i>
+			                                </div>
+		                                </c:if>
 	                                    <!--Title-->
 	                                    <h4 class="card-title"><c:out value="${submodule.name}" /></h4>
 	                                    <hr/>
@@ -219,6 +224,11 @@
 	                                <!--Card content-->
 	                                <div class="card-block">
 	                                    <!--Title-->
+	                                    <c:if test="${task.completion == 100}">
+					                      	<div class="form-header success-color success-header">
+			                                	<i class="fa fa-check-circle"></i>
+			                                </div>
+		                                </c:if>
 	                                    <h4 class="card-title"><c:out value="${task.name}" /></h4>
 	                                    <hr/>
 	                                    <!--Text-->
