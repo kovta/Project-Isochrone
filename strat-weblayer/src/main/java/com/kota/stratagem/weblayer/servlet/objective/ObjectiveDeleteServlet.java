@@ -28,20 +28,20 @@ public class ObjectiveDeleteServlet extends AbstractRefinerServlet implements Ob
 	private ObjectiveProtocol protocol;
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final String id = request.getParameter(ID);
 		LOGGER.info("Delete Objective by id (" + id + ")");
 		try {
-			if ((id == null) || "".equals(id) || this.isNumeric(id)) {
+			if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
 				response.sendRedirect(Page.ERROR.getUrl());
 			} else {
 				this.protocol.removeObjective(Long.parseLong(id));
 				request.getSession().setAttribute(ATTR_SUCCESS, "Objective deleted successfully!");
+				response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
 			}
 		} catch (final AdaptorException e) {
 			LOGGER.error(e, e);
 		}
-		response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
 	}
 
 }

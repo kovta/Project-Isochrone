@@ -121,6 +121,12 @@
 											    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 												</button>
 											</td></tr>
+											<tr class="match-row"><td>
+												<hr/>
+												<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteProject" data-toggle="modal">
+											    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Project</span>
+												</button>
+											</td></tr>
 										</tbody>
                                 	</table>
                                 </div>
@@ -135,9 +141,26 @@
 
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
-                            <div class="divider-new">
-                                <h2 class="h2-responsive">List of Submodules</h2>
-                            </div>
+                           	<c:choose>
+								<c:when test="${project.submodules.size() == 0 and project.tasks.size() == 0}">
+									<div class="center-text cover-up">
+                       					<h2 class="h2-responsive">There are currently no Submodules</h2>
+                   						<h2 class="h2-responsive">or Tasks</h2>
+                   						<h2 class="h2-responsive">defined under this Project</h2>
+                      				</div>
+                      			</c:when>
+								<c:when test="${project.submodules.size() == 0 and project.tasks.size() != 0}">
+									<div class="center-text cover-up">
+										<h2 class="h2-responsive">There are currently no Submodules</h2>
+										<h2 class="h2-responsive">defined under this Project</h2>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<div class="divider-new">
+										<h2 class="h2-responsive">List of Projects</h2>
+									</div>
+								</c:otherwise>
+							</c:choose>
                         </div>
                     </div>
 
@@ -210,9 +233,21 @@
 
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
-                            <div class="divider-new">
-                                <h2 class="h2-responsive">List of Tasks</h2>
-                            </div>
+							<c:choose>
+								<c:when test="${project.submodules.size() == 0 and project.tasks.size() == 0}">
+                               	</c:when>   
+                               	<c:when test="${project.submodules.size() != 0 and project.tasks.size() == 0}">
+                           			<div class="center-text cover-up">
+                               			<h2 class="h2-responsive">There are currently no Tasks</h2>
+                               			<h2 class="h2-responsive">defined under this Project</h2>
+                               		</div>
+                               	</c:when>
+                               	<c:otherwise>
+                               		<div class="divider-new">
+                               			<h2 class="h2-responsive">List of Tasks</h2>
+                               		</div>
+                               	</c:otherwise>
+							</c:choose>
                         </div>
                     </div>
 
@@ -277,7 +312,11 @@
    			<!-- Modals -->
 			<jsp:include page="../submodule/submodule-create.jsp"></jsp:include>
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
-			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<jsp:include page="project-delete.jsp"></jsp:include>
+			<jsp:include page="project-alert.jsp"></jsp:include>
+			<jsp:include page="../submodule/submodule-alert.jsp"></jsp:include>
+			<jsp:include page="../task/task-alert.jsp"></jsp:include>
+			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

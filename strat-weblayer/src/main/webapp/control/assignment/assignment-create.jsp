@@ -27,14 +27,27 @@
 							<c:if test="${not empty cluster[0]}">
 								<hr/><div class="full-width center-text"><span><c:out value="${cluster[0].role.label}" />s</span></div><hr/>
 							</c:if>
-							<c:forEach items="${cluster}" var="user">
-			                    <div class="checkbox-animated">
-		                          <label class="label--checkbox larger-font">
-							          <input type="checkbox" class="checkbox">
-							            ${user.name}
-							      </label>
-			                    </div>
-							</c:forEach>
+							<table>
+								<colgroup>
+									<col span="1" style="width: 15%;">
+									<col span="1" style="width: 25%;">
+									<col span="1" style="width: 60%;">
+							    </colgroup>
+								<tbody>
+								<c:forEach items="${cluster}" var="user">
+								<tr>
+									<td class="center-text">
+					                    <div class="checkbox-animated">
+				                          <label class="label--checkbox larger-font">
+									          <input type="checkbox" class="checkbox" name="assignments" value="${user.name}">
+									      </label>
+					                    </div>
+				                    </td>
+				                    <td class="center-text">${user.name}</td>
+				                    <td class="center-text">${user.email}</td>
+				                </tr>
+								</c:forEach>
+							</tbody></table>
 							<br/>
 						</c:forEach>
 	                </div>

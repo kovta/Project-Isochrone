@@ -33,9 +33,6 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveActionController.class);
 
-	private static final String TRUE_VALUE = "1";
-	private static final String NEW_OBJECTIVE_ID_FLAG = "-1";
-
 	@EJB
 	private ObjectiveProtocol objectiveProtocol;
 
@@ -51,24 +48,19 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
 			ObjectiveRepresentor objective = null;
-			boolean isNew = false, errorFlag = false;
-			if (NEW_OBJECTIVE_ID_FLAG.equals(id)) {
-				objective = new ObjectiveRepresentor("", "", 0, ObjectiveStatusRepresentor.PLANNED, new Date(), false, null, null, null, null);
-				isNew = true;
-			} else {
-				try {
-					objective = this.objectiveProtocol.getObjective(Long.parseLong(id));
-				} catch (final ServiceException e) {
-					LOGGER.error(e, e);
-					errorFlag = true;
-				}
+			boolean errorFlag = false;
+			try {
+				objective = this.objectiveProtocol.getObjective(Long.parseLong(id));
+			} catch (final ServiceException e) {
+				LOGGER.error(e, e);
+				errorFlag = true;
 			}
-			this.forward(request, response, objective, editFlag, isNew, false, errorFlag);
+			this.forward(request, response, objective, editFlag, null, errorFlag);
 		}
 	}
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ObjectiveRepresentor objective, final boolean editFlag,
-			final boolean isNew, final boolean finishFlag, final boolean errorFlag) throws ServletException, IOException {
+			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		boolean assignmentError = false;
 		try {
 			request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters());
@@ -80,8 +72,8 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
-		} else if (finishFlag) {
-			response.sendRedirect(Page.OBJECTIVE_LIST.getUrl());
+		} else if (returnPoint != null) {
+			response.sendRedirect(returnPoint);
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.OBJECTIVE_EDIT.getJspName() : Page.OBJECTIVE_VIEW.getJspName());
 			view.forward(request, response);
@@ -95,6 +87,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
 				id = Long.parseLong(request.getParameter(ID));
 			}
+			final String returnPoint = (id == null ? Page.OBJECTIVE_LIST.getUrl() : Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id);
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
 			int priorityTemp = 0;
@@ -113,7 +106,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, null, false, null, null, null, null);
-				this.forward(request, response, objective, false, false, true, false);
+				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
@@ -123,7 +116,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				// new attributes must be requested
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality, null, null,
 						null, null);
-				this.forward(request, response, objective, false, false, true, false);
+				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				ObjectiveRepresentor objective = null;
 				try {
@@ -135,7 +128,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, objective, false, false, true, false);
+				this.forward(request, response, objective, false, returnPoint, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

@@ -102,6 +102,12 @@
 											    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 												</button>
 											</td></tr>
+											<tr class="match-row"><td>
+												<hr/>
+												<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteSubmodule" data-toggle="modal">
+											    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Submodule</span>
+												</button>
+											</td></tr>
 										</tbody>
                                 	</table>
                                 </div>
@@ -116,9 +122,20 @@
 
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
-                            <div class="divider-new">
-                                <h2 class="h2-responsive">List of Tasks</h2>
-                            </div>
+                           	<c:choose>
+								<c:when test="${submodule.tasks.size() == 0}">
+									<div class="center-text cover-up">
+                       					<h2 class="h2-responsive">There are currently no Tasks</h2>
+                   						<h2 class="h2-responsive">or Tasks</h2>
+                   						<h2 class="h2-responsive">defined under this Submodule</h2>
+                      				</div>
+                      			</c:when>
+								<c:otherwise>
+									<div class="divider-new">
+										<h2 class="h2-responsive">List of Tasks</h2>
+									</div>
+								</c:otherwise>
+							</c:choose>
                         </div>
                     </div>
 
@@ -182,7 +199,10 @@
             
    			<!-- Modals -->
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
-			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<jsp:include page="submodule-delete.jsp"></jsp:include>
+			<jsp:include page="submodule-alert.jsp"></jsp:include>
+			<jsp:include page="../task/task-alert.jsp"></jsp:include>
+			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

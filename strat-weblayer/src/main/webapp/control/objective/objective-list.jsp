@@ -37,8 +37,8 @@
 			<table class="table table-hover">
 				<colgroup>
 					<col span="1" style="width: 3%;">
-					<col span="1" style="width: 45%;">
-					<col span="1" style="width: 15%;">
+					<col span="1" style="width: 42%;">
+					<col span="1" style="width: 18%;">
 					<col span="1" style="width: 8%;">
 					<col span="1" style="width: 8%;">
 					<col span="1" style="width: 8%;">
@@ -62,7 +62,17 @@
 	                        <tr>
 	                        	<th scope="row"><c:out value="${count}" /></th>
 	                            <td><c:out value="${objective.name}" /></td>
-	                            <td class="center-text"><c:out value="${objective.status.label}" /></td>
+	                            <td class="center-text">
+									<c:choose>
+										<c:when test="${objective.status.label == 'Planned'}"><i class="fa fa-map-o"></i></c:when>
+										<c:when test="${objective.status.label == 'Designated'}"><i class="fa fa-bullseye"></i></c:when>
+										<c:when test="${objective.status.label == 'Continuous'}"><i class="fa fa-long-arrow-right"></i></c:when>
+										<c:when test="${objective.status.label == 'Discontinued'}"><i class="fa fa-unlink"></i></c:when>
+										<c:when test="${objective.status.label == 'Completed'}"><i class="fa fa-check"></i></c:when>
+										<c:otherwise></c:otherwise>
+									</c:choose>
+	                            	<span class="icon-companion"><c:out value="${objective.status.label}" /></span>
+	                            </td>
 	                            <td class="center-text"><c:out value="${objective.priority}" /></td>
 	                            <td class="center-text"><c:out value="${objective.projects.size()}" /></td>
 	                            <td class="center-text"><c:out value="${objective.tasks.size()}" /></td>
@@ -70,7 +80,6 @@
 		                            <a href="Objective?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
 	                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager")) { %>
 									<a href="Objective?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
-		                            <a href="ObjectiveDelete?id=<c:out value="${objective.id}" />"><i class="fa fa-trash"  aria-hidden="true"></i></a>
 	                            	<% } %>
 	                            </td>
 	                        </tr>
@@ -80,7 +89,7 @@
 			
 			<!-- Modals -->
 			<jsp:include page="objective-create.jsp"></jsp:include>
-			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<jsp:include page="objective-alert.jsp"></jsp:include>
 			<!-- /Modals -->
 			
 		</div>

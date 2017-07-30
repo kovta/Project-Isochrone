@@ -118,6 +118,12 @@
 							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
 							       			    </a>
 											</td></tr>
+											<tr class="match-row"><td>
+												<hr/>
+												<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteTask" data-toggle="modal">
+											    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Task</span>
+												</button>
+											</td></tr>
 										</tbody>
                                 	</table>
                                 </div>
@@ -142,9 +148,10 @@
             </div>
             
    			<!-- Modals -->
-			<jsp:include page="../project/project-create.jsp"></jsp:include>
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
-			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<jsp:include page="task-delete.jsp"></jsp:include>
+			<jsp:include page="task-alert.jsp"></jsp:include>
+			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

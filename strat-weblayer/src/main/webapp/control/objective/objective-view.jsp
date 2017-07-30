@@ -124,6 +124,12 @@
 											    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
 												</button>
 											</td></tr>
+											<tr class="match-row"><td>
+												<hr/>
+												<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteObjective" data-toggle="modal">
+											    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Objective</span>
+												</button>
+											</td></tr>
 										</tbody>
                                 	</table>
                                 </div>
@@ -138,9 +144,26 @@
                     <!--First row-->
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
-                            <div class="divider-new">
-                                <h2 class="h2-responsive">List of Projects</h2>
-                            </div>
+                           	<c:choose>
+								<c:when test="${objective.projects.size() == 0 and objective.tasks.size() == 0}">
+									<div class="center-text cover-up">
+                       					<h2 class="h2-responsive">There are currently no Projects</h2>
+                   						<h2 class="h2-responsive">or Tasks</h2>
+                   						<h2 class="h2-responsive">defined under this Objective</h2>
+                      				</div>
+                      			</c:when>
+								<c:when test="${objective.projects.size() == 0 and objective.tasks.size() != 0}">
+									<div class="center-text cover-up">
+										<h2 class="h2-responsive">There are currently no Projects</h2>
+										<h2 class="h2-responsive">defined under this Objective</h2>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<div class="divider-new">
+										<h2 class="h2-responsive">List of Projects</h2>
+									</div>
+								</c:otherwise>
+							</c:choose>
                         </div>
                     </div>
                     <!--/.First row-->
@@ -197,9 +220,21 @@
 
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
-                            <div class="divider-new">
-                                <h2 class="h2-responsive">List of Tasks</h2>
-                            </div>
+							<c:choose>
+								<c:when test="${objective.projects.size() == 0 and objective.tasks.size() == 0}">
+                               	</c:when>   
+                               	<c:when test="${objective.projects.size() != 0 and objective.tasks.size() == 0}">
+                           			<div class="center-text cover-up">
+                               			<h2 class="h2-responsive">There are currently no Tasks</h2>
+                               			<h2 class="h2-responsive">defined under this Objective</h2>
+                               		</div>
+                               	</c:when>
+                               	<c:otherwise>
+                               		<div class="divider-new">
+                               			<h2 class="h2-responsive">List of Tasks</h2>
+                               		</div>
+                               	</c:otherwise>
+							</c:choose>
                         </div>
                     </div>
 
@@ -265,7 +300,11 @@
 			<jsp:include page="../project/project-create.jsp"></jsp:include>
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
-			<jsp:include page="../../partial/alert.jsp"></jsp:include>
+			<jsp:include page="objective-delete.jsp"></jsp:include>
+			<jsp:include page="objective-alert.jsp"></jsp:include>
+			<jsp:include page="../project/project-alert.jsp"></jsp:include>
+			<jsp:include page="../task/task-alert.jsp"></jsp:include>
+			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

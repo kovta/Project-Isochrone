@@ -31,9 +31,6 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 
 	private static final Logger LOGGER = Logger.getLogger(ProjectActionController.class);
 
-	private static final String TRUE_VALUE = "1";
-	private static final String NEW_PROJECT_ID_FLAG = "-1";
-
 	@EJB
 	private ProjectProtocol protocol;
 
@@ -46,31 +43,25 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
 			ProjectRepresentor project = null;
-			boolean isNew = false, errorFlag = false;
-			if (NEW_PROJECT_ID_FLAG.equals(id)) {
-				project = new ProjectRepresentor(null, "", "", ProjectStatusRepresentor.PROPOSED, null, false, null, null, null, null, null);
-				isNew = true;
-			} else {
-				try {
-					project = this.protocol.getProject(Long.parseLong(id));
-				} catch (final AdaptorException e) {
-					LOGGER.error(e, e);
-					errorFlag = true;
-				}
+			boolean errorFlag = false;
+			try {
+				project = this.protocol.getProject(Long.parseLong(id));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				errorFlag = true;
 			}
-			this.forward(request, response, project, editFlag, isNew, false, errorFlag);
+			this.forward(request, response, project, editFlag, null, errorFlag);
 		}
 	}
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ProjectRepresentor project, final boolean editFlag,
-			boolean isNew, boolean finishFlag, boolean errorFlag) throws ServletException, IOException {
+			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_PROJECT, project);
-		request.setAttribute(ATTR_ISNEW, isNew);
 		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
-		} else if (finishFlag) {
-			response.sendRedirect(Page.PROJECT_LIST.getUrl());
+		} else if (returnPoint != null) {
+			response.sendRedirect(returnPoint);
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.PROJECT_EDIT.getJspName() : Page.PROJECT_VIEW.getJspName());
 			view.forward(request, response);
@@ -86,6 +77,8 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 			} else {
 				objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 			}
+			final String returnPoint = (id == null ? Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id
+					: Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id);
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
 			final ProjectStatusRepresentor status = ProjectStatusRepresentor.valueOf(request.getParameter(STATUS));
@@ -99,7 +92,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				LOGGER.info("Failed attempt to modify Project : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, null, false, null, null, null, null, null);
-				this.forward(request, response, project, false, false, true, false);
+				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
@@ -108,7 +101,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				request.getSession().setAttribute(ATTR_ERROR, "Project name required");
 				// new attributes must be requested
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null, null, null, null, null);
-				this.forward(request, response, project, false, false, true, false);
+				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				ProjectRepresentor project = null;
 				try {
@@ -120,7 +113,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, project, false, false, true, false);
+				this.forward(request, response, project, false, returnPoint, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

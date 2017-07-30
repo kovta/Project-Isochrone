@@ -100,9 +100,9 @@
 		                    <!-- Fifth row -->
 		                    <div class="row">
 		                        <div class="col-md-6 text-center">
-									<button type="button" onclick="goBack()" class="btn btn-outline-info mr-auto full-form-footer-button">
-		            					Cancel <i class="fa fa-times-circle ml-1"></i>
-		            				</button>
+		                        	<a href="Task?id=<c:out value="${task.id}" />" class="btn btn-outline-info mr-auto full-form-footer-button">
+		                        		Cancel<i class="fa fa-times-circle ml-1"></i>
+		                        	</a>
 		                        </div>
 		                        <div class="col-md-6 text-center">
 									<button type="submit" name="submit" class="btn mdb-color darken-1 ml-auto full-form-footer-button">
@@ -117,6 +117,11 @@
 		            <!--/.Card content-->
 		        </div>
 		    </div>
+		    
+   			<!-- Modals -->
+			<jsp:include page="task-alert.jsp"></jsp:include>
+			<!-- /Modals -->
+		    
 		</div>
 		<div class="push"></div>
 	</div>

@@ -30,9 +30,6 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 
 	private static final Logger LOGGER = Logger.getLogger(SubmoduleActionController.class);
 
-	private static final String TRUE_VALUE = "1";
-	private static final String NEW_TASK_ID_FLAG = "-1";
-
 	@EJB
 	SubmoduleProtocol protocol;
 
@@ -45,31 +42,25 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
 			SubmoduleRepresentor submodule = null;
-			boolean isNew = false, errorFlag = false;
-			if (NEW_TASK_ID_FLAG.equals(id)) {
-				submodule = new SubmoduleRepresentor(null, "", "", new Date(), null, new Date(), null, new Date(), null);
-				isNew = true;
-			} else {
-				try {
-					submodule = this.protocol.getSubmodule(Long.parseLong(id));
-				} catch (final AdaptorException e) {
-					LOGGER.error(e, e);
-					errorFlag = true;
-				}
+			boolean errorFlag = false;
+			try {
+				submodule = this.protocol.getSubmodule(Long.parseLong(id));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				errorFlag = true;
 			}
-			this.forward(request, response, submodule, editFlag, isNew, false, errorFlag);
+			this.forward(request, response, submodule, editFlag, null, errorFlag);
 		}
 	}
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final SubmoduleRepresentor submodule, final boolean editFlag,
-			boolean isNew, boolean finishFlag, boolean errorFlag) throws ServletException, IOException {
+			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_SUBMODULE, submodule);
-		request.setAttribute(ATTR_ISNEW, isNew);
 		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
-		} else if (finishFlag) {
-			response.sendRedirect(Page.PROJECT_LIST.getUrl());
+		} else if (returnPoint != null) {
+			response.sendRedirect(returnPoint);
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.SUBMODULE_EDIT.getJspName() : Page.SUBMODULE_VIEW.getJspName());
 			view.forward(request, response);
@@ -86,6 +77,8 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 			} else {
 				project_id = Long.parseLong(request.getParameter(PARENT_PROJECT));
 			}
+			final String returnPoint = (id == null ? Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id
+					: Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id);
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
 			Date deadlineTemp = null;
@@ -98,14 +91,14 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 				LOGGER.info("Failed attempt to modify Submodule : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, null, null, null, null, null, null);
-				this.forward(request, response, submodule, false, false, true, false);
+				this.forward(request, response, submodule, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Submodule : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Submodule name required");
 				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, deadline, null, null, null, null, null);
-				this.forward(request, response, submodule, false, false, true, false);
+				this.forward(request, response, submodule, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				SubmoduleRepresentor submodule = null;
 				try {
@@ -117,7 +110,7 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, submodule, false, false, true, false);
+				this.forward(request, response, submodule, false, returnPoint, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

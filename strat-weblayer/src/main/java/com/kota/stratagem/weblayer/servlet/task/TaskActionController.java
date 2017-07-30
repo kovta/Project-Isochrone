@@ -30,9 +30,6 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 
 	private static final Logger LOGGER = Logger.getLogger(TaskActionController.class);
 
-	private static final String TRUE_VALUE = "1";
-	private static final String NEW_TASK_ID_FLAG = "-1";
-
 	@EJB
 	TaskProtocol protocol;
 
@@ -45,31 +42,25 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
 			TaskRepresentor project = null;
-			boolean isNew = false, errorFlag = false;
-			if (NEW_TASK_ID_FLAG.equals(id)) {
-				project = new TaskRepresentor(null, "", "", 0, 0, new Date(), null, new Date(), null, new Date());
-				isNew = true;
-			} else {
-				try {
-					project = this.protocol.getTask(Long.parseLong(id));
-				} catch (final AdaptorException e) {
-					LOGGER.error(e, e);
-					errorFlag = true;
-				}
+			boolean errorFlag = false;
+			try {
+				project = this.protocol.getTask(Long.parseLong(id));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				errorFlag = true;
 			}
-			this.forward(request, response, project, editFlag, isNew, false, errorFlag);
+			this.forward(request, response, project, editFlag, null, errorFlag);
 		}
 	}
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final TaskRepresentor task, final boolean editFlag,
-			boolean isNew, boolean finishFlag, boolean errorFlag) throws ServletException, IOException {
+			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_TASK, task);
-		request.setAttribute(ATTR_ISNEW, isNew);
 		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
-		} else if (finishFlag) {
-			response.sendRedirect(Page.PROJECT_LIST.getUrl());
+		} else if (returnPoint != null) {
+			response.sendRedirect(returnPoint);
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.TASK_EDIT.getJspName() : Page.TASK_VIEW.getJspName());
 			view.forward(request, response);
@@ -80,15 +71,20 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Long id = null, objective_id = null, project_id = null, submodule_id = null;
+			String returnPoint = "";
 			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
 				id = Long.parseLong(request.getParameter(ID));
+				returnPoint = (Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id);
 			} else {
 				if (request.getParameter(PARENT_OBJECTIVE) != "") {
 					objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
+					returnPoint = (Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id);
 				} else if (request.getParameter(PARENT_PROJECT) != "") {
 					project_id = Long.parseLong(request.getParameter(PARENT_PROJECT));
+					returnPoint = (Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id);
 				} else if (request.getParameter(PARENT_SUBMODULE) != "") {
 					submodule_id = Long.parseLong(request.getParameter(PARENT_SUBMODULE));
+					returnPoint = (Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id);
 				}
 			}
 			final String name = request.getParameter(NAME);
@@ -109,14 +105,14 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, null, null, null);
-				this.forward(request, response, Task, false, false, true, false);
+				this.forward(request, response, Task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
 				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, null, null, null);
-				this.forward(request, response, task, false, false, true, false);
+				this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				TaskRepresentor task = null;
 				try {
@@ -128,7 +124,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 				}
-				this.forward(request, response, task, false, false, true, false);
+				this.forward(request, response, task, false, returnPoint, false);
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();
