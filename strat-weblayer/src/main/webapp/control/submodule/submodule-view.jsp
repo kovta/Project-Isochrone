@@ -124,6 +124,9 @@
                         <div class="col-lg-12">
                            	<c:choose>
 								<c:when test="${submodule.tasks.size() == 0}">
+			                 		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
 									<div class="center-text cover-up">
                        					<h2 class="h2-responsive">There are currently no Tasks</h2>
                    						<h2 class="h2-responsive">or Tasks</h2>

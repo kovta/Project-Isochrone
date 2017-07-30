@@ -65,9 +65,6 @@ footer.page-footer {
 .space-top {
 	padding-top: 20px;
 }
-.cover-up {
-	padding-top: 15%;
-}
 .space-bottom {
 	padding-bottom: 20px;
 }
@@ -172,7 +169,7 @@ footer.page-footer {
     position: fixed;
     top: 10%;
     right: 2%;
-    width: 22%;
+    width: 23%;
     background: #CC0000;
 }
 #inner-message {
@@ -183,7 +180,7 @@ footer.page-footer {
 	position: fixed;
     top: 10%;
     right: 2%;
-    width: 22%;
+    width: 23%;
     background: #00d555;
 }
 #inner-message {
@@ -298,4 +295,37 @@ input[type="checkbox" i] {
     height: 1.1rem;
     background: #fff;
     cursor: pointer;
+}
+
+.card-avatar {
+	display: block;
+    max-width: 100%;
+    height: auto;
+    box-shadow: none!important;
+    text-align: center;
+    margin: -8rem 1rem 1rem;
+    padding: 1.5rem;
+    border: none;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    border-radius: 3px;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    border-bottom: 1px solid #eceeef;
+    -webkit-box-align: center;
+}
+.card-avatar img {
+	width: 130px;
+	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
+	border-style: none;
+    vertical-align: middle;
+}
+.rounded-circle {
+    border-radius: 50% 50% 50% 50%;
 }

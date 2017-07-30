@@ -143,14 +143,20 @@
                         <div class="col-lg-12">
                            	<c:choose>
 								<c:when test="${project.submodules.size() == 0 and project.tasks.size() == 0}">
-									<div class="center-text cover-up">
+			                   		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
+									<div class="center-text">
                        					<h2 class="h2-responsive">There are currently no Submodules</h2>
                    						<h2 class="h2-responsive">or Tasks</h2>
                    						<h2 class="h2-responsive">defined under this Project</h2>
                       				</div>
                       			</c:when>
 								<c:when test="${project.submodules.size() == 0 and project.tasks.size() != 0}">
-									<div class="center-text cover-up">
+			                 		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
+									<div class="center-text">
 										<h2 class="h2-responsive">There are currently no Submodules</h2>
 										<h2 class="h2-responsive">defined under this Project</h2>
 									</div>
@@ -237,7 +243,10 @@
 								<c:when test="${project.submodules.size() == 0 and project.tasks.size() == 0}">
                                	</c:when>   
                                	<c:when test="${project.submodules.size() != 0 and project.tasks.size() == 0}">
-                           			<div class="center-text cover-up">
+			                 		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
+                           			<div class="center-text">
                                			<h2 class="h2-responsive">There are currently no Tasks</h2>
                                			<h2 class="h2-responsive">defined under this Project</h2>
                                		</div>

@@ -146,14 +146,20 @@
                         <div class="col-lg-12">
                            	<c:choose>
 								<c:when test="${objective.projects.size() == 0 and objective.tasks.size() == 0}">
-									<div class="center-text cover-up">
+			                   		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
+									<div class="center-text">
                        					<h2 class="h2-responsive">There are currently no Projects</h2>
                    						<h2 class="h2-responsive">or Tasks</h2>
                    						<h2 class="h2-responsive">defined under this Objective</h2>
                       				</div>
                       			</c:when>
 								<c:when test="${objective.projects.size() == 0 and objective.tasks.size() != 0}">
-									<div class="center-text cover-up">
+			                   		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
+									<div class="center-text">
 										<h2 class="h2-responsive">There are currently no Projects</h2>
 										<h2 class="h2-responsive">defined under this Objective</h2>
 									</div>
@@ -224,7 +230,10 @@
 								<c:when test="${objective.projects.size() == 0 and objective.tasks.size() == 0}">
                                	</c:when>   
                                	<c:when test="${objective.projects.size() != 0 and objective.tasks.size() == 0}">
-                           			<div class="center-text cover-up">
+			                   		<div class="divider-new">
+			                 			<h2 class="h2-responsive">/</h2>
+			                 		</div>
+                           			<div class="center-text">
                                			<h2 class="h2-responsive">There are currently no Tasks</h2>
                                			<h2 class="h2-responsive">defined under this Objective</h2>
                                		</div>
@@ -295,6 +304,60 @@
                 </div>
                 <!--/.Main column-->
             </div>
+            
+            <!--Under column-->
+            <div class="row wow fadeIn" data-wow-delay="0.2s">
+            	<div class="col-lg-12">
+		            <c:choose>
+						<c:when test="${objective.assignedUsers.size() == 0 and objective.assignedTeams.size() == 0}">
+							<div class="divider-new">
+		                 		<h2 class="h2-responsive">/</h2>
+		                 	</div>
+							<div class="center-text">
+		       					<h2 class="h2-responsive">There are currently no Users</h2>
+		   						<h2 class="h2-responsive">or Teams</h2>
+		   						<h2 class="h2-responsive">assigned to this Objective</h2>
+		      				</div>
+		      			</c:when>
+						<c:otherwise>
+							<div class="divider-new">
+								<h2 class="h2-responsive">Assigned workforce</h2>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<br/><br/><br/><br/>
+			<div class="row">
+			<c:forEach items="${requestScope.objective.assignedUsers}" var="assignment">
+				<div class="col-lg-3">
+                    <!--Card-->
+                    <div class="card wow fadeIn" data-wow-delay="0.2s">
+                        <!--Card content-->
+                        <div class="card-block">
+                        	<div class="card-avatar">
+                        		<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
+                        		style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                        	</div>
+                            <!--Title-->
+                            <h4 class="card-title center-text"><c:out value="${assignment.recipient.name}" /></h4>
+                            <hr/>
+                            <!--Text-->
+                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
+                            <p class="card-text">Assignment date: 
+                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+                            </p>
+                            <div class="full-width center-text">
+                            	<a href="AssignmentDelete?id=<c:out value="${assignment.id}" />">Unassign user</a>
+                            </div>
+                        </div>
+                        <!--/.Card content-->
+                    </div>
+                    <br/><br/><br/><br/><br/>
+                    <!--/.Card-->
+            	</div>
+			</c:forEach>
+			<!--Under column-->
             
    			<!-- Modals -->
 			<jsp:include page="../project/project-create.jsp"></jsp:include>

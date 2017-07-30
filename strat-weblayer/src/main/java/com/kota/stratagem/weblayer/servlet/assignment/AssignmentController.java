@@ -37,26 +37,37 @@ public class AssignmentController extends HttpServlet implements AssignmentParam
 			try {
 				if (request.getParameter(OBJECTIVE) != "") {
 					final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
-					LOGGER.info("Create Assignments (" + assignedUsers.length + " users, objective: " + objective_id + ")");
-					this.protocol.saveObjectiveAssignments(assignedUsers, objective_id);
 					origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
+					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, objective: " + objective_id + ")");
+						this.protocol.saveObjectiveAssignments(assignedUsers, objective_id);
+					}
 				} else if (request.getParameter(PROJECT) != "") {
 					final Long project_id = Long.parseLong(request.getParameter(PROJECT));
-					LOGGER.info("Create Assignments (" + assignedUsers.length + " users, project: " + project_id + ")");
-					// this.protocol.saveObjectiveAssignments(assignedUsers, project_id);
 					origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
+					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, project: " + project_id + ")");
+						// this.protocol.saveObjectiveAssignments(assignedUsers, project_id);
+					}
 				} else if (request.getParameter(SUBMODULE) != "") {
 					final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
-					LOGGER.info("Create Assignments (" + assignedUsers.length + " users, submodule: " + submodule_id + ")");
-					// this.protocol.saveObjectiveAssignments(assignedUsers, submodule_id);
 					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
+					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, submodule: " + submodule_id + ")");
+						// this.protocol.saveObjectiveAssignments(assignedUsers, submodule_id);
+					}
 				} else if (request.getParameter(TASK) != "") {
 					final Long task_id = Long.parseLong(request.getParameter(TASK));
-					LOGGER.info("Create Assignments (" + assignedUsers.length + " users, task: " + task_id + ")");
-					// this.protocol.saveObjectiveAssignments(assignedUsers, task_id);
 					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
+					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, task: " + task_id + ")");
+						// this.protocol.saveObjectiveAssignments(assignedUsers, task_id);
+					}
 				}
-				request.getSession().setAttribute(ATTR_SUCCESS, assignedUsers.length + "Assignments added succesfully!");
+				request.getSession().setAttribute(ATTR_SUCCESS,
+						((assignedUsers != null) && (assignedUsers.length != 0))
+								? assignedUsers.length != 1 ? assignedUsers.length + " Assignments added succesfully!" : "1 Assignment added succesfully!"
+								: "No selections were made");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
