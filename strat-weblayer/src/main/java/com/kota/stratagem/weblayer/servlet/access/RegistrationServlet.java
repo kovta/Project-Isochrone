@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.RoleRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.access.RegistrationAttribute;
 import com.kota.stratagem.weblayer.common.access.RegistrationParameter;

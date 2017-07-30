@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.ProjectProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.project.ProjectAttribute;
 import com.kota.stratagem.weblayer.common.project.ProjectParameter;

@@ -18,7 +18,7 @@ import com.kota.stratagem.ejbservice.protocol.ProjectProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ProjectStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.FormValue;
 import com.kota.stratagem.weblayer.common.Page;

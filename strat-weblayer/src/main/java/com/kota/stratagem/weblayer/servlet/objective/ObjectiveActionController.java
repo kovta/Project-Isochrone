@@ -16,9 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ObjectiveStatusRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute;
@@ -36,7 +37,10 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 	private static final String NEW_OBJECTIVE_ID_FLAG = "-1";
 
 	@EJB
-	private ObjectiveProtocol protocol;
+	private ObjectiveProtocol objectiveProtocol;
+
+	@EJB
+	private AppUserProtocol appUserProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,7 +57,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				isNew = true;
 			} else {
 				try {
-					objective = this.protocol.getObjective(Long.parseLong(id));
+					objective = this.objectiveProtocol.getObjective(Long.parseLong(id));
 				} catch (final ServiceException e) {
 					LOGGER.error(e, e);
 					errorFlag = true;
@@ -65,8 +69,15 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ObjectiveRepresentor objective, final boolean editFlag,
 			final boolean isNew, final boolean finishFlag, final boolean errorFlag) throws ServletException, IOException {
+		boolean assignmentError = false;
+		try {
+			request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters());
+		} catch (final AdaptorException e) {
+			LOGGER.error(e, e);
+			assignmentError = true;
+		}
 		request.setAttribute(ATTR_OBJECTIVE, objective);
-		if (errorFlag) {
+		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
 		} else if (finishFlag) {
@@ -117,8 +128,8 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				ObjectiveRepresentor objective = null;
 				try {
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
-					objective = this.protocol.saveObjective(id, name, description, priority, status, deadline, confidentiality,
-							request.getUserPrincipal().getName(), null, null, null, null);
+					objective = this.objectiveProtocol.saveObjective(id, name, description, priority, status, deadline, confidentiality,
+							request.getUserPrincipal().getName(), null, null);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
