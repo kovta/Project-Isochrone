@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private ObjectiveService objectiveService;
 
 	@Override
-	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator,
+	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, Long creator,
 			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
@@ -58,10 +58,10 @@ public class ProjectServiceImpl implements ProjectService {
 			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), submodules, tasks, assignedTeams,
 					assignedUsers, impediments, parentObjective);
 			AppUser operatorTemp;
-			if (parentObjective.getCreator().getId() == creator.getId()) {
+			if (parentObjective.getCreator().getId() == creator) {
 				operatorTemp = parentObjective.getCreator();
 			} else {
-				operatorTemp = this.appUserService.read(creator.getId());
+				operatorTemp = this.appUserService.read(creator);
 			}
 			final AppUser operator = operatorTemp;
 			project.setCreator(operator);

@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 @MappedSuperclass
 public abstract class AbstractAssignment {
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, targetEntity = AppUser.class)
 	@JoinColumn(name = "assignment_entrustor", referencedColumnName = "user_id", nullable = false)
 	protected AppUser entrustor;
 

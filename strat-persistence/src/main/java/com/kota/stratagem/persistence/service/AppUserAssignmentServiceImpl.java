@@ -37,12 +37,32 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 	private ObjectiveService objectiveService;
 
 	@Override
-	public AppUserObjectiveAssignment create(AppUser entrustor, AppUser recipient, Objective objective) throws PersistenceServiceException {
+	public AppUserObjectiveAssignment create(Long entrustor, Long recipient, Long objective) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create User Objective Assignment (objective=" + objective + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
-			final AppUserObjectiveAssignment assignment = new AppUserObjectiveAssignment(entrustor, recipient, objective, new Date());
+			final Objective targetObjective = this.objectiveService.readElementary(objective);
+			final AppUserObjectiveAssignment assignment = new AppUserObjectiveAssignment(targetObjective, new Date());
+			AppUser operatorTemp, assigneeTemp;
+			if (targetObjective.getCreator().getId() == entrustor) {
+				operatorTemp = targetObjective.getCreator();
+			} else if (targetObjective.getModifier().getId() == entrustor) {
+				operatorTemp = targetObjective.getModifier();
+			} else {
+				operatorTemp = this.appUserService.read(entrustor);
+			}
+			if (targetObjective.getCreator().getId() == recipient) {
+				assigneeTemp = targetObjective.getCreator();
+			} else if (targetObjective.getModifier().getId() == recipient) {
+				assigneeTemp = targetObjective.getModifier();
+			} else {
+				assigneeTemp = this.appUserService.read(recipient);
+			}
+			final AppUser operator = operatorTemp;
+			final AppUser assignee = assigneeTemp;
+			assignment.setEntrustor(operator);
+			assignment.setRecipient(assignee);
 			this.entityManager.merge(assignment);
 			this.entityManager.flush();
 			return assignment;

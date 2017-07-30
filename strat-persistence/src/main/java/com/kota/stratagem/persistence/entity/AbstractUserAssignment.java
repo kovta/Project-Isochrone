@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractUserAssignment extends AbstractAssignment {
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, targetEntity = AppUser.class)
 	@JoinColumn(name = "assignment_recipient", referencedColumnName = "user_id", nullable = false)
 	protected AppUser recipient;
 

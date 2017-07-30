@@ -233,8 +233,8 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
-				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null, null,
-						null, null, null, objective);
+				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator).getId(), null,
+						null, null, null, null, objective);
 			}
 			return this.projectConverter.to(project);
 		} catch (final PersistenceServiceException e) {

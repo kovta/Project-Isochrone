@@ -17,7 +17,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 @Local
 public interface ProjectService {
 
-	Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser creator, Set<Submodule> submodules,
+	Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, Long creator, Set<Submodule> submodules,
 			Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective)
 			throws PersistenceServiceException;
 

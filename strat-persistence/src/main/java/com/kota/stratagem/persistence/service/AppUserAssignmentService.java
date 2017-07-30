@@ -2,15 +2,13 @@ package com.kota.stratagem.persistence.service;
 
 import javax.ejb.Local;
 
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
-import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 
 @Local
 public interface AppUserAssignmentService {
 
-	AppUserObjectiveAssignment create(AppUser entrustor, AppUser recipient, Objective objective) throws PersistenceServiceException;
+	AppUserObjectiveAssignment create(Long entrustor, Long recipient, Long objective) throws PersistenceServiceException;
 
 	// Objective create(Project project, AppUser recipient, AppUser entrustor) throws PersistenceServiceException;
 	//

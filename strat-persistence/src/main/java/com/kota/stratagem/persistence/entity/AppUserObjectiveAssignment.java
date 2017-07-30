@@ -40,11 +40,14 @@ public class AppUserObjectiveAssignment extends AbstractUserAssignment implement
 	@JoinColumn(name = "assignment_objective", referencedColumnName = "objective_id", nullable = false)
 	private Objective objective;
 
-	public AppUserObjectiveAssignment(AppUser entrustor, AppUser recipient, Objective objective, Date creationDate) {
+	public AppUserObjectiveAssignment() {
+		super();
+		this.creationDate = new Date();
+	}
+
+	public AppUserObjectiveAssignment(Objective objective, Date creationDate) {
 		super();
 		this.objective = objective;
-		this.recipient = recipient;
-		this.entrustor = entrustor;
 		this.creationDate = creationDate;
 	}
 

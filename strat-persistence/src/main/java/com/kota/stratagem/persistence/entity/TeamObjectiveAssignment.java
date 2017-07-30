@@ -31,6 +31,11 @@ public class TeamObjectiveAssignment extends AbstractTeamAssignment implements S
 	@JoinColumn(name = "assignment_objective", referencedColumnName = "objective_id", nullable = false)
 	private Objective objective;
 
+	public TeamObjectiveAssignment() {
+		super();
+		this.creationDate = new Date();
+	}
+
 	public TeamObjectiveAssignment(AppUser entrustor, Team recipient, Objective objective, Date creationDate) {
 		super();
 		this.objective = objective;
