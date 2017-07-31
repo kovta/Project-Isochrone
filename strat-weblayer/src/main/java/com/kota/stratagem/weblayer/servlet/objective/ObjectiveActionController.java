@@ -63,7 +63,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		boolean assignmentError = false;
 		try {
-			request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters());
+			request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(objective));
 		} catch (final AdaptorException e) {
 			LOGGER.error(e, e);
 			assignmentError = true;

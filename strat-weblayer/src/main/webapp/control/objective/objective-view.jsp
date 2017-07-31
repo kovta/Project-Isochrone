@@ -348,7 +348,7 @@
                             	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
                             </p>
                             <div class="full-width center-text">
-                            	<a href="AssignmentDelete?id=<c:out value="${assignment.id}" />">Unassign user</a>
+                            	<a href="AssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
                             </div>
                         </div>
                         <!--/.Card content-->

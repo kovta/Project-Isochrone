@@ -98,6 +98,10 @@ footer.page-footer {
 .full-form-footer-button {
 	width: 230px;
 }
+.button-centered {
+    width: 38%;
+    margin-left: 31%;
+}
 
 .view {
     background: url("../img/connections.jpg")no-repeat center center fixed;
