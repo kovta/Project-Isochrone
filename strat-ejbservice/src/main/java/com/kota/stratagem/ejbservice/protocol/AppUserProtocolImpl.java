@@ -16,6 +16,7 @@ import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.AppUserConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
@@ -121,13 +122,23 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
-	public List<List<AppUserRepresentor>> getAssignableAppUserClusters() throws AdaptorException {
+	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(ObjectiveRepresentor objective) throws AdaptorException {
 		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
 		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		final List<AppUserObjectiveAssignmentRepresentor> assignments = objective.getAssignedUsers();
 		try {
 			for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.read(operator).getRole().toString())
 					.getSubordinateRoles()) {
-				clusters.add(new ArrayList<>(this.converter.to(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName())))));
+				final List<AppUserRepresentor> userList = new ArrayList<>(
+						this.converter.to(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
+				for (final AppUserObjectiveAssignmentRepresentor assignment : assignments) {
+					if (userList.contains(assignment.getRecipient())) {
+						userList.remove(assignment.getRecipient());
+					}
+				}
+				if (userList.size() > 0) {
+					clusters.add(userList);
+				}
 			}
 			for (final List<AppUserRepresentor> cluster : clusters) {
 				Collections.sort(cluster, new Comparator<AppUserRepresentor>() {
@@ -139,7 +150,14 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			}
 			final List<AppUserRepresentor> self = new ArrayList<>();
 			self.add(this.converter.to(this.appUserService.read(operator)));
-			clusters.add(self);
+			for (final AppUserObjectiveAssignmentRepresentor assignment : assignments) {
+				if (self.contains(assignment.getRecipient())) {
+					self.remove(assignment.getRecipient());
+				}
+			}
+			if (self.size() > 0) {
+				clusters.add(self);
+			}
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " users(s)");
 			}

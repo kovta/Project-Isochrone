@@ -22,7 +22,7 @@ public interface AppUserProtocol {
 
 	AppUserRepresentor getAppUser(String username) throws AdaptorException;
 
-	List<List<AppUserRepresentor>> getAssignableAppUserClusters() throws AdaptorException;
+	List<List<AppUserRepresentor>> getAssignableAppUserClusters(ObjectiveRepresentor objective) throws AdaptorException;
 
 	List<AppUserRepresentor> getAllAppUsers() throws AdaptorException;
 
