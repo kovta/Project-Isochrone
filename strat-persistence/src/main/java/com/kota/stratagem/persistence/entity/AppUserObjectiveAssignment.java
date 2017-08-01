@@ -18,12 +18,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.kota.stratagem.persistence.parameter.AssignmentParameter;
-import com.kota.stratagem.persistence.query.UserObjectiveAssignmentQuery;
+import com.kota.stratagem.persistence.query.AppUserObjectiveAssignmentQuery;
 
 @Entity
 @Table(name = "user_objective_assignments")
 @NamedQueries(value = { //
-		@NamedQuery(name = UserObjectiveAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserObjectiveAssignment a WHERE a.id=:" + AssignmentParameter.ID)
+		@NamedQuery(name = AppUserObjectiveAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserObjectiveAssignment a WHERE a.id=:"
+				+ AssignmentParameter.ID)
 		//
 })
 @SequenceGenerator(name = "userObjectiveAssignmentGenerator", sequenceName = "user_objective_assignments_assignment_id_seq", allocationSize = 1)
@@ -69,7 +70,7 @@ public class AppUserObjectiveAssignment extends AbstractUserAssignment implement
 
 	@Override
 	public String toString() {
-		return "UserObjectiveAssignment [id=" + this.id + ", objective=" + this.objective + "]";
+		return "AppUserObjectiveAssignment [id=" + this.id + ", objective=" + this.objective + "]";
 	}
 
 }

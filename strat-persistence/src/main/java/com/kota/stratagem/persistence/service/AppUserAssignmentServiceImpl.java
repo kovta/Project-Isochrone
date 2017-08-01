@@ -13,12 +13,23 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.persistence.entity.AbstractMonitoredItem;
+import com.kota.stratagem.persistence.entity.AbstractUserAssignment;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
+import com.kota.stratagem.persistence.entity.AppUserProjectAssignment;
+import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
+import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.Objective;
+import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
+import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.AssignmentParameter;
-import com.kota.stratagem.persistence.query.UserObjectiveAssignmentQuery;
+import com.kota.stratagem.persistence.query.AppUserObjectiveAssignmentQuery;
+import com.kota.stratagem.persistence.query.AppUserProjectAssignmentQuery;
+import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
+import com.kota.stratagem.persistence.util.Constants;
 
 @Stateless(mappedName = "ejb/appUserAssignmentService")
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -36,35 +47,54 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 	@EJB
 	private ObjectiveService objectiveService;
 
+	@EJB
+	private ProjectService projectService;
+
+	@EJB
+	private SubmoduleService submoduleService;
+
+	@EJB
+	private TaskService taskService;
+
+	public <T extends AbstractMonitoredItem> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
+		if (object.getCreator().getId() == subject) {
+			return object.getCreator();
+		} else if (object.getModifier().getId() == subject) {
+			return object.getModifier();
+		} else {
+			return this.appUserService.read(subject);
+		}
+	}
+
+	public <T extends AbstractMonitoredItem, E extends AbstractUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
+			throws PersistenceServiceException {
+		subject.setEntrustor(this.mergeOperators(entrustor, object));
+		subject.setRecipient(this.mergeOperators(recipient, object));
+		this.entityManager.merge(subject);
+		this.entityManager.flush();
+	}
+
+	public void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Remove User " + object + " Assignment by id (" + id + ")");
+		}
+		try {
+			this.entityManager.createNamedQuery(query).setParameter(AssignmentParameter.ID, id).executeUpdate();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when removing  User " + object + " Assignment by id (" + id + ")! " + e.getLocalizedMessage(),
+					e);
+		}
+	}
+
 	@Override
-	public AppUserObjectiveAssignment create(Long entrustor, Long recipient, Long objective) throws PersistenceServiceException {
+	public AppUserObjectiveAssignment createObjectiveAssignment(Long entrustor, Long recipient, Long objective) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create User Objective Assignment (objective=" + objective + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
 			final Objective targetObjective = this.objectiveService.readElementary(objective);
 			final AppUserObjectiveAssignment assignment = new AppUserObjectiveAssignment(targetObjective, new Date());
-			AppUser operatorTemp, assigneeTemp;
-			if (targetObjective.getCreator().getId() == entrustor) {
-				operatorTemp = targetObjective.getCreator();
-			} else if (targetObjective.getModifier().getId() == entrustor) {
-				operatorTemp = targetObjective.getModifier();
-			} else {
-				operatorTemp = this.appUserService.read(entrustor);
-			}
-			if (targetObjective.getCreator().getId() == recipient) {
-				assigneeTemp = targetObjective.getCreator();
-			} else if (targetObjective.getModifier().getId() == recipient) {
-				assigneeTemp = targetObjective.getModifier();
-			} else {
-				assigneeTemp = this.appUserService.read(recipient);
-			}
-			final AppUser operator = operatorTemp;
-			final AppUser assignee = assigneeTemp;
-			assignment.setEntrustor(operator);
-			assignment.setRecipient(assignee);
-			this.entityManager.merge(assignment);
-			this.entityManager.flush();
+			this.persistAssignment(assignment, targetObjective, entrustor, recipient);
 			return assignment;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during persisting  User Objective Assignment (objective=" + objective + ", recipient="
@@ -73,15 +103,71 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 	}
 
 	@Override
-	public void deleteObjectiveAssignment(Long id) throws PersistenceServiceException {
+	public AppUserProjectAssignment createProjectAssignment(Long entrustor, Long recipient, Long project) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Remove User Objective Assignment by id (" + id + ")");
+			LOGGER.debug("Create User Project Assignment (project=" + project + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
-			this.entityManager.createNamedQuery(UserObjectiveAssignmentQuery.REMOVE_BY_ID).setParameter(AssignmentParameter.ID, id).executeUpdate();
+			final Project targetProject = this.projectService.readElementary(project);
+			final AppUserProjectAssignment assignment = new AppUserProjectAssignment(targetProject, new Date());
+			this.persistAssignment(assignment, targetProject, entrustor, recipient);
+			return assignment;
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when removing  User Objective Assignment by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error during persisting  User Project Assignment (project=" + project + ", recipient=" + recipient
+					+ ")! " + e.getLocalizedMessage(), e);
 		}
+	}
+
+	@Override
+	public AppUserSubmoduleAssignment createSubmoduleAssignment(Long entrustor, Long recipient, Long submodule) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Create User Objective Assignment (submodule=" + submodule + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
+		}
+		try {
+			final Submodule targetSubmodule = this.submoduleService.readElementary(submodule);
+			final AppUserSubmoduleAssignment assignment = new AppUserSubmoduleAssignment(targetSubmodule, new Date());
+			this.persistAssignment(assignment, targetSubmodule, entrustor, recipient);
+			return assignment;
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error during persisting  User Submodule Assignment (submodule=" + submodule + ", recipient="
+					+ recipient + ")! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public AppUserTaskAssignment createTaskAssignment(Long entrustor, Long recipient, Long task) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Create User Task Assignment (task=" + task + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
+		}
+		try {
+			final Task targetTask = this.taskService.read(task);
+			final AppUserTaskAssignment assignment = new AppUserTaskAssignment(targetTask, new Date());
+			this.persistAssignment(assignment, targetTask, entrustor, recipient);
+			return assignment;
+		} catch (final Exception e) {
+			throw new PersistenceServiceException(
+					"Unknown error during persisting  User Task Assignment (task=" + task + ", recipient=" + recipient + ")! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public void deleteObjectiveAssignment(Long id) throws PersistenceServiceException {
+		this.removeAssignment(id, AppUserObjectiveAssignmentQuery.REMOVE_BY_ID, Constants.OBJECTIVE_DATA_NAME);
+	}
+
+	@Override
+	public void deleteProjectAssignment(Long id) throws PersistenceServiceException {
+		this.removeAssignment(id, AppUserProjectAssignmentQuery.REMOVE_BY_ID, Constants.PROJECT_DATA_NAME);
+	}
+
+	@Override
+	public void deleteSubmoduleAssignment(Long id) throws PersistenceServiceException {
+		this.removeAssignment(id, AppUserProjectAssignmentQuery.REMOVE_BY_ID, Constants.SUBMODULE_DATA_NAME);
+	}
+
+	@Override
+	public void deleteTaskAssignment(Long id) throws PersistenceServiceException {
+		this.removeAssignment(id, AppUserTaskAssignmentQuery.REMOVE_BY_ID, Constants.TASK_DATA_NAME);
 	}
 
 }

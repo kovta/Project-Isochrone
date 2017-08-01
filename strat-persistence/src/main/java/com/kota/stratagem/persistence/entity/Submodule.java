@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +46,17 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 		//
 })
 @SequenceGenerator(name = "submoduleGenerator", sequenceName = "submodules_submodule_id_seq", allocationSize = 1)
-public class Submodule implements Serializable {
+@AttributeOverrides({ //
+		@AttributeOverride(name = "creationDate", column = @Column(name = "submodule_creation_date", nullable = false)),
+		@AttributeOverride(name = "modificationDate", column = @Column(name = "submodule_modification_date", nullable = false))
+		//
+})
+@AssociationOverrides({ //
+		@AssociationOverride(name = "creator", joinColumns = @JoinColumn(name = "submodule_creator", referencedColumnName = "user_id", nullable = false)),
+		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "submodule_modifier", referencedColumnName = "user_id", nullable = false))
+		//
+})
+public class Submodule extends AbstractMonitoredItem implements Serializable {
 
 	private static final long serialVersionUID = -1940935516451348184L;
 
@@ -60,22 +74,6 @@ public class Submodule implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "submodule_deadline", nullable = true)
 	private Date deadline;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "submodule_creator", referencedColumnName = "user_id", nullable = false)
-	private AppUser creator;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "submodule_creation_date", nullable = false)
-	private Date creationDate;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "submodule_modifier", referencedColumnName = "user_id", nullable = false)
-	private AppUser modifier;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "submodule_modification_date", nullable = false)
-	private Date modificationDate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Task.class)
 	@JoinTable(name = "submodule_tasks", joinColumns = @JoinColumn(name = "submodule_task_submodule_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "submodule_task_task_id", nullable = false))
@@ -159,38 +157,6 @@ public class Submodule implements Serializable {
 
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
-	}
-
-	public AppUser getCreator() {
-		return this.creator;
-	}
-
-	public void setCreator(AppUser creator) {
-		this.creator = creator;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public AppUser getModifier() {
-		return this.modifier;
-	}
-
-	public void setModifier(AppUser modifier) {
-		this.modifier = modifier;
-	}
-
-	public Date getModificationDate() {
-		return this.modificationDate;
-	}
-
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
 	}
 
 	public Set<Task> getTasks() {

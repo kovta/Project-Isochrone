@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +20,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -47,7 +50,17 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 		//
 })
 @SequenceGenerator(name = "objectiveGenerator", sequenceName = "objectives_objective_id_seq", allocationSize = 1)
-public class Objective implements Serializable {
+@AttributeOverrides({ //
+		@AttributeOverride(name = "creationDate", column = @Column(name = "objective_creation_date", nullable = false)),
+		@AttributeOverride(name = "modificationDate", column = @Column(name = "objective_modification_date", nullable = false))
+		//
+})
+@AssociationOverrides({ //
+		@AssociationOverride(name = "creator", joinColumns = @JoinColumn(name = "objective_creator", referencedColumnName = "user_id", nullable = false)),
+		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "objective_modifier", referencedColumnName = "user_id", nullable = false))
+		//
+})
+public class Objective extends AbstractMonitoredItem implements Serializable {
 
 	private static final long serialVersionUID = 3624081320738998792L;
 
@@ -75,22 +88,6 @@ public class Objective implements Serializable {
 
 	@Column(name = "objective_confidentiality", nullable = false)
 	private Boolean confidential;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = AppUser.class)
-	@JoinColumn(name = "objective_creator", referencedColumnName = "user_id", nullable = false)
-	private AppUser creator;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "objective_creation_date", nullable = false)
-	private Date creationDate;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "objective_modifier", referencedColumnName = "user_id", nullable = false)
-	private AppUser modifier;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "objective_modification_date", nullable = false)
-	private Date modificationDate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "objective_projects", joinColumns = @JoinColumn(name = "objective_project_objective", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_project_project", nullable = false))
@@ -194,38 +191,6 @@ public class Objective implements Serializable {
 
 	public void setConfidential(Boolean confidential) {
 		this.confidential = confidential;
-	}
-
-	public AppUser getCreator() {
-		return this.creator;
-	}
-
-	public void setCreator(AppUser creator) {
-		this.creator = creator;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public AppUser getModifier() {
-		return this.modifier;
-	}
-
-	public void setModifier(AppUser modifier) {
-		this.modifier = modifier;
-	}
-
-	public Date getModificationDate() {
-		return this.modificationDate;
-	}
-
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
 	}
 
 	public Set<Project> getProjects() {
