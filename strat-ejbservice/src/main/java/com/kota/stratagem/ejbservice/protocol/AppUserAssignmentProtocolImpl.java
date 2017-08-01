@@ -42,7 +42,8 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 			}
 			final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			for (final String recipient : recipients) {
-				this.assignmentService.create(this.appUserService.read(operator).getId(), this.appUserService.read(recipient).getId(), objective);
+				this.assignmentService.createObjectiveAssignment(this.appUserService.read(operator).getId(), this.appUserService.read(recipient).getId(),
+						objective);
 			}
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);

@@ -17,6 +17,7 @@ import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.ObjectiveProtocolRemote;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
@@ -76,6 +77,12 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
 					return c * -1;
+				}
+			});
+			Collections.sort(representor.getAssignedUsers(), new Comparator<AppUserObjectiveAssignmentRepresentor>() {
+				@Override
+				public int compare(AppUserObjectiveAssignmentRepresentor obj_a, AppUserObjectiveAssignmentRepresentor obj_b) {
+					return obj_a.getRecipient().getName().toLowerCase().compareTo(obj_b.getRecipient().getName().toLowerCase());
 				}
 			});
 			return representor;
