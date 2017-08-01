@@ -17,7 +17,7 @@ import com.kota.stratagem.weblayer.common.assignment.AssignmentAttribute;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentParameter;
 import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
-@WebServlet("/AssignmentDelete")
+@WebServlet("/AppUserAssignmentDelete")
 public class AssignmentDeleteServlet extends AbstractRefinerServlet implements AssignmentParameter, AssignmentAttribute {
 
 	private static final long serialVersionUID = -2010345699510377465L;

@@ -17,12 +17,12 @@ import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentAttribute;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentParameter;
 
-@WebServlet("/Assignment")
-public class AssignmentController extends HttpServlet implements AssignmentParameter, AssignmentAttribute {
+@WebServlet("/AppUserAssignment")
+public class AppUserAssignmentController extends HttpServlet implements AssignmentParameter, AssignmentAttribute {
 
 	private static final long serialVersionUID = 4129567458088082377L;
 
-	private static final Logger LOGGER = Logger.getLogger(AssignmentController.class);
+	private static final Logger LOGGER = Logger.getLogger(AppUserAssignmentController.class);
 
 	private static final String GET_REQUEST_QUERY_APPENDER = "?id=";
 

@@ -12,7 +12,7 @@
                 <h4 class="title"><i class="fa fa-group"></i>New Assignments</h4>
             </div>
             <!--Body-->
-            <form action="Assignment" method="post">
+            <form action="AppUserAssignment" method="post">
 	            <div class="modal-body">
        				<c:choose>
 						<c:when test="${requestScope.userClusters.size() == 0}">
