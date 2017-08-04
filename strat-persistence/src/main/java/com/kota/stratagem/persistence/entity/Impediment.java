@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +44,17 @@ import com.kota.stratagem.persistence.query.ImpedimentQuery;
 		//
 })
 @SequenceGenerator(name = "impedimentGenerator", sequenceName = "impediments_impediment_id_seq", allocationSize = 1)
-public class Impediment implements Serializable {
+@AttributeOverrides({ //
+		@AttributeOverride(name = "creationDate", column = @Column(name = "impediment_creation_date", nullable = false)),
+		@AttributeOverride(name = "modificationDate", column = @Column(name = "impediment_modification_date", nullable = false))
+		//
+})
+@AssociationOverrides({ //
+		@AssociationOverride(name = "creator", joinColumns = @JoinColumn(name = "impediment_creator", referencedColumnName = "user_id", nullable = false)),
+		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "impediment_modifier", referencedColumnName = "user_id", nullable = false))
+		//
+})
+public class Impediment extends AbstractMonitoredItem implements Serializable {
 
 	private static final long serialVersionUID = -8501472567228998129L;
 
@@ -74,22 +88,6 @@ public class Impediment implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "impediment_processor", referencedColumnName = "user_id", nullable = true)
 	private AppUser processor;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "impediment_creator", referencedColumnName = "user_id", nullable = false)
-	private AppUser creator;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "impediment_creation_date", nullable = false)
-	private Date creationDate;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "impediment_modifier", referencedColumnName = "user_id", nullable = false)
-	private AppUser modifier;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "impediment_modification_date", nullable = false)
-	private Date modificationDate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Remedy.class, mappedBy = "impediment")
 	private Set<Remedy> remedies;
@@ -209,34 +207,42 @@ public class Impediment implements Serializable {
 		this.processor = processor;
 	}
 
+	@Override
 	public AppUser getCreator() {
 		return this.creator;
 	}
 
+	@Override
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return this.creationDate;
 	}
 
+	@Override
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
+	@Override
 	public AppUser getModifier() {
 		return this.modifier;
 	}
 
+	@Override
 	public void setModifier(AppUser modifier) {
 		this.modifier = modifier;
 	}
 
+	@Override
 	public Date getModificationDate() {
 		return this.modificationDate;
 	}
 
+	@Override
 	public void setModificationDate(Date modificationDate) {
 		this.modificationDate = modificationDate;
 	}

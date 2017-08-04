@@ -3,6 +3,10 @@ package com.kota.stratagem.persistence.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +36,17 @@ import com.kota.stratagem.persistence.query.RemedyQuery;
 		//
 })
 @SequenceGenerator(name = "remedyGenerator", sequenceName = "remedies_remedy_id_seq", allocationSize = 1)
-public class Remedy implements Serializable {
+@AttributeOverrides({ //
+		@AttributeOverride(name = "creationDate", column = @Column(name = "remedy_creation_date", nullable = false)),
+		@AttributeOverride(name = "modificationDate", column = @Column(name = "remedy_modification_date", nullable = false))
+		//
+})
+@AssociationOverrides({ //
+		@AssociationOverride(name = "creator", joinColumns = @JoinColumn(name = "remedy_creator", referencedColumnName = "user_id", nullable = false)),
+		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "remedy_modifier", referencedColumnName = "user_id", nullable = false))
+		//
+})
+public class Remedy extends AbstractMonitoredItem implements Serializable {
 
 	private static final long serialVersionUID = 3249113805246989076L;
 
@@ -55,22 +69,6 @@ public class Remedy implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "remedy_provider", referencedColumnName = "user_id", nullable = false)
 	private AppUser provider;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "remedy_creator", referencedColumnName = "user_id", nullable = false)
-	private AppUser creator;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "remedy_creation_date", nullable = false)
-	private Date creationDate;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "remedy_modifier", referencedColumnName = "user_id", nullable = false)
-	private AppUser modifier;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "remedy_modification_date", nullable = false)
-	private Date modificationDate;
 
 	public Remedy(Long id, String description, Impediment impediment, Date submissionDate, AppUser provider, AppUser creator, Date creationDate,
 			AppUser modifier, Date modificationDate) {
@@ -139,34 +137,42 @@ public class Remedy implements Serializable {
 		this.provider = provider;
 	}
 
+	@Override
 	public AppUser getCreator() {
 		return this.creator;
 	}
 
+	@Override
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return this.creationDate;
 	}
 
+	@Override
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
+	@Override
 	public AppUser getModifier() {
 		return this.modifier;
 	}
 
+	@Override
 	public void setModifier(AppUser modifier) {
 		this.modifier = modifier;
 	}
 
+	@Override
 	public Date getModificationDate() {
 		return this.modificationDate;
 	}
 
+	@Override
 	public void setModificationDate(Date modificationDate) {
 		this.modificationDate = modificationDate;
 	}

@@ -56,7 +56,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 	@EJB
 	private TaskService taskService;
 
-	public <T extends AbstractMonitoredItem> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
+	private <T extends AbstractMonitoredItem> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
 		if (object.getCreator().getId() == subject) {
 			return object.getCreator();
 		} else if (object.getModifier().getId() == subject) {
@@ -66,7 +66,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 		}
 	}
 
-	public <T extends AbstractMonitoredItem, E extends AbstractUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
+	private <T extends AbstractMonitoredItem, E extends AbstractUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
 			throws PersistenceServiceException {
 		subject.setEntrustor(this.mergeOperators(entrustor, object));
 		subject.setRecipient(this.mergeOperators(recipient, object));
@@ -74,7 +74,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 		this.entityManager.flush();
 	}
 
-	public void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
+	private void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Remove User " + object + " Assignment by id (" + id + ")");
 		}
