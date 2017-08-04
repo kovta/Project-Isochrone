@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,15 +15,14 @@ import com.kota.stratagem.ejbservice.protocol.AppUserAssignmentProtocol;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentAttribute;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentParameter;
+import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
 @WebServlet("/AppUserAssignment")
-public class AppUserAssignmentController extends HttpServlet implements AssignmentParameter, AssignmentAttribute {
+public class AppUserAssignmentController extends AbstractRefinerServlet implements AssignmentParameter, AssignmentAttribute {
 
 	private static final long serialVersionUID = 4129567458088082377L;
 
 	private static final Logger LOGGER = Logger.getLogger(AppUserAssignmentController.class);
-
-	private static final String GET_REQUEST_QUERY_APPENDER = "?id=";
 
 	@EJB
 	AppUserAssignmentProtocol protocol;
@@ -47,21 +45,21 @@ public class AppUserAssignmentController extends HttpServlet implements Assignme
 					origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
 						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, project: " + project_id + ")");
-						// this.protocol.saveObjectiveAssignments(assignedUsers, project_id);
+						this.protocol.saveProjectAssignments(assignedUsers, project_id);
 					}
 				} else if (request.getParameter(SUBMODULE) != "") {
 					final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
 					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
 						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, submodule: " + submodule_id + ")");
-						// this.protocol.saveObjectiveAssignments(assignedUsers, submodule_id);
+						this.protocol.saveSubmoduleAssignments(assignedUsers, submodule_id);
 					}
 				} else if (request.getParameter(TASK) != "") {
 					final Long task_id = Long.parseLong(request.getParameter(TASK));
 					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
 						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, task: " + task_id + ")");
-						// this.protocol.saveObjectiveAssignments(assignedUsers, task_id);
+						this.protocol.saveTaskAssignments(assignedUsers, task_id);
 					}
 				}
 				request.getSession().setAttribute(ATTR_SUCCESS,

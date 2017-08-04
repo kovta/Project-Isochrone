@@ -2,6 +2,7 @@
 <%@ page import="java.util.Set" %>  
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="com.kota.stratagem.weblayer.common.task.TaskAttribute" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor" %>
 <!DOCTYPE html>
@@ -119,6 +120,11 @@
 							       			    </a>
 											</td></tr>
 											<tr class="match-row"><td>
+												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
+											    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
+												</button>
+											</td></tr>
+											<tr class="match-row"><td>
 												<hr/>
 												<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteTask" data-toggle="modal">
 											    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Task</span>
@@ -146,9 +152,65 @@
                 </div>
                 <!--/.Main column-->
             </div>
-            
+
+	        <!--Under column-->
+            <div class="row wow fadeIn" data-wow-delay="0.2s">
+            	<div class="col-lg-12">
+		            <c:choose>
+						<c:when test="${task.assignedUsers.size() == 0 and task.assignedTeams.size() == 0}">
+							<div class="divider-new">
+		                 		<h2 class="h2-responsive">/</h2>
+		                 	</div>
+							<div class="center-text">
+		       					<h2 class="h2-responsive">There are currently no Users</h2>
+		   						<h2 class="h2-responsive">or Teams</h2>
+		   						<h2 class="h2-responsive">assigned to this Task</h2>
+		      				</div>
+		      			</c:when>
+						<c:otherwise>
+							<div class="divider-new">
+								<h2 class="h2-responsive">Assigned workforce</h2>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<br/><br/><br/><br/>
+			<div class="row">
+				<c:forEach items="${requestScope.task.assignedUsers}" var="assignment">
+					<div class="col-lg-3">
+	                    <!--Card-->
+	                    <div class="card wow fadeIn" data-wow-delay="0.2s">
+	                        <!--Card content-->
+	                        <div class="card-block">
+	                        	<div class="card-avatar">
+	                        		<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
+	                        		style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+	                        	</div>
+	                            <!--Title-->
+	                            <h4 class="card-title center-text"><c:out value="${assignment.recipient.name}" /></h4>
+	                            <hr/>
+	                            <!--Text-->
+	                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
+	                            <p class="card-text">Assignment date: 
+	                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+	                            </p>
+	                            <div class="full-width center-text">
+	                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${task.id}" />">Unassign user</a>
+	                            </div>
+	                        </div>
+	                        <!--/.Card content-->
+	                    </div>
+	                    <br/><br/><br/><br/><br/>
+	                    <!--/.Card-->
+	            	</div>
+				</c:forEach>
+			</div>
+			<!--Under column-->
+	
    			<!-- Modals -->
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
+			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
 			<jsp:include page="task-delete.jsp"></jsp:include>
 			<jsp:include page="task-alert.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
