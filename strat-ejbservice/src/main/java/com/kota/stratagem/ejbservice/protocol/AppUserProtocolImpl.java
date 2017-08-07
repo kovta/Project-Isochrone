@@ -16,22 +16,14 @@ import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.AppUserConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
-import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AbstractAppUserAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
-import com.kota.stratagem.persistence.entity.Impediment;
-import com.kota.stratagem.persistence.entity.Objective;
-import com.kota.stratagem.persistence.entity.Project;
-import com.kota.stratagem.persistence.entity.Submodule;
-import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -79,6 +71,50 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@EJB
 	private SessionContextAccessor sessionContextAccessor;
 
+	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {
+		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
+		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		try {
+			for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.read(operator).getRole().toString())
+					.getSubordinateRoles()) {
+				final List<AppUserRepresentor> userList = new ArrayList<>(
+						this.converter.to(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
+				for (final T assignment : assignments) {
+					if (userList.contains(assignment.getRecipient())) {
+						userList.remove(assignment.getRecipient());
+					}
+				}
+				if (userList.size() > 0) {
+					clusters.add(userList);
+				}
+			}
+			for (final List<AppUserRepresentor> cluster : clusters) {
+				Collections.sort(cluster, new Comparator<AppUserRepresentor>() {
+					@Override
+					public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+					}
+				});
+			}
+			final List<AppUserRepresentor> self = new ArrayList<>();
+			self.add(this.converter.to(this.appUserService.read(operator)));
+			for (final T assignment : assignments) {
+				if (self.contains(assignment.getRecipient())) {
+					self.remove(assignment.getRecipient());
+				}
+			}
+			if (self.size() > 0) {
+				clusters.add(self);
+			}
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " users(s)");
+			}
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+		}
+		return clusters;
+	}
+
 	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
 		try {
@@ -123,103 +159,42 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(ObjectiveRepresentor objective) throws AdaptorException {
-		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
-		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
-		final List<AppUserObjectiveAssignmentRepresentor> assignments = objective.getAssignedUsers();
-		try {
-			for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.read(operator).getRole().toString())
-					.getSubordinateRoles()) {
-				final List<AppUserRepresentor> userList = new ArrayList<>(
-						this.converter.to(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
-				for (final AppUserObjectiveAssignmentRepresentor assignment : assignments) {
-					if (userList.contains(assignment.getRecipient())) {
-						userList.remove(assignment.getRecipient());
-					}
-				}
-				if (userList.size() > 0) {
-					clusters.add(userList);
-				}
-			}
-			for (final List<AppUserRepresentor> cluster : clusters) {
-				Collections.sort(cluster, new Comparator<AppUserRepresentor>() {
-					@Override
-					public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
-						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-					}
-				});
-			}
-			final List<AppUserRepresentor> self = new ArrayList<>();
-			self.add(this.converter.to(this.appUserService.read(operator)));
-			for (final AppUserObjectiveAssignmentRepresentor assignment : assignments) {
-				if (self.contains(assignment.getRecipient())) {
-					self.remove(assignment.getRecipient());
-				}
-			}
-			if (self.size() > 0) {
-				clusters.add(self);
-			}
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " users(s)");
-			}
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-		}
-		return clusters;
+		return this.retrieveObjectRelatedClusterList(objective.getAssignedUsers());
 	}
 
 	@Override
-	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, AppUserRepresentor operator,
-			Set<ObjectiveRepresentor> objectives, Set<ProjectRepresentor> projects, Set<SubmoduleRepresentor> submodules, Set<TaskRepresentor> tasks,
-			Set<ImpedimentRepresentor> reportedImpediments, Set<ImpedimentRepresentor> processedImpediments, Set<TeamRepresentor> supervisedTeams,
-			Set<TeamRepresentor> teamMemberships) throws AdaptorException {
+	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(ProjectRepresentor project) throws AdaptorException {
+		return this.retrieveObjectRelatedClusterList(project.getAssignedUsers());
+	}
+
+	@Override
+	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(SubmoduleRepresentor submodule) throws AdaptorException {
+		return this.retrieveObjectRelatedClusterList(submodule.getAssignedUsers());
+	}
+
+	@Override
+	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(TaskRepresentor task) throws AdaptorException {
+		return this.retrieveObjectRelatedClusterList(task.getAssignedUsers());
+	}
+
+	@Override
+	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, AppUserRepresentor operator)
+			throws AdaptorException {
 		try {
+
 			AppUser user = null;
 			final Role userRole = Role.valueOf(role.getName());
 			if ((id != null) && this.appUserService.exists(id)) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update AppUser (id: " + id + ")");
 				}
-				final Set<Objective> userObjectives = new HashSet<Objective>();
-				final Set<Project> userProjects = new HashSet<Project>();
-				final Set<Submodule> userSubmodules = new HashSet<Submodule>();
-				final Set<Task> userTasks = new HashSet<Task>();
-				final Set<Impediment> impedimentsReported = new HashSet<Impediment>();
-				final Set<Impediment> impedimentsProcessed = new HashSet<Impediment>();
-				final Set<Team> teamsSupervised = new HashSet<Team>();
-				final Set<Team> memberships = new HashSet<Team>();
-				for (final ObjectiveRepresentor objective : objectives) {
-					userObjectives.add(this.objectiveService.readElementary(objective.getId()));
-				}
-				for (final ProjectRepresentor project : projects) {
-					userProjects.add(this.projectService.readElementary(project.getId()));
-				}
-				for (final SubmoduleRepresentor submodule : submodules) {
-					userSubmodules.add(this.submoduleService.readElementary(submodule.getId()));
-				}
-				for (final TaskRepresentor task : tasks) {
-					userTasks.add(this.taskService.read(task.getId()));
-				}
-				for (final ImpedimentRepresentor impediment : reportedImpediments) {
-					impedimentsReported.add(this.impedimnetService.read(impediment.getId()));
-				}
-				for (final ImpedimentRepresentor impediment : processedImpediments) {
-					impedimentsProcessed.add(this.impedimnetService.read(impediment.getId()));
-				}
-				for (final TeamRepresentor team : supervisedTeams) {
-					teamsSupervised.add(this.teamService.read(team.getId()));
-				}
-				for (final TeamRepresentor team : teamMemberships) {
-					memberships.add(this.teamService.read(team.getId()));
-				}
-				// Submodules not passed although link addition method still needs further specification
-				user = this.appUserService.update(id, name, password, email, userRole, operator != null ? this.appUserService.read(operator.getId()) : null,
-						userObjectives, userProjects, userSubmodules, userTasks, impedimentsReported, impedimentsProcessed, teamsSupervised, memberships);
+				user = this.appUserService.update(id, name, password, email, userRole, operator != null ? this.appUserService.read(operator.getId()) : null);
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create AppUser (name: " + name + ")");
 				}
 				user = this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
-						operator != null ? this.appUserService.read(operator.getId()) : null, null, null, null, null, null, null, null, null);
+						operator != null ? this.appUserService.read(operator.getId()) : null);
 			}
 			return this.converter.to(user);
 		} catch (final PersistenceServiceException e) {

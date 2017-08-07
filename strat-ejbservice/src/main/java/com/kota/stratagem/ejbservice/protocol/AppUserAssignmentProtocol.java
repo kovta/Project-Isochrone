@@ -9,11 +9,11 @@ public interface AppUserAssignmentProtocol {
 
 	void saveObjectiveAssignments(String[] recipients, Long objective) throws AdaptorException;
 
-	void saveProjectAssignments(String[] recipients, Long objective) throws AdaptorException;
+	void saveProjectAssignments(String[] recipients, Long project) throws AdaptorException;
 
-	void saveSubmoduleAssignments(String[] recipients, Long objective) throws AdaptorException;
+	void saveSubmoduleAssignments(String[] recipients, Long submodule) throws AdaptorException;
 
-	void saveTaskAssignments(String[] recipients, Long objective) throws AdaptorException;
+	void saveTaskAssignments(String[] recipients, Long task) throws AdaptorException;
 
 	void removeObjectiveAssignment(Long id) throws AdaptorException;
 

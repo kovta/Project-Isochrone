@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,22 +16,14 @@ import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
 import com.kota.stratagem.ejbservice.converter.ProjectConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
-import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.ImpedimentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
-import com.kota.stratagem.persistence.entity.AppUser;
-import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Project;
-import com.kota.stratagem.persistence.entity.Submodule;
-import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -79,7 +70,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	@Override
 	public ProjectRepresentor getProject(Long id) throws AdaptorException {
 		try {
-			final ProjectRepresentor representor = this.projectConverter.to(this.projectService.readWithSubmodulesAndTasks(id));
+			final ProjectRepresentor representor = this.projectConverter.toComplete(this.projectService.readComplete(id));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Project (id: " + id + ") --> " + representor);
 			}
@@ -122,7 +113,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all Projects by criteria (" + criteria + "): " + projects.size() + " Projects(s)");
 			}
-			return new ArrayList<ProjectRepresentor>(this.projectConverter.to(projects));
+			return new ArrayList<ProjectRepresentor>(this.projectConverter.toSimplified(projects));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -133,7 +124,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	public List<ObjectiveRepresentor> getObjectiveProjectClusters() throws ServiceException {
 		try {
 			final List<ObjectiveRepresentor> clusters = new ArrayList<>();
-			final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>(this.projectConverter.to(this.projectService.readAll()));
+			final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>(this.projectConverter.toSimplified(this.projectService.readAll()));
 			for (final ProjectRepresentor project : projects) {
 				boolean contains = false;
 				for (final ObjectiveRepresentor cluster : clusters) {
@@ -161,7 +152,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			for (final ObjectiveRepresentor objective : clusters) {
 				final List<ProjectRepresentor> expandedProjects = new ArrayList<>();
 				for (final ProjectRepresentor project : objective.getProjects()) {
-					expandedProjects.add(this.projectConverter.to(this.projectService.readWithSubmodulesAndTasks(project.getId())));
+					expandedProjects.add(this.projectConverter.toSimplified(this.projectService.readWithSubmodulesAndTasks(project.getId())));
 				}
 				objective.setProjects(expandedProjects);
 				Collections.sort(objective.getProjects(), new Comparator<ProjectRepresentor>() {
@@ -188,8 +179,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 
 	@Override
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
-			String operator, Set<SubmoduleRepresentor> submodules, Set<TaskRepresentor> tasks, Set<TeamRepresentor> assignedTeams,
-			Set<AppUserRepresentor> assignedUsers, Set<ImpedimentRepresentor> impediments, Long objective) throws AdaptorException {
+			String operator, Long objective) throws AdaptorException {
 		try {
 			Project project = null;
 			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
@@ -197,46 +187,15 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Project (id: " + id + ")");
 				}
-				final Set<Submodule> projectSubmodules = new HashSet<Submodule>();
-				final Set<Task> projectTasks = new HashSet<Task>();
-				final Set<Team> teams = new HashSet<Team>();
-				final Set<AppUser> users = new HashSet<AppUser>();
-				final Set<Impediment> projectImpediments = new HashSet<Impediment>();
-				if (submodules != null) {
-					for (final SubmoduleRepresentor submodule : submodules) {
-						projectSubmodules.add(this.submoduleSerive.readElementary(submodule.getId()));
-					}
-				}
-				if (tasks != null) {
-					for (final TaskRepresentor task : tasks) {
-						projectTasks.add(this.taskService.read(task.getId()));
-					}
-				}
-				if (assignedTeams != null) {
-					for (final TeamRepresentor team : assignedTeams) {
-						teams.add(this.teamService.read(team.getId()));
-					}
-				}
-				if (assignedUsers != null) {
-					for (final AppUserRepresentor user : assignedUsers) {
-						users.add(this.appUserService.read(user.getId()));
-					}
-				}
-				if (impediments != null) {
-					for (final ImpedimentRepresentor impediment : impediments) {
-						projectImpediments.add(this.impedimentService.read(impediment.getId()));
-					}
-				}
-				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator), null,
-						projectTasks, teams, users, projectImpediments);
+				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
-				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator).getId(), null,
-						null, null, null, null, objective);
+				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator).getId(),
+						objective);
 			}
-			return this.projectConverter.to(project);
+			return this.projectConverter.toComplete(project);
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

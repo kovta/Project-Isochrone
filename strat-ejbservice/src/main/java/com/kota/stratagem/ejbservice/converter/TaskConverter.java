@@ -10,10 +10,16 @@ import com.kota.stratagem.persistence.entity.Task;
 @Local
 public interface TaskConverter {
 
-	TaskRepresentor to(Task task);
-
 	TaskRepresentor toElementary(Task task);
 
-	Set<TaskRepresentor> to(Set<Task> tasks);
+	TaskRepresentor toSimplified(Task task);
+
+	TaskRepresentor toComplete(Task task);
+
+	Set<TaskRepresentor> toElementary(Set<Task> tasks);
+
+	Set<TaskRepresentor> toSimplified(Set<Task> tasks);
+
+	Set<TaskRepresentor> toComplete(Set<Task> tasks);
 
 }

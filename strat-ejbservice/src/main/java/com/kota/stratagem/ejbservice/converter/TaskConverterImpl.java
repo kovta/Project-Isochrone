@@ -7,7 +7,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.Task;
+import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
 
 @Stateless
 public class TaskConverterImpl implements TaskConverter {
@@ -30,8 +32,23 @@ public class TaskConverterImpl implements TaskConverter {
 	@EJB
 	private ImpedimentConverter impedimentConverter;
 
+	@EJB
+	private AssignmentConverter assignmentConverter;
+
 	@Override
-	public TaskRepresentor to(Task task) {
+	public TaskRepresentor toElementary(Task task) {
+		final TaskRepresentor representor = task.getId() != null
+				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription(), task.getPriority(), task.getCompletion(), task.getDeadline(),
+						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
+						task.getModificationDate())
+				: new TaskRepresentor(task.getName(), task.getDescription(), task.getPriority(), task.getCompletion(), task.getDeadline(),
+						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
+						task.getModificationDate());
+		return representor;
+	}
+
+	@Override
+	public TaskRepresentor toSimplified(Task task) {
 		final TaskRepresentor representor = this.toElementary(task);
 		// if (task.getAssignedTeams() != null) {
 		// for (final Team team : task.getAssignedTeams()) {
@@ -71,22 +88,44 @@ public class TaskConverterImpl implements TaskConverter {
 	}
 
 	@Override
-	public TaskRepresentor toElementary(Task task) {
-		final TaskRepresentor representor = task.getId() != null
-				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription(), task.getPriority(), task.getCompletion(), task.getDeadline(),
-						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
-						task.getModificationDate())
-				: new TaskRepresentor(task.getName(), task.getDescription(), task.getPriority(), task.getCompletion(), task.getDeadline(),
-						this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(), this.appUserConverter.toElementary(task.getModifier()),
-						task.getModificationDate());
+	public TaskRepresentor toComplete(Task task) {
+		final TaskRepresentor representor = this.toElementary(task);
+		if (task.getAssignedTeams() != null) {
+			for (final TeamTaskAssignment team : task.getAssignedTeams()) {
+				representor.addTeam(this.assignmentConverter.to(team));
+			}
+		}
+		if (task.getAssignedUsers() != null) {
+			for (final AppUserTaskAssignment user : task.getAssignedUsers()) {
+				representor.addUser(this.assignmentConverter.to(user));
+			}
+		}
 		return representor;
 	}
 
 	@Override
-	public Set<TaskRepresentor> to(Set<Task> tasks) {
+	public Set<TaskRepresentor> toElementary(Set<Task> tasks) {
 		final Set<TaskRepresentor> representors = new HashSet<>();
 		for (final Task task : tasks) {
-			representors.add(this.to(task));
+			representors.add(this.toElementary(task));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<TaskRepresentor> toSimplified(Set<Task> tasks) {
+		final Set<TaskRepresentor> representors = new HashSet<>();
+		for (final Task task : tasks) {
+			representors.add(this.toSimplified(task));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<TaskRepresentor> toComplete(Set<Task> tasks) {
+		final Set<TaskRepresentor> representors = new HashSet<>();
+		for (final Task task : tasks) {
+			representors.add(this.toComplete(task));
 		}
 		return representors;
 	}

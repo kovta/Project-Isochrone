@@ -7,8 +7,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
+import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
+import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
 
 @Stateless
 public class SubmoduleConverterImpl implements SubmoduleConverter {
@@ -25,26 +27,8 @@ public class SubmoduleConverterImpl implements SubmoduleConverter {
 	@EJB
 	private AppUserConverter appUserConverter;
 
-	@Override
-	public SubmoduleRepresentor to(Submodule submodule) {
-		final SubmoduleRepresentor representor = this.toElementary(submodule);
-		if (submodule.getTasks() != null) {
-			for (final Task task : submodule.getTasks()) {
-				representor.addTask(this.taskConverter.toElementary(task));
-			}
-		}
-		// if (project.getAssignedTeams() != null) {
-		// for (final Team team : project.getAssignedTeams()) {
-		// representor.addTeam(this.teamConverter.to(team));
-		// }
-		// }
-		// if (project.getAssignedUsers() != null) {
-		// for (final AppUser user : project.getAssignedUsers()) {
-		// representor.addUser(this.appUserConverter.to(user));
-		// }
-		// }
-		return representor;
-	}
+	@EJB
+	private AssignmentConverter assignmentConverter;
 
 	@Override
 	public SubmoduleRepresentor toElementary(Submodule submodule) {
@@ -61,10 +45,55 @@ public class SubmoduleConverterImpl implements SubmoduleConverter {
 	}
 
 	@Override
-	public Set<SubmoduleRepresentor> to(Set<Submodule> submodules) {
+	public SubmoduleRepresentor toSimplified(Submodule submodule) {
+		final SubmoduleRepresentor representor = this.toElementary(submodule);
+		if (submodule.getTasks() != null) {
+			for (final Task task : submodule.getTasks()) {
+				representor.addTask(this.taskConverter.toElementary(task));
+			}
+		}
+		return representor;
+	}
+
+	@Override
+	public SubmoduleRepresentor toComplete(Submodule submodule) {
+		final SubmoduleRepresentor representor = this.toSimplified(submodule);
+		if (submodule.getAssignedTeams() != null) {
+			for (final TeamSubmoduleAssignment team : submodule.getAssignedTeams()) {
+				representor.addTeam(this.assignmentConverter.to(team));
+			}
+		}
+		if (submodule.getAssignedUsers() != null) {
+			for (final AppUserSubmoduleAssignment user : submodule.getAssignedUsers()) {
+				representor.addUser(this.assignmentConverter.to(user));
+			}
+		}
+		return representor;
+	}
+
+	@Override
+	public Set<SubmoduleRepresentor> toElementary(Set<Submodule> submodules) {
 		final Set<SubmoduleRepresentor> representors = new HashSet<SubmoduleRepresentor>();
 		for (final Submodule submodule : submodules) {
-			representors.add(this.to(submodule));
+			representors.add(this.toElementary(submodule));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<SubmoduleRepresentor> toSimplified(Set<Submodule> submodules) {
+		final Set<SubmoduleRepresentor> representors = new HashSet<SubmoduleRepresentor>();
+		for (final Submodule submodule : submodules) {
+			representors.add(this.toSimplified(submodule));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<SubmoduleRepresentor> toComplete(Set<Submodule> submodules) {
+		final Set<SubmoduleRepresentor> representors = new HashSet<SubmoduleRepresentor>();
+		for (final Submodule submodule : submodules) {
+			representors.add(this.toComplete(submodule));
 		}
 		return representors;
 	}

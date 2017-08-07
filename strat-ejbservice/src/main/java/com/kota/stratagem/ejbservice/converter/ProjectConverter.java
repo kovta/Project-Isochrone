@@ -10,10 +10,16 @@ import com.kota.stratagem.persistence.entity.Project;
 @Local
 public interface ProjectConverter {
 
-	ProjectRepresentor to(Project project);
-
 	ProjectRepresentor toElementary(Project project);
 
-	Set<ProjectRepresentor> to(Set<Project> projects);
+	ProjectRepresentor toSimplified(Project project);
+
+	ProjectRepresentor toComplete(Project project);
+
+	Set<ProjectRepresentor> toElementary(Set<Project> projects);
+
+	Set<ProjectRepresentor> toSimplified(Set<Project> projects);
+
+	Set<ProjectRepresentor> toComplete(Set<Project> projects);
 
 }

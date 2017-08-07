@@ -17,14 +17,9 @@ import com.kota.stratagem.ejbservice.converter.ProjectConverter;
 import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
-import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Submodule;
-import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
@@ -62,7 +57,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@Override
 	public SubmoduleRepresentor getSubmodule(Long id) throws AdaptorException {
 		try {
-			final SubmoduleRepresentor representor = this.submoduleConverter.to(this.submoduleSerive.readWithTasks(id));
+			final SubmoduleRepresentor representor = this.submoduleConverter.toComplete(this.submoduleSerive.readComplete(id));
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Submodule (id: " + id + ") --> " + representor);
 			}
@@ -87,7 +82,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	public List<SubmoduleRepresentor> getAllSubmodules() throws AdaptorException {
 		Set<SubmoduleRepresentor> representors = new HashSet<>();
 		try {
-			representors = this.submoduleConverter.to(this.submoduleSerive.readAll());
+			representors = this.submoduleConverter.toSimplified(this.submoduleSerive.readAll());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all Submodules --> " + representors.size() + " item(s)");
 			}
@@ -99,41 +94,21 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
-	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Set<TaskRepresentor> tasks,
-			Set<TeamRepresentor> assignedTeams, Set<AppUserRepresentor> assignedUsers, Long project) throws AdaptorException {
+	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
 		try {
 			Submodule submodule = null;
 			if ((id != null) && this.submoduleSerive.exists(id)) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Submodule (id: " + id + ")");
 				}
-				final Set<Task> submoduleTasks = new HashSet<Task>();
-				final Set<Team> teams = new HashSet<Team>();
-				final Set<AppUser> users = new HashSet<AppUser>();
-				if (tasks != null) {
-					for (final TaskRepresentor task : tasks) {
-						submoduleTasks.add(this.taskService.read(task.getId()));
-					}
-				}
-				if (assignedTeams != null) {
-					for (final TeamRepresentor team : assignedTeams) {
-						teams.add(this.teamService.read(team.getId()));
-					}
-				}
-				if (assignedUsers != null) {
-					for (final AppUserRepresentor user : assignedUsers) {
-						users.add(this.appUserService.read(user.getId()));
-					}
-				}
-				submodule = this.submoduleSerive.update(id, name, description, deadline, this.appUserService.read(operator), null, submoduleTasks, teams,
-						users);
+				submodule = this.submoduleSerive.update(id, name, description, deadline, this.appUserService.read(operator));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
-				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.read(operator), null, null, null, null, project);
+				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.read(operator), project);
 			}
-			return this.submoduleConverter.to(submodule);
+			return this.submoduleConverter.toComplete(submodule);
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

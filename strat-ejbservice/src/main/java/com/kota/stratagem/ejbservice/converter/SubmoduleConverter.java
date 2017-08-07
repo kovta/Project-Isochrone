@@ -10,10 +10,16 @@ import com.kota.stratagem.persistence.entity.Submodule;
 @Local
 public interface SubmoduleConverter {
 
-	SubmoduleRepresentor to(Submodule submodule);
-
 	SubmoduleRepresentor toElementary(Submodule submodule);
 
-	Set<SubmoduleRepresentor> to(Set<Submodule> submodules);
+	SubmoduleRepresentor toSimplified(Submodule submodule);
+
+	SubmoduleRepresentor toComplete(Submodule submodule);
+
+	Set<SubmoduleRepresentor> toElementary(Set<Submodule> submodules);
+
+	Set<SubmoduleRepresentor> toSimplified(Set<Submodule> submodules);
+
+	Set<SubmoduleRepresentor> toComplete(Set<Submodule> submodules);
 
 }

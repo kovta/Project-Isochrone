@@ -15,11 +15,11 @@ public class ObjectiveMonitor implements ObjectiveMonitorMBean {
 	ObjectiveProtocol protocol;
 
 	public void start() throws Exception {
-		LOGGER.info("Start Ticketing MBean");
+		LOGGER.info("Start Stratagem MBean");
 	}
 
 	public void stop() throws Exception {
-		LOGGER.info("Stop Ticketing MBean");
+		LOGGER.info("Stop Stratagem MBean");
 	}
 
 	@Override
