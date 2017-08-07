@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.TaskProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
@@ -31,7 +32,10 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 	private static final Logger LOGGER = Logger.getLogger(TaskActionController.class);
 
 	@EJB
-	TaskProtocol protocol;
+	TaskProtocol taskProtocol;
+
+	@EJB
+	AppUserProtocol appUserProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,7 +48,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			TaskRepresentor project = null;
 			boolean errorFlag = false;
 			try {
-				project = this.protocol.getTask(Long.parseLong(id));
+				project = this.taskProtocol.getTask(Long.parseLong(id));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				errorFlag = true;
@@ -55,8 +59,17 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final TaskRepresentor task, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
+		boolean assignmentError = false;
+		if (!errorFlag) {
+			try {
+				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(task));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				assignmentError = true;
+			}
+		}
 		request.setAttribute(ATTR_TASK, task);
-		if (errorFlag) {
+		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
 		} else if (returnPoint != null) {
@@ -117,8 +130,8 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				TaskRepresentor task = null;
 				try {
 					LOGGER.info(id == null ? "Create Task : (" + name + ")" : "Update Task : (" + id + ")");
-					task = this.protocol.saveTask(id, name, description, priority, completion, deadline, request.getUserPrincipal().getName(), null, null, null,
-							null, null, objective_id, project_id, submodule_id);
+					task = this.taskProtocol.saveTask(id, name, description, priority, completion, deadline, request.getUserPrincipal().getName(), objective_id,
+							project_id, submodule_id);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Task created succesfully!" : "Task updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

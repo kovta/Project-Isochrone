@@ -66,8 +66,7 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 				AppUserRepresentor user = null;
 				try {
 					LOGGER.info("Registration successful for user: " + username);
-					user = this.protocol.saveAppUser(null, username, password, email, RoleRepresentor.PRISTINE_USER, null, null, null, null, null, null, null,
-							null, null);
+					user = this.protocol.saveAppUser(null, username, password, email, RoleRepresentor.PRISTINE_USER, null);
 					request.setAttribute(ATTR_REG_SUCCESS, "Registration successful!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

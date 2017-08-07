@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.SubmoduleProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
@@ -24,14 +25,17 @@ import com.kota.stratagem.weblayer.common.submodule.SubmoduleParameter;
 import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
 @WebServlet("/Submodule")
-public class SubmoduleActionController extends AbstractRefinerServlet implements SubmoduleAttribute, SubmoduleParameter {
+public class SubmoduleActionController extends AbstractRefinerServlet implements SubmoduleParameter, SubmoduleAttribute {
 
 	private static final long serialVersionUID = 4167163197164098475L;
 
 	private static final Logger LOGGER = Logger.getLogger(SubmoduleActionController.class);
 
 	@EJB
-	SubmoduleProtocol protocol;
+	SubmoduleProtocol submoduleProtocol;
+
+	@EJB
+	AppUserProtocol appUserProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,7 +48,7 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 			SubmoduleRepresentor submodule = null;
 			boolean errorFlag = false;
 			try {
-				submodule = this.protocol.getSubmodule(Long.parseLong(id));
+				submodule = this.submoduleProtocol.getSubmodule(Long.parseLong(id));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				errorFlag = true;
@@ -55,8 +59,17 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final SubmoduleRepresentor submodule, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
+		boolean assignmentError = false;
+		if (!errorFlag) {
+			try {
+				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(submodule));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				assignmentError = true;
+			}
+		}
 		request.setAttribute(ATTR_SUBMODULE, submodule);
-		if (errorFlag) {
+		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
 		} else if (returnPoint != null) {
@@ -103,8 +116,7 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 				SubmoduleRepresentor submodule = null;
 				try {
 					LOGGER.info(id == null ? "Create Submodule : (" + name + ")" : "Update Submodule : (" + id + ")");
-					submodule = this.protocol.saveSubmodule(id, name, description, deadline, request.getUserPrincipal().getName(), null, null, null,
-							project_id);
+					submodule = this.submoduleProtocol.saveSubmodule(id, name, description, deadline, request.getUserPrincipal().getName(), project_id);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Submodule created succesfully!" : "Submodule updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.ProjectProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
@@ -32,7 +33,10 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 	private static final Logger LOGGER = Logger.getLogger(ProjectActionController.class);
 
 	@EJB
-	private ProjectProtocol protocol;
+	private ProjectProtocol projectProtocol;
+
+	@EJB
+	private AppUserProtocol appUserProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,7 +49,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 			ProjectRepresentor project = null;
 			boolean errorFlag = false;
 			try {
-				project = this.protocol.getProject(Long.parseLong(id));
+				project = this.projectProtocol.getProject(Long.parseLong(id));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				errorFlag = true;
@@ -56,8 +60,17 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ProjectRepresentor project, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
+		boolean assignmentError = false;
+		if (!errorFlag) {
+			try {
+				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(project));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				assignmentError = true;
+			}
+		}
 		request.setAttribute(ATTR_PROJECT, project);
-		if (errorFlag) {
+		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
 		} else if (returnPoint != null) {
@@ -106,8 +119,8 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				ProjectRepresentor project = null;
 				try {
 					LOGGER.info(id == null ? "Create Project : (" + name + ")" : "Update Project : (" + id + ")");
-					project = this.protocol.saveProject(id, name, description, status, deadline, confidentiality, request.getUserPrincipal().getName(), null,
-							null, null, null, null, objective_id);
+					project = this.projectProtocol.saveProject(id, name, description, status, deadline, confidentiality, request.getUserPrincipal().getName(),
+							objective_id);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Project created succesfully!" : "Project updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
