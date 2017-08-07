@@ -3,28 +3,21 @@ package com.kota.stratagem.ejbserviceclient.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class AppUserProjectAssignmentRepresentor extends AbstractAssignmentRepresentor implements Serializable {
+public class AppUserProjectAssignmentRepresentor extends AbstractAppUserAssignmentRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -4732660193181661667L;
 
-	private final AppUserRepresentor recipient;
 	private final ProjectRepresentor project;
 
 	public AppUserProjectAssignmentRepresentor(Long id, AppUserRepresentor entrustor, AppUserRepresentor recipient, ProjectRepresentor project,
 			Date creationDate) {
-		super(id, entrustor, creationDate);
-		this.recipient = recipient;
+		super(id, entrustor, recipient, creationDate);
 		this.project = project;
 	}
 
 	public AppUserProjectAssignmentRepresentor(AppUserRepresentor entrustor, AppUserRepresentor recipient, ProjectRepresentor project, Date creationDate) {
-		super(entrustor, creationDate);
-		this.recipient = recipient;
+		super(entrustor, recipient, creationDate);
 		this.project = project;
-	}
-
-	public AppUserRepresentor getRecipient() {
-		return this.recipient;
 	}
 
 	public ProjectRepresentor getProject() {

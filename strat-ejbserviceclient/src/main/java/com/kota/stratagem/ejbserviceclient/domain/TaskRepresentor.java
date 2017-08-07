@@ -19,8 +19,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private final Date creationDate;
 	private final AppUserRepresentor modifier;
 	private final Date modificationDate;
-	private final List<TeamRepresentor> assignedTeams;
-	private final List<AppUserRepresentor> assignedUsers;
+	private final List<TeamTaskAssignmentRepresentor> assignedTeams;
+	private final List<AppUserTaskAssignmentRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
 	private final List<TaskRepresentor> dependantTasks;
 	private final List<TaskRepresentor> taskDependencies;
@@ -32,7 +32,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this(null, "", "", 5, 0, new Date(), null, new Date(), null, new Date());
 	}
 
-	// Projects and Objectives removed from constructor due to structure ambiguity
 	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator,
 			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
 		super(deadline != null ? deadline : new Date());
@@ -146,11 +145,11 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		return this.modificationDate;
 	}
 
-	public List<TeamRepresentor> getAssignedTeams() {
+	public List<TeamTaskAssignmentRepresentor> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public List<AppUserRepresentor> getAssignedUsers() {
+	public List<AppUserTaskAssignmentRepresentor> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
@@ -173,6 +172,14 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 				+ this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
 				+ this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies="
 				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + "]";
+	}
+
+	public void addTeam(TeamTaskAssignmentRepresentor team) {
+		this.assignedTeams.add(team);
+	}
+
+	public void addUser(AppUserTaskAssignmentRepresentor user) {
+		this.assignedUsers.add(user);
 	}
 
 }

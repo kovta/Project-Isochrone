@@ -18,8 +18,8 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final AppUserRepresentor modifier;
 	private final Date modificationDate;
 	private final List<TaskRepresentor> tasks;
-	private final List<TeamRepresentor> assignedTeams;
-	private final List<AppUserRepresentor> assignedUsers;
+	private final List<TeamSubmoduleAssignmentRepresentor> assignedTeams;
+	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
 	private double completion;
 
@@ -100,11 +100,11 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 		return this.tasks;
 	}
 
-	public List<TeamRepresentor> getAssignedTeams() {
+	public List<TeamSubmoduleAssignmentRepresentor> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public List<AppUserRepresentor> getAssignedUsers() {
+	public List<AppUserSubmoduleAssignmentRepresentor> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
@@ -132,11 +132,11 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.tasks.add(task);
 	}
 
-	public void addTeam(TeamRepresentor team) {
+	public void addTeam(TeamSubmoduleAssignmentRepresentor team) {
 		this.assignedTeams.add(team);
 	}
 
-	public void addUser(AppUserRepresentor user) {
+	public void addUser(AppUserSubmoduleAssignmentRepresentor user) {
 		this.assignedUsers.add(user);
 	}
 
