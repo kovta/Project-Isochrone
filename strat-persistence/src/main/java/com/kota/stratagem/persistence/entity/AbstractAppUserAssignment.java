@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class AbstractUserAssignment extends AbstractAssignment {
+public abstract class AbstractAppUserAssignment extends AbstractAssignment {
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, targetEntity = AppUser.class)
 	@JoinColumn(name = "assignment_recipient", referencedColumnName = "user_id", nullable = false)

@@ -18,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -40,6 +39,8 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 		@NamedQuery(name = SubmoduleQuery.COUNT_BY_ID, query = "SELECT COUNT(sm) FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID, query = "SELECT sm FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_ALL_SUBMODULES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t ORDER BY sm.name"),
 		@NamedQuery(name = SubmoduleQuery.REMOVE_BY_ID, query = "DELETE FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID)
@@ -79,13 +80,11 @@ public class Submodule extends AbstractMonitoredItem implements Serializable {
 	@JoinTable(name = "submodule_tasks", joinColumns = @JoinColumn(name = "submodule_task_submodule_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "submodule_task_task_id", nullable = false))
 	private Set<Task> tasks;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
-	@JoinTable(name = "team_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<Team> assignedTeams;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamSubmoduleAssignment.class, mappedBy = "submodule")
+	private Set<TeamSubmoduleAssignment> assignedTeams;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinTable(name = "user_submodule_assignments", joinColumns = @JoinColumn(name = "assignment_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<AppUser> assignedUsers;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserSubmoduleAssignment.class, mappedBy = "submodule")
+	private Set<AppUserSubmoduleAssignment> assignedUsers;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_project", nullable = false))
@@ -98,8 +97,7 @@ public class Submodule extends AbstractMonitoredItem implements Serializable {
 		this.assignedUsers = new HashSet<>();
 	}
 
-	public Submodule(Long id, String name, String description, Date deadline, Date creationDate, Date modificationDate, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Project project) {
+	public Submodule(Long id, String name, String description, Date deadline, Date creationDate, Date modificationDate, Project project) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -107,23 +105,16 @@ public class Submodule extends AbstractMonitoredItem implements Serializable {
 		this.deadline = deadline;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.tasks = tasks;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
 		this.project = project;
 	}
 
-	public Submodule(String name, String description, Date deadline, Date creationDate, Date modificationDate, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Project project) {
+	public Submodule(String name, String description, Date deadline, Date creationDate, Date modificationDate, Project project) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.tasks = tasks;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
 		this.project = project;
 	}
 
@@ -167,19 +158,19 @@ public class Submodule extends AbstractMonitoredItem implements Serializable {
 		this.tasks = tasks;
 	}
 
-	public Set<Team> getAssignedTeams() {
+	public Set<TeamSubmoduleAssignment> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public void setAssignedTeams(Set<Team> assignedTeams) {
+	public void setAssignedTeams(Set<TeamSubmoduleAssignment> assignedTeams) {
 		this.assignedTeams = assignedTeams;
 	}
 
-	public Set<AppUser> getAssignedUsers() {
+	public Set<AppUserSubmoduleAssignment> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
-	public void setAssignedUsers(Set<AppUser> assignedUsers) {
+	public void setAssignedUsers(Set<AppUserSubmoduleAssignment> assignedUsers) {
 		this.assignedUsers = assignedUsers;
 	}
 

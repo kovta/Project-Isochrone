@@ -12,28 +12,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.kota.stratagem.persistence.parameter.AssignmentParameter;
-import com.kota.stratagem.persistence.query.AppUserSubmoduleAssignmentQuery;
-
 @Entity
-@Table(name = "user_submodule_assignments")
-@NamedQueries(value = { //
-		@NamedQuery(name = AppUserSubmoduleAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserSubmoduleAssignment a WHERE a.id=:"
-				+ AssignmentParameter.ID)
-		//
-})
-@SequenceGenerator(name = "userSubmoduleAssignmentGenerator", sequenceName = "user_submodule_assignments_assignment_id_seq", allocationSize = 1)
-public class AppUserSubmoduleAssignment extends AbstractAppUserAssignment implements Serializable {
+@Table(name = "team_submodule_assignments")
+@SequenceGenerator(name = "teamSubmoduleAssignmentGenerator", sequenceName = "team_submodule_assignments_assignment_id_seq", allocationSize = 1)
+public class TeamSubmoduleAssignment extends AbstractTeamAssignment implements Serializable {
 
-	private static final long serialVersionUID = -7689042201929946465L;
+	private static final long serialVersionUID = -236212267967798240L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSubmoduleAssignmentGenerator")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teamSubmoduleAssignmentGenerator")
 	@Column(name = "assignment_id", nullable = false, updatable = false, insertable = false)
 	private Long id;
 
@@ -41,14 +31,16 @@ public class AppUserSubmoduleAssignment extends AbstractAppUserAssignment implem
 	@JoinColumn(name = "assignment_submodule", referencedColumnName = "submodule_id", nullable = false)
 	private Submodule submodule;
 
-	public AppUserSubmoduleAssignment() {
+	public TeamSubmoduleAssignment() {
 		super();
 		this.creationDate = new Date();
 	}
 
-	public AppUserSubmoduleAssignment(Submodule submodule, Date creationDate) {
+	public TeamSubmoduleAssignment(AppUser entrustor, Team recipient, Submodule submodule, Date creationDate) {
 		super();
 		this.submodule = submodule;
+		this.recipient = recipient;
+		this.entrustor = entrustor;
 		this.creationDate = creationDate;
 	}
 
@@ -64,13 +56,13 @@ public class AppUserSubmoduleAssignment extends AbstractAppUserAssignment implem
 		return this.submodule;
 	}
 
-	public void setSubmodule(Submodule Submodule) {
-		this.submodule = Submodule;
+	public void setSubmodule(Submodule submodule) {
+		this.submodule = submodule;
 	}
 
 	@Override
 	public String toString() {
-		return "UserSubmoduleAssignment [id=" + this.id + ", submodule=" + this.submodule + "]";
+		return "TeamSubmoduleAssignment [id=" + this.id + ", submodule=" + this.submodule + "]";
 	}
 
 }

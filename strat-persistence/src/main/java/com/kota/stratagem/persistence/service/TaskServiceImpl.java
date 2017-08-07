@@ -16,12 +16,10 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.persistence.entity.AppUser;
-import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.TaskParameter;
 import com.kota.stratagem.persistence.query.TaskQuery;
@@ -48,16 +46,27 @@ public class TaskServiceImpl implements TaskService {
 	@EJB
 	private SubmoduleService submoduleService;
 
+	private Task retrieveSingleRecord(Long id, String query, String message) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(message);
+		}
+		Task result = null;
+		try {
+			result = this.entityManager.createNamedQuery(query, Task.class).setParameter(TaskParameter.ID, id).getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
 	@Override
-	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project,
+	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Long objective, Long project,
 			Long submodule) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, priority, completion, deadline, new Date(), new Date(), assignedTeams, assignedUsers, impediments,
-					dependantTasks, taskDependencies);
+			final Task task = new Task(name, description, priority, completion, deadline, new Date(), new Date());
 			Objective parentObjective = null;
 			Project parentProject = null;
 			Submodule parentSubmodule = null;
@@ -101,17 +110,13 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task read(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Task by id (" + id + ")");
-		}
-		Task result = null;
-		try {
-			result = this.entityManager.createNamedQuery(TaskQuery.GET_BY_ID, Task.class).setParameter(TaskParameter.ID, id).getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+	public Task readElementary(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID, "Get Task by id (" + id + ")");
+	}
+
+	@Override
+	public Task readComplete(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_COMPLETE, "Get Task with all attributes by id (" + id + ")");
 	}
 
 	@Override
@@ -129,14 +134,13 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies, Long objective, Long project,
+	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Long objective, Long project,
 			Long submodule) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = this.read(id);
+			final Task task = this.readElementary(id);
 			final AppUser operator = this.appUserService.read(modifier.getId());
 			task.setName(name);
 			task.setDescription(description);
@@ -151,11 +155,6 @@ public class TaskServiceImpl implements TaskService {
 				}
 			}
 			task.setModificationDate(new Date());
-			task.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
-			task.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
-			task.setImpediments(impediments != null ? impediments : new HashSet<Impediment>());
-			task.setDependantTasks(dependantTasks != null ? dependantTasks : new HashSet<Task>());
-			task.setTaskDependencies(taskDependencies != null ? taskDependencies : new HashSet<Task>());
 			if (objective != null) {
 				task.setObjective(this.objectiveService.readWithTasks(objective));
 			} else if (project != null) {

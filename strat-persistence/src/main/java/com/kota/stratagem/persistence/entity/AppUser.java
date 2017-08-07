@@ -120,8 +120,7 @@ public class AppUser implements Serializable {
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
-			Date acountModificationDate, Set<Objective> objectives, Set<Project> projects, Set<Submodule> submodules, Set<Task> tasks,
-			Set<Impediment> reportedImpediments, Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+			Date acountModificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -131,19 +130,9 @@ public class AppUser implements Serializable {
 		this.registrationDate = registrationDate;
 		this.accountModifier = accountModifier;
 		this.acountModificationDate = acountModificationDate;
-		this.objectives = objectives;
-		this.projects = projects;
-		this.submodules = submodules;
-		this.tasks = tasks;
-		this.reportedImpediments = reportedImpediments;
-		this.processedImpediments = processedImpediments;
-		this.supervisedTeams = supervisedTeams;
-		this.teamMemberships = teamMemberships;
 	}
 
-	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate,
-			Set<Objective> objectives, Set<Project> projects, Set<Submodule> submodules, Set<Task> tasks, Set<Impediment> reportedImpediments,
-			Set<Impediment> processedImpediments, Set<Team> supervisedTeams, Set<Team> teamMemberships) {
+	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate) {
 		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
@@ -152,14 +141,6 @@ public class AppUser implements Serializable {
 		this.registrationDate = registrationDate;
 		this.accountModifier = accountModifier;
 		this.acountModificationDate = acountModificationDate;
-		this.objectives = objectives;
-		this.projects = projects;
-		this.submodules = submodules;
-		this.tasks = tasks;
-		this.reportedImpediments = reportedImpediments;
-		this.processedImpediments = processedImpediments;
-		this.supervisedTeams = supervisedTeams;
-		this.teamMemberships = teamMemberships;
 	}
 
 	public Long getId() {

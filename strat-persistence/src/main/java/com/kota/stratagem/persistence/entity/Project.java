@@ -20,7 +20,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -39,10 +38,12 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = ProjectQuery.COUNT_BY_ID, query = "SELECT COUNT(p) FROM Project p WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID, query = "SELECT p FROM Project p WHERE p.id=:" + ProjectParameter.ID),
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm WHERE p.id=:"
 				+ ProjectParameter.ID),
-		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.id=:"
+				+ ProjectParameter.ID),
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_COMPLETE, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t LEFT JOIN FETCH p.assignedUsers au LEFT JOIN FETCH p.assignedTeams at WHERE p.id=:"
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.status=:"
 				+ ProjectParameter.STATUS + " ORDER BY p.name"),
@@ -95,13 +96,11 @@ public class Project extends AbstractMonitoredItem implements Serializable {
 	@JoinTable(name = "project_tasks", joinColumns = @JoinColumn(name = "project_task_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_task_task_id", nullable = false))
 	private Set<Task> tasks;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
-	@JoinTable(name = "team_project_assignments", joinColumns = @JoinColumn(name = "assignment_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<Team> assignedTeams;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamProjectAssignment.class, mappedBy = "project")
+	private Set<TeamProjectAssignment> assignedTeams;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinTable(name = "user_project_assignments", joinColumns = @JoinColumn(name = "assignment_project", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<AppUser> assignedUsers;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserProjectAssignment.class, mappedBy = "project")
+	private Set<AppUserProjectAssignment> assignedUsers;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Impediment.class)
 	@JoinTable(name = "project_impediments", joinColumns = @JoinColumn(name = "project_impediment_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_impediment_impediment_id", nullable = false))
@@ -120,8 +119,7 @@ public class Project extends AbstractMonitoredItem implements Serializable {
 	}
 
 	public Project(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidential, Date creationDate,
-			Date modificationDate, Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments,
-			Objective objective) {
+			Date modificationDate, Objective objective) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -131,16 +129,11 @@ public class Project extends AbstractMonitoredItem implements Serializable {
 		this.confidential = confidential;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.submodules = submodules;
-		this.tasks = tasks;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
-		this.impediments = impediments;
 		this.objective = objective;
 	}
 
 	public Project(String name, String description, ProjectStatus status, Date deadline, Boolean confidential, Date creationDate, Date modificationDate,
-			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Objective objective) {
+			Objective objective) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -149,11 +142,6 @@ public class Project extends AbstractMonitoredItem implements Serializable {
 		this.confidential = confidential;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.submodules = submodules;
-		this.tasks = tasks;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
-		this.impediments = impediments;
 		this.objective = objective;
 	}
 
@@ -221,19 +209,19 @@ public class Project extends AbstractMonitoredItem implements Serializable {
 		this.tasks = tasks;
 	}
 
-	public Set<Team> getAssignedTeams() {
+	public Set<TeamProjectAssignment> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public void setAssignedTeams(Set<Team> assignedTeams) {
+	public void setAssignedTeams(Set<TeamProjectAssignment> assignedTeams) {
 		this.assignedTeams = assignedTeams;
 	}
 
-	public Set<AppUser> getAssignedUsers() {
+	public Set<AppUserProjectAssignment> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
-	public void setAssignedUsers(Set<AppUser> assignedUsers) {
+	public void setAssignedUsers(Set<AppUserProjectAssignment> assignedUsers) {
 		this.assignedUsers = assignedUsers;
 	}
 

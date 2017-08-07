@@ -18,8 +18,6 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Submodule;
-import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.SubmoduleParameter;
@@ -42,15 +40,27 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	@EJB
 	private ProjectService projectService;
 
-	@Override
-	public Submodule create(String name, String description, Date deadline, AppUser creator, Date creationDate, Set<Task> tasks, Set<Team> assignedTeams,
-			Set<AppUser> assignedUsers, Long project) throws PersistenceServiceException {
+	private Submodule retrieveSingleRecord(Long id, String query, String message) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Create Submodule (name: " + name + ", description: " + description + ", tasks: " + tasks + ")");
+			LOGGER.debug(message);
+		}
+		Submodule result = null;
+		try {
+			result = this.entityManager.createNamedQuery(query, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public Submodule create(String name, String description, Date deadline, AppUser creator, Long project) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Create Submodule (name: " + name + ", description: " + description + ")");
 		}
 		try {
 			final Project parentProject = this.projectService.readElementary(project);
-			final Submodule submodule = new Submodule(name, description, deadline, new Date(), new Date(), tasks, assignedTeams, assignedUsers, parentProject);
+			final Submodule submodule = new Submodule(name, description, deadline, new Date(), new Date(), parentProject);
 			AppUser operatorTemp;
 			if (parentProject.getCreator().getId() == creator.getId()) {
 				operatorTemp = parentProject.getCreator();
@@ -70,31 +80,17 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 
 	@Override
 	public Submodule readElementary(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Submodule by id (" + id + ")");
-		}
-		Submodule result = null;
-		try {
-			result = this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, SubmoduleQuery.GET_BY_ID, "Get Submodule by id (" + id + ")");
 	}
 
 	@Override
 	public Submodule readWithTasks(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Submodule with Tasks by id (" + id + ")");
-		}
-		Submodule result = null;
-		try {
-			result = this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, SubmoduleQuery.GET_BY_ID_WITH_TASKS, "Get Submodule with Tasks by id (" + id + ")");
+	}
+
+	@Override
+	public Submodule readComplete(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, SubmoduleQuery.GET_BY_ID_COMPLETE, "Get Submodule with all attributes by id (" + id + ")");
 	}
 
 	@Override
@@ -112,10 +108,9 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	}
 
 	@Override
-	public Submodule update(Long id, String name, String description, Date deadline, AppUser modifier, Date modificationDate, Set<Task> tasks,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers) throws PersistenceServiceException {
+	public Submodule update(Long id, String name, String description, Date deadline, AppUser modifier) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Update Submodule (id: " + id + ", name: " + name + ", description: " + description + ", tasks: " + tasks + ")");
+			LOGGER.debug("Update Submodule (id: " + id + ", name: " + name + ", description: " + description + ")");
 		}
 		try {
 			final Submodule submodule = this.readWithTasks(id);
@@ -131,10 +126,6 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 				}
 			}
 			submodule.setModificationDate(new Date());
-			// project.setSubmodules(submodules != null ? submodules : new HashSet<Submodule>());
-			// project.setTasks(tasks != null ? tasks : new HashSet<Task>());
-			submodule.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
-			submodule.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
 			return this.entityManager.merge(submodule);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when merging Submodule! " + e.getLocalizedMessage(), e);
@@ -167,7 +158,6 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 			LOGGER.debug("Check Submodule by id (" + id + ")");
 		}
 		try {
-			// query returns more than 1 result
 			return this.entityManager.createNamedQuery(SubmoduleQuery.COUNT_BY_ID, Long.class).setParameter(SubmoduleParameter.ID, id).getSingleResult() > 0;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during Submodule serach (" + id + ")! " + e.getLocalizedMessage(), e);

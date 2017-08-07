@@ -39,6 +39,8 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = TaskQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Task t WHERE t.id=:" + TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID, query = "SELECT t FROM Task t WHERE t.id=:" + TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Task t LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
+				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks LEFT JOIN FETCH t.taskDependencies ORDER BY t.name"),
 		@NamedQuery(name = TaskQuery.REMOVE_BY_ID, query = "DELETE FROM Task t WHERE t.id=:" + TaskParameter.ID)
 		//
@@ -79,13 +81,11 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@Column(name = "task_deadline", nullable = true)
 	private Date deadline;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Team.class)
-	@JoinTable(name = "team_task_assignments", joinColumns = @JoinColumn(name = "assignment_task", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<Team> assignedTeams;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamTaskAssignment.class, mappedBy = "task")
+	private Set<TeamTaskAssignment> assignedTeams;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinTable(name = "user_task_assignments", joinColumns = @JoinColumn(name = "assignment_task", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_recipient", nullable = false))
-	private Set<AppUser> assignedUsers;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserTaskAssignment.class, mappedBy = "task")
+	private Set<AppUserTaskAssignment> assignedUsers;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Impediment.class)
 	@JoinTable(name = "project_impediments", joinColumns = @JoinColumn(name = "project_impediment_project_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_impediment_impediment_id", nullable = false))
@@ -122,8 +122,7 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies) {
+	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -133,15 +132,9 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.deadline = deadline;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
-		this.impediments = impediments;
-		this.dependantTasks = dependantTasks;
-		this.taskDependencies = taskDependencies;
 	}
 
-	public Task(String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate,
-			Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Set<Task> dependantTasks, Set<Task> taskDependencies) {
+	public Task(String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -150,11 +143,6 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.deadline = deadline;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
-		this.assignedTeams = assignedTeams;
-		this.assignedUsers = assignedUsers;
-		this.impediments = impediments;
-		this.dependantTasks = dependantTasks;
-		this.taskDependencies = taskDependencies;
 	}
 
 	public Long getId() {
@@ -205,19 +193,19 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.deadline = deadline;
 	}
 
-	public Set<Team> getAssignedTeams() {
+	public Set<TeamTaskAssignment> getAssignedTeams() {
 		return this.assignedTeams;
 	}
 
-	public void setAssignedTeams(Set<Team> assignedTeams) {
+	public void setAssignedTeams(Set<TeamTaskAssignment> assignedTeams) {
 		this.assignedTeams = assignedTeams;
 	}
 
-	public Set<AppUser> getAssignedUsers() {
+	public Set<AppUserTaskAssignment> getAssignedUsers() {
 		return this.assignedUsers;
 	}
 
-	public void setAssignedUsers(Set<AppUser> assignedUsers) {
+	public void setAssignedUsers(Set<AppUserTaskAssignment> assignedUsers) {
 		this.assignedUsers = assignedUsers;
 	}
 

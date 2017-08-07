@@ -12,27 +12,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.kota.stratagem.persistence.parameter.AssignmentParameter;
-import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
-
 @Entity
-@Table(name = "user_task_assignments")
-@NamedQueries(value = { //
-		@NamedQuery(name = AppUserTaskAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserTaskAssignment a WHERE a.id=:" + AssignmentParameter.ID)
-		//
-})
-@SequenceGenerator(name = "userTaskAssignmentGenerator", sequenceName = "user_task_assignments_assignment_id_seq", allocationSize = 1)
-public class AppUserTaskAssignment extends AbstractAppUserAssignment implements Serializable {
+@Table(name = "team_task_assignments")
+@SequenceGenerator(name = "teamTaskAssignmentGenerator", sequenceName = "team_task_assignments_assignment_id_seq", allocationSize = 1)
+public class TeamTaskAssignment extends AbstractTeamAssignment implements Serializable {
 
-	private static final long serialVersionUID = -7689042201929946465L;
+	private static final long serialVersionUID = -3305132249066347071L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userTaskAssignmentGenerator")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teamTaskAssignmentGenerator")
 	@Column(name = "assignment_id", nullable = false, updatable = false, insertable = false)
 	private Long id;
 
@@ -40,14 +31,16 @@ public class AppUserTaskAssignment extends AbstractAppUserAssignment implements 
 	@JoinColumn(name = "assignment_task", referencedColumnName = "task_id", nullable = false)
 	private Task task;
 
-	public AppUserTaskAssignment() {
+	public TeamTaskAssignment() {
 		super();
 		this.creationDate = new Date();
 	}
 
-	public AppUserTaskAssignment(Task task, Date creationDate) {
+	public TeamTaskAssignment(AppUser entrustor, Team recipient, Task task, Date creationDate) {
 		super();
 		this.task = task;
+		this.recipient = recipient;
+		this.entrustor = entrustor;
 		this.creationDate = creationDate;
 	}
 
@@ -69,7 +62,7 @@ public class AppUserTaskAssignment extends AbstractAppUserAssignment implements 
 
 	@Override
 	public String toString() {
-		return "UserTaskAssignment [id=" + this.id + ", task=" + this.task + "]";
+		return "TeamTaskAssignment [id=" + this.id + ", task=" + this.task + "]";
 	}
 
 }

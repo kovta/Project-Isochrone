@@ -12,27 +12,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.kota.stratagem.persistence.parameter.AssignmentParameter;
-import com.kota.stratagem.persistence.query.AppUserProjectAssignmentQuery;
-
 @Entity
-@Table(name = "user_project_assignments")
-@NamedQueries(value = { //
-		@NamedQuery(name = AppUserProjectAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserProjectAssignment a WHERE a.id=:" + AssignmentParameter.ID)
-		//
-})
-@SequenceGenerator(name = "userProjectAssignmentGenerator", sequenceName = "user_project_assignments_assignment_id_seq", allocationSize = 1)
-public class AppUserProjectAssignment extends AbstractAppUserAssignment implements Serializable {
+@Table(name = "team_project_assignments")
+@SequenceGenerator(name = "teamProjectAssignmentGenerator", sequenceName = "team_project_assignments_assignment_id_seq", allocationSize = 1)
+public class TeamProjectAssignment extends AbstractTeamAssignment implements Serializable {
 
-	private static final long serialVersionUID = -7689042201929946465L;
+	private static final long serialVersionUID = -291842579597781124L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userProjectAssignmentGenerator")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teamProjectAssignmentGenerator")
 	@Column(name = "assignment_id", nullable = false, updatable = false, insertable = false)
 	private Long id;
 
@@ -40,14 +31,16 @@ public class AppUserProjectAssignment extends AbstractAppUserAssignment implemen
 	@JoinColumn(name = "assignment_project", referencedColumnName = "project_id", nullable = false)
 	private Project project;
 
-	public AppUserProjectAssignment() {
+	public TeamProjectAssignment() {
 		super();
 		this.creationDate = new Date();
 	}
 
-	public AppUserProjectAssignment(Project project, Date creationDate) {
+	public TeamProjectAssignment(AppUser entrustor, Team recipient, Project project, Date creationDate) {
 		super();
 		this.project = project;
+		this.recipient = recipient;
+		this.entrustor = entrustor;
 		this.creationDate = creationDate;
 	}
 
@@ -69,7 +62,7 @@ public class AppUserProjectAssignment extends AbstractAppUserAssignment implemen
 
 	@Override
 	public String toString() {
-		return "UserprojectAssignment [id=" + this.id + ", project=" + this.project + "]";
+		return "TeamProjectAssignment [id=" + this.id + ", project=" + this.project + "]";
 	}
 
 }

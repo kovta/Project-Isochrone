@@ -16,12 +16,8 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.persistence.entity.AppUser;
-import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
-import com.kota.stratagem.persistence.entity.Submodule;
-import com.kota.stratagem.persistence.entity.Task;
-import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -45,18 +41,29 @@ public class ProjectServiceImpl implements ProjectService {
 	@EJB
 	private ObjectiveService objectiveService;
 
+	private Project retrieveSingleRecord(Long id, String query, String message) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(message);
+		}
+		Project result = null;
+		try {
+			result = this.entityManager.createNamedQuery(query, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
 	@Override
-	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, Long creator,
-			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments, Long objective)
+	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, Long creator, Long objective)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Create Project (name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks + ", confidentiality: "
-					+ confidentiality + ")");
+			LOGGER.debug(
+					"Create Project (name: " + name + ", description: " + description + ", status: " + status + ", confidentiality: " + confidentiality + ")");
 		}
 		try {
 			final Objective parentObjective = this.objectiveService.readElementary(objective);
-			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), submodules, tasks, assignedTeams,
-					assignedUsers, impediments, parentObjective);
+			final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), parentObjective);
 			AppUser operatorTemp;
 			if (parentObjective.getCreator().getId() == creator) {
 				operatorTemp = parentObjective.getCreator();
@@ -76,61 +83,27 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public Project readElementary(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Project by id (" + id + ")");
-		}
-		Project result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
-	}
-
-	@Override
-	public Project readWithSubmodules(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Project with Submodules by id (" + id + ")");
-		}
-		Project result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES, Project.class).setParameter(ProjectParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID, "Get Project by id (" + id + ")");
 	}
 
 	@Override
 	public Project readWithTasks(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Project with Tasks by id (" + id + ")");
-		}
-		Project result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_TASKS, Project.class).setParameter(ProjectParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID_WITH_TASKS, "Get Project with Tasks by id (" + id + ")");
+	}
+
+	@Override
+	public Project readWithSubmodules(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID_WITH_SUBMODULES, "Get Project with Submodules by id (" + id + ")");
 	}
 
 	@Override
 	public Project readWithSubmodulesAndTasks(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Project with Submodules and Tasks by id (" + id + ")");
-		}
-		Project result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, Project.class).setParameter(ProjectParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Project by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, "Get Project with Submodules and Tasks by id (" + id + ")");
+	}
+
+	@Override
+	public Project readComplete(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID_COMPLETE, "Get Project with all attributes by id (" + id + ")");
 	}
 
 	@Override
@@ -163,12 +136,11 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier,
-			Set<Submodule> submodules, Set<Task> tasks, Set<Team> assignedTeams, Set<AppUser> assignedUsers, Set<Impediment> impediments)
+	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Update Project (id: " + id + ", name: " + name + ", description: " + description + ", status: " + status + ", tasks: " + tasks
-					+ ", confidentiality: " + confidentiality + ")");
+			LOGGER.debug("Update Project (id: " + id + ", name: " + name + ", description: " + description + ", status: " + status + ", confidentiality: "
+					+ confidentiality + ")");
 		}
 		try {
 			final Project project = this.readWithSubmodulesAndTasks(id);
@@ -186,11 +158,6 @@ public class ProjectServiceImpl implements ProjectService {
 				}
 			}
 			project.setModificationDate(new Date());
-			// project.setSubmodules(submodules != null ? submodules : new HashSet<Submodule>());
-			// project.setTasks(tasks != null ? tasks : new HashSet<Task>());
-			project.setAssignedTeams(assignedTeams != null ? assignedTeams : new HashSet<Team>());
-			project.setAssignedUsers(assignedUsers != null ? assignedUsers : new HashSet<AppUser>());
-			project.setImpediments(impediments != null ? impediments : new HashSet<Impediment>());
 			return this.entityManager.merge(project);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when merging Project! " + e.getLocalizedMessage(), e);
@@ -224,7 +191,6 @@ public class ProjectServiceImpl implements ProjectService {
 			LOGGER.debug("Check Project by id (" + id + ")");
 		}
 		try {
-			// query returns more than 1 result
 			return this.entityManager.createNamedQuery(ProjectQuery.COUNT_BY_ID, Long.class).setParameter(ProjectParameter.ID, id).getSingleResult() > 0;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during Project serach (" + id + ")! " + e.getLocalizedMessage(), e);

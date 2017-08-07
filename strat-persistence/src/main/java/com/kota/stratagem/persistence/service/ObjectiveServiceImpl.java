@@ -37,6 +37,19 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	@EJB
 	private AppUserService appUserService;
 
+	private Objective retrieveSingleRecord(Long id, String query, String message) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(message);
+		}
+		Objective result = null;
+		try {
+			result = this.entityManager.createNamedQuery(query, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
 	@Override
 	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator)
 			throws PersistenceServiceException {
@@ -59,76 +72,27 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 
 	@Override
 	public Objective readElementary(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Objective by id (" + id + ")");
-		}
-		Objective result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
-	}
-
-	@Override
-	public Objective readWithProjects(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Objective with projects by id (" + id + ")");
-		}
-		Objective result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, Objective.class).setParameter(ObjectiveParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID, "Get Objective by id (" + id + ")");
 	}
 
 	@Override
 	public Objective readWithTasks(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Objective with tasks by id (" + id + ")");
-		}
-		Objective result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_TASKS, Objective.class).setParameter(ObjectiveParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID_WITH_TASKS, "Get Objective with Tasks by id (" + id + ")");
+	}
+
+	@Override
+	public Objective readWithProjects(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, "Get Objective with Projects by id (" + id + ")");
 	}
 
 	@Override
 	public Objective readWithProjectsAndTasks(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Objective with projects and tasks by id (" + id + ")");
-		}
-		Objective result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, Objective.class)
-					.setParameter(ObjectiveParameter.ID, id).getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, "Get Objective with Projects and Tasks by id (" + id + ")");
 	}
 
 	@Override
 	public Objective readComplete(Long id) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Get Objective with all attributes by id (" + id + ")");
-		}
-		Objective result = null;
-		try {
-			result = this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_COMPLETE, Objective.class).setParameter(ObjectiveParameter.ID, id)
-					.getSingleResult();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
-		}
-		return result;
+		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID_COMPLETE, "Get Objective with all attributes by id (" + id + ")");
 	}
 
 	@Override
