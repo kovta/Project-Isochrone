@@ -89,7 +89,7 @@ public class TaskConverterImpl implements TaskConverter {
 
 	@Override
 	public TaskRepresentor toComplete(Task task) {
-		final TaskRepresentor representor = this.toElementary(task);
+		final TaskRepresentor representor = this.toSimplified(task);
 		if (task.getAssignedTeams() != null) {
 			for (final TeamTaskAssignment team : task.getAssignedTeams()) {
 				representor.addTeam(this.assignmentConverter.to(team));
