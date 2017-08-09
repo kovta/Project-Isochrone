@@ -45,10 +45,10 @@
 				        <tr>
 				        	<th>#</th>
 					        <th>Name</th>
-					        <th class="center-text">Status</th>
-					        <th class="center-text">Submodules</th>
-					        <th class="center-text">Tasks</th>
-					        <th class="center-text">Actions</th>
+					        <th class="text-center">Status</th>
+					        <th class="text-center">Submodules</th>
+					        <th class="text-center">Tasks</th>
+					        <th class="text-center">Actions</th>
 				        </tr>
 				    </thead>
 				    <tbody>
@@ -58,7 +58,7 @@
 		                        <tr>
 		                        	<th scope="row"><c:out value="${count}" /></th>
 		                            <td><c:out value="${project.name}" /></td>
-		                            <td class="center-text">
+		                            <td class="text-center">
 										<c:choose>
 											<c:when test="${project.status.label == 'Proposed'}"><i class="fa fa-share-square-o"></i></c:when>
 											<c:when test="${project.status.label == 'Pending'}"><i class="fa fa-ellipsis-h"></i></c:when>
@@ -80,9 +80,9 @@
 										</c:choose>
 		                            	<span class="icon-companion"><c:out value="${project.status.label}" /></span>
 		                            </td>
-		                            <td class="center-text"><c:out value="${project.submodules.size()}" /></td>
-		                            <td class="center-text"><c:out value="${project.tasks.size()}" /></td>
-		                            <td class="center-text">
+		                            <td class="text-center"><c:out value="${project.submodules.size()}" /></td>
+		                            <td class="text-center"><c:out value="${project.tasks.size()}" /></td>
+		                            <td class="text-center">
 			                            <a href="Project?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
 		                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager") || request.isUserInRole("general_manager")) { %>
 										<a href="Project?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>

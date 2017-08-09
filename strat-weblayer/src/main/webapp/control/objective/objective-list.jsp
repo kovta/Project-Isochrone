@@ -48,11 +48,11 @@
 			        <tr>
 				        <th>#</th>
 				        <th>Name</th>
-				        <th class="center-text">Status</th>
-				        <th class="center-text">Priority</th>
-				        <th class="center-text">Projects</th>
-				        <th class="center-text">Tasks</th>
-				        <th class="center-text">Actions</th>
+				        <th class="text-center">Status</th>
+				        <th class="text-center">Priority</th>
+				        <th class="text-center">Projects</th>
+				        <th class="text-center">Tasks</th>
+				        <th class="text-center">Actions</th>
 			        </tr>
 			    </thead>
 			    <tbody>
@@ -62,7 +62,7 @@
 	                        <tr>
 	                        	<th scope="row"><c:out value="${count}" /></th>
 	                            <td><c:out value="${objective.name}" /></td>
-	                            <td class="center-text">
+	                            <td class="text-center">
 									<c:choose>
 										<c:when test="${objective.status.label == 'Planned'}"><i class="fa fa-map-o"></i></c:when>
 										<c:when test="${objective.status.label == 'Designated'}"><i class="fa fa-bullseye"></i></c:when>
@@ -73,10 +73,10 @@
 									</c:choose>
 	                            	<span class="icon-companion"><c:out value="${objective.status.label}" /></span>
 	                            </td>
-	                            <td class="center-text"><c:out value="${objective.priority}" /></td>
-	                            <td class="center-text"><c:out value="${objective.projects.size()}" /></td>
-	                            <td class="center-text"><c:out value="${objective.tasks.size()}" /></td>
-	                            <td class="center-text">
+	                            <td class="text-center"><c:out value="${objective.priority}" /></td>
+	                            <td class="text-center"><c:out value="${objective.projects.size()}" /></td>
+	                            <td class="text-center"><c:out value="${objective.tasks.size()}" /></td>
+	                            <td class="text-center">
 		                            <a href="Objective?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
 	                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager")) { %>
 									<a href="Objective?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>

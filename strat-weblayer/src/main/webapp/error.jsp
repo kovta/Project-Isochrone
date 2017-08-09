@@ -12,9 +12,9 @@
 		<div class="divider-new">
             <h1 class="h1-responsive wow fadeIn" data-wow-delay="0.1s">The requested resource is not available</h1>
         </div>
-        <h2 class="vertical-align-middle center-text full-width">Please use the following link to navigate back to the starting page</h2>
+        <h2 class="vertical-align-middle text-center full-width">Please use the following link to navigate back to the starting page</h2>
         <br/><br/>
-        <a href="Home" class="absolutely-positioned vertical-align-middle center-text full-width">
+        <a href="Home" class="absolutely-positioned vertical-align-middle text-center full-width">
     		<i class="fa fa-home" aria-hidden="true"></i> Home
 	    </a>
 		<br/><br/><br/><br/><br/><br/><br/><br/>

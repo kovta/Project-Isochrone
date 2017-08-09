@@ -8,6 +8,7 @@ body,
     height: 50%;
 }
 
+/* Frame */
 .navbar-transparent {
     background-color: transparent;
 }
@@ -44,6 +45,7 @@ footer.page-footer {
     }
 }
 
+/* Util */
 .flex-center {
     color: #fff;
 }
@@ -65,14 +67,17 @@ footer.page-footer {
 .space-top {
 	padding-top: 20px;
 }
+.padding-top {
+	padding-top: 1rem;
+}
+.content-padder {
+	padding-top: 7rem;
+}
 .space-bottom {
 	padding-bottom: 20px;
 }
 .space-left {
 	padding-left: 20px;
-}
-.center-text {
-	text-align: center; 
 }
 .full-width {
 	width: 100%;
@@ -103,6 +108,7 @@ footer.page-footer {
     margin-left: 31%;
 }
 
+/* Landing */
 .view {
     background: url("../img/connections.jpg")no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -128,6 +134,7 @@ footer.page-footer {
     padding-bottom: 1%;
 }
 
+/* Font */
 .brand-name {
     font-size: 4rem;
 }
@@ -169,6 +176,7 @@ footer.page-footer {
     font-size: larger;
 }
 
+/* Alert */
 #alertErrorMessage {
     position: fixed;
     top: 10%;
@@ -192,6 +200,7 @@ footer.page-footer {
     color: #ffffff;
 }
 
+/* Radio */
 .close {
 	color: #ffffff !important;
 }
@@ -207,6 +216,7 @@ footer.page-footer {
 	background: #BABABA;
 }
 
+/* Detail table */
 .strat-detail-table {
 	width: 100%;
     float: left;
@@ -245,6 +255,7 @@ tr > td:first-child {
 	table-layout: fixed;
 }
 
+/* Select */
 .label--checkbox {
     position: relative;
     margin: .5rem;
@@ -301,6 +312,7 @@ input[type="checkbox" i] {
     cursor: pointer;
 }
 
+/* Avatars */
 .card-avatar {
 	display: block;
     max-width: 100%;
@@ -332,4 +344,42 @@ input[type="checkbox" i] {
 }
 .rounded-circle {
     border-radius: 50% 50% 50% 50%;
+}
+
+/* Tabs panel */
+.nav-justified .nav-item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 100%;
+    -ms-flex: 1 1 100%;
+    flex: 1 1 100%;
+    text-align: center;
+}
+.nav-item > a.active {
+  border-bottom: 2px solid #293547;
+  position: relative;
+}
+.nav-item > a.active > span {
+  color: #2e2e2e;	
+}
+.tab-listener:hover > a {
+  border-bottom: 2px solid #8b9ebc;
+  background: none !important;
+  
+}
+.tab-listener:hover > a > span {
+	color: #333333;
+}
+.tab-listener > a > span {
+	color: #9d9d9d;
+}
+.tab-listener:hover > a.active {
+  border-bottom: 2px solid #293547;
+  position: relative;	
+}
+.tab-listener:hover > a.active > span {
+  color: #2e2e2e;	
+}
+.nav-item > a {
+  border: 0;
+  margin-right: 0;
 }

@@ -13,7 +13,7 @@
             <form action="ObjectiveDelete" method="post">
 	            <div class="modal-body">
 	            	<input type="hidden" name="id" value="${objective.id}" />
-	      			<div class="md-form form-sm full-width center-text">
+	      			<div class="md-form form-sm full-width text-center">
 	           			<h3>Are you sure you want to delete this Objective?</h3>
 	           		</div>
 	            </div>

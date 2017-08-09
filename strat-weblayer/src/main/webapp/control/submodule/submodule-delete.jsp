@@ -13,7 +13,7 @@
             <form action="SubmoduleDelete" method="post">
 	            <div class="modal-body">
 	            	<input type="hidden" name="id" value="${submodule.id}" />
-	      			<div class="md-form form-sm full-width center-text">
+	      			<div class="md-form form-sm full-width text-center">
 	           			<h3>Are you sure you want to delete this Submodule?</h3>
 	           		</div>
 	            </div>

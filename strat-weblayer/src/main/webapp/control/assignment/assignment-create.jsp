@@ -17,7 +17,7 @@
        				<c:choose>
 						<c:when test="${requestScope.userClusters.size() == 0}">
 		          			<div class="md-form form-sm">
-		              			<label class="full-width center-text">There are currently no assignable users</label>
+		              			<label class="full-width text-center">There are currently no assignable users</label>
 		              			<br/>
 		               		</div>
 		      			</c:when>
@@ -27,13 +27,13 @@
 			            	<input type="hidden" name="submoduleId" value="${submodule.id}" />
 			            	<input type="hidden" name="taskId" value="${task.id}" />
 		          			<div class="md-form form-sm">
-		              			<label class="full-width center-text">Select which users to delegate</label>
+		              			<label class="full-width text-center">Select which users to delegate</label>
 		              			<br/>
 		               		</div>
 			           		<div class="form-sm" id="objform35">
 								<c:forEach items="${requestScope.userClusters}" var="cluster">
 									<c:if test="${not empty cluster[0]}">
-										<hr/><div class="full-width center-text"><span><c:out value="${cluster[0].role.label}" />s</span></div><hr/>
+										<hr/><div class="full-width text-center"><span><c:out value="${cluster[0].role.label}" />s</span></div><hr/>
 									</c:if>
 									<table>
 										<colgroup>
@@ -44,15 +44,15 @@
 										<tbody>
 										<c:forEach items="${cluster}" var="user">
 										<tr>
-											<td class="center-text">
+											<td class="text-center">
 							                    <div class="checkbox-animated">
 						                          <label class="label--checkbox larger-font">
 											          <input type="checkbox" class="checkbox" name="assignments" value="${user.name}">
 											      </label>
 							                    </div>
 						                    </td>
-						                    <td class="center-text">${user.name}</td>
-						                    <td class="center-text">${user.email}</td>
+						                    <td class="text-center">${user.name}</td>
+						                    <td class="text-center">${user.email}</td>
 						                </tr>
 										</c:forEach>
 									</tbody></table>

@@ -22,36 +22,35 @@
                 <div class="col-lg-4 wow fadeIn" data-wow-delay="0.1s">
 					<br/><br/>
                     <div class="widget-wrapper wow fadeIn" data-wow-delay="0.2s">
-						<h2>${task.name}</h2>
-                        <br/><br/>
                         <div class="card">
                             <div class="card-block">
-                            	<div class="form-header mdb-color darken-1">
-                                	<h5><i class="fa fa-info-circle"></i><span class="icon-companion"> Information</span></h5>
-                                </div>
+								<div class="padding-top"><h3 class="h3-responsive text-center">${task.name}</h3></div>
                                 <div class="md-form">
                                 	<table class="strat-detail-table">
 	                                	<tbody>
-											<c:choose>
-											    <c:when test="${not empty task.objective}">
-			                               			<td class="strat-detail-attribute-name">Parent Objective</td>
-		                                			<td class="strat-detail-attribute-value">
-		                                				<a href="Objective?id=<c:out value="${task.objective.id}" />">${task.objective.name}</a>
-		                                			</td>
-											    </c:when>
-											    <c:when test="${not empty task.project}">	
-		                                			<td class="strat-detail-attribute-name">Parent Project</td>
-		                                			<td class="strat-detail-attribute-value">
-		                                				<a href="Project?id=<c:out value="${task.project.id}" />">${task.project.name}</a>
-		                                			</td>
-											    </c:when>
-										        <c:otherwise>
-					                      			<td class="strat-detail-attribute-name">Parent Submodule</td>
-		                                			<td class="strat-detail-attribute-value">
-		                                				<a href="Submodule?id=<c:out value="${task.submodule.id}" />">${task.submodule.name}</a>
-		                                			</td>
-										        </c:otherwise>
-											</c:choose>
+	                                		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+											<tr>
+												<c:choose>
+												    <c:when test="${not empty task.objective}">
+				                               			<td class="strat-detail-attribute-name">Parent Objective</td>
+			                                			<td class="strat-detail-attribute-value">
+			                                				<a href="Objective?id=<c:out value="${task.objective.id}" />">${task.objective.name}</a>
+			                                			</td>
+												    </c:when>
+												    <c:when test="${not empty task.project}">	
+			                                			<td class="strat-detail-attribute-name">Parent Project</td>
+			                                			<td class="strat-detail-attribute-value">
+			                                				<a href="Project?id=<c:out value="${task.project.id}" />">${task.project.name}</a>
+			                                			</td>
+												    </c:when>
+											        <c:otherwise>
+						                      			<td class="strat-detail-attribute-name">Parent Submodule</td>
+			                                			<td class="strat-detail-attribute-value">
+			                                				<a href="Submodule?id=<c:out value="${task.submodule.id}" />">${task.submodule.name}</a>
+			                                			</td>
+											        </c:otherwise>
+												</c:choose>
+											</tr>
 	                                		<tr>
 	                                			<td class="strat-detail-attribute-name">Priority</td>
 	                                			<td class="strat-detail-attribute-value">${task.priority}</td>
@@ -89,14 +88,14 @@
 											    <c:when test="${empty task.description}">
 											    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
 											    	<tr><td colspan="2" class="strat-detail-description">
-											    		<p class="center-text"><span class="font-no-content">No Description</span></p>
+											    		<p class="text-center"><span class="font-no-content">No Description</span></p>
 										    		</td></tr>
 											    </c:when>
 										        <c:otherwise>
 										        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="center-text">Description</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="center-text">...</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="center-text">${task.description}</p></td></tr>
+											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">Description</p></td></tr>
+											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">...</p></td></tr>
+											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">${task.description}</p></td></tr>
 										        </c:otherwise>
 											</c:choose>
 										</tbody>
@@ -114,8 +113,8 @@
                                 <div class="md-form">
                                 	<table class="strat-detail-table">
 	                                	<tbody>
-	                                		<tr class="match-row"><td class="center-text">
-						  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle center-text full-width">
+	                                		<tr class="match-row"><td class="text-center">
+						  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
 							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
 							       			    </a>
 											</td></tr>
@@ -141,73 +140,113 @@
 
                 <!--Main column-->
                 <div class="col-lg-8">
+					<!--First row-->
                     <div class="row wow fadeIn" data-wow-delay="0.2s">
                         <div class="col-lg-12">
-                            <div class="divider-new">
-                                <h2 class="h2-responsive">Assigned work force</h2>
-                            </div>
-                        </div>
+                        <br/><br/>
+	                         <!-- Tabs -->
+	                         <!-- Nav tabs -->
+	                         <div class="tabs-wrapper">
+	                             <ul class="nav nav-justified classic-tabs tabs-primary" role="tablist">
+	                                 <li class="nav-item tab-listener">
+	                                    <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" href="#userPanel" role="tab" aria-expanded="false">
+		                                    <span>Assigned Users (<c:out value="${task.assignedUsers.size()}" />)</span>
+	                                    </a>
+	                                 </li>
+	                                 <li class="nav-item tab-listener">
+	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#teamPanel" role="tab" aria-expanded="false">
+		                                    <span>Assigned Teams (<c:out value="${task.assignedTeams.size()}" />)</span>
+	                                    </a>
+	                                 </li>
+	                             </ul>
+	                         </div>
+	                         <br/><br/>
+	                         <!-- Tab panels -->
+	                         <div class="tab-content">
+								 <!--Panel 3-->
+	                             <div class="tab-pane fade active show" id="userPanel" role="tabpanel" aria-expanded="false">
+								     <c:choose>
+									     <c:when test="${submodule.assignedUsers.size() == 0}">
+											<div class="row wow fadeIn" data-wow-delay="0.2s">
+	                    					    <div class="col-lg-12">
+				                           			<div class="text-center content-padder">
+				                               			<h2 class="h2-responsive">There are currently no Users</h2>
+				                               			<h2 class="h2-responsive">assigned to this Task</h2>
+				                               		</div>
+			                               		</div>
+		                               		</div>
+										</c:when>
+										<c:otherwise>
+											<div class="row">
+												<c:forEach items="${requestScope.task.assignedUsers}" var="assignmentItem">
+													<div class="col-lg-4">
+									                    <c:set var="assignment" value="${assignmentItem}" scope="request" />
+							                            <jsp:include page="../assignment/assignment-card.jsp"></jsp:include>									                    
+									            	</div>
+												</c:forEach>
+											</div>		    
+										</c:otherwise>
+									</c:choose>
+	                             </div>
+	                             <!--/.Panel 3-->
+	                             <!--Panel 4-->
+	                             <div class="tab-pane fade" id="teamPanel" role="tabpanel" aria-expanded="false">
+								     <c:choose>
+									     <c:when test="${submodule.assignedTeams.size() == 0}">
+											<div class="row wow fadeIn" data-wow-delay="0.2s">
+	                    					    <div class="col-lg-12">
+				                           			<div class="text-center content-padder">
+				                               			<h2 class="h2-responsive">There are currently no Teams</h2>
+				                               			<h2 class="h2-responsive">assigned to this Task</h2>
+				                               		</div>
+			                               		</div>
+		                               		</div>
+										</c:when>
+										<c:otherwise>
+											<div class="row">
+												<c:forEach items="${requestScope.task.assignedTeams}" var="assignment">
+													<div class="col-lg-4">
+									                    <!--Card-->
+									                    <br/><br/><br/>
+									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
+									                        <!--Card content-->
+									                        <div class="card-block">
+									                        	<div class="card-avatar">
+									                        		<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
+									                        		style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+									                        	</div>
+									                            <!--Title-->
+									                            <h4 class="card-title text-center"><c:out value="${assignment.recipient.name}" /></h4>
+									                            <hr/>
+									                            <!--Text-->
+									                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
+									                            <p class="card-text">Assignment date: 
+									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+									                            </p>
+									                            <div class="full-width text-center">
+									                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
+									                            </div>
+									                        </div>
+									                        <!--/.Card content-->
+									                    </div>
+									                    <br/><br/><br/><br/><br/>
+									                    <!--/.Card-->
+									            	</div>
+												</c:forEach>
+											</div>		    
+										</c:otherwise>
+									</c:choose>
+	                             </div>
+	                             <!--/.Panel 4-->
+	                         </div>
+	                         <!-- /.Tabs -->
+	                    </div>
                     </div>
-                    
+                    <!--/.First row-->
                 </div>
                 <!--/.Main column-->
-            </div>
-
-	        <!--Under column-->
-            <div class="row wow fadeIn" data-wow-delay="0.2s">
-            	<div class="col-lg-12">
-		            <c:choose>
-						<c:when test="${task.assignedUsers.size() == 0 and task.assignedTeams.size() == 0}">
-							<div class="divider-new">
-		                 		<h2 class="h2-responsive">/</h2>
-		                 	</div>
-							<div class="center-text">
-		       					<h2 class="h2-responsive">There are currently no Users</h2>
-		   						<h2 class="h2-responsive">or Teams</h2>
-		   						<h2 class="h2-responsive">assigned to this Task</h2>
-		      				</div>
-		      			</c:when>
-						<c:otherwise>
-							<div class="divider-new">
-								<h2 class="h2-responsive">Assigned workforce</h2>
-							</div>
-						</c:otherwise>
-					</c:choose>
-				</div>
 			</div>
-			<br/><br/><br/><br/>
-			<div class="row">
-				<c:forEach items="${requestScope.task.assignedUsers}" var="assignment">
-					<div class="col-lg-3">
-	                    <!--Card-->
-	                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-	                        <!--Card content-->
-	                        <div class="card-block">
-	                        	<div class="card-avatar">
-	                        		<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
-	                        		style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-	                        	</div>
-	                            <!--Title-->
-	                            <h4 class="card-title center-text"><c:out value="${assignment.recipient.name}" /></h4>
-	                            <hr/>
-	                            <!--Text-->
-	                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
-	                            <p class="card-text">Assignment date: 
-	                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
-	                            </p>
-	                            <div class="full-width center-text">
-	                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${task.id}" />">Unassign user</a>
-	                            </div>
-	                        </div>
-	                        <!--/.Card content-->
-	                    </div>
-	                    <br/><br/><br/><br/><br/>
-	                    <!--/.Card-->
-	            	</div>
-				</c:forEach>
-			</div>
-			<!--Under column-->
-	
+			
    			<!-- Modals -->
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
