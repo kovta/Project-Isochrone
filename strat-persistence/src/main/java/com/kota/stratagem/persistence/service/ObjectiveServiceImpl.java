@@ -58,7 +58,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ")");
 		}
 		try {
-			final AppUser operator = this.appUserService.read(creator.getId());
+			final AppUser operator = this.appUserService.readElementary(creator.getId());
 			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, new Date(), new Date());
 			objective.setCreator(operator);
 			objective.setModifier(operator);
@@ -118,8 +118,8 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 		}
 		try {
 			// Multiple representation workaround
-			final Objective objective = this.readWithProjectsAndTasks(id);
-			final AppUser operator = this.appUserService.read(modifier.getId());
+			final Objective objective = this.readComplete(id);
+			final AppUser operator = this.appUserService.readElementary(modifier.getId());
 			objective.setName(name);
 			objective.setDescription(description);
 			objective.setPriority(priority);

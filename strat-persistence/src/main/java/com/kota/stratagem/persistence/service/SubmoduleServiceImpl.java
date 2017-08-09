@@ -65,7 +65,7 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 			if (parentProject.getCreator().getId() == creator.getId()) {
 				operatorTemp = parentProject.getCreator();
 			} else {
-				operatorTemp = this.appUserService.read(creator.getId());
+				operatorTemp = this.appUserService.readElementary(creator.getId());
 			}
 			final AppUser operator = operatorTemp;
 			submodule.setCreator(operator);
@@ -113,8 +113,8 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 			LOGGER.debug("Update Submodule (id: " + id + ", name: " + name + ", description: " + description + ")");
 		}
 		try {
-			final Submodule submodule = this.readWithTasks(id);
-			final AppUser operator = this.appUserService.read(modifier.getId());
+			final Submodule submodule = this.readComplete(id);
+			final AppUser operator = this.appUserService.readElementary(modifier.getId());
 			submodule.setName(name);
 			submodule.setDescription(description);
 			submodule.setDeadline(deadline);

@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
 				if (parentObjective.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentObjective.getCreator();
 				} else {
-					operatorTemp = this.appUserService.read(creator.getId());
+					operatorTemp = this.appUserService.readElementary(creator.getId());
 				}
 			} else if (project != null) {
 				parentProject = this.projectService.readElementary(project);
@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
 				if (parentProject.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentProject.getCreator();
 				} else {
-					operatorTemp = this.appUserService.read(creator.getId());
+					operatorTemp = this.appUserService.readElementary(creator.getId());
 				}
 			} else if (submodule != null) {
 				parentSubmodule = this.submoduleService.readElementary(submodule);
@@ -93,10 +93,10 @@ public class TaskServiceImpl implements TaskService {
 				if (parentSubmodule.getCreator().getId() == creator.getId()) {
 					operatorTemp = parentSubmodule.getCreator();
 				} else {
-					operatorTemp = this.appUserService.read(creator.getId());
+					operatorTemp = this.appUserService.readElementary(creator.getId());
 				}
 			} else {
-				operatorTemp = this.appUserService.read(creator.getId());
+				operatorTemp = this.appUserService.readElementary(creator.getId());
 			}
 			final AppUser operator = operatorTemp;
 			task.setCreator(operator);
@@ -140,8 +140,8 @@ public class TaskServiceImpl implements TaskService {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = this.readElementary(id);
-			final AppUser operator = this.appUserService.read(modifier.getId());
+			final Task task = this.readComplete(id);
+			final AppUser operator = this.appUserService.readElementary(modifier.getId());
 			task.setName(name);
 			task.setDescription(description);
 			task.setPriority(priority);

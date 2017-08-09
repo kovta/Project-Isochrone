@@ -13,9 +13,13 @@ public interface AppUserService {
 
 	AppUser create(String name, String passwordHash, String email, Role role, AppUser creator) throws PersistenceServiceException;
 
-	AppUser read(Long id) throws PersistenceServiceException;
+	AppUser readElementary(Long id) throws PersistenceServiceException;
 
-	AppUser read(String username) throws PersistenceServiceException;
+	AppUser readElementary(String username) throws PersistenceServiceException;
+
+	AppUser readComplete(Long id) throws PersistenceServiceException;
+
+	AppUser readComplete(String username) throws PersistenceServiceException;
 
 	Set<AppUser> readByRole(Role role) throws PersistenceServiceException;
 

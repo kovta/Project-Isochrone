@@ -48,7 +48,7 @@ public class AppUserServiceImpl implements AppUserService {
 	}
 
 	@Override
-	public AppUser read(Long id) throws PersistenceServiceException {
+	public AppUser readElementary(Long id) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Get AppUser by id (" + id + ")");
 		}
@@ -62,13 +62,43 @@ public class AppUserServiceImpl implements AppUserService {
 	}
 
 	@Override
-	public AppUser read(String username) throws PersistenceServiceException {
+	public AppUser readElementary(String username) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Get AppUser by username (" + username + ")");
 		}
 		AppUser result = null;
 		try {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public AppUser readComplete(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get AppUser with all attributes by id (" + id + ")");
+		}
+		AppUser result = null;
+		try {
+			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_COMPLETE, AppUser.class).setParameter(AppUserParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error when fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public AppUser readComplete(String username) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get AppUser with all attributes by username (" + username + ")");
+		}
+		AppUser result = null;
+		try {
+			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_COMPLETE, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
 					.getSingleResult();
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
@@ -111,7 +141,7 @@ public class AppUserServiceImpl implements AppUserService {
 			LOGGER.debug("Update ApUser (id: " + id + ", name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role + ")");
 		}
 		try {
-			final AppUser user = this.read(id);
+			final AppUser user = this.readElementary(id);
 			user.setName(name);
 			user.setPasswordHash(passwordHash);
 			user.setEmail(email);
@@ -130,7 +160,7 @@ public class AppUserServiceImpl implements AppUserService {
 			LOGGER.debug("Remove AppUser by id (" + id + ")");
 		}
 		if (this.exists(id)) {
-			if (this.read(id).getProjects().size() == 0) {
+			if (this.readComplete(id).getProjects().size() == 0) {
 				try {
 					this.entityManager.createNamedQuery(AppUserQuery.REMOVE_BY_ID).setParameter(AppUserParameter.ID, id).executeUpdate();
 				} catch (final Exception e) {

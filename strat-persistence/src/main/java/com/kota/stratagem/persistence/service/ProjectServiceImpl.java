@@ -68,7 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
 			if (parentObjective.getCreator().getId() == creator) {
 				operatorTemp = parentObjective.getCreator();
 			} else {
-				operatorTemp = this.appUserService.read(creator);
+				operatorTemp = this.appUserService.readElementary(creator);
 			}
 			final AppUser operator = operatorTemp;
 			project.setCreator(operator);
@@ -143,8 +143,8 @@ public class ProjectServiceImpl implements ProjectService {
 					+ confidentiality + ")");
 		}
 		try {
-			final Project project = this.readWithSubmodulesAndTasks(id);
-			final AppUser operator = this.appUserService.read(modifier.getId());
+			final Project project = this.readComplete(id);
+			final AppUser operator = this.appUserService.readElementary(modifier.getId());
 			project.setName(name);
 			project.setDescription(description);
 			project.setStatus(status);

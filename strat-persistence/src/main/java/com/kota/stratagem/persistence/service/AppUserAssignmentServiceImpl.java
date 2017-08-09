@@ -62,7 +62,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 		} else if (object.getModifier().getId() == subject) {
 			return object.getModifier();
 		} else {
-			return this.appUserService.read(subject);
+			return this.appUserService.readElementary(subject);
 		}
 	}
 
