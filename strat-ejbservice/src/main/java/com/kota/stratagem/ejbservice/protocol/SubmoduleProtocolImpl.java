@@ -23,10 +23,7 @@ import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
-import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
-import com.kota.stratagem.persistence.service.TaskService;
-import com.kota.stratagem.persistence.service.TeamService;
 
 @Stateless(mappedName = "ejb/submoduleProtocol")
 public class SubmoduleProtocolImpl implements SubmoduleProtocol {
@@ -34,16 +31,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	private static final Logger LOGGER = Logger.getLogger(SubmoduleProtocolImpl.class);
 
 	@EJB
-	private ProjectService projectService;
-
-	@EJB
 	private SubmoduleService submoduleSerive;
-
-	@EJB
-	private TaskService taskService;
-
-	@EJB
-	private TeamService teamService;
 
 	@EJB
 	private AppUserService appUserService;
@@ -101,12 +89,12 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Submodule (id: " + id + ")");
 				}
-				submodule = this.submoduleSerive.update(id, name, description, deadline, this.appUserService.read(operator));
+				submodule = this.submoduleSerive.update(id, name, description, deadline, this.appUserService.readElementary(operator));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
-				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.read(operator), project);
+				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.readElementary(operator), project);
 			}
 			return this.submoduleConverter.toComplete(submodule);
 		} catch (final PersistenceServiceException e) {

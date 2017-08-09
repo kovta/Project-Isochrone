@@ -50,16 +50,6 @@ public class TaskConverterImpl implements TaskConverter {
 	@Override
 	public TaskRepresentor toSimplified(Task task) {
 		final TaskRepresentor representor = this.toElementary(task);
-		// if (task.getAssignedTeams() != null) {
-		// for (final Team team : task.getAssignedTeams()) {
-		// representor.addTeam(this.teamConverter.to(team));
-		// }
-		// }
-		// if (task.getAssignedUsers() != null) {
-		// for (final AppUser user : task.getAssignedUsers()) {
-		// representor.addUser(this.appUserConverter.to(user));
-		// }
-		// }
 		// if (task.getImpediments() != null) {
 		// for (final Impediment impediment : task.getImpediments()) {
 		// representor.addImpediment(this.impedimentConverter.to(impediment));

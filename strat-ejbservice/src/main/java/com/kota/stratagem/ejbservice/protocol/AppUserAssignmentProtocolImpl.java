@@ -36,20 +36,20 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 			for (final String recipient : recipients) {
 				switch (object) {
 					case Constants.OBJECTIVE_DATA_NAME:
-						this.assignmentService.createObjectiveAssignment(this.appUserService.read(operator).getId(),
-								this.appUserService.read(recipient).getId(), subject);
+						this.assignmentService.createObjectiveAssignment(this.appUserService.readElementary(operator).getId(),
+								this.appUserService.readElementary(recipient).getId(), subject);
 						break;
 					case Constants.PROJECT_DATA_NAME:
-						this.assignmentService.createProjectAssignment(this.appUserService.read(operator).getId(), this.appUserService.read(recipient).getId(),
-								subject);
+						this.assignmentService.createProjectAssignment(this.appUserService.readElementary(operator).getId(),
+								this.appUserService.readElementary(recipient).getId(), subject);
 						break;
 					case Constants.SUBMODULE_DATA_NAME:
-						this.assignmentService.createSubmoduleAssignment(this.appUserService.read(operator).getId(),
-								this.appUserService.read(recipient).getId(), subject);
+						this.assignmentService.createSubmoduleAssignment(this.appUserService.readElementary(operator).getId(),
+								this.appUserService.readElementary(recipient).getId(), subject);
 						break;
 					case Constants.TASK_DATA_NAME:
-						this.assignmentService.createTaskAssignment(this.appUserService.read(operator).getId(), this.appUserService.read(recipient).getId(),
-								subject);
+						this.assignmentService.createTaskAssignment(this.appUserService.readElementary(operator).getId(),
+								this.appUserService.readElementary(recipient).getId(), subject);
 						break;
 					default:
 						break;

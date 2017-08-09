@@ -10,10 +10,12 @@ import com.kota.stratagem.persistence.entity.AppUser;
 @Local
 public interface AppUserConverter {
 
-	AppUserRepresentor to(AppUser user);
-
 	AppUserRepresentor toElementary(AppUser user);
 
-	Set<AppUserRepresentor> to(Set<AppUser> users);
+	AppUserRepresentor toComplete(AppUser user);
+
+	Set<AppUserRepresentor> toElementary(Set<AppUser> users);
+
+	Set<AppUserRepresentor> toComplete(Set<AppUser> users);
 
 }

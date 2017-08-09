@@ -57,11 +57,12 @@ public class TeamConverterImpl implements TeamConverter {
 	@Override
 	public TeamRepresentor toElementary(Team team) {
 		final TeamRepresentor representor = team.getId() != null
-				? new TeamRepresentor(team.getId(), team.getName(), this.appUserConverter.to(team.getLeader()),
+				? new TeamRepresentor(team.getId(), team.getName(), this.appUserConverter.toElementary(team.getLeader()),
 						this.appUserConverter.toElementary(team.getCreator()), team.getCreationDate(), this.appUserConverter.toElementary(team.getModifier()),
 						team.getModificationDate())
-				: new TeamRepresentor(team.getName(), this.appUserConverter.to(team.getLeader()), this.appUserConverter.toElementary(team.getCreator()),
-						team.getCreationDate(), this.appUserConverter.toElementary(team.getModifier()), team.getModificationDate());
+				: new TeamRepresentor(team.getName(), this.appUserConverter.toElementary(team.getLeader()),
+						this.appUserConverter.toElementary(team.getCreator()), team.getCreationDate(), this.appUserConverter.toElementary(team.getModifier()),
+						team.getModificationDate());
 		return representor;
 	}
 

@@ -19,10 +19,10 @@ public class AppUserRepresentor implements Serializable {
 	private final Date registrationDate;
 	private AppUserRepresentor accountModifier;
 	private final Date acountModificationDate;
-	private final List<ObjectiveRepresentor> objectives;
-	private final List<ProjectRepresentor> projects;
-	private final List<SubmoduleRepresentor> submodules;
-	private final List<TaskRepresentor> tasks;
+	private final List<AppUserObjectiveAssignmentRepresentor> objectives;
+	private final List<AppUserProjectAssignmentRepresentor> projects;
+	private final List<AppUserSubmoduleAssignmentRepresentor> submodules;
+	private final List<AppUserTaskAssignmentRepresentor> tasks;
 	private final List<ImpedimentRepresentor> reportedImpediments;
 	private final List<ImpedimentRepresentor> processedImpediments;
 	private final List<TeamRepresentor> supervisedTeams;
@@ -110,19 +110,19 @@ public class AppUserRepresentor implements Serializable {
 		return this.acountModificationDate;
 	}
 
-	public List<ObjectiveRepresentor> getObjectives() {
+	public List<AppUserObjectiveAssignmentRepresentor> getObjectives() {
 		return this.objectives;
 	}
 
-	public List<ProjectRepresentor> getProjects() {
+	public List<AppUserProjectAssignmentRepresentor> getProjects() {
 		return this.projects;
 	}
 
-	public List<SubmoduleRepresentor> getSubmodules() {
+	public List<AppUserSubmoduleAssignmentRepresentor> getSubmodules() {
 		return this.submodules;
 	}
 
-	public List<TaskRepresentor> getTasks() {
+	public List<AppUserTaskAssignmentRepresentor> getTasks() {
 		return this.tasks;
 	}
 
@@ -149,6 +149,22 @@ public class AppUserRepresentor implements Serializable {
 				+ this.acountModificationDate + ", objectives=" + this.objectives + ", projects=" + this.projects + ", tasks=" + this.tasks
 				+ ", reportedImpediments=" + this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams="
 				+ this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + "]\n";
+	}
+
+	public void addObjectiveAssignment(AppUserObjectiveAssignmentRepresentor objective) {
+		this.objectives.add(objective);
+	}
+
+	public void addProjectAssignment(AppUserProjectAssignmentRepresentor project) {
+		this.projects.add(project);
+	}
+
+	public void addSubmoduleAssignment(AppUserSubmoduleAssignmentRepresentor submodule) {
+		this.submodules.add(submodule);
+	}
+
+	public void addTaskAssignment(AppUserTaskAssignmentRepresentor task) {
+		this.tasks.add(task);
 	}
 
 	@Override

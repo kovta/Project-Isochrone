@@ -9,6 +9,10 @@ import javax.ejb.Stateless;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
+import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
+import com.kota.stratagem.persistence.entity.AppUserProjectAssignment;
+import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
+import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 
 @Stateless
 public class AppUserConverterImpl implements AppUserConverter {
@@ -23,29 +27,51 @@ public class AppUserConverterImpl implements AppUserConverter {
 	private TaskConverter taskConverter;
 
 	@EJB
+	private SubmoduleConverter submoduleConverter;
+
+	@EJB
 	private ImpedimentConverter impedimentConverter;
 
 	@EJB
 	private TeamConverter teamConverter;
 
+	@EJB
+	private AssignmentConverter assignmentConverter;
+
 	@Override
-	public AppUserRepresentor to(AppUser user) {
+	public AppUserRepresentor toElementary(AppUser user) {
+		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
+		final AppUserRepresentor representor = user.getId() != null
+				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
+						user.getAcountModificationDate())
+				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
+						user.getAcountModificationDate());
+		return representor;
+	}
+
+	@Override
+	public AppUserRepresentor toComplete(AppUser user) {
 		final AppUserRepresentor representor = this.toElementary(user);
-		// if (user.getObjectives() != null) {
-		// for (final Objective objective : user.getObjectives()) {
-		// representor.addObjective(this.objectiveConverter.toElementary(objective));
-		// }
-		// }
-		// if (user.getProjects() != null) {
-		// for (final Project project : user.getProjects()) {
-		// representor.addProject(this.projectConverter.toElementary(project));
-		// }
-		// }
-		// if (user.getTasks() != null) {
-		// for (final Task task : user.getTasks()) {
-		// representor.addTask(this.taskConverter.to(task));
-		// }
-		// }
+		if (user.getObjectives() != null) {
+			for (final AppUserObjectiveAssignment objective : user.getObjectives()) {
+				representor.addObjectiveAssignment(this.assignmentConverter.to(objective));
+			}
+		}
+		if (user.getProjects() != null) {
+			for (final AppUserProjectAssignment project : user.getProjects()) {
+				representor.addProjectAssignment(this.assignmentConverter.to(project));
+			}
+		}
+		if (user.getSubmodules() != null) {
+			for (final AppUserSubmoduleAssignment submodule : user.getSubmodules()) {
+				representor.addSubmoduleAssignment(this.assignmentConverter.to(submodule));
+			}
+		}
+		if (user.getTasks() != null) {
+			for (final AppUserTaskAssignment task : user.getTasks()) {
+				representor.addTaskAssignment(this.assignmentConverter.to(task));
+			}
+		}
 		// if (user.getReportedImpediments() != null) {
 		// for (final Impediment impediment : user.getReportedImpediments()) {
 		// representor.addReportedImpediment(this.impedimentConverter.to(impediment));
@@ -73,21 +99,19 @@ public class AppUserConverterImpl implements AppUserConverter {
 	}
 
 	@Override
-	public AppUserRepresentor toElementary(AppUser user) {
-		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
-		final AppUserRepresentor representor = user.getId() != null
-				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate())
-				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate());
-		return representor;
+	public Set<AppUserRepresentor> toElementary(Set<AppUser> users) {
+		final Set<AppUserRepresentor> representors = new HashSet<>();
+		for (final AppUser user : users) {
+			representors.add(this.toElementary(user));
+		}
+		return representors;
 	}
 
 	@Override
-	public Set<AppUserRepresentor> to(Set<AppUser> users) {
+	public Set<AppUserRepresentor> toComplete(Set<AppUser> users) {
 		final Set<AppUserRepresentor> representors = new HashSet<>();
 		for (final AppUser user : users) {
-			representors.add(this.to(user));
+			representors.add(this.toComplete(user));
 		}
 		return representors;
 	}

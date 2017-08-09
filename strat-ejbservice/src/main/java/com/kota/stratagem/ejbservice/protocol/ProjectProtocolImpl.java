@@ -28,12 +28,8 @@ import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
-import com.kota.stratagem.persistence.service.ImpedimentService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
-import com.kota.stratagem.persistence.service.SubmoduleService;
-import com.kota.stratagem.persistence.service.TaskService;
-import com.kota.stratagem.persistence.service.TeamService;
 
 @Stateless(mappedName = "ejb/projectProtocol")
 public class ProjectProtocolImpl implements ProjectProtocol {
@@ -44,19 +40,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	private ProjectService projectService;
 
 	@EJB
-	private SubmoduleService submoduleSerive;
-
-	@EJB
-	private TaskService taskService;
-
-	@EJB
-	private TeamService teamService;
-
-	@EJB
 	private AppUserService appUserService;
-
-	@EJB
-	private ImpedimentService impedimentService;
 
 	@EJB
 	private ObjectiveService objectiveService;
@@ -187,13 +171,14 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Update Project (id: " + id + ")");
 				}
-				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential, this.appUserService.read(operator));
+				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential,
+						this.appUserService.readElementary(operator));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Project (name: " + name + ")");
 				}
-				project = this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.read(operator).getId(),
-						objective);
+				project = this.projectService.create(name, description, projectStatus, deadline, confidential,
+						this.appUserService.readElementary(operator).getId(), objective);
 			}
 			return this.projectConverter.toComplete(project);
 		} catch (final PersistenceServiceException e) {

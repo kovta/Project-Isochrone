@@ -29,23 +29,11 @@ import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceExcept
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
-import com.kota.stratagem.persistence.service.ProjectService;
-import com.kota.stratagem.persistence.service.TaskService;
-import com.kota.stratagem.persistence.service.TeamService;
 
 @Stateless(mappedName = "ejb/objectiveProtocol")
 public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtocolRemote {
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveProtocolImpl.class);
-
-	@EJB
-	private ProjectService projectService;
-
-	@EJB
-	private TaskService taskService;
-
-	@EJB
-	private TeamService teamService;
 
 	@EJB
 	private AppUserService appUserService;
@@ -137,13 +125,13 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 					LOGGER.debug("Update Objective (id: " + id + ")");
 				}
 				objective = this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator));
+						this.appUserService.readElementary(operator));
 			} else {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Create Objective (" + name + ")");
 				}
 				objective = this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.read(operator));
+						this.appUserService.readElementary(operator));
 			}
 			return this.converter.toComplete(objective);
 		} catch (final PersistenceServiceException e) {
