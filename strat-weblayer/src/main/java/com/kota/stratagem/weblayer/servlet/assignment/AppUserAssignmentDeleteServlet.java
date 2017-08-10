@@ -35,8 +35,8 @@ public class AppUserAssignmentDeleteServlet extends AbstractRefinerServlet imple
 			response.sendRedirect(Page.ERROR.getUrl());
 		} else {
 			try {
-				if (request.getParameter(OBJECTIVE) != "") {
-					if ((request.getParameter(OBJECTIVE) != null) && this.isNumeric(request.getParameter(OBJECTIVE))) {
+				if ((request.getParameter(OBJECTIVE) != "") && (request.getParameter(OBJECTIVE) != null)) {
+					if (this.isNumeric(request.getParameter(OBJECTIVE))) {
 						final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
 						origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
 						LOGGER.info("Remove Assignment (id: " + id + ", objective: " + objective_id + ")");
@@ -44,8 +44,8 @@ public class AppUserAssignmentDeleteServlet extends AbstractRefinerServlet imple
 					} else {
 						response.sendRedirect(Page.ERROR.getUrl());
 					}
-				} else if (request.getParameter(PROJECT) != "") {
-					if ((request.getParameter(PROJECT) != null) && this.isNumeric(request.getParameter(PROJECT))) {
+				} else if ((request.getParameter(PROJECT) != "") && (request.getParameter(OBJECTIVE) != null)) {
+					if (this.isNumeric(request.getParameter(PROJECT))) {
 						final Long project_id = Long.parseLong(request.getParameter(PROJECT));
 						origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
 						LOGGER.info("Remove Assignment (id: " + id + ", project: " + project_id + ")");
@@ -53,8 +53,8 @@ public class AppUserAssignmentDeleteServlet extends AbstractRefinerServlet imple
 					} else {
 						response.sendRedirect(Page.ERROR.getUrl());
 					}
-				} else if (request.getParameter(SUBMODULE) != "") {
-					if ((request.getParameter(SUBMODULE) != null) && this.isNumeric(request.getParameter(SUBMODULE))) {
+				} else if ((request.getParameter(SUBMODULE) != "") && (request.getParameter(SUBMODULE) != null)) {
+					if (this.isNumeric(request.getParameter(SUBMODULE))) {
 						final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
 						origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
 						LOGGER.info("Remove Assignment (id: " + id + ", submodule: " + submodule_id + ")");
@@ -62,8 +62,8 @@ public class AppUserAssignmentDeleteServlet extends AbstractRefinerServlet imple
 					} else {
 						response.sendRedirect(Page.ERROR.getUrl());
 					}
-				} else if (request.getParameter(TASK) != "") {
-					if ((request.getParameter(TASK) != null) && this.isNumeric(request.getParameter(TASK))) {
+				} else if ((request.getParameter(TASK) != "") && (request.getParameter(TASK) != null)) {
+					if (this.isNumeric(request.getParameter(TASK))) {
 						final Long task_id = Long.parseLong(request.getParameter(TASK));
 						origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
 						LOGGER.info("Remove Assignment (id: " + id + ", task: " + task_id + ")");

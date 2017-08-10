@@ -39,7 +39,7 @@
             	</li>
 				<li class="nav-item">				
 					<a class="nav-link" data-toggle="modal" data-target="#modalLogin">
-						<i class="fa fa-sign-in" aria-hidden="true"></i><span class="icon-companion"> Log in</span>
+						<i class="fa fa-sign-in" aria-hidden="true"></i><span class="icon-companion"> Sign in</span>
 					</a>
 				</li>
             </ul>
@@ -77,7 +77,7 @@
             	</li>
 				<li class="nav-item">
 					<a class="nav-link" href="Logout">
-						<i class="fa fa-sign-out" aria-hidden="true"></i><span class="icon-companion"> Logout</span>
+						<i class="fa fa-sign-out" aria-hidden="true"></i><span class="icon-companion"> Sign out</span>
 					</a>
 				</li>
             </ul>

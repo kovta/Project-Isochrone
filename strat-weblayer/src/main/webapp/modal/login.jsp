@@ -13,7 +13,7 @@
 
             <!--Header-->
             <div class="modal-header mdb-color darken-1 white-text">               
-                <h4 class="title"><i class="fa fa-user"></i> Log in</h4>
+                <h4 class="title"><i class="fa fa-user"></i> Sign in</h4>
             </div>
             
             <!--Body-->

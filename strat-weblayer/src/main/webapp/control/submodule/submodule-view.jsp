@@ -190,10 +190,33 @@
 										</c:when>
 										<c:otherwise>
 											<div class="row">
-												<c:forEach items="${requestScope.submodule.assignedUsers}" var="assignmentItem">
+												<c:forEach items="${requestScope.submodule.assignedUsers}" var="assignment">
 													<div class="col-lg-4">
-									                    <c:set var="assignment" value="${assignmentItem}" scope="request" />
-							                            <jsp:include page="../assignment/assignment-card.jsp"></jsp:include>									                    
+														<!--Card-->
+														<br/><br/><br/>
+														<div class="card wow fadeIn" data-wow-delay="0.2s">
+														    <!--Card content-->
+															<div class="card-block">
+																<div class="card-avatar">
+																	<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
+																	style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+																</div>
+														   		<!--Title-->
+																<h4 class="card-title text-center"><c:out value="${assignment.recipient.name}" /></h4>
+																<hr/>
+																<!--Text-->
+																<p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
+																<p class="card-text">Assignment date: 
+																	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+																</p>
+																<div class="full-width text-center">
+																	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&submoduleId=<c:out value="${submodule.id}" />">Unassign user</a>
+														    	</div>
+															</div>
+															<!--/.Card content-->
+														</div>
+														<br/><br/><br/><br/><br/>
+														<!--/.Card-->
 									            	</div>
 												</c:forEach>
 											</div>		    
