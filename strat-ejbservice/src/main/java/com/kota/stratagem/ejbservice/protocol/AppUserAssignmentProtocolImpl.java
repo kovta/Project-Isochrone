@@ -30,7 +30,7 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 	private void saveAssignments(String[] recipients, Long subject, String object) throws AdaptorException {
 		try {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Create AppUser" + object + "Assignment (" + recipients.length + " recipients, Objective: " + subject + ")");
+				LOGGER.debug("Create AppUser" + object + "Assignment (" + recipients.length + " recipients, " + object + ": " + subject + ")");
 			}
 			final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			for (final String recipient : recipients) {

@@ -83,7 +83,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				clusters.add(self);
 			}
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " users(s)");
+				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " group(s)");
 			}
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);

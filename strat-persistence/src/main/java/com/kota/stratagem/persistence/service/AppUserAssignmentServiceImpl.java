@@ -70,7 +70,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			throws PersistenceServiceException {
 		subject.setEntrustor(this.mergeOperators(entrustor, object));
 		subject.setRecipient(this.mergeOperators(recipient, object));
-		this.entityManager.merge(subject);
+		this.entityManager.persist(subject);
 		this.entityManager.flush();
 	}
 
@@ -97,7 +97,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			this.persistAssignment(assignment, targetObjective, entrustor, recipient);
 			return assignment;
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error during persisting  User Objective Assignment (objective=" + objective + ", recipient="
+			throw new PersistenceServiceException("Unknown error during persisting User Objective Assignment (objective=" + objective + ", recipient="
 					+ recipient + ")! " + e.getLocalizedMessage(), e);
 		}
 	}
@@ -113,7 +113,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			this.persistAssignment(assignment, targetProject, entrustor, recipient);
 			return assignment;
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error during persisting  User Project Assignment (project=" + project + ", recipient=" + recipient
+			throw new PersistenceServiceException("Unknown error during persisting User Project Assignment (project=" + project + ", recipient=" + recipient
 					+ ")! " + e.getLocalizedMessage(), e);
 		}
 	}
@@ -129,7 +129,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			this.persistAssignment(assignment, targetSubmodule, entrustor, recipient);
 			return assignment;
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error during persisting  User Submodule Assignment (submodule=" + submodule + ", recipient="
+			throw new PersistenceServiceException("Unknown error during persisting User Submodule Assignment (submodule=" + submodule + ", recipient="
 					+ recipient + ")! " + e.getLocalizedMessage(), e);
 		}
 	}
@@ -146,7 +146,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			return assignment;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException(
-					"Unknown error during persisting  User Task Assignment (task=" + task + ", recipient=" + recipient + ")! " + e.getLocalizedMessage(), e);
+					"Unknown error during persisting User Task Assignment (task=" + task + ", recipient=" + recipient + ")! " + e.getLocalizedMessage(), e);
 		}
 	}
 
