@@ -97,10 +97,10 @@ public class Objective extends AbstractMonitoredItem implements Serializable {
 	@JoinTable(name = "objective_tasks", joinColumns = @JoinColumn(name = "objective_task_objective_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "objective_task_task_id", nullable = false))
 	private Set<Task> tasks;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamObjectiveAssignment.class, mappedBy = "objective")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = TeamObjectiveAssignment.class, mappedBy = "objective")
 	private Set<TeamObjectiveAssignment> assignedTeams;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserObjectiveAssignment.class, mappedBy = "objective")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = AppUserObjectiveAssignment.class, mappedBy = "objective")
 	private Set<AppUserObjectiveAssignment> assignedUsers;
 
 	public Objective() {

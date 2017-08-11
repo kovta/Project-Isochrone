@@ -28,6 +28,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.AssignmentParameter;
 import com.kota.stratagem.persistence.query.AppUserObjectiveAssignmentQuery;
 import com.kota.stratagem.persistence.query.AppUserProjectAssignmentQuery;
+import com.kota.stratagem.persistence.query.AppUserSubmoduleAssignmentQuery;
 import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 import com.kota.stratagem.persistence.util.Constants;
 
@@ -162,7 +163,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 
 	@Override
 	public void deleteSubmoduleAssignment(Long id) throws PersistenceServiceException {
-		this.removeAssignment(id, AppUserProjectAssignmentQuery.REMOVE_BY_ID, Constants.SUBMODULE_DATA_NAME);
+		this.removeAssignment(id, AppUserSubmoduleAssignmentQuery.REMOVE_BY_ID, Constants.SUBMODULE_DATA_NAME);
 	}
 
 	@Override

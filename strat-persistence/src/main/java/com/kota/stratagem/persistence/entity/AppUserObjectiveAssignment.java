@@ -30,7 +30,7 @@ import com.kota.stratagem.persistence.query.AppUserObjectiveAssignmentQuery;
 @SequenceGenerator(name = "userObjectiveAssignmentGenerator", sequenceName = "user_objective_assignments_assignment_id_seq", allocationSize = 1)
 public class AppUserObjectiveAssignment extends AbstractAppUserAssignment implements Serializable {
 
-	private static final long serialVersionUID = -7689042201929946465L;
+	private static final long serialVersionUID = -1428184546365653308L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userObjectiveAssignmentGenerator")

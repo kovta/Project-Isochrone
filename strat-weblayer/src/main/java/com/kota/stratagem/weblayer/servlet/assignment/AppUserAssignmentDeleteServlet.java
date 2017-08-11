@@ -44,7 +44,7 @@ public class AppUserAssignmentDeleteServlet extends AbstractRefinerServlet imple
 					} else {
 						response.sendRedirect(Page.ERROR.getUrl());
 					}
-				} else if ((request.getParameter(PROJECT) != "") && (request.getParameter(OBJECTIVE) != null)) {
+				} else if ((request.getParameter(PROJECT) != "") && (request.getParameter(PROJECT) != null)) {
 					if (this.isNumeric(request.getParameter(PROJECT))) {
 						final Long project_id = Long.parseLong(request.getParameter(PROJECT));
 						origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
