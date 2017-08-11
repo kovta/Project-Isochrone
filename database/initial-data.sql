@@ -193,7 +193,8 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (3, 'Adding Project manager and Product owner funcitonality', 'Highest level project responsibility delegation must be clear at least on project level. Other leading elements wil be discerned with the help of assignments', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Test Submodule', '', NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(6, 'Test Submodule', '', NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'User profile view implementation', 'Seperate view must be added to view user level responsibiliies', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -203,8 +204,8 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (7, 3),
 (7, 4),
 (7, 5),
-(8, 6);
-
+(8, 6),
+(7, 7);
 -- ###########################################################################################
 
 INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_completion_percentage, task_deadline, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
@@ -223,7 +224,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (14, 'Add default sorting to all lists', 'Collection sizes have higher priority', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(15, 'Project level test Task', '', 10, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(15, 'Project level test Task 1', '', 10, 100, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (16, 'Add submodules to database', 'Add definitions and initial data, and extend existing tables', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (17, 'Update persistence layer', 'Add Submodule entity, and expand existing ones with associations', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (18, 'Add submodule representors', 'Domain objects must be updated', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -231,7 +232,18 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(23, 'Submodule level test Task 1', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(23, 'Submodule level test Task 1', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(25, 'Create header for all structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 20, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(26, 'Objective level test Task 1', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(27, 'Add links to profile view from all refrences', 'View must be accessible at all questionable points of delegation and responsibility', 1, 40, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(28, 'Add profile inspection button to navbar', 'Signed in user must have access to own profile information at all times', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(29, 'Add form for profile editing, with possible extension for future avatar selection', 'User data modification must be made possible on email level for now, and later for name', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(30, 'Add main control level assignment structures due to additionally stored attributes', 'Assignment entruster, and creation date storage is paramount for tracability', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(31, 'Add assignment distribution control to respective views', 'Asignments can only be distributed according to authorization level', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(32, 'Assignment removal implementation', 'Asignment deletion does not need to be traced only reported with notification to the unassigned parties in later builds', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(33, 'Assignment listing in main control structures and profile views', 'All assignments must be displayed in an orderly manor', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(34, 'Assignment distribution should also be implemented on team level', 'This requires manager level manipulation of team structures. Assignment would be tied to team leader authorization level', 1, 10, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -241,7 +253,8 @@ INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id
 (2, 10),
 (2, 11),
 (2, 12),
-(2, 13);
+(2, 13),
+(7, 26);
 
 INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (0, 1),
@@ -255,7 +268,9 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (7, 8),
 (7, 14),
 (8, 15),
-(7, 22);
+(7, 22),
+(7, 24),
+(7, 25);
 
 INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id) VALUES
 (0, 16),
@@ -264,7 +279,15 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (0, 19),
 (0, 20),
 (0, 21),
-(6, 23);
+(6, 23),
+(7, 27),
+(7, 28),
+(7, 29),
+(1, 30),
+(1, 31),
+(1, 32),
+(1, 33),
+(1, 34);
 
 -- ###########################################################################################
 
@@ -309,16 +332,22 @@ SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id),
 
 INSERT INTO team_objective_assignments (assignment_entrustor, assignment_recipient, assignment_objective, assignment_creation_date) VALUES
 (1, 1, 1, '2015/12/13 14:20:00');
+SELECT SETVAL('team_objective_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM team_objective_assignments;
 INSERT INTO user_objective_assignments (assignment_entrustor, assignment_recipient, assignment_objective, assignment_creation_date) VALUES
 (2, 2, 3, '2015/12/13 14:20:00');
+SELECT SETVAL('user_objective_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM user_objective_assignments;
 INSERT INTO team_project_assignments (assignment_entrustor, assignment_recipient, assignment_project, assignment_creation_date) VALUES
 (2, 2, 3, '2015/12/13 14:20:00');
+SELECT SETVAL('team_project_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM team_project_assignments;
 INSERT INTO user_project_assignments (assignment_entrustor, assignment_recipient, assignment_project, assignment_creation_date) VALUES
 (0, 3, 2, '2015/12/13 14:20:00');
+SELECT SETVAL('user_project_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM user_project_assignments;
 INSERT INTO team_task_assignments (assignment_entrustor, assignment_recipient, assignment_task, assignment_creation_date) VALUES
 (1, 2, 0, '2015/12/13 14:20:00');
+SELECT SETVAL('team_task_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM team_task_assignments;
 INSERT INTO user_task_assignments (assignment_entrustor, assignment_recipient, assignment_task, assignment_creation_date) VALUES
 (0, 7, 1, '2015/12/13 14:20:00');
+SELECT SETVAL('user_task_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM user_task_assignments;
 
 -- ###########################################################################################
 
