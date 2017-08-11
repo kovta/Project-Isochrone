@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <c:if test="${submodule.completion == 100}">
-	<br/><br/>
+	<br/>
 </c:if>
 <!--Card-->
 <div class="card wow fadeIn" data-wow-delay="0.2s">

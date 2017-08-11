@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Stratagem - Objectives</title>
+	<title>Stratagem - User</title>
 	<jsp:include page="../../header.jsp"></jsp:include>
 </head>
 <body>
@@ -25,8 +25,12 @@
                     <div class="widget-wrapper wow fadeIn" data-wow-delay="0.2s">
                         <div class="card">
                             <div class="card-block">
+                            	<div class="card-avatar form-content">
+                                	<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK"
+                                	style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                            	</div>
                         		<div class="padding-top"><h3 class="h3-responsive text-center">${user.name}</h3></div>
-                        		<h4 class="h3-responsive text-center">${user.role.label}</h4>
+                        		<p class="text-center grey-text">${user.role.label}</p>
                                 <div class="md-form">
                                 	<table class="strat-detail-table">
 	                                	<tbody>
@@ -218,7 +222,6 @@
 												<c:forEach items="${requestScope.user.submodules}" var="assignment">
 													<div class="col-lg-4">
 									                    <!--Card-->
-									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <!--Card content-->
 									                        <div class="card-block">
@@ -261,7 +264,6 @@
 												<c:forEach items="${requestScope.user.tasks}" var="assignment">
 													<div class="col-lg-4">
 									                    <!--Card-->
-									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <!--Card content-->
 									                        <div class="card-block">

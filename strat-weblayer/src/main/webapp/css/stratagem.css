@@ -4,6 +4,10 @@ body,
     height: 100%;
 }
 
+body {
+	background-color: #eee;
+}
+
 .control-view {
     height: 50%;
 }
@@ -51,6 +55,9 @@ footer.page-footer {
 }
 .white-text {
 	color: #fff;
+}
+.link-text > a {
+	color: #0275d8;
 }
 .success-text {
 	color: limegreen;
@@ -172,7 +179,7 @@ footer.page-footer {
 .success-header {
     margin-left: 33%;
     margin-right: 33%;
-    margin-bottom: 2rem;
+    margin-bottom: 2rem !important;
     font-size: larger;
 }
 
@@ -314,7 +321,7 @@ input[type="checkbox" i] {
 
 /* Avatars */
 .card-avatar {
-	display: block;
+	display: flex;
     max-width: 100%;
     height: auto;
     box-shadow: none!important;
@@ -335,6 +342,9 @@ input[type="checkbox" i] {
     justify-content: space-between;
     border-bottom: 1px solid #eceeef;
     -webkit-box-align: center;
+}
+.form-content {
+	margin: 0rem 1rem 1rem !important;;
 }
 .card-avatar img {
 	width: 130px;
