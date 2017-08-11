@@ -17,13 +17,16 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.kota.stratagem.persistence.parameter.AppUserParameter;
 import com.kota.stratagem.persistence.parameter.AssignmentParameter;
 import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 
 @Entity
 @Table(name = "user_task_assignments")
 @NamedQueries(value = { //
-		@NamedQuery(name = AppUserTaskAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserTaskAssignment a WHERE a.id=:" + AssignmentParameter.ID)
+		@NamedQuery(name = AppUserTaskAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserTaskAssignment a WHERE a.id=:" + AssignmentParameter.ID),
+		@NamedQuery(name = AppUserTaskAssignmentQuery.GET_ALL_BY_APP_USER_ID, query = "Select a FROM AppUserTaskAssignment a WHERE a.recipient.id=:"
+				+ AppUserParameter.ID)
 		//
 })
 @SequenceGenerator(name = "userTaskAssignmentGenerator", sequenceName = "user_task_assignments_assignment_id_seq", allocationSize = 1)

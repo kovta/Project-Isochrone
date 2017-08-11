@@ -2,7 +2,6 @@ package com.kota.stratagem.persistence.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -14,7 +13,7 @@ import javax.persistence.TemporalType;
 @MappedSuperclass
 public abstract class AbstractAssignment {
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AppUser.class)
 	@JoinColumn(name = "assignment_entrustor", referencedColumnName = "user_id", nullable = false)
 	protected AppUser entrustor;
 

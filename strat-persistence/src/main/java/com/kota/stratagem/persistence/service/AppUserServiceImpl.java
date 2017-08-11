@@ -15,11 +15,13 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.persistence.entity.AppUser;
+import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.AppUserParameter;
 import com.kota.stratagem.persistence.query.AppUserQuery;
+import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Stateless(mappedName = "ejb/appUserService")
@@ -85,6 +87,9 @@ public class AppUserServiceImpl implements AppUserService {
 		try {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_COMPLETE, AppUser.class).setParameter(AppUserParameter.ID, id)
 					.getSingleResult();
+			result.setTasks(new HashSet<AppUserTaskAssignment>(
+					this.entityManager.createNamedQuery(AppUserTaskAssignmentQuery.GET_ALL_BY_APP_USER_ID, AppUserTaskAssignment.class)
+							.setParameter(AppUserParameter.ID, id).getResultList()));
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
@@ -128,7 +133,7 @@ public class AppUserServiceImpl implements AppUserService {
 		}
 		Set<AppUser> result = null;
 		try {
-			result = new HashSet<AppUser>(this.entityManager.createNamedQuery(AppUserQuery.GET_ALL_USERS, AppUser.class).getResultList());
+			result = new HashSet<AppUser>(this.entityManager.createNamedQuery(AppUserQuery.GET_ALL_APP_USERS, AppUser.class).getResultList());
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error occured while fetching AppUsers" + e.getLocalizedMessage(), e);
 		}
