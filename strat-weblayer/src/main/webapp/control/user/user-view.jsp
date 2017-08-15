@@ -298,6 +298,7 @@
             </div>
         
    			<!-- Modals -->
+   			<jsp:include page="user-alert.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

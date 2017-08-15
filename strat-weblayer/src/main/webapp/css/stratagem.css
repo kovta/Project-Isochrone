@@ -343,17 +343,24 @@ input[type="checkbox" i] {
     border-bottom: 1px solid #eceeef;
     -webkit-box-align: center;
 }
-.form-content {
-	margin: 0rem 1rem 1rem !important;;
-}
 .card-avatar img {
 	width: 130px;
 	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
 	border-style: none;
     vertical-align: middle;
 }
+.line-avatar {
+    width: 23px;
+    padding-right: 3px;
+	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
+	border-style: none;
+    vertical-align: middle;
+}
 .rounded-circle {
     border-radius: 50% 50% 50% 50%;
+}
+.form-content {
+	margin: 0rem 1rem 1rem !important;;
 }
 
 /* Tabs panel */
