@@ -15,7 +15,6 @@ import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
@@ -72,21 +71,13 @@ public class TaskProtocolImpl implements TaskProtocol {
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator, Long objective,
 			Long project, Long submodule) throws AdaptorException {
 		try {
-			Task task = null;
-			if ((id != null) && this.taskService.exists(id)) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Update Task (id: " + id + ")");
-				}
-				task = this.taskService.update(id, name, description, priority, completion, deadline, this.appUserService.readElementary(operator), objective,
-						project, submodule);
-			} else {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create Task (name: " + name + ")");
-				}
-				task = this.taskService.create(name, description, priority, completion, deadline, this.appUserService.readElementary(operator), objective,
-						project, submodule);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(id != null ? "Update Task (id: " + id + ")" : "Create Task (" + name + ")");
 			}
-			return this.converter.toComplete(task);
+			return this.converter.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name, description, priority,
+					completion, deadline, this.appUserService.readElementary(operator), objective, project, submodule)
+					: this.taskService.create(name, description, priority, completion, deadline, this.appUserService.readElementary(operator), objective,
+							project, submodule));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

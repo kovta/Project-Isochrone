@@ -23,7 +23,6 @@ import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -154,25 +153,16 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
-	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, AppUserRepresentor operator)
-			throws AdaptorException {
+	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, String operator) throws AdaptorException {
 		try {
-			AppUser user = null;
 			final Role userRole = Role.valueOf(role.getName());
-			if ((id != null) && this.appUserService.exists(id)) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Update AppUser (id: " + id + ")");
-				}
-				user = this.appUserService.update(id, name, password, email, userRole,
-						operator != null ? this.appUserService.readElementary(operator.getId()) : null);
-			} else {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create AppUser (name: " + name + ")");
-				}
-				user = this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
-						operator != null ? this.appUserService.readElementary(operator.getId()) : null);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(id != null ? "Update AppUser (id: " + id + ")" : "Create AppUser (" + name + ")");
 			}
-			return this.converter.toComplete(user);
+			return this.converter
+					.toComplete(((id != null) && this.appUserService.exists(id)) ? this.appUserService.update(id, name, password, email, userRole, operator)
+							: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
+									this.appUserService.readElementary(operator)));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

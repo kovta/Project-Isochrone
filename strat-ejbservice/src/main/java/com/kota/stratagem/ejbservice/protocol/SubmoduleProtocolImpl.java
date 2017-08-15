@@ -19,7 +19,6 @@ import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
@@ -84,19 +83,12 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@Override
 	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
 		try {
-			Submodule submodule = null;
-			if ((id != null) && this.submoduleSerive.exists(id)) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Update Submodule (id: " + id + ")");
-				}
-				submodule = this.submoduleSerive.update(id, name, description, deadline, this.appUserService.readElementary(operator));
-			} else {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create Project (name: " + name + ")");
-				}
-				submodule = this.submoduleSerive.create(name, description, deadline, this.appUserService.readElementary(operator), project);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(id != null ? "Update Submodule (id: " + id + ")" : "Create Submodule (" + name + ")");
 			}
-			return this.submoduleConverter.toComplete(submodule);
+			return this.submoduleConverter.toComplete(((id != null) && this.submoduleSerive.exists(id))
+					? this.submoduleSerive.update(id, name, description, deadline, this.appUserService.readElementary(operator))
+					: this.submoduleSerive.create(name, description, deadline, this.appUserService.readElementary(operator), project));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

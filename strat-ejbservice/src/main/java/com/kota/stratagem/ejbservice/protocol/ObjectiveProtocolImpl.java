@@ -23,7 +23,6 @@ import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
-import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -118,22 +117,13 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
 			Boolean confidentiality, String operator) throws AdaptorException {
 		try {
-			Objective objective = null;
 			final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
-			if ((id != null) && this.objectiveService.exists(id)) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Update Objective (id: " + id + ")");
-				}
-				objective = this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.readElementary(operator));
-			} else {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create Objective (" + name + ")");
-				}
-				objective = this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality,
-						this.appUserService.readElementary(operator));
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(id != null ? "Update Objective (id: " + id + ")" : "Create Objective (" + name + ")");
 			}
-			return this.converter.toComplete(objective);
+			return this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
+					? this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality, operator)
+					: this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality, operator));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

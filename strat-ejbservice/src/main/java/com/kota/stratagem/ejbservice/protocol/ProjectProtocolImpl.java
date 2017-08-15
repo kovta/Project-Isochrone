@@ -165,22 +165,14 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			String operator, Long objective) throws AdaptorException {
 		try {
-			Project project = null;
 			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
-			if ((id != null) && this.projectService.exists(id)) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Update Project (id: " + id + ")");
-				}
-				project = this.projectService.update(id, name, description, projectStatus, deadline, confidential,
-						this.appUserService.readElementary(operator));
-			} else {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Create Project (name: " + name + ")");
-				}
-				project = this.projectService.create(name, description, projectStatus, deadline, confidential,
-						this.appUserService.readElementary(operator).getId(), objective);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(id != null ? "Update Project (id: " + id + ")" : "Create Project (" + name + ")");
 			}
-			return this.projectConverter.toComplete(project);
+			return this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
+					? this.projectService.update(id, name, description, projectStatus, deadline, confidential, operator)
+					: this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.readElementary(operator).getId(),
+							objective));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
