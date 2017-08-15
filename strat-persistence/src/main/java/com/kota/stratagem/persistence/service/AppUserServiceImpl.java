@@ -15,13 +15,11 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.persistence.entity.AppUser;
-import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.AppUserParameter;
 import com.kota.stratagem.persistence.query.AppUserQuery;
-import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Stateless(mappedName = "ejb/appUserService")
@@ -87,9 +85,6 @@ public class AppUserServiceImpl implements AppUserService {
 		try {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_COMPLETE, AppUser.class).setParameter(AppUserParameter.ID, id)
 					.getSingleResult();
-			result.setTasks(new HashSet<AppUserTaskAssignment>(
-					this.entityManager.createNamedQuery(AppUserTaskAssignmentQuery.GET_ALL_BY_APP_USER_ID, AppUserTaskAssignment.class)
-							.setParameter(AppUserParameter.ID, id).getResultList()));
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error when fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
@@ -141,17 +136,20 @@ public class AppUserServiceImpl implements AppUserService {
 	}
 
 	@Override
-	public AppUser update(Long id, String name, String passwordHash, String email, Role role, AppUser modifier) throws PersistenceServiceException {
+	public AppUser update(Long id, String name, String passwordHash, String email, Role role, String modifier) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update ApUser (id: " + id + ", name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role + ")");
 		}
 		try {
-			final AppUser user = this.readElementary(id);
+			final AppUser user = this.readComplete(id);
+			final AppUser operator = this.readElementary(modifier);
 			user.setName(name);
 			user.setPasswordHash(passwordHash);
 			user.setEmail(email);
 			user.setRole(role);
-			user.setAccountModifier(modifier);
+			if (user.getAccountModifier().getId() != operator.getId()) {
+				user.setAccountModifier(operator);
+			}
 			user.setAcountModificationDate(new Date());
 			return this.entityManager.merge(user);
 		} catch (final Exception e) {

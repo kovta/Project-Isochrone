@@ -147,12 +147,10 @@ public class TaskServiceImpl implements TaskService {
 			task.setPriority(priority);
 			task.setCompletion(completion);
 			task.setDeadline(deadline);
-			if (!(task.getModifier().equals(operator))) {
-				if (!(task.getCreator().equals(task.getModifier()))) {
-					task.setModifier(operator);
-				} else if (task.getCreator().equals(operator)) {
-					task.setModifier(task.getCreator());
-				}
+			if (task.getCreator().getId() == operator.getId()) {
+				task.setModifier(task.getCreator());
+			} else if (task.getModifier().getId() != operator.getId()) {
+				task.setModifier(operator);
 			}
 			task.setModificationDate(new Date());
 			if (objective != null) {

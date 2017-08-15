@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.ejb.Local;
 
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -30,7 +29,7 @@ public interface ProjectService {
 
 	Set<Project> readAll() throws PersistenceServiceException;
 
-	Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier)
+	Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String modifier)
 			throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;

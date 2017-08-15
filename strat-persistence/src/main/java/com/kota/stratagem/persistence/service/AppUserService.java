@@ -25,7 +25,7 @@ public interface AppUserService {
 
 	Set<AppUser> readAll() throws PersistenceServiceException;
 
-	AppUser update(Long id, String name, String passwordHash, String email, Role role, AppUser modifier) throws PersistenceServiceException;
+	AppUser update(Long id, String name, String passwordHash, String email, Role role, String modifier) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

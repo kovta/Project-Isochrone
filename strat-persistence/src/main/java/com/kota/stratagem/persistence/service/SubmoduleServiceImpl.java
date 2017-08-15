@@ -118,12 +118,10 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 			submodule.setName(name);
 			submodule.setDescription(description);
 			submodule.setDeadline(deadline);
-			if (!(submodule.getModifier().equals(operator))) {
-				if (!(submodule.getCreator().equals(submodule.getModifier()))) {
-					submodule.setModifier(operator);
-				} else if (submodule.getCreator().equals(operator)) {
-					submodule.setModifier(submodule.getCreator());
-				}
+			if (submodule.getCreator().getId() == operator.getId()) {
+				submodule.setModifier(submodule.getCreator());
+			} else if (submodule.getModifier().getId() != operator.getId()) {
+				submodule.setModifier(operator);
 			}
 			submodule.setModificationDate(new Date());
 			return this.entityManager.merge(submodule);

@@ -51,14 +51,14 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	}
 
 	@Override
-	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator)
+	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, String creator)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Objective (name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status + ", deadline="
-					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator.getName() + ")");
+					+ deadline + ", confidential=" + confidentiality + ", creator=" + creator + ")");
 		}
 		try {
-			final AppUser operator = this.appUserService.readElementary(creator.getId());
+			final AppUser operator = this.appUserService.readElementary(creator);
 			final Objective objective = new Objective(name, description, priority, status, deadline, confidentiality, new Date(), new Date());
 			objective.setCreator(operator);
 			objective.setModifier(operator);
@@ -111,27 +111,24 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 
 	@Override
 	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality,
-			AppUser modifier) throws PersistenceServiceException {
+			String modifier) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Objective (id: " + id + ", name=" + name + ", description=" + description + ", priority=" + priority + ", status=" + status
 					+ ", deadline=" + deadline + ", confidential=" + confidentiality + ")");
 		}
 		try {
-			// Multiple representation workaround
 			final Objective objective = this.readComplete(id);
-			final AppUser operator = this.appUserService.readElementary(modifier.getId());
+			final AppUser operator = this.appUserService.readElementary(modifier);
 			objective.setName(name);
 			objective.setDescription(description);
 			objective.setPriority(priority);
 			objective.setStatus(status);
 			objective.setDeadline(deadline);
 			objective.setConfidential(confidentiality);
-			if ((objective.getModifier().getId() != operator.getId())) {
-				if ((objective.getCreator().getId() != objective.getModifier().getId())) {
-					objective.setModifier(operator);
-				} else if (objective.getCreator().getId() == operator.getId()) {
-					objective.setModifier(objective.getCreator());
-				}
+			if (objective.getCreator().getId() == operator.getId()) {
+				objective.setModifier(objective.getCreator());
+			} else if (objective.getModifier().getId() != operator.getId()) {
+				objective.setModifier(operator);
 			}
 			objective.setModificationDate(new Date());
 			return this.entityManager.merge(objective);

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.ejb.Local;
 
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -13,7 +12,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 @Local
 public interface ObjectiveService {
 
-	Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser creator)
+	Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, String creator)
 			throws PersistenceServiceException;
 
 	Objective readElementary(Long id) throws PersistenceServiceException;
@@ -28,7 +27,7 @@ public interface ObjectiveService {
 
 	Set<Objective> readAll() throws PersistenceServiceException;
 
-	Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, AppUser modifier)
+	Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, String modifier)
 			throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;

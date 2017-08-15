@@ -38,9 +38,9 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME, query = "SELECT u FROM AppUser u WHERE u.name=:" + AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_TASK_ASSIGNMENTS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.tasks t WHERE u.id=:"
 				+ AppUserParameter.ID),
-		@NamedQuery(name = AppUserQuery.GET_BY_ID_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm WHERE u.id=:"
+		@NamedQuery(name = AppUserQuery.GET_BY_ID_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t WHERE u.id=:"
 				+ AppUserParameter.ID),
-		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t WHERE u.name=:"
+		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t WHERE u.name=:"
 				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_ALL_BY_ROLE, query = "SELECT u FROM AppUser u WHERE u.role=:" + AppUserParameter.ROLE + " ORDER BY u.name"),
 		@NamedQuery(name = AppUserQuery.GET_ALL_APP_USERS, query = "SELECT u FROM AppUser u ORDER BY u.name"),
@@ -74,7 +74,7 @@ public class AppUser implements Serializable {
 	@Column(name = "user_registration_date", nullable = false)
 	private Date registrationDate;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "user_account_modifier", referencedColumnName = "user_id", nullable = true)
 	private AppUser accountModifier;
 

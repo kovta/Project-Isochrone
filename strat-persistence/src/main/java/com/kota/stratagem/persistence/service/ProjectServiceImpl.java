@@ -136,7 +136,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, AppUser modifier)
+	public Project update(Long id, String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String modifier)
 			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Project (id: " + id + ", name: " + name + ", description: " + description + ", status: " + status + ", confidentiality: "
@@ -144,18 +144,16 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		try {
 			final Project project = this.readComplete(id);
-			final AppUser operator = this.appUserService.readElementary(modifier.getId());
+			final AppUser operator = this.appUserService.readElementary(modifier);
 			project.setName(name);
 			project.setDescription(description);
 			project.setStatus(status);
 			project.setDeadline(deadline);
 			project.setConfidential(confidentiality);
-			if (!(project.getModifier().equals(operator))) {
-				if (!(project.getCreator().equals(project.getModifier()))) {
-					project.setModifier(operator);
-				} else if (project.getCreator().equals(operator)) {
-					project.setModifier(project.getCreator());
-				}
+			if (project.getCreator().getId() == operator.getId()) {
+				project.setModifier(project.getCreator());
+			} else if (project.getModifier().getId() != operator.getId()) {
+				project.setModifier(operator);
 			}
 			project.setModificationDate(new Date());
 			return this.entityManager.merge(project);
