@@ -23,7 +23,7 @@ INSERT INTO roles (role_id, role_name) VALUES
 SELECT SETVAL('roles_role_id_seq', COALESCE(MAX(role_id), 0) ) FROM roles;
 
 INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_registration_date, user_account_modification_date, user_account_modifier) VALUES 
-(0, 'adam', '$2a$10$FPiPKeyDIYEHTu1Nx7GCJOO5.A4agR15rHiham3pgzhE5yNjshBJ.', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
+(0, 'adam', '$2a$10$FPiPKeyDIYEHTu1Nx7GCJOO5.A4agR15rHiham3pgzhE5yNjshBJ.', 4, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (1, 'brent', '$2a$10$cRxiTtzegqpCu6ArnTNQ2et3l2bPIHzTuCvnyd89T/93VwZTW4jim', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (2, 'chris', '$2a$10$Oer1r4GqXVbtjc5auNJcTeUaCmis2gVUmO1UiDitM5GkhQdenJHmm', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
 (3, 'dennis', '$2a$10$xjom.FGpOcDDCoa2YcrFhuvR6W/hgHEwRJu4oFJ.Do6D8eMu8gN/m', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
@@ -37,7 +37,7 @@ INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_r
 SELECT SETVAL('app_users_user_id_seq', COALESCE(MAX(user_id), 0) ) FROM app_users;
 
 INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES 
-(0, 3),
+(0, 4),
 (1, 3),
 (2, 1),
 (3, 1),
@@ -194,7 +194,8 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Test Submodule', '', NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'User profile view implementation', 'Seperate view must be added to view user level responsibiliies', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(7, 'User profile view implementation', 'Seperate view must be added to view user level responsibiliies', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'Team management implementation', 'Control must be made for team creation, modification, member and leader selection', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -205,7 +206,9 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (7, 4),
 (7, 5),
 (8, 6),
-(7, 7);
+(7, 7),
+(7, 8);
+
 -- ###########################################################################################
 
 INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_completion_percentage, task_deadline, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
@@ -243,7 +246,19 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (31, 'Add assignment distribution control to respective views', 'Asignments can only be distributed according to authorization level', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (32, 'Assignment removal implementation', 'Asignment deletion does not need to be traced only reported with notification to the unassigned parties in later builds', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (33, 'Assignment listing in main control structures and profile views', 'All assignments must be displayed in an orderly manor', 1, 100, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(34, 'Assignment distribution should also be implemented on team level', 'This requires manager level manipulation of team structures. Assignment would be tied to team leader authorization level', 1, 10, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(34, 'Assignment distribution should also be implemented on team level', 'This requires manager level manipulation of team structures. Assignment would be tied to team leader authorization level', 1, 10, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(35, 'Structure wiring', 'User and team subscriptions must be added for all major structures', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(36, 'Assignment level triggering', 'Assignments must always trigger notifications', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(37, 'Update level triggering', 'Updates trigger notification creations for effected parties', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(38, 'Association strategy', 'Only single Notification must be created at all times, and multiple join records will attach users and teams', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(39, 'List based presentation', 'In profile view Notifications are ordered by team memberships and individual subscriptions', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(40, 'Dependency presentation', 'Dependencies may be inspected in task view', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(41, 'Inspection of dependency levels', 'All direct dependencies and dependants must be represented grouped by the dependency level', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(42, 'Representor constroction', 'Upon assembling Task representor we must loop through dependency and dependant lists recursively and must return a list of task lists and an interview indicating dependency level', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(43, 'Dependency addition control', 'When adding dependency and dependant tasks, the possibilities must be provided only at the parent structure level. Removal should work similarly as assignment removal. Duplicate or cycle creators must not be provided', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(44, 'Deadline warnings', 'Deadlines that are due in a week have warnings in orange, overdue ones in red', 1, 30, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(45, 'Correctional action generation', 'On navigating to control view on which signed in user is assigned business logic must discern deadline time reserve and remaining unfinished task count ratio. If the number surpasses the threshold (Configurable strategy) then business logic must assess all assignable workforces, and suggest the resolving of impediments', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -287,7 +302,19 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (1, 31),
 (1, 32),
 (1, 33),
-(1, 34);
+(1, 34),
+(2, 35),
+(2, 36),
+(2, 37),
+(2, 38),
+(2, 39),
+(4, 40),
+(4, 41),
+(4, 42),
+(4, 43),
+(5, 44),
+(5, 45),
+(6, 46);
 
 -- ###########################################################################################
 
