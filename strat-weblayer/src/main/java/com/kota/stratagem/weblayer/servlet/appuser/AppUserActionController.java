@@ -32,21 +32,40 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		LOGGER.info("Get AppUser by id (" + request.getParameter(ID) + ")");
-		final String id = request.getParameter(ID);
-		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
-			response.sendRedirect(Page.ERROR.getUrl());
-		} else {
-			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
-			AppUserRepresentor user = null;
-			boolean errorFlag = false;
-			try {
-				user = this.appUserProtocol.getAppUser(Long.parseLong(id));
-			} catch (final AdaptorException e) {
-				LOGGER.error(e, e);
-				errorFlag = true;
+		final String id = request.getParameter(ID), username = request.getParameter(NAME);
+		boolean errorFlag = false;
+		if (((id == null) || "".equals(id)) && (username != null)) {
+			if ("".equals(username)) {
+				response.sendRedirect(Page.ERROR.getUrl());
+			} else {
+				LOGGER.info("Get AppUser by name (" + username + ")");
+				final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
+				AppUserRepresentor user = null;
+				try {
+					user = this.appUserProtocol.getAppUser(username);
+				} catch (final AdaptorException e) {
+					LOGGER.error(e, e);
+					errorFlag = true;
+				}
+				this.forward(request, response, user, editFlag, null, errorFlag);
 			}
-			this.forward(request, response, user, editFlag, null, errorFlag);
+		} else if ((id != null) && ((username == null) || "".equals(username))) {
+			if ("".equals(id) || !this.isNumeric(id)) {
+				response.sendRedirect(Page.ERROR.getUrl());
+			} else {
+				LOGGER.info("Get AppUser by id (" + id + ")");
+				final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
+				AppUserRepresentor user = null;
+				try {
+					user = this.appUserProtocol.getAppUser(Long.parseLong(id));
+				} catch (final AdaptorException e) {
+					LOGGER.error(e, e);
+					errorFlag = true;
+				}
+				this.forward(request, response, user, editFlag, null, errorFlag);
+			}
+		} else {
+			response.sendRedirect(Page.ERROR.getUrl());
 		}
 	}
 
@@ -61,6 +80,33 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 		} else {
 			final RequestDispatcher view = request.getRequestDispatcher(editFlag ? Page.USER_EDIT.getJspName() : Page.USER_VIEW.getJspName());
 			view.forward(request, response);
+		}
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			Long id = null;
+			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
+				id = Long.parseLong(request.getParameter(ID));
+			}
+			final String returnPoint = (Page.USER_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id);
+			final String email = request.getParameter(EMAIL);
+			AppUserRepresentor user = null;
+			try {
+				LOGGER.info("Update AppUser: (" + id + ", email: " + email + ")");
+				// Protocol redesign needed
+				final AppUserRepresentor userTemp = this.appUserProtocol.getAppUser(id);
+				user = this.appUserProtocol.saveAppUser(id, userTemp.getName(), userTemp.getPasswordHash(), email, userTemp.getRole(),
+						request.getUserPrincipal().getName());
+				request.getSession().setAttribute(ATTR_SUCCESS, "Account updated successfully!");
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
+			}
+			this.forward(request, response, user, false, returnPoint, false);
+		} catch (final Exception e) {
+			e.printStackTrace();
 		}
 	}
 
