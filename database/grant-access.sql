@@ -24,3 +24,8 @@ team_objective_assignments_assignment_id_seq, user_objective_assignments_assignm
 team_project_assignments_assignment_id_seq, user_project_assignments_assignment_id_seq,
 team_submodule_assignments_assignment_id_seq, user_submodule_assignments_assignment_id_seq,
 team_task_assignments_assignment_id_seq, user_task_assignments_assignment_id_seq TO stratagem_std_user;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON 
+notifications, user_notifications TO stratagem_std_user;
+GRANT USAGE, SELECT, UPDATE ON 
+notifications_notification_id_seq, user_notifications_user_notification_id_seq TO stratagem_std_user;

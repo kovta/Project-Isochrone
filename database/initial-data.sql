@@ -22,18 +22,18 @@ INSERT INTO roles (role_id, role_name) VALUES
 (5, 'system_administrator');
 SELECT SETVAL('roles_role_id_seq', COALESCE(MAX(role_id), 0) ) FROM roles;
 
-INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_registration_date, user_account_modification_date, user_account_modifier) VALUES 
-(0, 'adam', '$2a$10$FPiPKeyDIYEHTu1Nx7GCJOO5.A4agR15rHiham3pgzhE5yNjshBJ.', 4, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(1, 'brent', '$2a$10$cRxiTtzegqpCu6ArnTNQ2et3l2bPIHzTuCvnyd89T/93VwZTW4jim', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(2, 'chris', '$2a$10$Oer1r4GqXVbtjc5auNJcTeUaCmis2gVUmO1UiDitM5GkhQdenJHmm', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(3, 'dennis', '$2a$10$xjom.FGpOcDDCoa2YcrFhuvR6W/hgHEwRJu4oFJ.Do6D8eMu8gN/m', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(4, 'ellie', '$2a$10$3TxZKVQuSD.s9K.P/i1uX.vIk9HG9Q2vzjL0xanTZuEBqbsXwJBpm', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(5, 'frank', '$2a$10$0Z9B1Z5GiJ0DFXwVHpYCBOkannkyArcKeZX1.DHDwNX/kweZ.vOTy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(6, 'gabrille', '$2a$10$g3tlhM1JGx.rckAiFiWT.Ok5xyvz1a878l41lVZuIilRzBa/FFjfa', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(7, 'holly', '$2a$10$W/nRkIKvfZ.3cCbJCxghKujWqAIzf/meL2g2DEQKv9pLpkPq9YvaC', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(8, 'ike', '$2a$10$q2DRoc37d30C9i2t6gLCGO7vAA2bJw2b4cjxZyD0Df9PDCTP0LWC2', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(9, 'jenny', '$2a$10$R80wTRvd1xSdlyafWnt4HeVKaF7z239JY9Gb6G5WPIUShlMyWGLwq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0),
-(10, 'kevin', '$2a$10$a3/8TbXxSBpDBk4kX1BJ1uVWqOTRT5DWcxULlUXHeri0t.xHh48BW', 2, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0);
+INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_registration_date, user_account_modification_date, user_account_modifier, user_notification_view_count) VALUES 
+(0, 'adam', '$2a$10$i2mSCec8pR886PFgaydyauLocGUCavrQMVcs7I6jJcu6v.0hye.3a', 4, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(1, 'brent', '$2a$10$at/2hcd0Lv3s20BIsPYPbeHjY0CBAsNhupFITrlPS6qzMB3g3lRW.', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(2, 'chris', '$2a$10$UxYObgg/mDYWu77wCF8V7.XqCdmdG19BOAaPCzbzvY601Sg1of7Mq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(3, 'dennis', '$2a$10$g5DOPhsfuQLqzB6yd1g.2eYswE00Zh8q77fPSc5dKjwWXV/pWMGS6', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(4, 'ellie', '$2a$10$MHLMnRaQkoybGpdvMY.F0e7jIN8IYj6hozDc12EZPOFTfoTypLZnu', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(5, 'frank', '$2a$10$7m8VIy8YWdu2p6MkXjhrfOTPzHZ0NiNBjACkqCVWjH8D8D4YaJ8DO', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(6, 'gabrille', '$2a$10$ARgEy3y3fYOzoupqwWRqzeASy5KllWKLixDWId57Dl5whjV9i888W', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(7, 'holly', '$2a$10$nExDjhpB1s/c8TKAI3U5tuVQHMCI2vr7Z0vz4CKs/I.PV5lM16wmy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(8, 'ike', '$2a$10$k5v48h9nA410N4ULAn.PnOZX2VudxIqR9I4FKUjn9qZIBlNqTqdwW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(9, 'jenny', '$2a$10$v0hqFIXP3PIUq1vx8wXGFehCjdah5qaCBO0sHgSTiZsVJBDze/lAy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0),
+(10, 'kevin', '$2a$10$zkz3vmAw/GKfiAp.R8xHDOg.3VsZJGz4rzW2Cb62W55W8mqC7sRtS', 2, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0);
 SELECT SETVAL('app_users_user_id_seq', COALESCE(MAX(user_id), 0) ) FROM app_users;
 
 INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES 
@@ -88,7 +88,7 @@ INSERT INTO objectives (objective_id, objective_name, objective_description, obj
 (4, 'Develop cross-platfrom worflow management system', 'Due to competitors lack in flexibility and structure handling the creation of revisioned management system could give us a leading edge on the market', 1, 1, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Clone specific customer architectures into a more flexible microservice-based solution', 'Efforts to follow new trends', 4, 3, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Recreating designated legacy control systems into the cloud', 'Software preconditions and multiple high end requests have led to the descision to move solutions to a cloud platfrom', 6, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'Test objective', '', 10, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(7, 'Test Objective', '', 10, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('objectives_objective_id_seq', COALESCE(MAX(objective_id), 0) ) FROM objectives;
 
 INSERT INTO objective_missions (mission_id, mission_name, mission_description, mission_objective, mission_stage_id) VALUES
@@ -375,6 +375,10 @@ SELECT SETVAL('team_task_assignments_assignment_id_seq', COALESCE(MAX(assignment
 INSERT INTO user_task_assignments (assignment_entrustor, assignment_recipient, assignment_task, assignment_creation_date) VALUES
 (0, 7, 1, '2015/12/13 14:20:00');
 SELECT SETVAL('user_task_assignments_assignment_id_seq', COALESCE(MAX(assignment_id), 0) ) FROM user_task_assignments;
+
+-- ###########################################################################################
+
+-- INSERT INTO notifications
 
 -- ###########################################################################################
 

@@ -25,6 +25,7 @@ CREATE TABLE app_users (
 	user_registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	user_account_modifier INTEGER NULL,
 	user_account_modification_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	user_notification_view_count INTEGER NULL,
 	CONSTRAINT PK_USER_ID PRIMARY KEY (user_id),
 	CONSTRAINT FK_USER_ROLE FOREIGN KEY (user_role)
 		REFERENCES roles (role_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -525,6 +526,28 @@ CREATE TABLE user_task_assignments (
 
 -- ###########################################################################################
 
+CREATE TABLE notifications (
+	notification_id SERIAL NOT NULL,
+	notification_inducer INTEGER NOT NULL,
+	notification_message CHARACTER VARYING(2000) NULL,
+	notification_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	CONSTRAINT PK_NOTIFICATION_ID PRIMARY KEY (notification_id),
+	CONSTRAINT FK_NOTIFICATION_INDUCER FOREIGN KEY (notification_inducer)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE user_notifications (
+	user_notification_id SERIAL NOT NULL,
+	user_notification_user_id INTEGER NOT NULL,
+	user_notification_notification_id INTEGER NOT NULL,
+	CONSTRAINT PK_USER_NOTIFICATION_ID PRIMARY KEY (user_notification_id),
+	CONSTRAINT FK_USER_NOTIFICATION_USER_ID FOREIGN KEY (user_notification_user_id)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_USER_NOTIFICATION_NOTIFICATION_ID FOREIGN KEY (user_notification_notification_id)
+	  REFERENCES notifications (notification_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+-- ###########################################################################################
+
 CREATE TABLE reviews (
 	review_id SERIAL NOT NULL,
 	review_name CHARACTER VARYING(100) NOT NULL,
@@ -590,5 +613,7 @@ ALTER TABLE team_objective_assignments OWNER TO postgres;
 ALTER TABLE team_project_assignments OWNER TO postgres;
 ALTER TABLE team_submodule_assignments OWNER TO postgres;
 ALTER TABLE team_task_assignments OWNER TO postgres;
+ALTER TABLE notifications OWNER TO postgres;
+ALTER TABLE user_notifications OWNER TO postgres;
 ALTER TABLE reviews OWNER TO postgres;
 ALTER TABLE review_invitations OWNER TO postgres;
