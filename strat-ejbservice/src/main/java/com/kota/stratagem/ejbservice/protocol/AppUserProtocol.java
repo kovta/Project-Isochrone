@@ -33,4 +33,6 @@ public interface AppUserProtocol {
 
 	void removeAppUser(Long id) throws AdaptorException;
 
+	boolean isOperatorAccount(AppUserRepresentor operator) throws AdaptorException;
+
 }

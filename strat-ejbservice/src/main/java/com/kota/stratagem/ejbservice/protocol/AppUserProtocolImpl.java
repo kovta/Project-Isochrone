@@ -161,8 +161,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			}
 			return this.converter
 					.toComplete(((id != null) && this.appUserService.exists(id)) ? this.appUserService.update(id, name, password, email, userRole, operator)
-							: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole,
-									this.appUserService.readElementary(operator)));
+							: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -179,6 +178,20 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public boolean isOperatorAccount(AppUserRepresentor operator) throws AdaptorException {
+		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Verify logged in AppUser account (id: " + operator.getId() + ")");
+			}
+			return this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId() == operator
+					.getId();
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

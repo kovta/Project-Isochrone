@@ -21,6 +21,18 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 	@EJB
 	private AppUserAssignmentService assignmentService;
 
+	// @EJB
+	// private AppUserObjectiveAssignmentService objectiveAssignmentService;
+	//
+	// @EJB
+	// private AppUserProjectAssignmentService projectAssignmentService;
+	//
+	// @EJB
+	// private AppUserSubmoduleAssignmentService submoduleAssignmentService;
+	//
+	// @EJB
+	// private AppUserTaskAssignmentService taskAssignmentService;
+
 	@EJB
 	private AppUserService appUserService;
 
@@ -34,6 +46,7 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 			}
 			final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			for (final String recipient : recipients) {
+				// StructureHandlers.structureMap.get(object);
 				switch (object) {
 					case Constants.OBJECTIVE_DATA_NAME:
 						this.assignmentService.createObjectiveAssignment(this.appUserService.readElementary(operator).getId(),
@@ -96,7 +109,6 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 	@Override
 	public void saveProjectAssignments(String[] recipients, Long project) throws AdaptorException {
 		this.saveAssignments(recipients, project, Constants.PROJECT_DATA_NAME);
-
 	}
 
 	@Override

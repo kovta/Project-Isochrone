@@ -14,15 +14,16 @@ import javax.ejb.Stateless;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
+import com.kota.stratagem.ejbservice.dispatch.ObjectiveLifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
-import com.kota.stratagem.ejbserviceclient.ObjectiveProtocolRemote;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
+import com.kota.stratagem.ejbserviceclient.protocol.ObjectiveProtocolRemote;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -42,6 +43,9 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@EJB
 	private ObjectiveConverter converter;
+
+	@EJB
+	private ObjectiveLifecycleOverseer overseer;
 
 	@Override
 	public ObjectiveRepresentor getObjective(Long id) throws ServiceException {
@@ -117,13 +121,23 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
 			Boolean confidentiality, String operator) throws AdaptorException {
 		try {
-			final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(id != null ? "Update Objective (id: " + id + ")" : "Create Objective (" + name + ")");
 			}
-			return this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
+			final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
+			ObjectiveRepresentor origin = null;
+			if (id != null) {
+				origin = this.converter.toElementary(this.objectiveService.readElementary(id));
+			}
+			final ObjectiveRepresentor representor = this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
 					? this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality, operator)
 					: this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality, operator));
+			if (id != null) {
+				this.overseer.modified(origin, representor);
+			} else {
+				this.overseer.created(representor);
+			}
+			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -136,6 +150,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Objective (id: " + id + ")");
 			}
+			this.overseer.deleted(this.converter.toElementary(this.objectiveService.readElementary(id)));
 			this.objectiveService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
