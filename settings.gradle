@@ -1,6 +1,7 @@
 include 'strat-security'
 include 'strat-persistence'
 include 'strat-ejbserviceclient'
+include 'strat-messageservice'
 include 'strat-ejbservice'
 include 'strat-weblayer'
 include 'strat-rmiclient'
