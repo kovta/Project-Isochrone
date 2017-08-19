@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.persistence.entity.AppUser;
+import com.kota.stratagem.persistence.entity.Notification;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
@@ -33,12 +34,12 @@ public class AppUserServiceImpl implements AppUserService {
 	private EntityManager entityManager;
 
 	@Override
-	public AppUser create(String name, String passwordHash, String email, Role role, AppUser creator) throws PersistenceServiceException {
+	public AppUser create(String name, String passwordHash, String email, Role role) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create AppUser (name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role + ")");
 		}
 		try {
-			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), creator, new Date());
+			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), null, new Date());
 			this.entityManager.persist(user);
 			this.entityManager.flush();
 			return user;
@@ -56,7 +57,7 @@ public class AppUserServiceImpl implements AppUserService {
 		try {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID, AppUser.class).setParameter(AppUserParameter.ID, id).getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -71,7 +72,22 @@ public class AppUserServiceImpl implements AppUserService {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
 					.getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public AppUser readWithNotifications(Long id) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get AppUser with Notifications by id (" + id + ")");
+		}
+		AppUser result = null;
+		try {
+			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, AppUser.class).setParameter(AppUserParameter.ID, id)
+					.getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error while fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -86,7 +102,7 @@ public class AppUserServiceImpl implements AppUserService {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_COMPLETE, AppUser.class).setParameter(AppUserParameter.ID, id)
 					.getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -101,7 +117,7 @@ public class AppUserServiceImpl implements AppUserService {
 			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_COMPLETE, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
 					.getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -116,7 +132,7 @@ public class AppUserServiceImpl implements AppUserService {
 			result = new HashSet<AppUser>(
 					this.entityManager.createNamedQuery(AppUserQuery.GET_ALL_BY_ROLE, AppUser.class).setParameter(AppUserParameter.ROLE, role).getResultList());
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching AppUsers! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching AppUsers! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -153,7 +169,7 @@ public class AppUserServiceImpl implements AppUserService {
 			user.setAcountModificationDate(new Date());
 			return this.entityManager.merge(user);
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when merging AppUser! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while merging AppUser! " + e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -167,7 +183,7 @@ public class AppUserServiceImpl implements AppUserService {
 				try {
 					this.entityManager.createNamedQuery(AppUserQuery.REMOVE_BY_ID).setParameter(AppUserParameter.ID, id).executeUpdate();
 				} catch (final Exception e) {
-					throw new PersistenceServiceException("Unknown error when removing AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
+					throw new PersistenceServiceException("Unknown error while removing AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
 				}
 			} else {
 				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "AppUser has undeleted dependency(s)", id.toString());
@@ -187,6 +203,21 @@ public class AppUserServiceImpl implements AppUserService {
 			return this.entityManager.createNamedQuery(AppUserQuery.COUNT_BY_ID, Long.class).setParameter(AppUserParameter.ID, id).getSingleResult() == 1;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during counting Tasks by AppUser (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public void addNotification(Long id, Notification notification) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Add Notification to AppUser (id: " + id + ", notification: " + notification.getId() + ")");
+		}
+		try {
+			final AppUser recipient = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, AppUser.class)
+					.setParameter(AppUserParameter.ID, id).getSingleResult();
+			recipient.addNotification(notification);
+			this.entityManager.merge(recipient);
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error while adding Notification to AppUser (id: " + id + ")! " + e.getLocalizedMessage(), e);
 		}
 	}
 

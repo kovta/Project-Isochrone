@@ -48,7 +48,7 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 		try {
 			result = this.entityManager.createNamedQuery(query, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -126,7 +126,7 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 			submodule.setModificationDate(new Date());
 			return this.entityManager.merge(submodule);
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when merging Submodule! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while merging Submodule! " + e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -140,7 +140,7 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 				try {
 					this.entityManager.createNamedQuery(SubmoduleQuery.REMOVE_BY_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 				} catch (final Exception e) {
-					throw new PersistenceServiceException("Unknown error when removing Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
+					throw new PersistenceServiceException("Unknown error while removing Submodule by id (" + id + ")! " + e.getLocalizedMessage(), e);
 				}
 			} else {
 				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "Project has undeleted dependency(s)", id.toString());

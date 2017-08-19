@@ -36,6 +36,8 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 		@NamedQuery(name = AppUserQuery.COUNT_BY_ID, query = "SELECT COUNT(u) FROM AppUser u WHERE u.id=:" + AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID, query = "SELECT u FROM AppUser u WHERE u.id=:" + AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME, query = "SELECT u FROM AppUser u WHERE u.name=:" + AppUserParameter.USERNAME),
+		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.notifications n WHERE u.id=:"
+				+ AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_TASK_ASSIGNMENTS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.tasks t WHERE u.id=:"
 				+ AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t WHERE u.id=:"
@@ -107,6 +109,10 @@ public class AppUser implements Serializable {
 	@JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_member_user_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "team_member_team_id", nullable = false))
 	private Set<Team> teamMemberships;
 
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Notification.class)
+	@JoinTable(name = "user_notifications", joinColumns = @JoinColumn(name = "user_notification_user_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "user_notification_notification_id", nullable = false))
+	private Set<Notification> notifications;
+
 	public AppUser() {
 		this.objectives = new HashSet<>();
 		this.projects = new HashSet<>();
@@ -116,6 +122,7 @@ public class AppUser implements Serializable {
 		this.processedImpediments = new HashSet<>();
 		this.supervisedTeams = new HashSet<>();
 		this.teamMemberships = new HashSet<>();
+		this.notifications = new HashSet<>();
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
@@ -270,10 +277,22 @@ public class AppUser implements Serializable {
 		this.teamMemberships = teamMemberships;
 	}
 
+	public Set<Notification> getNotifications() {
+		return this.notifications;
+	}
+
+	public void setNotifications(Set<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
 	@Override
 	public String toString() {
 		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role
 				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + "]";
+	}
+
+	public void addNotification(Notification notification) {
+		this.notifications.add(notification);
 	}
 
 }

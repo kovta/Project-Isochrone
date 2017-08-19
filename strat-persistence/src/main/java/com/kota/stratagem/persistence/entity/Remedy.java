@@ -70,6 +70,10 @@ public class Remedy extends AbstractMonitoredItem implements Serializable {
 	@JoinColumn(name = "remedy_provider", referencedColumnName = "user_id", nullable = false)
 	private AppUser provider;
 
+	public Remedy() {
+		super();
+	}
+
 	public Remedy(Long id, String description, Impediment impediment, Date submissionDate, AppUser provider, AppUser creator, Date creationDate,
 			AppUser modifier, Date modificationDate) {
 		super();

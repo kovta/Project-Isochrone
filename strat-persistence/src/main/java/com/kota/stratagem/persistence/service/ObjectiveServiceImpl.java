@@ -45,7 +45,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 		try {
 			result = this.entityManager.createNamedQuery(query, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -133,7 +133,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 			objective.setModificationDate(new Date());
 			return this.entityManager.merge(objective);
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when merging Project! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while merging Project! " + e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 				try {
 					this.entityManager.createNamedQuery(ObjectiveQuery.REMOVE_BY_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 				} catch (final Exception e) {
-					throw new PersistenceServiceException("Unknown error when removing Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
+					throw new PersistenceServiceException("Unknown error while removing Objective by id (" + id + ")! " + e.getLocalizedMessage(), e);
 				}
 			} else {
 				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "Objective has undeleted dependency(s)",

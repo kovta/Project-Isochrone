@@ -54,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
 		try {
 			result = this.entityManager.createNamedQuery(query, Task.class).setParameter(TaskParameter.ID, id).getSingleResult();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when fetching Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while fetching Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -162,7 +162,7 @@ public class TaskServiceImpl implements TaskService {
 			}
 			return this.entityManager.merge(task);
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when merging Task! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while merging Task! " + e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class TaskServiceImpl implements TaskService {
 		try {
 			this.entityManager.createNamedQuery(TaskQuery.REMOVE_BY_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when removing Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
+			throw new PersistenceServiceException("Unknown error while removing Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
 		}
 	}
 
