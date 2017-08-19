@@ -14,6 +14,7 @@ ext {
 	jstlVersion = '1.2'
 	jaxrsVersion = '2.0.1'
 	resteasyVersion = '2.3.7.Final'
+	jbossjmsclientVersion = '7.2.0.Final'
 	
 	webapplicationName = 'strat-weblayer.war'
 	webapplicationContextPath = 'stratagem'
@@ -49,9 +50,10 @@ ear {
 }
 
 dependencies {
-	deploy project('strat-ejbservice')
 	deploy project('strat-persistence')
 	deploy project('strat-security')
+	deploy project('strat-messageservice')
+	deploy project('strat-ejbservice')
 	deploy project(path: 'strat-weblayer', configuration: 'archives')
 	deploy project(path: 'strat-webservice', configuration: 'archives')
 	earlib ( project('strat-ejbserviceclient') ) {
