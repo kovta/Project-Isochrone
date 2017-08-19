@@ -8,9 +8,9 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import com.kota.stratagem.ejbserviceclient.ObjectiveProtocolRemote;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
+import com.kota.stratagem.ejbserviceclient.protocol.ObjectiveProtocolRemote;
 
 public class StratagemObjectiveClient {
 
@@ -49,7 +49,7 @@ public class StratagemObjectiveClient {
 		jndiProperties.put(JBOSS_NAMING_CLIENT_EJB_CONTEXT_KEY, JBOSS_NAMING_CLIENT_EJB_CONTEXT_VALUE);
 		final Context context = new InitialContext(jndiProperties);
 		return (ObjectiveProtocolRemote) context
-				.lookup("stratagem/strat-ejbservice/ObjectiveProtocolImpl!com.kota.stratagem.ejbserviceclient.ObjectiveProtocolRemote");
+				.lookup("stratagem/strat-ejbservice/ObjectiveProtocolImpl!com.kota.stratagem.ejbserviceclient.protocol.ObjectiveProtocolRemote");
 	}
 
 }
