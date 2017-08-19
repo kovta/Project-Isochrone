@@ -21,12 +21,13 @@
 		        <form action="j_security_check" method="post">
 		            <div class="md-form form-sm">
 		                <i class="fa fa-user prefix"></i>
-		                <input type="text" name="j_username" id="username" class="form-control" placeholder="Username" value="<%= userName != null ? userName : "" %>">
+		                <input type="text" name="j_username" id="username" class="form-control" 
+		                	placeholder="Username" value="<%= userName != null ? userName : "" %>" required>
 		            </div>
 		
 		            <div class="md-form form-sm">
 		                <i class="fa fa-lock prefix"></i>
-		                <input type="password" name="j_password" id="password" class="form-control validate" placeholder="Password">
+		                <input type="password" name="j_password" id="password" class="form-control validate" placeholder="Password" required>
 		            </div>
 		
 		            <div class="text-center mt-2">
@@ -39,7 +40,8 @@
                 <div class="options text-center text-md-right mt-1">
                     <p>Not a member? <a data-dismiss="modal" data-toggle="modal" data-target="#modalRegister">Sign Up</a></p>
                 </div>
-                <button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">Close <i class="fa fa-times-circle ml-1"></i></button>
+                <button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">
+                	Close <i class="fa fa-times-circle ml-1"></i></button>
             </div>
         </div>
         <!--/.Content-->

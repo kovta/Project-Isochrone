@@ -62,7 +62,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final ObjectiveRepresentor objective, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		boolean assignmentError = false;
-		if(!errorFlag) {
+		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(objective));
 			} catch (final AdaptorException e) {

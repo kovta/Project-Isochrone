@@ -18,7 +18,7 @@
 	            	<input type="hidden" name="submoduleId" value="${submodule.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}">
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}" required>
 	                </div>
 
             		<div class="row">
@@ -32,11 +32,11 @@
 		               			<c:choose>
 			      			      	<c:when test = "${task != null}">
 				         				<input type="number" id="objform32" class="form-control" name="priority" 
-					                    min="0" max="100" value="${task.priority}">
+					                    	min="0" max="100" value="${task.priority}" required>
 					                </c:when>
 					                <c:otherwise>
 					                	<input type="number" id="objform32" class="form-control" name="priority" 
-					                    min="0" max="100" value="10">
+					                    	min="0" max="100" value="10" required>
 					                </c:otherwise>
 				                </c:choose>
 			                </div>

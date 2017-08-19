@@ -20,22 +20,25 @@
             	<form action="Register" method="post">
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-user prefix"></i>
-	                    <input type="text" id="form32" class="form-control" name="username" placeholder="Username" value="${user.name}">
+	                    <input type="text" id="form32" class="form-control" name="username" placeholder="Username" value="${user.name}" required>
 	                </div>
             	
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-envelope prefix"></i>
-	                    <input type="email" id="form32" class="form-control validate" name="email" placeholder="Email address" value="${user.email}">
+	                    <input type="email" id="form32" class="form-control validate" 
+	                    	name="email" placeholder="Email address" value="${user.email}">
 	                </div>
 	
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-lock prefix"></i>
-	                    <input type="password" id="form33" class="form-control" name="password" placeholder="Password" value="">
+	                    <input type="password" id="form33" class="form-control" 
+	                    	name="password" placeholder="Password" value="" required>
 	                </div>
 	
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-lock prefix"></i>
-	                    <input type="password" id="form34" class="form-control" name="password_confirmation" placeholder="Repeat password" value="">
+	                    <input type="password" id="form34" class="form-control" 
+	                    	name="password_confirmation" placeholder="Repeat password" value="" required>
 	                </div>
 	
 	                <div class="text-center mt-2">
@@ -48,7 +51,8 @@
                 <div class="options text-center text-md-right mt-1">
                     <p>Already have an account? <a data-dismiss="modal" data-toggle="modal" data-target="#modalLogin">Log In</a></p>
                 </div>
-                <button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">Close <i class="fa fa-times-circle ml-1"></i></button>
+                <button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">
+                	Close <i class="fa fa-times-circle ml-1"></i></button>
             </div>
         </div>
         <!--/.Content-->

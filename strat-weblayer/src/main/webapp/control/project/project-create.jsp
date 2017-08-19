@@ -17,7 +17,7 @@
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${project.name}">
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${project.name}" required>
 	                </div>
             	
 					<div class="md-form form-sm">

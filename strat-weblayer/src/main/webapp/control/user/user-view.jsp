@@ -70,11 +70,14 @@
                                 <div class="md-form">
                                 	<table class="strat-detail-table">
 	                                	<tbody>
-	                                		<tr class="match-row"><td class="text-center">
-						  		   			    <a href="User?id=<c:out value="${user.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
-							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Profile
-							       			    </a>
-											</td></tr>
+	                                		<c:if test="${requestScope.operatorAccount}">
+		                                		<tr class="match-row"><td class="text-center">
+							  		   			    <a href="User?id=<c:out value="${user.id}"/>&edit=1" 
+							  		   			    	class="vertical-align-middle text-center full-width">
+								       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Profile
+								       			    </a>
+												</td></tr>
+											</c:if>
 										</tbody>
                                 	</table>
                                 </div>
@@ -96,22 +99,26 @@
 	                         <div class="tabs-wrapper">
 	                             <ul class="nav nav-justified classic-tabs tabs-primary" role="tablist">
 	                                 <li class="nav-item tab-listener">
-		                             	 <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" href="#objectivePanel" role="tab" aria-expanded="true">
+		                             	 <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" 
+		                             	 	href="#objectivePanel" role="tab" aria-expanded="true">
 		                                 	 <span>Objective Assignments (<c:out value="${user.objectives.size()}" />)</span>
 		                                 </a>
 	                                 </li>
 	                                 <li class="nav-item tab-listener">
-		                             	 <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#projectPanel" role="tab" aria-expanded="true">
+		                             	 <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
+		                             	 	href="#projectPanel" role="tab" aria-expanded="true">
 		                                 	 <span>Project Assignments (<c:out value="${user.projects.size()}" />)</span>
 		                                 </a>
 	                                 </li>
 	                                 <li class="nav-item tab-listener">
-	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#submodulePanel" role="tab" aria-expanded="false">
+	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
+	                                    	href="#submodulePanel" role="tab" aria-expanded="false">
 		                                    <span>Submodule Assignments (<c:out value="${user.submodules.size()}" />)</span>
 	                                    </a>
 	                                 </li>
 	                                 <li class="nav-item tab-listener">
-	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#taskPanel" role="tab" aria-expanded="false">
+	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
+	                                    	href="#taskPanel" role="tab" aria-expanded="false">
 		                                    <span>Task Assignments (<c:out value="${user.tasks.size()}" />)</span>
 	                                    </a>
 	                                 </li>

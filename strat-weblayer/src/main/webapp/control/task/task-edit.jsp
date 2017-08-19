@@ -38,7 +38,8 @@
 				               			<label>The name of the Task</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" id="form1" class="form-control validate" name="name" placeholder="The name of the Task" value="${task.name}">
+		                                <input type="text" id="form1" class="form-control validate" name="name" 
+		                                	placeholder="The name of the Task" value="${task.name}" required>
 		                            </div>
 		                        </div>
 		                    </div>
@@ -51,7 +52,7 @@
 				               			<label>The priority of the Task</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" name="priority" id="form81" class="form-control validate" value="${task.priority}">
+		                                <input type="text" name="priority" id="form81" class="form-control validate" value="${task.priority}" required>
 		                            </div>
 		                        </div>
 		                        <!--Second column-->

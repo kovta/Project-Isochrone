@@ -38,7 +38,8 @@
 				               			<label>The name of the Submodule</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" id="form1" class="form-control validate" name="name" placeholder="The name of the Submodule" value="${submodule.name}">
+		                                <input type="text" id="form1" class="form-control validate" name="name" 
+		                                	placeholder="The name of the Submodule" value="${submodule.name}" required>
 		                            </div>
 		                        </div>
 		                    </div>

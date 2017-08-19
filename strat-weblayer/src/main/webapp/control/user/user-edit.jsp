@@ -35,7 +35,8 @@
 				               			<label>Email address</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" id="form1" class="form-control validate" name="email" placeholder="example@mail.com" value="${user.email}">
+		                                <input type="text" id="form1" class="form-control validate" name="email" 
+		                                	placeholder="example@mail.com" value="${user.email}">
 		                            </div>
 		                        </div>
 		                    </div>

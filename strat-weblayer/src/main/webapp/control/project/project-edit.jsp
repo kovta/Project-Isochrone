@@ -39,7 +39,8 @@
 				               			<label>The name of the Project</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" id="form1" class="form-control validate" name="name" placeholder="The name of the Project" value="${project.name}">
+		                                <input type="text" id="form1" class="form-control validate" name="name" 
+		                                	placeholder="The name of the Project" value="${project.name}" required>
 		                            </div>
 		                        </div>
 		                    </div>
@@ -54,7 +55,9 @@
 		                            <div class="md-form">
 	                       				<select class="form-control" id="form89" name="status">
 											<% for ( ProjectStatusRepresentor status : ProjectStatusRepresentor.values()) { %>
-												<option value="<% out.print(status.name()); %>" <% out.print( status == project.getStatus() ? "selected=\"selected\"" : "" ); %>><% out.print(status.getLabel()); %></option>
+												<option value="<% out.print(status.name()); %>" 
+													<% out.print(status == project.getStatus() ? "selected=\"selected\"" : "" ); %>>
+													<% out.print(status.getLabel()); %></option>
 											<% } %>
 										</select>
 		                            </div>

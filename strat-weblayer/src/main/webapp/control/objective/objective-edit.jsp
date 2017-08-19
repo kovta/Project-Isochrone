@@ -40,7 +40,8 @@
 				               			<label>The name of the Objective</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" id="form1" class="form-control validate" name="name" placeholder="The name of the Ovjective" value="${objective.name}">
+		                                <input type="text" id="form1" class="form-control validate" name="name" 
+		                                	placeholder="The name of the Ovjective" value="${objective.name}" required>
 		                            </div>
 		                        </div>
 		                    </div>
@@ -53,7 +54,7 @@
 				               			<label>The priority of the Objective</label><br/>
 	                  				</div>
 		                            <div class="md-form">
-		                                <input type="text" name="priority" id="form81" class="form-control validate" value="${objective.priority}">
+		                                <input type="text" name="priority" id="form81" class="form-control validate" value="${objective.priority}" required>
 		                            </div>
 		                        </div>
 		                        <!--Second column-->
@@ -64,7 +65,9 @@
 		                            <div class="md-form">
 	                       				<select class="form-control" id="form89" name="status">
 											<% for ( ObjectiveStatusRepresentor status : ObjectiveStatusRepresentor.values()) { %>
-												<option value="<% out.print(status.name()); %>" <% out.print( status == objective.getStatus() ? "selected=\"selected\"" : "" ); %>><% out.print(status.getLabel()); %></option>
+												<option value="<% out.print(status.name()); %>" 
+													<% out.print( status == objective.getStatus() ? "selected=\"selected\"" : "" ); %>>
+													<% out.print(status.getLabel()); %></option>
 											<% } %>
 										</select>
 		                            </div>

@@ -72,6 +72,14 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final AppUserRepresentor user, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		request.setAttribute(ATTR_APPUSER, user);
+		if (!errorFlag) {
+			try {
+				request.setAttribute(ATTR_OPERATOR_ACCOUNT, this.appUserProtocol.isOperatorAccount(user));
+			} catch (final AdaptorException e) {
+				LOGGER.error(e, e);
+				errorFlag = true;
+			}
+		}
 		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);

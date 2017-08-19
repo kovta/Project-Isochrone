@@ -16,7 +16,7 @@
 	            	<input type="hidden" name="projectId" value="${project.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${submodule.name}">
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${submodule.name}" required>
 	                </div>
 
            			<div class="md-form form-sm">
