@@ -1,4 +1,4 @@
-package com.kota.stratagem.ejbserviceclient;
+package com.kota.stratagem.ejbserviceclient.protocol;
 
 import javax.ejb.Remote;
 

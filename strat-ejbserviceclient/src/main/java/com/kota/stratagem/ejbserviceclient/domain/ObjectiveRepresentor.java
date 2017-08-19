@@ -170,6 +170,12 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 				+ this.projects + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + "]\n";
 	}
 
+	public String toTextMessage() {
+		return "ObjectiveRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
+				+ ", status=" + this.status + ", deadline=" + this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId()
+				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", modificationDate=" + this.modificationDate + "]";
+	}
+
 	public void addProject(ProjectRepresentor project) {
 		this.projects.add(project);
 	}
