@@ -1,85 +1,65 @@
 package com.kota.stratagem.messageservice.processing;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 
-import org.apache.log4j.Logger;
-
-import com.kota.stratagem.messageservice.assembly.MessageAssembler;
+import com.kota.stratagem.messageservice.qualifier.ObjectiveOriented;
 import com.kota.stratagem.persistence.entity.AppUser;
-import com.kota.stratagem.persistence.entity.Notification;
+import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
-import com.kota.stratagem.persistence.service.AppUserService;
-import com.kota.stratagem.persistence.service.NotificationService;
+import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.util.Constants;
 
-@Stateless(mappedName = "ejb/objectiveProcessor")
-public class ObjectiveDevelopmentProcessorImpl implements ObjectiveDevelopmentProcessor {
-
-	private static final Logger LOGGER = Logger.getLogger(ObjectiveDevelopmentProcessorImpl.class);
+@ObjectiveOriented
+public class ObjectiveDevelopmentProcessorImpl extends AbstractDevelopmentProcessor implements DevelopmentProcessor {
 
 	@EJB
-	private NotificationService notificationService;
-
-	@EJB
-	private AppUserService appUserService;
+	protected ObjectiveService objectiveService;
 
 	@Override
-	public void processCreation(String message) {
-		message = message.replace("[", "");
-		message = message.replace("]", "");
-		final String[] attributes = message.split(", ");
-		String inducer = "", name = "", priority = "", deadline = "", confidentiality = "";
-		for (final String attribute : attributes) {
-			final String key = attribute.split("=")[0];
-			final String value = attribute.split("=").length > 1 ? attribute.split("=")[1] != null ? attribute.split("=")[1] : "" : "";
-			switch (key) {
-				case "creator_id":
-					inducer = value;
-					break;
-				case "name":
-					name = value;
-					break;
-				case "priority":
-					priority = value;
-					break;
-				case "deadline":
-					deadline = value;
-					break;
-				case "confidentiality":
-					confidentiality = value;
-					break;
-				default:
-					break;
-			}
+	public void processCreation(String message) throws PersistenceServiceException {
+		final Map<String, String> attributes = this.processMessageContent(message, Constants.CREATION_SELECTOR);
+		final Set<AppUser> recipients = this.appUserService.readAll();
+		recipients.remove(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))));
+		this.handleCreationProperties(attributes, Constants.OBJECTIVE_DATA_NAME, recipients);
+	}
+
+	@Override
+	public void processAssignment(String message) throws PersistenceServiceException {
+		final Map<String, String> attributes = this.processMessageContent(message, Constants.ASSIGNMENT_SELECTOR);
+		this.handleAssignmentProperties(attributes, Constants.OBJECTIVE_DATA_NAME, attributes.get(Constants.OBJECTIVE_NAME_ATTRIBUTE_DATA_NAME));
+	}
+
+	@Override
+	public void processDissociation(String message) throws PersistenceServiceException {
+		final Map<String, String> attributes = this.processMessageContent(message, Constants.DISSOCIATION_SELECTOR);
+		this.handleDissociationProperties(attributes, Constants.OBJECTIVE_DATA_NAME, attributes.get(Constants.OBJECTIVE_NAME_ATTRIBUTE_DATA_NAME));
+	}
+
+	@Override
+	public void processModification(String originMessage, String resultMessage) throws PersistenceServiceException {
+		final Map<String, String> origin_attributes = this.processMessageContent(originMessage, Constants.UPDATE_SELECTOR);
+		final Map<String, String> result_attributes = this.processMessageContent(resultMessage, Constants.UPDATE_SELECTOR);
+		final Set<AppUser> recipients = new HashSet<>();
+		for (final AppUserObjectiveAssignment assignment : this.objectiveService
+				.readWithAssignments(Long.parseLong(result_attributes.get(Constants.ID_DATA_NAME))).getAssignedUsers()) {
+			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
 		}
-		try {
-			final Notification notification = this.notificationService.create(Long.parseLong(inducer),
-					MessageAssembler.buildCreationMessage(Constants.OBJECTIVE_DATA_NAME, name, priority, deadline, confidentiality));
-			for (final AppUser user : this.appUserService.readAll()) {
-				this.appUserService.readWithNotifications(user.getId()).addNotification(notification);
-			}
-		} catch (NumberFormatException | PersistenceServiceException e) {
-			e.printStackTrace();
+		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_NAME).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))) {
+			recipients.add(this.appUserService.readElementary(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))));
 		}
+		this.handleModificationProperties(origin_attributes, result_attributes, Constants.OBJECTIVE_DATA_NAME, recipients);
 	}
 
 	@Override
-	public void processAssignment(String message) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void processModification(String message) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void processDeletion(String message) {
-		// TODO Auto-generated method stub
-
+	public void processDeletion(String message, String operator) throws PersistenceServiceException {
+		final Map<String, String> attributes = this.processMessageContent(message, Constants.DELETION_SELECTOR);
+		final Set<AppUser> recipients = this.appUserService.readAll();
+		recipients.remove(this.appUserService.readElementary(operator));
+		this.handleDeletionProperties(attributes, Constants.OBJECTIVE_DATA_NAME, operator, recipients);
 	}
 
 }

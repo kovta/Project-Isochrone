@@ -15,41 +15,41 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.util.Constants;
 
-@MessageDriven(name = "StructureCreationListener", activationConfig = { //
+@MessageDriven(name = "StructureAssignmentListener", activationConfig = { //
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-		@ActivationConfigProperty(propertyName = "destination", propertyValue = "stratagem-creation-notification-queue"),
+		@ActivationConfigProperty(propertyName = "destination", propertyValue = "stratagem-assignment-notification-queue"),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge")
 		//
 })
-public class StructureCreationListener extends AbstractDevelopmentMessageRouter implements MessageListener {
+public class StructureAssignmentListener extends AbstractDevelopmentMessageRouter implements MessageListener {
 
-	private static final Logger LOGGER = Logger.getLogger(StructureCreationListener.class);
+	private static final Logger LOGGER = Logger.getLogger(StructureAssignmentListener.class);
 
 	@PostConstruct
 	public void initialize() {
-		LOGGER.info("Structure Creation Listener initialized");
+		LOGGER.info("Structure Assignment Listener initialized");
 	}
 
 	@Override
 	public void onMessage(final Message message) {
 		try {
-			if (this.certified(message, Constants.CREATION_SELECTOR)) {
+			if (this.certified(message, Constants.ASSIGNMENT_SELECTOR)) {
 				final TextMessage textMessage = (TextMessage) message;
 				final String content = textMessage.getText();
 				final String[] partitions = content.split(Pattern.quote(Constants.PAYLOAD_SEPARATOR));
 				final String structureSelector = partitions[0];
 				switch (structureSelector) {
-					case Constants.OBJECTIVE_REPRESENTOR_DATA_NAME:
-						this.objectiveProcessor.processCreation(partitions[1]);
+					case Constants.APP_USER_OBJECTIVE_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+						this.objectiveProcessor.processAssignment(partitions[1]);
 						break;
-					case Constants.PROJECT_REPRESENTOR_DATA_NAME:
-						this.projectProcessor.processCreation(partitions[1]);
+					case Constants.APP_USER_PROJECT_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+						this.projectProcessor.processAssignment(partitions[1]);
 						break;
-					case Constants.SUBMODULE_REPRESENTOR_DATA_NAME:
-						this.submoduleProcessor.processCreation(partitions[1]);
+					case Constants.APP_USER_SUBMODULE_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+						this.submoduleProcessor.processAssignment(partitions[1]);
 						break;
-					case Constants.TASK_REPRESENTOR_DATA_NAME:
-						this.taskProcessor.processCreation(partitions[1]);
+					case Constants.APP_USER_TASK_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+						this.taskProcessor.processAssignment(partitions[1]);
 						break;
 					default:
 						break;

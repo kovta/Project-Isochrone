@@ -1,6 +1,6 @@
 package com.kota.stratagem.messageservice.listener;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Queue;
@@ -8,28 +8,33 @@ import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 
-import com.kota.stratagem.messageservice.processing.ObjectiveDevelopmentProcessor;
-import com.kota.stratagem.messageservice.processing.ProjectDevelopmentProcessor;
-import com.kota.stratagem.messageservice.processing.SubmoduleDevelopmentProcessor;
-import com.kota.stratagem.messageservice.processing.TaskDevelopmentProcessor;
+import com.kota.stratagem.messageservice.processing.DevelopmentProcessor;
+import com.kota.stratagem.messageservice.qualifier.ObjectiveOriented;
+import com.kota.stratagem.messageservice.qualifier.ProjectOriented;
+import com.kota.stratagem.messageservice.qualifier.SubmoduleOriented;
+import com.kota.stratagem.messageservice.qualifier.TaskOriented;
 
 public class AbstractDevelopmentMessageRouter {
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractDevelopmentMessageRouter.class);
 
-	@EJB
-	protected ObjectiveDevelopmentProcessor objectiveProcessor;
+	@Inject
+	@ObjectiveOriented
+	protected DevelopmentProcessor objectiveProcessor;
 
-	@EJB
-	protected ProjectDevelopmentProcessor projectProcessor;
+	@Inject
+	@ProjectOriented
+	protected DevelopmentProcessor projectProcessor;
 
-	@EJB
-	protected SubmoduleDevelopmentProcessor submoduleProcessor;
+	@Inject
+	@SubmoduleOriented
+	protected DevelopmentProcessor submoduleProcessor;
 
-	@EJB
-	protected TaskDevelopmentProcessor taskProcessor;
+	@Inject
+	@TaskOriented
+	protected DevelopmentProcessor taskProcessor;
 
-	public boolean handleMessage(final Message message, final String operationSelector) throws JMSException {
+	public boolean certified(final Message message, final String operationSelector) throws JMSException {
 		if (LOGGER.isDebugEnabled()) {
 			final Queue destination = (Queue) message.getJMSDestination();
 			final String queueName = destination.getQueueName();
