@@ -42,6 +42,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get Objective by id (" + request.getParameter(ID) + ")");
+		this.setUserAttributes(request);
 		final String id = request.getParameter(ID);
 		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
 			response.sendRedirect(Page.ERROR.getUrl());
@@ -115,7 +116,6 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
-				// new attributes must be requested
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality, null, null,
 						null, null);
 				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);

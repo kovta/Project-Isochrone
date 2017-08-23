@@ -96,6 +96,7 @@
 		    
 		    <!-- Modals -->
 			<jsp:include page="submodule-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
 		    
 		</div>

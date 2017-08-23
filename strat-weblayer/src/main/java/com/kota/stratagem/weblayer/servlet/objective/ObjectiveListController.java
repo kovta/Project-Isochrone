@@ -7,7 +7,6 @@ import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,10 +17,11 @@ import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveListAttribute;
+import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 import com.kota.stratagem.weblayer.servlet.project.ProjectListController;
 
 @WebServlet("/ObjectiveList")
-public class ObjectiveListController extends HttpServlet implements ObjectiveListAttribute {
+public class ObjectiveListController extends AbstractRefinerServlet implements ObjectiveListAttribute {
 
 	private static final long serialVersionUID = -7211465510306969487L;
 
@@ -34,6 +34,7 @@ public class ObjectiveListController extends HttpServlet implements ObjectiveLis
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get All Objectives");
 		try {
+			this.setUserAttributes(request);
 			final List<ObjectiveRepresentor> objectives = this.protocol.getAllObjectives();
 			request.setAttribute(ATTR_OBJECTIVES, objectives);
 		} catch (final AdaptorException e) {

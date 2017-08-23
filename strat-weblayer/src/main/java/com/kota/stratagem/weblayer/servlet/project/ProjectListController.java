@@ -7,7 +7,6 @@ import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,9 +23,10 @@ import com.kota.stratagem.weblayer.common.FormValue;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.project.ProjectListAttribute;
 import com.kota.stratagem.weblayer.common.project.ProjectListParameter;
+import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
 @WebServlet("/ProjectList")
-public class ProjectListController extends HttpServlet implements ProjectListAttribute, ProjectListParameter, FormValue {
+public class ProjectListController extends AbstractRefinerServlet implements ProjectListAttribute, ProjectListParameter, FormValue {
 
 	private static final long serialVersionUID = -7360081024797943969L;
 
@@ -39,6 +39,7 @@ public class ProjectListController extends HttpServlet implements ProjectListAtt
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get All Projects");
 		try {
+			this.setUserAttributes(request);
 			final List<ObjectiveRepresentor> objectiveProjectClusters = this.protocol.getObjectiveProjectClusters();
 			request.setAttribute(ATTR_PARENT_OBJECTIVES_CLUSTERS, objectiveProjectClusters);
 		} catch (final ServiceException e) {

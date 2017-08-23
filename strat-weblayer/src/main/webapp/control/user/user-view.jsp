@@ -87,7 +87,6 @@
                 </div>
                 <!--/.Sidebar-->
                 
-                
                 <!--Main column-->
                 <div class="col-lg-8">
                     <!--First row-->
@@ -98,12 +97,30 @@
 	                         <!-- Nav tabs -->
 	                         <div class="tabs-wrapper">
 	                             <ul class="nav nav-justified classic-tabs tabs-primary" role="tablist">
-	                                 <li class="nav-item tab-listener">
-		                             	 <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" 
-		                             	 	href="#objectivePanel" role="tab" aria-expanded="true">
-		                                 	 <span>Objective Assignments (<c:out value="${user.objectives.size()}" />)</span>
-		                                 </a>
-	                                 </li>
+	                                 <c:choose>
+		                                 <c:when test="${requestScope.operatorAccount}">
+			                                 <li class="nav-item tab-listener">
+				                             	 <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" 
+				                             	 	href="#notificationPanel" role="tab" aria-expanded="true">
+				                                 	 <span>Notifications (<c:out value="${user.notifications.size()}" />)</span>
+				                                 </a>
+			                                 </li>
+											 <li class="nav-item tab-listener">
+				                             	 <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
+				                             	 	href="#objectivePanel" role="tab" aria-expanded="true">
+				                                 	 <span>Objective Assignments (<c:out value="${user.objectives.size()}" />)</span>
+				                                 </a>
+		                                 	 </li>
+										 </c:when>
+										 <c:otherwise>
+											 <li class="nav-item tab-listener">
+				                             	 <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" 
+				                             	 	href="#objectivePanel" role="tab" aria-expanded="true">
+				                                 	 <span>Objective Assignments (<c:out value="${user.objectives.size()}" />)</span>
+				                                 </a>
+		                                 	 </li>										 	 
+										 </c:otherwise>
+									 </c:choose>
 	                                 <li class="nav-item tab-listener">
 		                             	 <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
 		                             	 	href="#projectPanel" role="tab" aria-expanded="true">
@@ -125,49 +142,155 @@
 	                             </ul>
 	                         </div>
 	                         <br/><br/>
-                			<!-- Tab panels -->
+                			 <!-- Tab panels -->
 	                         <div class="tab-content">
-	                         	 <!--Panel 1-->
-	                             <div class="tab-pane fade active show" id="objectivePanel" role="tabpanel" aria-expanded="true">
-		                             <c:choose>
-									     <c:when test="${user.objectives.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-													<div class="text-center content-padder">
-														<h2 class="h2-responsive">There are currently no Objectives</h2>
-														<h2 class="h2-responsive">assigned to this User</h2>
+	                         	 <!-- Notification Panel -->
+	                         	 <c:if test="${requestScope.operatorAccount}">
+		                         	 <div class="tab-pane fade active show" id="notificationPanel" role="tabpanel" aria-expanded="true">
+			                             <c:choose>
+										     <c:when test="${user.notifications.size() == 0}">
+												<div class="row wow fadeIn" data-wow-delay="0.2s">
+		                    					    <div class="col-lg-12">
+														<div class="text-center content-padder">
+															<h2 class="h2-responsive">You currently have no</h2>
+															<h2 class="h2-responsive">new Notifications</h2>
+														</div>
 													</div>
 												</div>
-											</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.user.objectives}" var="assignment">
-													<div class="col-lg-4">
-									                    <!--Card-->
-									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <!--Card content-->
-									                        <div class="card-block">
-									                            <!--Title-->
-									                            <h4 class="card-title text-center"><c:out value="${assignment.objective.name}" /></h4>
-									                            <hr/>
-									                            <!--Text-->
-									                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
-									                            <p class="card-text">Assignment date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
-									                            </p>
-																<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
-															</div>
-									                        <!--/.Card content-->
-									                    </div>
-									                    <br/><br/><br/><br/><br/>
-									                    <!--/.Card-->	
+											</c:when>
+											<c:otherwise>
+												<div class="card">
+													<div class="card-block">
+														<table class="table table-hover">
+															<colgroup>
+																<col span="1" style="width: 3%;">
+																<col span="1" style="width: 62%;">
+																<col span="1" style="width: 10%;">
+																<col span="1" style="width: 20%;">
+														    </colgroup>
+														    <thead>
+														        <tr>
+															        <th>#</th>
+															        <th>Message</th>
+															        <th class="text-center">Inducer</th>
+															        <th class="text-center">Date</th>
+														        </tr>
+														    </thead>
+														    <tbody>
+														    	<c:set var="count" value="0" scope="page" />
+																<c:forEach items="${requestScope.user.notifications}" var="notification">
+																	<c:set var="count" value="${count + 1}" scope="page"/>
+																	<c:set var="size" value="${user.notifications.size()}" scope="page"/>
+											                        <c:choose>
+										     							<c:when test="${(size - user.notificationViewCount) ge count}">
+										     								<tr class="new-notification">
+										     									<th scope="row"><c:out value="${count}" /></th>
+													                            <td><c:out value="${notification.message}" /></td>
+													                            <td class="text-center"><a href="User?id=<c:out value="${notification.inducer.id}" />"><c:out value="${notification.inducer.name}" /></a></td>
+													                            <td class="text-center"><fmt:formatDate type="date" value="${notification.creationDate}" pattern="yyyy-MM-dd hh:mm" /></td>
+													                        </tr>		
+										     							</c:when>
+										     							<c:otherwise>
+										     								<tr>
+										     									<th scope="row"><c:out value="${count}" /></th>
+													                            <td><c:out value="${notification.message}" /></td>
+													                            <td class="text-center"><a href="User?id=<c:out value="${notification.inducer.id}" />"><c:out value="${notification.inducer.name}" /></a></td>
+													                            <td class="text-center"><fmt:formatDate type="date" value="${notification.creationDate}" pattern="yyyy-MM-dd hh:mm" /></td>
+													                        </tr>
+										     							</c:otherwise>
+										     						</c:choose>
+																</c:forEach>
+														    </tbody>
+														</table>
 													</div>
-												</c:forEach>
-											</div>
-										</c:otherwise>
-									</c:choose>
-	                             </div>
+												</div>
+											</c:otherwise>
+										</c:choose>
+		                             </div>
+	                             </c:if>
+	                         	 <!--Panel 1-->
+								 <c:choose>
+     	                             <c:when test="${requestScope.operatorAccount}">
+			                             <div class="tab-pane fade" id="objectivePanel" role="tabpanel" aria-expanded="true">
+				                             <c:choose>
+											     <c:when test="${user.objectives.size() == 0}">
+													<div class="row wow fadeIn" data-wow-delay="0.2s">
+			                    					    <div class="col-lg-12">
+															<div class="text-center content-padder">
+																<h2 class="h2-responsive">There are currently no Objectives</h2>
+																<h2 class="h2-responsive">assigned to this User</h2>
+															</div>
+														</div>
+													</div>
+												</c:when>
+												<c:otherwise>
+													<div class="row">
+														<c:forEach items="${requestScope.user.objectives}" var="assignment">
+															<div class="col-lg-4">
+											                    <div class="card wow fadeIn" data-wow-delay="0.2s">
+											                        <div class="card-block">
+											                            <h4 class="card-title text-center"><c:out value="${assignment.objective.name}" /></h4>
+											                            <hr/>
+											                            <p class="card-text">Assigned by: 
+											                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
+											                            		<c:out value="${assignment.entrustor.name}" />
+											                            	</a>		
+											                            </p>
+											                            <p class="card-text">Date: 
+											                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
+											                            </p>
+																		<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
+																	</div>
+											                    </div>
+											                    <br/>	
+															</div>
+														</c:forEach>
+													</div>
+												</c:otherwise>
+											</c:choose>
+			                             </div>
+									</c:when>
+	                             	<c:otherwise>
+	                             		<div class="tab-pane fade active show" id="objectivePanel" role="tabpanel" aria-expanded="true">
+				                             <c:choose>
+											     <c:when test="${user.objectives.size() == 0}">
+													<div class="row wow fadeIn" data-wow-delay="0.2s">
+			                    					    <div class="col-lg-12">
+															<div class="text-center content-padder">
+																<h2 class="h2-responsive">There are currently no Objectives</h2>
+																<h2 class="h2-responsive">assigned to this User</h2>
+															</div>
+														</div>
+													</div>
+												</c:when>
+												<c:otherwise>
+													<div class="row">
+														<c:forEach items="${requestScope.user.objectives}" var="assignment">
+															<div class="col-lg-4">
+											                    <div class="card wow fadeIn" data-wow-delay="0.2s">
+											                        <div class="card-block">
+											                            <h4 class="card-title text-center"><c:out value="${assignment.objective.name}" /></h4>
+											                            <hr/>
+											                            <p class="card-text">Assigned by: 
+											                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
+											                            		<c:out value="${assignment.entrustor.name}" />
+											                            	</a>		
+											                            </p>
+											                            <p class="card-text">Date: 
+											                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
+											                            </p>
+																		<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
+																	</div>
+											                    </div>
+											                    <br/>	
+															</div>
+														</c:forEach>
+													</div>
+												</c:otherwise>
+											</c:choose>
+			                             </div>
+	                             	</c:otherwise>
+	                             </c:choose>
 	                             <!--/.Panel 1-->
 	                             <!--Panel 2-->
 	                             <div class="tab-pane fade" id="projectPanel" role="tabpanel" aria-expanded="false">
@@ -186,24 +309,22 @@
 											<div class="row">
 												<c:forEach items="${requestScope.user.projects}" var="assignment">
 													<div class="col-lg-4">
-									                    <!--Card-->
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <!--Card content-->
 									                        <div class="card-block">
-									                            <!--Title-->
 									                            <h4 class="card-title text-center"><c:out value="${assignment.project.name}" /></h4>
 									                            <hr/>
-									                            <!--Text-->
-									                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
-									                            <p class="card-text">Assignment date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+									                            <p class="card-text">Assigned by: 
+									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
+									                            		<c:out value="${assignment.entrustor.name}" />
+									                            	</a>
+									                            </p>
+									                            <p class="card-text">Date: 
+									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 									                            </p>
 																<a href="Project?id=<c:out value="${assignment.project.id}" />" class="btn btn-primary">Inspect Project</a>
 															</div>
-									                        <!--/.Card content-->
 									                    </div>
-									                    <br/><br/><br/><br/><br/>
-									                    <!--/.Card-->							                    
+									                    <br/>							                    
 							                        </div>
 												</c:forEach>
 											</div>		    
@@ -228,24 +349,22 @@
 											<div class="row">
 												<c:forEach items="${requestScope.user.submodules}" var="assignment">
 													<div class="col-lg-4">
-									                    <!--Card-->
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <!--Card content-->
 									                        <div class="card-block">
-									                            <!--Title-->
 									                            <h4 class="card-title text-center"><c:out value="${assignment.submodule.name}" /></h4>
 									                            <hr/>
-									                            <!--Text-->
-									                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
-									                            <p class="card-text">Assignment date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+									                            <p class="card-text">Assigned by: 
+									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
+									                            		<c:out value="${assignment.entrustor.name}" />
+									                            	</a>
+									                            </p>
+									                            <p class="card-text">Date: 
+									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 									                            </p>
 																<a href="Submodule?id=<c:out value="${assignment.submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
 															</div>
-									                        <!--/.Card content-->
 									                    </div>
-									                    <br/><br/><br/><br/><br/>
-									                    <!--/.Card-->
+									                    <br/>
 							                        </div>
 												</c:forEach>
 											</div>		    
@@ -270,24 +389,22 @@
 											<div class="row">
 												<c:forEach items="${requestScope.user.tasks}" var="assignment">
 													<div class="col-lg-4">
-									                    <!--Card-->
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <!--Card content-->
 									                        <div class="card-block">
-									                            <!--Title-->
 									                            <h4 class="card-title text-center"><c:out value="${assignment.task.name}" /></h4>
 									                            <hr/>
-									                            <!--Text-->
-									                            <p class="card-text">Assigned by: <c:out value="${assignment.entrustor.name}" /></p>
-									                            <p class="card-text">Assignment date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd" />
+									                            <p class="card-text">Assigned by: 
+									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
+									                            		<c:out value="${assignment.entrustor.name}" />
+									                            	</a>
+									                            </p>
+									                            <p class="card-text">Date: 
+									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 									                            </p>
 																<a href="Task?id=<c:out value="${assignment.task.id}" />" class="btn btn-primary">Inspect Task</a>
 															</div>
-									                        <!--/.Card content-->
 									                    </div>
-									                    <br/><br/><br/><br/><br/>
-									                    <!--/.Card-->
+									                    <br/>
 									            	</div>
 												</c:forEach>
 											</div>		    
@@ -306,6 +423,7 @@
         
    			<!-- Modals -->
    			<jsp:include page="user-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

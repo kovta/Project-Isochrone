@@ -32,7 +32,7 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final AppUserRepresentor user = new AppUserRepresentor("", "", "", RoleRepresentor.PRISTINE_USER, null, null);
+		final AppUserRepresentor user = new AppUserRepresentor("", "", "", RoleRepresentor.PRISTINE_USER, null, null, 0);
 		this.forward(request, response, user, false);
 	}
 
@@ -60,7 +60,7 @@ public class RegistrationServlet extends HttpServlet implements RegistrationPara
 				} else if (!(password.equals(password_confirmation))) {
 					request.setAttribute(ATTR_REG_ERROR, "Unmatching passwords");
 				}
-				final AppUserRepresentor user = new AppUserRepresentor(username, "", email, RoleRepresentor.PRISTINE_USER, null, null);
+				final AppUserRepresentor user = new AppUserRepresentor(username, "", email, RoleRepresentor.PRISTINE_USER, null, null, 0);
 				this.forward(request, response, user, false);
 			} else {
 				AppUserRepresentor user = null;

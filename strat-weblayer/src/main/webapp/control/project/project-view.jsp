@@ -242,10 +242,8 @@
 											<div class="row">
 												<c:forEach items="${requestScope.project.assignedUsers}" var="assignment">
 													<div class="col-lg-4">
-														<!--Card-->
 														<br/><br/><br/>
 														<div class="card wow fadeIn" data-wow-delay="0.2s">
-														    <!--Card content-->
 															<div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
@@ -253,10 +251,8 @@
 																	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&projectId=<c:out value="${project.id}" />">Unassign user</a>
 														    	</div>
 															</div>
-															<!--/.Card content-->
 														</div>
 														<br/><br/>
-														<!--/.Card-->
 													</div>
 												</c:forEach>
 											</div>		    
@@ -281,10 +277,8 @@
 											<div class="row">
 												<c:forEach items="${requestScope.objective.assignedTeams}" var="assignment">
 													<div class="col-lg-4">
-									                    <!--Card-->
 									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <!--Card content-->
 									                        <div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
@@ -292,10 +286,8 @@
 									                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
 									                            </div>
 									                        </div>
-									                        <!--/.Card content-->
 									                    </div>
 									                    <br/><br/>
-									                    <!--/.Card-->
 									            	</div>
 												</c:forEach>
 											</div>		    
@@ -321,6 +313,7 @@
 			<jsp:include page="../submodule/submodule-alert.jsp"></jsp:include>
 			<jsp:include page="../task/task-alert.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
             
 		</div>

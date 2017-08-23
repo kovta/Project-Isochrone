@@ -40,6 +40,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get Task by id (" + request.getParameter(ID) + ")");
+		this.setUserAttributes(request);
 		final String id = request.getParameter(ID);
 		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
 			response.sendRedirect(Page.ERROR.getUrl());

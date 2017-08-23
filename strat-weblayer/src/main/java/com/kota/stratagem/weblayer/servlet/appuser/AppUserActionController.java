@@ -32,6 +32,7 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.setUserAttributes(request);
 		final String id = request.getParameter(ID), username = request.getParameter(NAME);
 		boolean errorFlag = false;
 		if (((id == null) || "".equals(id)) && (username != null)) {
@@ -103,14 +104,13 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 			AppUserRepresentor user = null;
 			try {
 				LOGGER.info("Update AppUser: (" + id + ", email: " + email + ")");
-				// Protocol redesign needed
 				final AppUserRepresentor userTemp = this.appUserProtocol.getAppUser(id);
 				user = this.appUserProtocol.saveAppUser(id, userTemp.getName(), userTemp.getPasswordHash(), email, userTemp.getRole(),
 						request.getUserPrincipal().getName());
-				request.getSession().setAttribute(ATTR_SUCCESS, "Account updated successfully!");
+				request.getSession().setAttribute(ATTR_USER_SUCCESS, "Account updated successfully!");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
-				request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
+				request.getSession().setAttribute(ATTR_USER_ERROR, "Operation failed");
 			}
 			this.forward(request, response, user, false, returnPoint, false);
 		} catch (final Exception e) {

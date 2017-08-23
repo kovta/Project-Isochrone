@@ -126,6 +126,7 @@
         <!-- Modals -->
 		<jsp:include page="/modal/login.jsp"></jsp:include>
 		<jsp:include page="/modal/register.jsp"></jsp:include>
+		<jsp:include page="/modal/logout.jsp"></jsp:include>
 		<jsp:include page="/partial/access-alert.jsp"></jsp:include>
 		<!-- /Modals -->
 		

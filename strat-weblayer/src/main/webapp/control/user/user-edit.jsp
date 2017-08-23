@@ -58,6 +58,12 @@
 	            	<!--/.Card content-->
 		        </div>
 		    </div>
+		
+		   	<!-- Modals -->
+   			<jsp:include page="user-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
+			<!-- /Modals -->
+		
 		</div>
 		<div class="push"></div>
 	</div>

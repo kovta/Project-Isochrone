@@ -42,6 +42,6 @@
 	   <a href="Project?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect Project</a>
 	</div>
 	<!--/.Card content-->
-	</div>
+</div>
 <br/>
 <!--/.Card-->

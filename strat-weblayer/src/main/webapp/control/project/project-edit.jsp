@@ -137,6 +137,7 @@
 		    
 		    <!-- Modals -->
 			<jsp:include page="project-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
 			
 		</div>

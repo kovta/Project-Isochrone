@@ -2,9 +2,18 @@ package com.kota.stratagem.weblayer.servlet;
 
 import java.util.Scanner;
 
+import javax.ejb.EJB;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 
-public abstract class AbstractRefinerServlet extends HttpServlet {
+import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
+import com.kota.stratagem.weblayer.common.appuser.AppUserAttribute;
+
+public abstract class AbstractRefinerServlet extends HttpServlet implements AppUserAttribute {
+
+	@EJB
+	private AppUserProtocol appUserProtocol;
 
 	private static final long serialVersionUID = 3731026449748271832L;
 
@@ -12,7 +21,7 @@ public abstract class AbstractRefinerServlet extends HttpServlet {
 	protected static final String GET_REQUEST_QUERY_APPENDER = "?id=";
 	protected static final String GET_REQUEST_QUERY_EDIT_PARAMETER = "&edit=";
 
-	public boolean isNumeric(String parameter) {
+	protected boolean isNumeric(String parameter) {
 		boolean valid = false;
 		final Scanner sc = new Scanner(parameter.trim());
 		if (!sc.hasNextInt(10)) {
@@ -23,6 +32,14 @@ public abstract class AbstractRefinerServlet extends HttpServlet {
 		}
 		sc.close();
 		return valid;
+	}
+
+	protected void setUserAttributes(HttpServletRequest request) {
+		try {
+			request.getSession().setAttribute(ATTR_NOTIFICATION_COUNT, this.appUserProtocol.getAppUserNewNotificationCount(request.getRemoteUser()));
+		} catch (final AdaptorException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

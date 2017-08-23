@@ -41,6 +41,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.info("Get Project by id (" + request.getParameter(ID) + ")");
+		this.setUserAttributes(request);
 		final String id = request.getParameter(ID);
 		if ((id == null) || "".equals(id) || !this.isNumeric(id)) {
 			response.sendRedirect(Page.ERROR.getUrl());

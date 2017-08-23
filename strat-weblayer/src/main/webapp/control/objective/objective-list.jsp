@@ -94,6 +94,7 @@
 			<!-- Modals -->
 			<jsp:include page="objective-create.jsp"></jsp:include>
 			<jsp:include page="objective-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
 			
 		</div>

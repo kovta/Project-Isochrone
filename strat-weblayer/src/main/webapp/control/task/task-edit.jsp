@@ -121,6 +121,7 @@
 		    
    			<!-- Modals -->
 			<jsp:include page="task-alert.jsp"></jsp:include>
+			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
 		    
 		</div>

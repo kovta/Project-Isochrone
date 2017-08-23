@@ -12,5 +12,7 @@
 </h4>
 <hr/>
 <!--Text-->
-<p class="card-text">Assigned by: <c:out value="${assignmentItem.entrustor.name}" /></p>
-<p class="card-text">Assignment date: <fmt:formatDate type="date" value="${assignmentItem.creationDate}" pattern="yyyy-MM-dd" /></p>
+<p class="card-text">Assigned by: 
+	<a href="User?id=<c:out value="${assignmentItem.entrustor.id}" />"><c:out value="${assignmentItem.entrustor.name}" /></a>
+</p>
+<p class="card-text">Date: <fmt:formatDate type="date" value="${assignmentItem.creationDate}" pattern="yyyy-MM-dd hh:mm" /></p>
