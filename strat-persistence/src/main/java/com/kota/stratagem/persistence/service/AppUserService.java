@@ -20,6 +20,8 @@ public interface AppUserService {
 
 	AppUser readWithNotifications(Long id) throws PersistenceServiceException;
 
+	AppUser readWithNotifications(String username) throws PersistenceServiceException;
+
 	AppUser readComplete(Long id) throws PersistenceServiceException;
 
 	AppUser readComplete(String username) throws PersistenceServiceException;
@@ -29,6 +31,8 @@ public interface AppUserService {
 	Set<AppUser> readAll() throws PersistenceServiceException;
 
 	AppUser update(Long id, String name, String passwordHash, String email, Role role, String modifier) throws PersistenceServiceException;
+
+	AppUser updateNotificationViewCount(Long id, int notificationViewCount) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

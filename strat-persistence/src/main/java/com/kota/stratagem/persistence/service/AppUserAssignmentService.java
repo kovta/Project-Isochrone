@@ -19,6 +19,14 @@ public interface AppUserAssignmentService {
 
 	AppUserTaskAssignment createTaskAssignment(Long entrustor, Long recipient, Long task) throws PersistenceServiceException;
 
+	AppUserObjectiveAssignment readObjectiveAssignment(Long id) throws PersistenceServiceException;
+
+	AppUserProjectAssignment readProjectAssignment(Long id) throws PersistenceServiceException;
+
+	AppUserSubmoduleAssignment readSubmoduleAssignment(Long id) throws PersistenceServiceException;
+
+	AppUserTaskAssignment readTaskAssignment(Long id) throws PersistenceServiceException;
+
 	void deleteObjectiveAssignment(Long id) throws PersistenceServiceException;
 
 	void deleteProjectAssignment(Long id) throws PersistenceServiceException;

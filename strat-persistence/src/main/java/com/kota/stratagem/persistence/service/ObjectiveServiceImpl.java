@@ -76,6 +76,11 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	}
 
 	@Override
+	public Objective readWithAssignments(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID_WITH_ASSIGNMENTS, "Get Objective with Assignments by id (" + id + ")");
+	}
+
+	@Override
 	public Objective readWithTasks(Long id) throws PersistenceServiceException {
 		return this.retrieveSingleRecord(id, ObjectiveQuery.GET_BY_ID_WITH_TASKS, "Get Objective with Tasks by id (" + id + ")");
 	}

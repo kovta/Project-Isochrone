@@ -1,6 +1,8 @@
 package com.kota.stratagem.persistence.service;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -31,16 +33,30 @@ public class NotificationServiceImpl implements NotificationService {
 	private AppUserService appUserService;
 
 	@Override
-	public Notification create(Long inducer, String message) throws PersistenceServiceException {
+	public void create(Long inducer, String message, Long[] recipients) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Notification (inducer: " + inducer + ", message: " + message + ")");
 		}
 		try {
+			if (recipients.length != 0) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Notification created with empty recipient list (inducer: " + inducer + ", message: " + message + ")");
+				}
+			}
 			final AppUser operator = this.appUserService.readElementary(inducer);
 			final Notification notification = new Notification(message, new Date(), operator);
-			this.entityManager.persist(notification);
+			final Set<AppUser> recipientSet = new HashSet<AppUser>();
+			for (final Long recipient : recipients) {
+				recipientSet.add(this.appUserService.readElementary(recipient));
+			}
+			notification.setRecipients(recipientSet);
+			this.entityManager.merge(notification);
 			this.entityManager.flush();
-			return notification;
+			if (recipients.length == 0) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Notification created with empty recipient list as log entry (inducer: " + inducer + ", message: " + message + ")");
+				}
+			}
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during persisting Notification (" + message + ")! " + e.getLocalizedMessage(), e);
 		}

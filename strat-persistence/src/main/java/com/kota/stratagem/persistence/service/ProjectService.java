@@ -17,6 +17,8 @@ public interface ProjectService {
 
 	Project readElementary(Long id) throws PersistenceServiceException;
 
+	Project readWithAssignments(Long id) throws PersistenceServiceException;
+
 	Project readWithTasks(Long id) throws PersistenceServiceException;
 
 	Project readWithSubmodules(Long id) throws PersistenceServiceException;

@@ -57,16 +57,6 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 	@EJB
 	private TaskService taskService;
 
-	private <T extends AbstractMonitoredItem> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
-		if (object.getCreator().getId() == subject) {
-			return object.getCreator();
-		} else if (object.getModifier().getId() == subject) {
-			return object.getModifier();
-		} else {
-			return this.appUserService.readElementary(subject);
-		}
-	}
-
 	private <T extends AbstractMonitoredItem, E extends AbstractAppUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
 			throws PersistenceServiceException {
 		subject.setEntrustor(this.mergeOperators(entrustor, object));
@@ -75,15 +65,13 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 		this.entityManager.flush();
 	}
 
-	private void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Remove User " + object + " Assignment by id (" + id + ")");
-		}
-		try {
-			this.entityManager.createNamedQuery(query).setParameter(AssignmentParameter.ID, id).executeUpdate();
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error when removing  User " + object + " Assignment by id (" + id + ")! " + e.getLocalizedMessage(),
-					e);
+	private <T extends AbstractMonitoredItem> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
+		if (object.getCreator().getId() == subject) {
+			return object.getCreator();
+		} else if (object.getModifier().getId() == subject) {
+			return object.getModifier();
+		} else {
+			return this.appUserService.readElementary(subject);
 		}
 	}
 
@@ -148,6 +136,56 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 		} catch (final Exception e) {
 			throw new PersistenceServiceException(
 					"Unknown error during persisting User Task Assignment (task=" + task + ", recipient=" + recipient + ")! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	private Object readAssignment(Long id, String query, String object, Class<? extends AbstractAppUserAssignment> assignmentType)
+			throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Read User " + object + " Assignment by id (" + id + ")");
+		}
+		Object result = null;
+		try {
+			result = this.entityManager.createNamedQuery(query, assignmentType).setParameter(AssignmentParameter.ID, id).getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException(
+					"Unknown error while retrieving User " + object + " Assignment by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public AppUserObjectiveAssignment readObjectiveAssignment(Long id) throws PersistenceServiceException {
+		return (AppUserObjectiveAssignment) this.readAssignment(id, AppUserObjectiveAssignmentQuery.GET_BY_ID, Constants.OBJECTIVE_DATA_NAME,
+				AppUserObjectiveAssignment.class);
+	}
+
+	@Override
+	public AppUserProjectAssignment readProjectAssignment(Long id) throws PersistenceServiceException {
+		return (AppUserProjectAssignment) this.readAssignment(id, AppUserProjectAssignmentQuery.GET_BY_ID, Constants.PROJECT_DATA_NAME,
+				AppUserProjectAssignment.class);
+	}
+
+	@Override
+	public AppUserSubmoduleAssignment readSubmoduleAssignment(Long id) throws PersistenceServiceException {
+		return (AppUserSubmoduleAssignment) this.readAssignment(id, AppUserSubmoduleAssignmentQuery.GET_BY_ID, Constants.SUBMODULE_DATA_NAME,
+				AppUserSubmoduleAssignment.class);
+	}
+
+	@Override
+	public AppUserTaskAssignment readTaskAssignment(Long id) throws PersistenceServiceException {
+		return (AppUserTaskAssignment) this.readAssignment(id, AppUserTaskAssignmentQuery.GET_BY_ID, Constants.TASK_DATA_NAME, AppUserTaskAssignment.class);
+	}
+
+	private void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Remove User " + object + " Assignment by id (" + id + ")");
+		}
+		try {
+			this.entityManager.createNamedQuery(query).setParameter(AssignmentParameter.ID, id).executeUpdate();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error while removing  User " + object + " Assignment by id (" + id + ")! " + e.getLocalizedMessage(),
+					e);
 		}
 	}
 

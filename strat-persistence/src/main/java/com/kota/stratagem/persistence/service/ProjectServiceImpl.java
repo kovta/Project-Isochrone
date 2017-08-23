@@ -87,6 +87,11 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
+	public Project readWithAssignments(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID_WITH_ASSIGNMENTS, "Get Project with Assignments by id (" + id + ")");
+	}
+
+	@Override
 	public Project readWithTasks(Long id) throws PersistenceServiceException {
 		return this.retrieveSingleRecord(id, ProjectQuery.GET_BY_ID_WITH_TASKS, "Get Project with Tasks by id (" + id + ")");
 	}

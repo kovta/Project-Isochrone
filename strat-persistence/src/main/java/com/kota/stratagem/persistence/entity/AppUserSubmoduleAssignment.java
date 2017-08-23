@@ -23,6 +23,8 @@ import com.kota.stratagem.persistence.query.AppUserSubmoduleAssignmentQuery;
 @Entity
 @Table(name = "user_submodule_assignments")
 @NamedQueries(value = { //
+		@NamedQuery(name = AppUserSubmoduleAssignmentQuery.GET_BY_ID, query = "SELECT a FROM AppUserSubmoduleAssignment a WHERE a.id=:"
+				+ AssignmentParameter.ID),
 		@NamedQuery(name = AppUserSubmoduleAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserSubmoduleAssignment a WHERE a.id=:"
 				+ AssignmentParameter.ID)
 		//

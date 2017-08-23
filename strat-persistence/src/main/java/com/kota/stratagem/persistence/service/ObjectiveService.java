@@ -17,6 +17,8 @@ public interface ObjectiveService {
 
 	Objective readElementary(Long id) throws PersistenceServiceException;
 
+	Objective readWithAssignments(Long id) throws PersistenceServiceException;
+
 	Objective readWithTasks(Long id) throws PersistenceServiceException;
 
 	Objective readWithProjects(Long id) throws PersistenceServiceException;

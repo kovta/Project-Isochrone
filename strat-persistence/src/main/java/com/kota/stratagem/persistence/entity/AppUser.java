@@ -38,11 +38,13 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME, query = "SELECT u FROM AppUser u WHERE u.name=:" + AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.notifications n WHERE u.id=:"
 				+ AppUserParameter.ID),
+		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_WITH_NOTIFICATIONS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.notifications n WHERE u.name=:"
+				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_TASK_ASSIGNMENTS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.tasks t WHERE u.id=:"
 				+ AppUserParameter.ID),
-		@NamedQuery(name = AppUserQuery.GET_BY_ID_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t WHERE u.id=:"
+		@NamedQuery(name = AppUserQuery.GET_BY_ID_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t LEFT JOIN FETCH u.notifications n WHERE u.id=:"
 				+ AppUserParameter.ID),
-		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t WHERE u.name=:"
+		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t LEFT JOIN FETCH u.notifications n WHERE u.name=:"
 				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_ALL_BY_ROLE, query = "SELECT u FROM AppUser u WHERE u.role=:" + AppUserParameter.ROLE + " ORDER BY u.name"),
 		@NamedQuery(name = AppUserQuery.GET_ALL_APP_USERS, query = "SELECT u FROM AppUser u ORDER BY u.name"),
@@ -83,6 +85,9 @@ public class AppUser implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "user_account_modification_date", nullable = false)
 	private Date acountModificationDate;
+
+	@Column(name = "user_notification_view_count", nullable = false)
+	private int notificationViewCount;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserObjectiveAssignment.class, mappedBy = "recipient")
 	private Set<AppUserObjectiveAssignment> objectives;
@@ -126,7 +131,7 @@ public class AppUser implements Serializable {
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
-			Date acountModificationDate) {
+			Date acountModificationDate, int notificationViewCount) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -136,9 +141,11 @@ public class AppUser implements Serializable {
 		this.registrationDate = registrationDate;
 		this.accountModifier = accountModifier;
 		this.acountModificationDate = acountModificationDate;
+		this.notificationViewCount = notificationViewCount;
 	}
 
-	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate) {
+	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate,
+			int notificationViewCount) {
 		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
@@ -147,6 +154,7 @@ public class AppUser implements Serializable {
 		this.registrationDate = registrationDate;
 		this.accountModifier = accountModifier;
 		this.acountModificationDate = acountModificationDate;
+		this.notificationViewCount = notificationViewCount;
 	}
 
 	public Long getId() {
@@ -207,6 +215,14 @@ public class AppUser implements Serializable {
 
 	public Date getAcountModificationDate() {
 		return this.acountModificationDate;
+	}
+
+	public int getNotificationViewCount() {
+		return this.notificationViewCount;
+	}
+
+	public void setNotificationViewCount(int notificationViewCount) {
+		this.notificationViewCount = notificationViewCount;
 	}
 
 	public void setAcountModificationDate(Date acountModificationDate) {
@@ -288,7 +304,8 @@ public class AppUser implements Serializable {
 	@Override
 	public String toString() {
 		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role
-				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + "]";
+				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + ", notificationViewCount="
+				+ this.notificationViewCount + "]";
 	}
 
 	public void addNotification(Notification notification) {

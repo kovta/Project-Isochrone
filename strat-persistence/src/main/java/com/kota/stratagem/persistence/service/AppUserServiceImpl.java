@@ -39,7 +39,7 @@ public class AppUserServiceImpl implements AppUserService {
 			LOGGER.debug("Create AppUser (name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role + ")");
 		}
 		try {
-			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), null, new Date());
+			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), null, new Date(), 0);
 			this.entityManager.persist(user);
 			this.entityManager.flush();
 			return user;
@@ -88,6 +88,21 @@ public class AppUserServiceImpl implements AppUserService {
 					.getSingleResult();
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error while fetching AppUser by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+
+	@Override
+	public AppUser readWithNotifications(String username) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Get AppUser with Notifications by username (" + username + ")");
+		}
+		AppUser result = null;
+		try {
+			result = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_WITH_NOTIFICATIONS, AppUser.class)
+					.setParameter(AppUserParameter.USERNAME, username).getSingleResult();
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error while fetching AppUser by username (" + username + ")! " + e.getLocalizedMessage(), e);
 		}
 		return result;
 	}
@@ -167,6 +182,20 @@ public class AppUserServiceImpl implements AppUserService {
 				user.setAccountModifier(operator);
 			}
 			user.setAcountModificationDate(new Date());
+			return this.entityManager.merge(user);
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error while merging AppUser! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public AppUser updateNotificationViewCount(Long id, int notificationViewCount) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Update ApUser notification view count (id: " + id + ", viewCount=" + notificationViewCount + ")");
+		}
+		try {
+			final AppUser user = this.readElementary(id);
+			user.setNotificationViewCount(notificationViewCount);
 			return this.entityManager.merge(user);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error while merging AppUser! " + e.getLocalizedMessage(), e);

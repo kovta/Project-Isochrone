@@ -115,6 +115,11 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	public Task readWithAssignments(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_WITH_ASSIGNMENTS, "Get Task with Assignments by id (" + id + ")");
+	}
+
+	@Override
 	public Task readComplete(Long id) throws PersistenceServiceException {
 		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_COMPLETE, "Get Task with all attributes by id (" + id + ")");
 	}

@@ -24,6 +24,7 @@ import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 @Entity
 @Table(name = "user_task_assignments")
 @NamedQueries(value = { //
+		@NamedQuery(name = AppUserTaskAssignmentQuery.GET_BY_ID, query = "SELECT a FROM AppUserTaskAssignment a WHERE a.id=:" + AssignmentParameter.ID),
 		@NamedQuery(name = AppUserTaskAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserTaskAssignment a WHERE a.id=:" + AssignmentParameter.ID),
 		@NamedQuery(name = AppUserTaskAssignmentQuery.GET_ALL_BY_APP_USER_ID, query = "Select a FROM AppUserTaskAssignment a WHERE a.recipient.id=:"
 				+ AppUserParameter.ID)

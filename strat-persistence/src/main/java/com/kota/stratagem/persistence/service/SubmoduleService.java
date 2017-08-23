@@ -16,6 +16,8 @@ public interface SubmoduleService {
 
 	Submodule readElementary(Long id) throws PersistenceServiceException;
 
+	Submodule readWithAssignments(Long id) throws PersistenceServiceException;
+
 	Submodule readWithTasks(Long id) throws PersistenceServiceException;
 
 	Submodule readComplete(Long id) throws PersistenceServiceException;

@@ -84,6 +84,11 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	}
 
 	@Override
+	public Submodule readWithAssignments(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, "Get Submodule with Assignments by id (" + id + ")");
+	}
+
+	@Override
 	public Submodule readWithTasks(Long id) throws PersistenceServiceException {
 		return this.retrieveSingleRecord(id, SubmoduleQuery.GET_BY_ID_WITH_TASKS, "Get Submodule with Tasks by id (" + id + ")");
 	}

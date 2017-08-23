@@ -17,6 +17,8 @@ public interface TaskService {
 
 	Task readElementary(Long id) throws PersistenceServiceException;
 
+	Task readWithAssignments(Long id) throws PersistenceServiceException;
+
 	Task readComplete(Long id) throws PersistenceServiceException;
 
 	Set<Task> readAll() throws PersistenceServiceException;

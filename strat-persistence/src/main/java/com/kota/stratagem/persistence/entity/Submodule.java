@@ -38,6 +38,8 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = SubmoduleQuery.COUNT_BY_ID, query = "SELECT COUNT(sm) FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID, query = "SELECT sm FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
