@@ -17,7 +17,12 @@ import com.kota.stratagem.ejbservice.converter.AppUserConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AbstractAppUserAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserProjectAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserSubmoduleAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserTaskAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.NotificationRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
@@ -90,14 +95,65 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		return clusters;
 	}
 
+	private AppUserRepresentor sortUserCollections(AppUserRepresentor representor) {
+		Collections.sort(representor.getNotifications(), new Comparator<NotificationRepresentor>() {
+			@Override
+			public int compare(NotificationRepresentor obj_a, NotificationRepresentor obj_b) {
+				return obj_b.getCreationDate().compareTo(obj_a.getCreationDate());
+			}
+		});
+		Collections.sort(representor.getObjectives(), new Comparator<AppUserObjectiveAssignmentRepresentor>() {
+			@Override
+			public int compare(AppUserObjectiveAssignmentRepresentor obj_a, AppUserObjectiveAssignmentRepresentor obj_b) {
+				return obj_b.getCreationDate().compareTo(obj_a.getCreationDate());
+			}
+		});
+		Collections.sort(representor.getProjects(), new Comparator<AppUserProjectAssignmentRepresentor>() {
+			@Override
+			public int compare(AppUserProjectAssignmentRepresentor obj_a, AppUserProjectAssignmentRepresentor obj_b) {
+				return obj_b.getCreationDate().compareTo(obj_a.getCreationDate());
+			}
+		});
+		Collections.sort(representor.getSubmodules(), new Comparator<AppUserSubmoduleAssignmentRepresentor>() {
+			@Override
+			public int compare(AppUserSubmoduleAssignmentRepresentor obj_a, AppUserSubmoduleAssignmentRepresentor obj_b) {
+				return obj_b.getCreationDate().compareTo(obj_a.getCreationDate());
+			}
+		});
+		Collections.sort(representor.getTasks(), new Comparator<AppUserTaskAssignmentRepresentor>() {
+			@Override
+			public int compare(AppUserTaskAssignmentRepresentor obj_a, AppUserTaskAssignmentRepresentor obj_b) {
+				return obj_b.getCreationDate().compareTo(obj_a.getCreationDate());
+			}
+		});
+		return representor;
+	}
+
+	@Override
+	public int getAppUserNewNotificationCount(String username) throws AdaptorException {
+		try {
+			final AppUserRepresentor representor = this.converter.toSimplified(this.appUserService.readWithNotifications(username));
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Get AppUser notification count (name: " + username + ") --> " + representor);
+			}
+			return (representor.getNotifications().size() - representor.getNotificationViewCount());
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+	}
+
 	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
 		try {
 			final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(id));
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Get AppUser (id: " + id + ") --> " + representor);
+				LOGGER.debug("Get AppUser (id: " + id + ")");
 			}
-			return representor;
+			if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
+				this.equalizeViewedNotifications(representor);
+			}
+			return this.sortUserCollections(representor);
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -108,10 +164,13 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	public AppUserRepresentor getAppUser(String username) throws AdaptorException {
 		try {
 			final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(username));
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Get AppUser (username: " + username + ") --> " + representor);
+			if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
+				this.equalizeViewedNotifications(representor);
 			}
-			return representor;
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Get AppUser (username: " + username + ")");
+			}
+			return this.sortUserCollections(representor);
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -196,6 +255,20 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
+	}
+
+	@Override
+	public void equalizeViewedNotifications(AppUserRepresentor operator) throws AdaptorException {
+		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Equalize logged in AppUser notification view count (id: " + operator.getId() + ")");
+			}
+			this.appUserService.updateNotificationViewCount(operator.getId(), operator.getNotifications().size());
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+
 	}
 
 }

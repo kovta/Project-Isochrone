@@ -13,21 +13,10 @@ import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
 import com.kota.stratagem.persistence.entity.AppUserProjectAssignment;
 import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
+import com.kota.stratagem.persistence.entity.Notification;
 
 @Stateless
 public class AppUserConverterImpl implements AppUserConverter {
-
-	@EJB
-	private ObjectiveConverter objectiveConverter;
-
-	@EJB
-	private ProjectConverter projectConverter;
-
-	@EJB
-	private TaskConverter taskConverter;
-
-	@EJB
-	private SubmoduleConverter submoduleConverter;
 
 	@EJB
 	private ImpedimentConverter impedimentConverter;
@@ -38,20 +27,34 @@ public class AppUserConverterImpl implements AppUserConverter {
 	@EJB
 	private AssignmentConverter assignmentConverter;
 
+	@EJB
+	private NotificationConverter notificationConverter;
+
 	@Override
 	public AppUserRepresentor toElementary(AppUser user) {
 		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
 		final AppUserRepresentor representor = user.getId() != null
 				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate())
+						user.getAcountModificationDate(), user.getNotificationViewCount())
 				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate());
+						user.getAcountModificationDate(), user.getNotificationViewCount());
+		return representor;
+	}
+
+	@Override
+	public AppUserRepresentor toSimplified(AppUser user) {
+		final AppUserRepresentor representor = this.toElementary(user);
+		if (user.getNotifications() != null) {
+			for (final Notification notification : user.getNotifications()) {
+				representor.addNotification(this.notificationConverter.to(notification));
+			}
+		}
 		return representor;
 	}
 
 	@Override
 	public AppUserRepresentor toComplete(AppUser user) {
-		final AppUserRepresentor representor = this.toElementary(user);
+		final AppUserRepresentor representor = this.toSimplified(user);
 		if (user.getObjectives() != null) {
 			for (final AppUserObjectiveAssignment objective : user.getObjectives()) {
 				representor.addObjectiveAssignment(this.assignmentConverter.to(objective));

@@ -12,10 +12,13 @@ import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
 import com.kota.stratagem.ejbservice.converter.ProjectConverter;
+import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserProjectAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
@@ -30,6 +33,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
+import com.kota.stratagem.persistence.util.Constants;
 
 @Stateless(mappedName = "ejb/projectProtocol")
 public class ProjectProtocolImpl implements ProjectProtocol {
@@ -50,6 +54,12 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 
 	@EJB
 	private ObjectiveConverter objectiveConverter;
+
+	@EJB
+	private SessionContextAccessor sessionContextAccessor;
+
+	@EJB
+	private LifecycleOverseer overseer;
 
 	@Override
 	public ProjectRepresentor getProject(Long id) throws AdaptorException {
@@ -76,6 +86,12 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
 					return c * -1;
+				}
+			});
+			Collections.sort(representor.getAssignedUsers(), new Comparator<AppUserProjectAssignmentRepresentor>() {
+				@Override
+				public int compare(AppUserProjectAssignmentRepresentor obj_a, AppUserProjectAssignmentRepresentor obj_b) {
+					return obj_a.getRecipient().getName().toLowerCase().compareTo(obj_b.getRecipient().getName().toLowerCase());
 				}
 			});
 			return representor;
@@ -165,14 +181,24 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			String operator, Long objective) throws AdaptorException {
 		try {
-			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(id != null ? "Update Project (id: " + id + ")" : "Create Project (" + name + ")");
 			}
-			return this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
+			final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
+			ProjectRepresentor origin = null;
+			if (id != null) {
+				origin = this.projectConverter.toElementary(this.projectService.readElementary(id));
+			}
+			final ProjectRepresentor representor = this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
 					? this.projectService.update(id, name, description, projectStatus, deadline, confidential, operator)
 					: this.projectService.create(name, description, projectStatus, deadline, confidential, this.appUserService.readElementary(operator).getId(),
 							objective));
+			if (id != null) {
+				this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
+			} else {
+				this.overseer.created(representor.toTextMessage());
+			}
+			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -185,6 +211,8 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Project (id: " + id + ")");
 			}
+			this.overseer.deleted(this.projectConverter.toElementary(this.projectService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
 			this.projectService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());

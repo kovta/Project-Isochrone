@@ -1,6 +1,8 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,15 +13,19 @@ import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
+import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserTaskAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.service.TeamService;
+import com.kota.stratagem.persistence.util.Constants;
 
 @Stateless(mappedName = "ejb/taskProtocol")
 public class TaskProtocolImpl implements TaskProtocol {
@@ -38,6 +44,12 @@ public class TaskProtocolImpl implements TaskProtocol {
 	@EJB
 	private TaskConverter converter;
 
+	@EJB
+	private SessionContextAccessor sessionContextAccessor;
+
+	@EJB
+	private LifecycleOverseer overseer;
+
 	@Override
 	public TaskRepresentor getTask(Long id) throws AdaptorException {
 		try {
@@ -45,6 +57,12 @@ public class TaskProtocolImpl implements TaskProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Task (id: " + id + ") --> " + representor);
 			}
+			Collections.sort(representor.getAssignedUsers(), new Comparator<AppUserTaskAssignmentRepresentor>() {
+				@Override
+				public int compare(AppUserTaskAssignmentRepresentor obj_a, AppUserTaskAssignmentRepresentor obj_b) {
+					return obj_a.getRecipient().getName().toLowerCase().compareTo(obj_b.getRecipient().getName().toLowerCase());
+				}
+			});
 			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
@@ -74,10 +92,20 @@ public class TaskProtocolImpl implements TaskProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(id != null ? "Update Task (id: " + id + ")" : "Create Task (" + name + ")");
 			}
-			return this.converter.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name, description, priority,
-					completion, deadline, this.appUserService.readElementary(operator), objective, project, submodule)
+			TaskRepresentor origin = null;
+			if (id != null) {
+				origin = this.converter.toElementary(this.taskService.readElementary(id));
+			}
+			final TaskRepresentor representor = this.converter.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name,
+					description, priority, completion, deadline, this.appUserService.readElementary(operator), objective, project, submodule)
 					: this.taskService.create(name, description, priority, completion, deadline, this.appUserService.readElementary(operator), objective,
 							project, submodule));
+			if (id != null) {
+				this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
+			} else {
+				this.overseer.created(representor.toTextMessage());
+			}
+			return representor;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
@@ -90,6 +118,8 @@ public class TaskProtocolImpl implements TaskProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Task (id: " + id + ")");
 			}
+			this.overseer.deleted(this.converter.toElementary(this.taskService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
 			this.taskService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());

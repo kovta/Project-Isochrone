@@ -42,11 +42,11 @@ public class ProjectConverterImpl implements ProjectConverter {
 	public ProjectRepresentor toElementary(Project project) {
 		final ProjectStatusRepresentor status = ProjectStatusRepresentor.valueOf(project.getStatus().toString());
 		final ProjectRepresentor representor = project.getId() != null
-				? new ProjectRepresentor(project.getId(), project.getName(), project.getDescription(), status, project.getDeadline(), project.getConfidential(),
-						this.appUserConverter.toElementary(project.getCreator()), project.getCreationDate(),
+				? new ProjectRepresentor(project.getId(), project.getName(), project.getDescription().trim(), status, project.getDeadline(),
+						project.getConfidential(), this.appUserConverter.toElementary(project.getCreator()), project.getCreationDate(),
 						this.appUserConverter.toElementary(project.getModifier()), project.getModificationDate(),
 						project.getObjective() != null ? this.objectiveConverter.toElementary(project.getObjective()) : null)
-				: new ProjectRepresentor(project.getName(), project.getDescription(), status, project.getDeadline(), project.getConfidential(),
+				: new ProjectRepresentor(project.getName(), project.getDescription().trim(), status, project.getDeadline(), project.getConfidential(),
 						this.appUserConverter.toElementary(project.getCreator()), project.getCreationDate(),
 						this.appUserConverter.toElementary(project.getModifier()), project.getModificationDate(),
 						this.objectiveConverter.toElementary(project.getObjective()));

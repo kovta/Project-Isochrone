@@ -44,12 +44,12 @@ public class ImpedimentConverterImpl implements ImpedimentConverter {
 		final PriorityRepresentor priority = PriorityRepresentor.valueOf(impediment.getPriority().toString());
 		final ImpedimentStatusRepresentor status = ImpedimentStatusRepresentor.valueOf(impediment.getStatus().toString());
 		final ImpedimentRepresentor representor = impediment.getId() != null
-				? new ImpedimentRepresentor(impediment.getId(), impediment.getName(), impediment.getDescription(), priority, status, impediment.getReportDate(),
-						this.appUserConverter.toElementary(impediment.getReporter()),
+				? new ImpedimentRepresentor(impediment.getId(), impediment.getName(), impediment.getDescription().trim(), priority, status,
+						impediment.getReportDate(), this.appUserConverter.toElementary(impediment.getReporter()),
 						impediment.getProcessor() != null ? this.appUserConverter.toElementary(impediment.getProcessor()) : null,
 						this.appUserConverter.toElementary(impediment.getCreator()), impediment.getCreationDate(),
 						this.appUserConverter.toElementary(impediment.getModifier()), impediment.getModificationDate())
-				: new ImpedimentRepresentor(impediment.getName(), impediment.getDescription(), priority, status, impediment.getReportDate(),
+				: new ImpedimentRepresentor(impediment.getName(), impediment.getDescription().trim(), priority, status, impediment.getReportDate(),
 						this.appUserConverter.toElementary(impediment.getReporter()),
 						impediment.getProcessor() != null ? this.appUserConverter.toElementary(impediment.getProcessor()) : null,
 						this.appUserConverter.toElementary(impediment.getCreator()), impediment.getCreationDate(),

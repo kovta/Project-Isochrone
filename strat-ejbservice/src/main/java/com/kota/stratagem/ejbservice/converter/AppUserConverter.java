@@ -12,6 +12,8 @@ public interface AppUserConverter {
 
 	AppUserRepresentor toElementary(AppUser user);
 
+	AppUserRepresentor toSimplified(AppUser user);
+
 	AppUserRepresentor toComplete(AppUser user);
 
 	Set<AppUserRepresentor> toElementary(Set<AppUser> users);

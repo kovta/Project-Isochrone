@@ -23,6 +23,7 @@ public abstract class AbstractLifecycleMessageProducer {
 	protected static final String CONNECTION_FACTORY = "ConnectionFactory";
 	protected static final String STRAT_CREATION_CONSUMER_DESTINATION = "jms/queue/stratagem-creation-notification-queue";
 	protected static final String STRAT_ASSIGNMENT_CONSUMER_DESTINATION = "jms/queue/stratagem-assignment-notification-queue";
+	protected static final String STRAT_DISSOCIATION_CONSUMER_DESTINATION = "jms/queue/stratagem-dissociation-notification-queue";
 	protected static final String STRAT_MODIFICATION_CONSUMER_DESTINATION = "jms/queue/stratagem-modification-notification-queue";
 	protected static final String STRAT_DELETION_CONSUMER_DESTINATION = "jms/queue/stratagem-deletion-notification-queue";
 
@@ -33,6 +34,7 @@ public abstract class AbstractLifecycleMessageProducer {
 
 	private MessageProducer creationMessageProducer;
 	private MessageProducer assignmentMessageProducer;
+	private MessageProducer dissociationMessageProducer;
 	private MessageProducer modificationMessageProducer;
 	private MessageProducer deletionMessageProducer;
 
@@ -47,6 +49,10 @@ public abstract class AbstractLifecycleMessageProducer {
 
 	public boolean sendAssignmentTextMessage(final String message) {
 		return this.sendTextMessage(message, STRAT_ASSIGNMENT_CONSUMER_DESTINATION, this.assignmentMessageProducer);
+	}
+
+	public boolean sendDissociationTextMessage(final String message) {
+		return this.sendTextMessage(message, STRAT_DISSOCIATION_CONSUMER_DESTINATION, this.dissociationMessageProducer);
 	}
 
 	public boolean sendModificationTextMessage(final String message) {
@@ -156,8 +162,9 @@ public abstract class AbstractLifecycleMessageProducer {
 	@Override
 	protected void finalize() throws Throwable {
 		if (this.context != null) {
-			this.context.close();
+			this.connection.close();
 			this.session.close();
+			this.context.close();
 		}
 	}
 

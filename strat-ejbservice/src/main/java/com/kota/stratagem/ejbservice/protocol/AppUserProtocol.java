@@ -15,6 +15,8 @@ import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 @Local
 public interface AppUserProtocol {
 
+	int getAppUserNewNotificationCount(String username) throws AdaptorException;
+
 	AppUserRepresentor getAppUser(Long id) throws AdaptorException;
 
 	AppUserRepresentor getAppUser(String username) throws AdaptorException;
@@ -34,5 +36,7 @@ public interface AppUserProtocol {
 	void removeAppUser(Long id) throws AdaptorException;
 
 	boolean isOperatorAccount(AppUserRepresentor operator) throws AdaptorException;
+
+	void equalizeViewedNotifications(AppUserRepresentor operator) throws AdaptorException;
 
 }

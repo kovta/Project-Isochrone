@@ -33,11 +33,11 @@ public class SubmoduleConverterImpl implements SubmoduleConverter {
 	@Override
 	public SubmoduleRepresentor toElementary(Submodule submodule) {
 		final SubmoduleRepresentor representor = submodule.getId() != null
-				? new SubmoduleRepresentor(submodule.getId(), submodule.getName(), submodule.getDescription(), submodule.getDeadline(),
+				? new SubmoduleRepresentor(submodule.getId(), submodule.getName(), submodule.getDescription().trim(), submodule.getDeadline(),
 						this.appUserConverter.toElementary(submodule.getCreator()), submodule.getCreationDate(),
 						this.appUserConverter.toElementary(submodule.getModifier()), submodule.getModificationDate(),
 						submodule.getProject() != null ? this.projectConverter.toElementary(submodule.getProject()) : null)
-				: new SubmoduleRepresentor(submodule.getName(), submodule.getDescription(), submodule.getDeadline(),
+				: new SubmoduleRepresentor(submodule.getName(), submodule.getDescription().trim(), submodule.getDeadline(),
 						this.appUserConverter.toElementary(submodule.getCreator()), submodule.getCreationDate(),
 						this.appUserConverter.toElementary(submodule.getModifier()), submodule.getModificationDate(),
 						submodule.getProject() != null ? this.projectConverter.toElementary(submodule.getProject()) : null);

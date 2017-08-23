@@ -13,8 +13,9 @@ import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
-import com.kota.stratagem.ejbservice.dispatch.ObjectiveLifecycleOverseer;
+import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
@@ -29,6 +30,7 @@ import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceExcept
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
+import com.kota.stratagem.persistence.util.Constants;
 
 @Stateless(mappedName = "ejb/objectiveProtocol")
 public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtocolRemote {
@@ -45,7 +47,10 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	private ObjectiveConverter converter;
 
 	@EJB
-	private ObjectiveLifecycleOverseer overseer;
+	private SessionContextAccessor sessionContextAccessor;
+
+	@EJB
+	private LifecycleOverseer overseer;
 
 	@Override
 	public ObjectiveRepresentor getObjective(Long id) throws ServiceException {
@@ -87,10 +92,10 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	public List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException {
 		Set<ObjectiveRepresentor> representors = new HashSet<ObjectiveRepresentor>();
 		try {
+			representors = this.converter.toSimplified(this.objectiveService.readAll());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all Objectives : " + representors.size() + " objective(s)");
 			}
-			representors = this.converter.toSimplified(this.objectiveService.readAll());
 			final List<ObjectiveRepresentor> objectives = new ArrayList<ObjectiveRepresentor>(representors);
 			Collections.sort(objectives, new Comparator<ObjectiveRepresentor>() {
 				@Override
@@ -133,9 +138,9 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 					? this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality, operator)
 					: this.objectiveService.create(name, description, priority, objectiveStatus, deadline, confidentiality, operator));
 			if (id != null) {
-				this.overseer.modified(origin, representor);
+				this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
 			} else {
-				this.overseer.created(representor);
+				this.overseer.created(representor.toTextMessage());
 			}
 			return representor;
 		} catch (final PersistenceServiceException e) {
@@ -150,7 +155,8 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Objective (id: " + id + ")");
 			}
-			this.overseer.deleted(this.converter.toElementary(this.objectiveService.readElementary(id)));
+			this.overseer.deleted(this.converter.toElementary(this.objectiveService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
 			this.objectiveService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
