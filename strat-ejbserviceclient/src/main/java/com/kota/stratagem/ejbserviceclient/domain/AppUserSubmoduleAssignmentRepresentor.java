@@ -30,4 +30,10 @@ public class AppUserSubmoduleAssignmentRepresentor extends AbstractAppUserAssign
 		return "AppUserSubmoduleAssignmentRepresentor [recipient=" + this.recipient + ", submodule=" + this.submodule + "]";
 	}
 
+	public String toTextMessage() {
+		return "AppUserSubmoduleAssignmentRepresentor | [id=" + this.id + ", submodule_id=" + this.submodule.getId() + ", submodule_name="
+				+ this.submodule.getName() + ", recipient_id=" + this.recipient.getId() + ", entrustor_id=" + this.entrustor.getId() + ", creationDate="
+				+ this.creationDate + "]";
+	}
+
 }

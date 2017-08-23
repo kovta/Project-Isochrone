@@ -122,10 +122,16 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	@Override
 	public String toString() {
-		return "SubmoduleRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline
+		return "\nSubmoduleRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline
 				+ ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate="
 				+ this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers
 				+ ", project=" + this.project + "]";
+	}
+
+	public String toTextMessage() {
+		return "SubmoduleRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline
+				+ ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", project_id="
+				+ this.project.getId() + "]";
 	}
 
 	public void addTask(TaskRepresentor task) {

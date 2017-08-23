@@ -31,8 +31,9 @@ public class AppUserObjectiveAssignmentRepresentor extends AbstractAppUserAssign
 	}
 
 	public String toTextMessage() {
-		return "AppUserObjectiveAssignmentRepresentor [id=" + this.id + ", objective_id=" + this.objective.getId() + ", recipient_id=" + this.recipient.getId()
-				+ ", entrustor_id=" + this.entrustor.getId() + ", creationDate=" + this.creationDate + "]";
+		return "AppUserObjectiveAssignmentRepresentor | [id=" + this.id + ", objective_id=" + this.objective.getId() + ", objective_name="
+				+ this.objective.getName() + ", recipient_id=" + this.recipient.getId() + ", entrustor_id=" + this.entrustor.getId() + ", creationDate="
+				+ this.creationDate + "]";
 	}
 
 }

@@ -150,6 +150,12 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 				+ this.objective + "]";
 	}
 
+	public String toTextMessage() {
+		return "ProjectRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
+				+ this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate
+				+ ", modifier_id=" + this.modifier.getId() + ", objective_id=" + this.objective.getId() + "]";
+	}
+
 	public void addSubmodules(SubmoduleRepresentor submodule) {
 		this.submodules.add(submodule);
 	}

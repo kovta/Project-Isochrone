@@ -78,6 +78,34 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.id = id;
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
+	public Date getDeadline() {
+		return this.deadline;
+	}
+
+	public Boolean getConfidential() {
+		return this.confidential;
+	}
+
+	public AppUserRepresentor getCreator() {
+		return this.creator;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public AppUserRepresentor getModifier() {
+		return this.modifier;
+	}
+
+	public Date getModificationDate() {
+		return this.modificationDate;
+	}
+
 	public String getDescription() {
 		return this.description;
 	}
@@ -134,34 +162,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.assignedUsers = assignedUsers;
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
-	public Date getDeadline() {
-		return this.deadline;
-	}
-
-	public Boolean getConfidential() {
-		return this.confidential;
-	}
-
-	public AppUserRepresentor getCreator() {
-		return this.creator;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public AppUserRepresentor getModifier() {
-		return this.modifier;
-	}
-
-	public Date getModificationDate() {
-		return this.modificationDate;
-	}
-
 	@Override
 	public String toString() {
 		return "\nObjectiveRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
@@ -173,7 +173,7 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 	public String toTextMessage() {
 		return "ObjectiveRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
 				+ ", status=" + this.status + ", deadline=" + this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId()
-				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", modificationDate=" + this.modificationDate + "]";
+				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + "]";
 	}
 
 	public void addProject(ProjectRepresentor project) {

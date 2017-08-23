@@ -85,30 +85,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.id = id;
 	}
 
-	public ObjectiveRepresentor getObjective() {
-		return this.objective;
-	}
-
-	public void setObjective(ObjectiveRepresentor objective) {
-		this.objective = objective;
-	}
-
-	public ProjectRepresentor getProject() {
-		return this.project;
-	}
-
-	public void setProject(ProjectRepresentor project) {
-		this.project = project;
-	}
-
-	public SubmoduleRepresentor getSubmodule() {
-		return this.submodule;
-	}
-
-	public void setSubmodule(SubmoduleRepresentor submodule) {
-		this.submodule = submodule;
-	}
-
 	public String getName() {
 		return this.name;
 	}
@@ -165,13 +141,44 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		return this.taskDependencies;
 	}
 
+	public ObjectiveRepresentor getObjective() {
+		return this.objective;
+	}
+
+	public void setObjective(ObjectiveRepresentor objective) {
+		this.objective = objective;
+	}
+
+	public ProjectRepresentor getProject() {
+		return this.project;
+	}
+
+	public void setProject(ProjectRepresentor project) {
+		this.project = project;
+	}
+
+	public SubmoduleRepresentor getSubmodule() {
+		return this.submodule;
+	}
+
+	public void setSubmodule(SubmoduleRepresentor submodule) {
+		this.submodule = submodule;
+	}
+
 	@Override
 	public String toString() {
-		return "TaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
-				+ this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
+		return "\nTaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
+				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate
+				+ ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
 				+ this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies="
-				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + "]";
+				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule=" + this.submodule + "]";
+	}
+
+	public String toTextMessage() {
+		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
+				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", creator_id=" + this.creator.getId() + ", creationDate="
+				+ this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id=" + this.objective.getId() + ", project_id="
+				+ this.project.getId() + ", submodule_id=" + this.submodule.getId() + "]";
 	}
 
 	public void addTeam(TeamTaskAssignmentRepresentor team) {

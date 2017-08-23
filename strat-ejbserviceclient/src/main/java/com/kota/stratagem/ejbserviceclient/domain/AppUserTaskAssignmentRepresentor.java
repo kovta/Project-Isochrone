@@ -28,4 +28,9 @@ public class AppUserTaskAssignmentRepresentor extends AbstractAppUserAssignmentR
 		return "AppUserTaskAssignmentRepresentor [recipient=" + this.recipient + ", task=" + this.task + "]";
 	}
 
+	public String toTextMessage() {
+		return "AppUserTaskAssignmentRepresentor | [id=" + this.id + ", task_id=" + this.task.getId() + ", task_name=" + this.task.getName() + ", recipient_id="
+				+ this.recipient.getId() + ", entrustor_id=" + this.entrustor.getId() + ", creationDate=" + this.creationDate + "]";
+	}
+
 }

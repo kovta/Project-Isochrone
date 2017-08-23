@@ -29,4 +29,9 @@ public class AppUserProjectAssignmentRepresentor extends AbstractAppUserAssignme
 		return "AppUserProjectAssignmentRepresentor [recipient=" + this.recipient + ", project=" + this.project + "]";
 	}
 
+	public String toTextMessage() {
+		return "AppUserProjectAssignmentRepresentor | [id=" + this.id + ", project_id=" + this.project.getId() + ", project_name=" + this.project.getName()
+				+ ", recipient_id=" + this.recipient.getId() + ", entrustor_id=" + this.entrustor.getId() + ", creationDate=" + this.creationDate + "]";
+	}
+
 }

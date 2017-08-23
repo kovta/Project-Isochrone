@@ -19,6 +19,7 @@ public class AppUserRepresentor implements Serializable {
 	private final Date registrationDate;
 	private AppUserRepresentor accountModifier;
 	private final Date acountModificationDate;
+	private final int notificationViewCount;
 	private final List<AppUserObjectiveAssignmentRepresentor> objectives;
 	private final List<AppUserProjectAssignmentRepresentor> projects;
 	private final List<AppUserSubmoduleAssignmentRepresentor> submodules;
@@ -27,13 +28,14 @@ public class AppUserRepresentor implements Serializable {
 	private final List<ImpedimentRepresentor> processedImpediments;
 	private final List<TeamRepresentor> supervisedTeams;
 	private final List<TeamRepresentor> teamMemberships;
+	private final List<NotificationRepresentor> notifications;
 
 	public AppUserRepresentor() {
-		this(null, "", "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date());
+		this(null, "", "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date(), 0);
 	}
 
-	public AppUserRepresentor(Long id, String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate,
-			Date acountModificationDate) {
+	public AppUserRepresentor(Long id, String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
+			int notificationViewCount) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -42,6 +44,7 @@ public class AppUserRepresentor implements Serializable {
 		this.role = role;
 		this.registrationDate = registrationDate;
 		this.acountModificationDate = acountModificationDate;
+		this.notificationViewCount = notificationViewCount;
 		this.objectives = new ArrayList<>();
 		this.projects = new ArrayList<>();
 		this.submodules = new ArrayList<>();
@@ -50,9 +53,11 @@ public class AppUserRepresentor implements Serializable {
 		this.processedImpediments = new ArrayList<>();
 		this.supervisedTeams = new ArrayList<>();
 		this.teamMemberships = new ArrayList<>();
+		this.notifications = new ArrayList<>();
 	}
 
-	public AppUserRepresentor(String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate) {
+	public AppUserRepresentor(String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
+			int notificationViewCount) {
 		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
@@ -60,6 +65,7 @@ public class AppUserRepresentor implements Serializable {
 		this.role = role;
 		this.registrationDate = registrationDate;
 		this.acountModificationDate = acountModificationDate;
+		this.notificationViewCount = notificationViewCount;
 		this.objectives = new ArrayList<>();
 		this.projects = new ArrayList<>();
 		this.submodules = new ArrayList<>();
@@ -68,6 +74,7 @@ public class AppUserRepresentor implements Serializable {
 		this.processedImpediments = new ArrayList<>();
 		this.supervisedTeams = new ArrayList<>();
 		this.teamMemberships = new ArrayList<>();
+		this.notifications = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -110,6 +117,10 @@ public class AppUserRepresentor implements Serializable {
 		return this.acountModificationDate;
 	}
 
+	public int getNotificationViewCount() {
+		return this.notificationViewCount;
+	}
+
 	public List<AppUserObjectiveAssignmentRepresentor> getObjectives() {
 		return this.objectives;
 	}
@@ -142,13 +153,18 @@ public class AppUserRepresentor implements Serializable {
 		return this.teamMemberships;
 	}
 
+	public List<NotificationRepresentor> getNotifications() {
+		return this.notifications;
+	}
+
 	@Override
 	public String toString() {
 		return "\nAppUserRepresentor [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role="
 				+ this.role + ", registrationDate=" + this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate="
-				+ this.acountModificationDate + ", objectives=" + this.objectives + ", projects=" + this.projects + ", tasks=" + this.tasks
-				+ ", reportedImpediments=" + this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams="
-				+ this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + "]\n";
+				+ this.acountModificationDate + ", notificationViewCount=" + this.notificationViewCount + ", objectives=" + this.objectives + ", projects="
+				+ this.projects + ", submodules=" + this.submodules + ", tasks=" + this.tasks + ", reportedImpediments=" + this.reportedImpediments
+				+ ", processedImpediments=" + this.processedImpediments + ", supervisedTeams=" + this.supervisedTeams + ", teamMemberships="
+				+ this.teamMemberships + ", notifications=" + this.notifications + "]";
 	}
 
 	public void addObjectiveAssignment(AppUserObjectiveAssignmentRepresentor objective) {
@@ -165,6 +181,10 @@ public class AppUserRepresentor implements Serializable {
 
 	public void addTaskAssignment(AppUserTaskAssignmentRepresentor task) {
 		this.tasks.add(task);
+	}
+
+	public void addNotification(NotificationRepresentor notification) {
+		this.notifications.add(notification);
 	}
 
 	@Override
