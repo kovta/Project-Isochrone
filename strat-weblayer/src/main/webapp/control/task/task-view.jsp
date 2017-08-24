@@ -13,6 +13,7 @@
 </head>
 <body>
 	<jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
+	<jsp:include page="../../partial/authority.jsp"></jsp:include>
 	<jsp:useBean id="task" class="com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor" scope="request" />
 	<br/><br/><br/><br/>
 	<div class="wrapper">
@@ -104,36 +105,44 @@
 	                        </div>
 	                    </div>
 
-	       			    <br/><br/><br/>
-	       			    <div class="card">
-                            <div class="card-block">
-                            	<div class="form-header mdb-color darken-1">
-                                	<h5><i class="fa fa-exclamation-circle"></i><span class="icon-companion"> Actions</span></h5>
-                                </div>
-                                <div class="md-form">
-                                	<table class="strat-detail-table">
-	                                	<tbody>
-	                                		<tr class="match-row"><td class="text-center">
-						  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
-							       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
-							       			    </a>
-											</td></tr>
-											<tr class="match-row"><td>
-												<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
-											    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
-												</button>
-											</td></tr>
-											<tr class="match-row"><td>
-												<hr/>
-												<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteTask" data-toggle="modal">
-											    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Task</span>
-												</button>
-											</td></tr>
-										</tbody>
-                                	</table>
-                                </div>
-	                        </div>
-	                    </div>
+						<c:set var="assigned" value="false" />
+						<c:forEach items="${requestScope.task.assignedUsers}" var="assignment">
+	                    	<c:if test="${pageContext.request.remoteUser eq assignment.recipient.name}"><c:set var="assigned" value="true" /></c:if>
+						</c:forEach>
+						<c:if test="${isCentralManager or isDepartmentManager or isGeneralManager or assigned}">
+		       			    <br/><br/><br/>
+		       			    <div class="card">
+	                            <div class="card-block">
+	                            	<div class="form-header mdb-color darken-1">
+	                                	<h5><i class="fa fa-exclamation-circle"></i><span class="icon-companion"> Actions</span></h5>
+	                                </div>
+	                                <div class="md-form">
+	                                	<table class="strat-detail-table">
+		                                	<tbody>
+		                                		<tr class="match-row"><td class="text-center">
+							  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
+								       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
+								       			    </a>
+												</td></tr>
+												<c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq task.creator.name}">
+													<tr class="match-row"><td>
+														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
+													    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
+														</button>
+													</td></tr>
+													<tr class="match-row"><td>
+														<hr/>
+														<button type="button" class="btn btn-danger ml-auto full-width" data-target="#deleteTask" data-toggle="modal">
+													    	<i class="fa fa-trash tile-icon"></i><span class="icon-companion">Delete Task</span>
+														</button>
+													</td></tr>
+												</c:if>
+											</tbody>
+	                                	</table>
+	                                </div>
+		                        </div>
+		                    </div>
+	                    </c:if>
                     </div>
                 </div>
                 <!--/.Sidebar-->
@@ -185,9 +194,11 @@
 															<div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-																<div class="full-width text-center">
-																	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&taskId=<c:out value="${task.id}" />">Unassign user</a>
-														    	</div>
+																<c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq assignmentItem.entrustor.name}">
+																	<div class="full-width text-center">
+																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&taskId=<c:out value="${task.id}" />">Unassign user</a>
+															    	</div>
+														    	</c:if>
 															</div>
 														</div>
 														<br/><br/>
@@ -220,9 +231,11 @@
 									                        <div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <div class="full-width text-center">
-									                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
-									                            </div>
+									                            <c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq assignmentItem.entrustor.name}">
+										                            <div class="full-width text-center">
+										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
+										                            </div>
+									                            </c:if>
 									                        </div>
 									                    </div>
 									                    <br/><br/>

@@ -10,6 +10,7 @@
 </head>
 <body>
 	<jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
+	<jsp:include page="../../partial/authority.jsp"></jsp:include>
 	<br/><br/>
 	
 	<c:choose>
@@ -27,13 +28,12 @@
     
 	<div class="wrapper">
 		<div class="container">
-	       	<% if (request.isUserInRole("central_manager")) { %>
-			<div class="space-bottom">
+	       	<c:if test="${isCentralManager}">
 			    <button type="button" class="btn mdb-color darken-1" data-toggle="modal" data-target="#addObjective">
 			    	<i class="fa fa-plus-square right"></i><span class="icon-companion"> Set new Objective</span>
 				</button>
-			</div>
-			<% } %>
+			</c:if>
+			<div class="small-padder"></div>
 			<div class="card">
 				<div class="card-block">
 					<table class="table table-hover">
@@ -80,9 +80,9 @@
 			                            <td class="text-center"><c:out value="${objective.tasks.size()}" /></td>
 			                            <td class="text-center">
 				                            <a href="Objective?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
-			                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager")) { %>
+			                            	<c:if test="${isCentralManager}">
 												<a href="Objective?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
-			                            	<% } %>
+			                            	</c:if>
 			                            </td>
 			                        </tr>
 							</c:forEach>

@@ -13,6 +13,7 @@
 </head>
 <body>
     <jsp:include page="../../partial/navbar-fill.jsp"></jsp:include>
+	<jsp:include page="../../partial/authority.jsp"></jsp:include>
 	<br/><br/>
 	
 	<c:choose>
@@ -86,9 +87,9 @@
 				                            <td class="text-center"><c:out value="${project.tasks.size()}" /></td>
 				                            <td class="text-center">
 					                            <a href="Project?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
-				                            	<% if (request.isUserInRole("department_manager") || request.isUserInRole("central_manager") || request.isUserInRole("general_manager")) { %>
-												<a href="Project?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
-				                            	<% } %>
+				                            	<c:if test="${isCentralManager}">
+													<a href="Project?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
+				                            	</c:if>
 				                            </td>
 				                        </tr>
 								</c:forEach>

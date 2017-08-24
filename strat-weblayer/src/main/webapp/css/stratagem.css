@@ -71,14 +71,17 @@ footer.page-footer {
 .danger-text {
 	color: red;	
 }
-.space-top {
-	padding-top: 20px;
-}
 .padding-top {
 	padding-top: 1rem;
 }
+.small-padder {
+	height: 20px;
+}
 .content-padder {
 	padding-top: 7rem;
+}
+.space-top {
+	padding-top: 20px;
 }
 .space-bottom {
 	padding-bottom: 20px;

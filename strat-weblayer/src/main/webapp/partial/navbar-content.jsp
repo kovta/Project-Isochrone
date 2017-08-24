@@ -1,3 +1,4 @@
+<%@page import="com.kota.stratagem.weblayer.common.appuser.AccountAttribute"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.kota.stratagem.weblayer.common.appuser.AppUserAttribute" %>
@@ -46,7 +47,7 @@
 		<!-- /Search bar -->
 		<ul class="navbar-nav float-right">
 			<li class="nav-item">
-				<% int notificationCount = (Integer) request.getSession().getAttribute(AppUserAttribute.ATTR_NOTIFICATION_COUNT); %>
+				<% int notificationCount = (Integer) request.getSession().getAttribute(AccountAttribute.ATTR_NOTIFICATION_COUNT); %>
 				<% if (notificationCount > 0) { %>
 					<a class="nav-link flex-display" href="User?name=<%= request.getUserPrincipal().getName() %>">
 						<div class="chip">
