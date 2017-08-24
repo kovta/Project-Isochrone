@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
-import com.kota.stratagem.weblayer.common.appuser.AppUserAttribute;
+import com.kota.stratagem.weblayer.common.appuser.AccountAttribute;
 
-public abstract class AbstractRefinerServlet extends HttpServlet implements AppUserAttribute {
+public abstract class AbstractRefinerServlet extends HttpServlet implements AccountAttribute {
 
 	@EJB
 	private AppUserProtocol appUserProtocol;

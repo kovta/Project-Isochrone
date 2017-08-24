@@ -245,9 +245,11 @@
 															<div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <div class="full-width text-center">
-																	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
-														    	</div>
+									                            <% if (request.isUserInRole("central_manager")) { %>
+										                            <div class="full-width text-center">
+																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
+															    	</div>
+														    	<% } %>
 															</div>
 														</div>
 														<br/><br/>
@@ -280,9 +282,11 @@
 									                        <div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <div class="full-width text-center">
-									                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
-									                            </div>
+									                            <% if (request.isUserInRole("central_manager")) { %>
+										                            <div class="full-width text-center">
+										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
+										                            </div>
+									                            <% } %>
 									                        </div>
 									                    </div>
 									                    <br/><br/>
