@@ -35,6 +35,14 @@ public class Constants {
 	public static final String ASSIGNMENT_SELECTOR = "assign";
 	public static final String DISSOCIATION_SELECTOR = "dissociation";
 
+	// Authorization
+	public static final String SYSTEM_ADMINISTRATOR_AUTHORIZATION_TITLE = "system_administrator";
+	public static final String CENTRAL_MANAGER_AUTHORIZATION_TITLE = "central_manager";
+	public static final String DEPARTMENT_MANAGER_AUTHORIZATION_TITLE = "department_manager";
+	public static final String GENERAL_MANAGER_AUTHORIZATION_TITLE = "general_manager";
+	public static final String GENERAL_USER_AUTHORIZATION_TITLE = "general_user";
+	public static final String PRISTINE_USER_AUTHORIZATION_TITLE = "pristine_user";
+
 	// Separator
 	public static final String PAYLOAD_SEPARATOR = " | ";
 	public static final String DATA_SEPARATOR = "_";
