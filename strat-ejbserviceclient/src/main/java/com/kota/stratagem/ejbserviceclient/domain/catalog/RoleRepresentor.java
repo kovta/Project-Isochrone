@@ -2,12 +2,12 @@ package com.kota.stratagem.ejbserviceclient.domain.catalog;
 
 public enum RoleRepresentor {
 
-	PRISTINE_USER("Pristine user"), //
-	GENERAL_USER("General user"), //
-	GENERAL_MANAGER("General manager"), //
-	DEPARTMENT_MANAGER("Department manager"), //
-	CENTRAL_MANAGER("Central manager"), //
-	SYSTEM_ADMINISTRATOR("System administrator");
+	PRISTINE_USER("Pristine user", "pristine_user"), //
+	GENERAL_USER("General user", "general_user"), //
+	GENERAL_MANAGER("General manager", "general_manager"), //
+	DEPARTMENT_MANAGER("Department manager", "department_manager"), //
+	CENTRAL_MANAGER("Central manager", "central_manager"), //
+	SYSTEM_ADMINISTRATOR("System administrator", "system_administrator");
 
 	static {
 		PRISTINE_USER.subordinates = new RoleRepresentor[] {};
@@ -20,14 +20,21 @@ public enum RoleRepresentor {
 
 	private final String label;
 
+	private final String title;
+
 	private RoleRepresentor[] subordinates;
 
-	private RoleRepresentor(String label) {
+	private RoleRepresentor(String label, String title) {
 		this.label = label;
+		this.title = title;
 	}
 
 	public String getLabel() {
 		return this.label;
+	}
+
+	public String getTitle() {
+		return this.title;
 	}
 
 	public String getName() {
