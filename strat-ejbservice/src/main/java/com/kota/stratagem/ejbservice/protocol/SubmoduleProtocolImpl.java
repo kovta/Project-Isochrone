@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -45,7 +46,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@EJB
 	private ProjectConverter projectConverter;
 
-	@EJB
+	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
 	@EJB

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +45,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	@EJB
 	private TaskConverter converter;
 
-	@EJB
+	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
 	@EJB

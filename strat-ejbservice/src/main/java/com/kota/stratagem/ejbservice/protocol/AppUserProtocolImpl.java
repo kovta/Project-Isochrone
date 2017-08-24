@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -48,7 +49,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@EJB
 	private PasswordGenerationService passwordGenerator;
 
-	@EJB
+	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
 	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {

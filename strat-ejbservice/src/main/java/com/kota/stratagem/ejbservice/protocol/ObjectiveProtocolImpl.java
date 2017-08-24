@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -46,7 +47,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	@EJB
 	private ObjectiveConverter converter;
 
-	@EJB
+	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
 	@EJB

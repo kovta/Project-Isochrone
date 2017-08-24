@@ -2,6 +2,7 @@ package com.kota.stratagem.ejbservice.protocol;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -41,7 +42,7 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 	@EJB
 	private AssignmentConverter converter;
 
-	@EJB
+	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
 	@EJB
