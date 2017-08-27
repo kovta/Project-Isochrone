@@ -272,9 +272,18 @@ tr > td:first-child {
     border-left-width: 2px;
     border-left-style: groove;
 }
+.dependency-table-header {
+    height: 55px;
+	border-bottom-style: solid;
+    border-top-style: solid;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-bottom-color: lightgray;
+    border-top-color: lightgray;
+}
 
 /* Select */
-.label--checkbox {
+.label-checkbox {
     position: relative;
     margin: .5rem;
     line-height: 135%;

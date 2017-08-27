@@ -12,6 +12,9 @@ public interface TaskParameter {
 	public static final String COMPLETION = "completion";
 	public static final String DEADLINE = "deadline";
 
+	public static final String TASK = "taskId";
+	public static final String DEPENDENCIES = "dependencies";
+
 	public static final String EDIT_FLAG = "edit";
 
 }

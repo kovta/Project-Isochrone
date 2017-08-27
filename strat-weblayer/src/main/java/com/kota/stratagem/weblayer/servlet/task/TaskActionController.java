@@ -60,17 +60,17 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final TaskRepresentor task, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
-		boolean assignmentError = false;
 		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(task));
+				request.setAttribute(ATTR_CONFIGURABLE_DEPENDENCIES, this.taskProtocol.getCompliantDependencyConfigurations(task));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
-				assignmentError = true;
+				errorFlag = true;
 			}
 		}
 		request.setAttribute(ATTR_TASK, task);
-		if (errorFlag || assignmentError) {
+		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
 		} else if (returnPoint != null) {

@@ -124,6 +124,11 @@
 								       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
 								       			    </a>
 												</td></tr>
+												<tr class="match-row"><td>
+													<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addDependencies" data-toggle="modal">
+												    	<i class="fa fa-share-alt tile-icon"></i><span class="icon-companion">Add Dependencies</span>
+													</button>
+												</td></tr>
 												<c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq task.creator.name}">
 													<tr class="match-row"><td>
 														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
@@ -158,7 +163,12 @@
 	                         <div class="tabs-wrapper">
 	                             <ul class="nav nav-justified classic-tabs tabs-primary" role="tablist">
 	                                 <li class="nav-item tab-listener">
-	                                    <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" href="#userPanel" role="tab" aria-expanded="false">
+	                                    <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" href="#dependencyPanel" role="tab" aria-expanded="false">
+		                                    <span>Task Dependency chain (<c:out value="${task.dependantCount}" />|<c:out value="${task.dependencyCount}" />)</span>
+	                                    </a>
+	                                 </li>
+	                                 <li class="nav-item tab-listener">
+	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#userPanel" role="tab" aria-expanded="false">
 		                                    <span>Assigned Users (<c:out value="${task.assignedUsers.size()}" />)</span>
 	                                    </a>
 	                                 </li>
@@ -173,7 +183,74 @@
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
 								 <!--Panel 3-->
-	                             <div class="tab-pane fade active show" id="userPanel" role="tabpanel" aria-expanded="false">
+	                             <div class="tab-pane fade active show" id="dependencyPanel" role="tabpanel" aria-expanded="false">
+								     <c:choose>
+									     <c:when test="${task.taskDependencies.size() == 0 and task.dependantTasks.size() == 0}">
+											<div class="row wow fadeIn" data-wow-delay="0.2s">
+	                    					    <div class="col-lg-12">
+				                           			<div class="text-center content-padder">
+				                               			<h2 class="h2-responsive">There are currently no Dependency Configurations</h2>
+				                               			<h2 class="h2-responsive">for this Task</h2>
+				                               		</div>
+			                               		</div>
+		                               		</div>
+										</c:when>
+										<c:otherwise>
+											<c:set var="level" value="${requestScope.task.dependantChain.size()}" scope="page" />
+											<c:forEach items="${requestScope.task.dependantChain}" var="dependantLevel">
+									            <div class="row wow fadeIn" data-wow-delay="0.2s">
+							                        <div class="col-lg-12">
+							                            <div class="divider-new">
+							                                <h2 class="h4-responsive wow fadeIn">Dependant level: <c:out value="${level}" /></h2>
+							                            </div>
+							                        </div>
+							                    </div>
+												<div class="row">
+													<c:forEach items="${dependantLevel}" var="dependant">
+														<div class="col-lg-4">
+								            				<c:set var="target" value="${requestScope.task}" scope="request" />
+								                            <c:set var="task" value="${dependant}" scope="request" />
+								                            <jsp:include page="../task/task-card.jsp"></jsp:include>
+								                            <c:set var="task" value="${target}" scope="request" />
+								                        </div>
+							                        </c:forEach>
+						                        </div>
+						                        <c:set var="level" value="${level - 1}" scope="page" />
+											</c:forEach>
+										</div>
+										<hr/>
+											<div class="col-lg-12">
+												<div class="text-center"><h4><c:out value="${requestScope.task.name}" /></h4></div>
+											</div>
+										<hr/>
+										<div>
+											<c:set var="levelIndicator" value="0" scope="page" />
+											<c:forEach items="${requestScope.task.dependencyChain}" var="dependencyLevel">
+												<c:set var="levelIndicator" value="${levelIndicator + 1}" scope="page" />
+									            <div class="row wow fadeIn" data-wow-delay="0.2s">
+							                        <div class="col-lg-12">
+							                            <div class="divider-new">
+							                                <h2 class="h4-responsive wow fadeIn">Dependency level: <c:out value="${levelIndicator}" /></h2>
+							                            </div>
+							                        </div>
+							                    </div>
+												<div class="row">
+													<c:forEach items="${dependencyLevel}" var="dependency">
+														<div class="col-lg-4">
+															<c:set var="target" value="${requestScope.task}" scope="request" />
+								                            <c:set var="task" value="${dependency}" scope="request" />
+								                            <jsp:include page="../task/task-card.jsp"></jsp:include>
+								                            <c:set var="task" value="${target}" scope="request" />
+								                        </div>
+							                        </c:forEach>
+						                        </div>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+	                             </div>
+	                             <!--/.Panel 3-->
+	                             <!--Panel 3-->
+	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
 									     <c:when test="${task.assignedUsers.size() == 0}">
 											<div class="row wow fadeIn" data-wow-delay="0.2s">
@@ -256,10 +333,10 @@
 			</div>
 			
    			<!-- Modals -->
-			<jsp:include page="../task/task-create.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
 			<jsp:include page="task-delete.jsp"></jsp:include>
 			<jsp:include page="task-alert.jsp"></jsp:include>
+			<jsp:include page="task-dependency-create.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
 			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->

@@ -43,17 +43,17 @@
 									    </colgroup>
 										<tbody>
 										<c:forEach items="${cluster}" var="user">
-										<tr>
-											<td class="text-center">
-							                    <div class="checkbox-animated">
-						                          <label class="label--checkbox larger-font">
-											          <input type="checkbox" class="checkbox" name="assignments" value="${user.name}">
-											      </label>
-							                    </div>
-						                    </td>
-						                    <td class="text-center">${user.name}</td>
-						                    <td class="text-center">${user.email}</td>
-						                </tr>
+											<tr>
+												<td class="text-center">
+								                    <div class="checkbox-animated">
+							                          <label class="label-checkbox larger-font">
+												          <input type="checkbox" class="checkbox" name="assignments" value="${user.name}">
+												      </label>
+								                    </div>
+							                    </td>
+							                    <td class="text-center">${user.name}</td>
+							                    <td class="text-center">${user.email}</td>
+							                </tr>
 										</c:forEach>
 									</tbody></table>
 									<br/>

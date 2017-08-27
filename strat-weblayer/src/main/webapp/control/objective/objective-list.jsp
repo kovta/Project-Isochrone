@@ -22,7 +22,7 @@
         <c:otherwise>
     		<div class="divider-new">
 		        <h2 class="h2-responsive wow fadeIn">List of Objectives</h2>
-		    </div>    
+		    </div>
         </c:otherwise>
     </c:choose>
     
