@@ -258,7 +258,10 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (43, 'Dependency addition control', 'When adding dependency and dependant tasks, the possibilities must be provided only at the parent structure level. Removal should work similarly as assignment removal. Duplicate or cycle creators must not be provided', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (44, 'Deadline warnings', 'Deadlines that are due in a week have warnings in orange, overdue ones in red', 1, 30, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (45, 'Correctional action generation', 'On navigating to control view on which signed in user is assigned business logic must discern deadline time reserve and remaining unfinished task count ratio. If the number surpasses the threshold (Configurable strategy) then business logic must assess all assignable workforces, and suggest the resolving of impediments', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 0, '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(47, 'Submodule level test Task 2', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(48, 'Submodule level test Task 3', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(49, 'Submodule level test Task 4', '', 10, 10, NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -295,6 +298,9 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (0, 20),
 (0, 21),
 (6, 23),
+(6, 47),
+(6, 48),
+(6, 49),
 (7, 27),
 (7, 28),
 (7, 29),
@@ -314,7 +320,7 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (4, 43),
 (5, 44),
 (5, 45),
-(6, 46);
+(5, 46);
 
 -- ###########################################################################################
 
@@ -347,7 +353,7 @@ SELECT SETVAL('remedies_remedy_id_seq', COALESCE(MAX(remedy_id), 0) ) FROM remed
 
 -- ###########################################################################################
 
-INSERT INTO task_dependencies (dependency_dependent, dependency_maintainer) VALUES
+INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (5, 4);
 
 INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
