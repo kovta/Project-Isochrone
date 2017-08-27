@@ -19,6 +19,12 @@ public interface TaskService {
 
 	Task readWithAssignments(Long id) throws PersistenceServiceException;
 
+	Task readWithDependencies(Long id) throws PersistenceServiceException;
+
+	Task readWithDependants(Long id) throws PersistenceServiceException;
+
+	Task readWithDirectDependencies(Long id) throws PersistenceServiceException;
+
 	Task readComplete(Long id) throws PersistenceServiceException;
 
 	Set<Task> readAll() throws PersistenceServiceException;
@@ -29,5 +35,7 @@ public interface TaskService {
 	void delete(Long id) throws PersistenceServiceException;
 
 	boolean exists(Long id) throws PersistenceServiceException;
+
+	void createDependency(Long dependancy, Long dependant) throws PersistenceServiceException;
 
 }

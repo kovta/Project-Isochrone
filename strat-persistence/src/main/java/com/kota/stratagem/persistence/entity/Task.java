@@ -41,7 +41,13 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 		@NamedQuery(name = TaskQuery.GET_BY_ID, query = "SELECT t FROM Task t WHERE t.id=:" + TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
 				+ TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Task t LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td WHERE t.id=:"
+				+ TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks dt WHERE t.id=:"
+				+ TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt WHERE t.id=:"
+				+ TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
 				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks LEFT JOIN FETCH t.taskDependencies ORDER BY t.name"),
 		@NamedQuery(name = TaskQuery.REMOVE_BY_ID, query = "DELETE FROM Task t WHERE t.id=:" + TaskParameter.ID)
@@ -94,11 +100,11 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	private Set<Impediment> impediments;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Task.class)
-	@JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_dependent", nullable = false))
+	@JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "dependency_satiator", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false))
 	private Set<Task> dependantTasks;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Task.class)
-	@JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "dependency_dependent", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false))
+	@JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_satiator", nullable = false))
 	private Set<Task> taskDependencies;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Objective.class)

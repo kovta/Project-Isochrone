@@ -120,6 +120,21 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	public Task readWithDependencies(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_WITH_DEPENDENCIES, "Get Task with Dependencies by id (" + id + ")");
+	}
+
+	@Override
+	public Task readWithDependants(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_WITH_DEPENDANTS, "Get Task with Dependants by id (" + id + ")");
+	}
+
+	@Override
+	public Task readWithDirectDependencies(Long id) throws PersistenceServiceException {
+		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, "Get Task with direct Dependency list by id (" + id + ")");
+	}
+
+	@Override
 	public Task readComplete(Long id) throws PersistenceServiceException {
 		return this.retrieveSingleRecord(id, TaskQuery.GET_BY_ID_COMPLETE, "Get Task with all attributes by id (" + id + ")");
 	}
@@ -194,6 +209,23 @@ public class TaskServiceImpl implements TaskService {
 			return this.entityManager.createNamedQuery(TaskQuery.COUNT_BY_ID, Long.class).setParameter(TaskParameter.ID, id).getSingleResult() == 1;
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during counting Tasks by id (" + id + ")! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public void createDependency(Long dependency, Long dependant) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Creating Task dependency (dependency: " + dependency + ", dependant: " + dependant + ")");
+		}
+		try {
+			final Task maintainer = this.readWithDependencies(dependant);
+			final Set<Task> dependencies = maintainer.getTaskDependencies();
+			dependencies.add(this.readElementary(dependency));
+			maintainer.setTaskDependencies(dependencies);
+			this.entityManager.merge(maintainer);
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error during Task depependency addition (dependency: " + dependency + ", dependant: " + dependant
+					+ ")! " + e.getLocalizedMessage(), e);
 		}
 	}
 

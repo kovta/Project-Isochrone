@@ -46,6 +46,7 @@ public class Constants {
 	// Separator
 	public static final String PAYLOAD_SEPARATOR = " | ";
 	public static final String DATA_SEPARATOR = "_";
+	public static final String NULL_ATTRIBUTE = "null";
 
 	// Attribute
 	public static final String ID_DATA_NAME = "id";
