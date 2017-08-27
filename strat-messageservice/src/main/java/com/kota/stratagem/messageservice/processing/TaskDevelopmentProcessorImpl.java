@@ -8,15 +8,25 @@ import javax.ejb.EJB;
 
 import com.kota.stratagem.messageservice.qualifier.TaskOriented;
 import com.kota.stratagem.persistence.entity.AppUser;
+import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
+import com.kota.stratagem.persistence.entity.AppUserProjectAssignment;
 import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
+import com.kota.stratagem.persistence.service.ObjectiveService;
+import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.util.Constants;
 
 @TaskOriented
 public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor implements DevelopmentProcessor {
+
+	@EJB
+	protected ObjectiveService objectiveService;
+
+	@EJB
+	protected ProjectService projectService;
 
 	@EJB
 	protected SubmoduleService submoduleService;
@@ -28,11 +38,27 @@ public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor i
 	public void processCreation(String message) throws PersistenceServiceException {
 		final Map<String, String> attributes = this.processMessageContent(message, Constants.CREATION_SELECTOR);
 		final Set<AppUser> recipients = new HashSet<>();
-		recipients.add(this.appUserService
-				.readElementary(this.submoduleService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))).getCreator().getId()));
-		for (final AppUserSubmoduleAssignment assignment : this.submoduleService
-				.readWithAssignments(Long.parseLong(attributes.get(Constants.PROJECT_ID_ATTRIBUTE_DATA_NAME))).getAssignedUsers()) {
-			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+		if (!attributes.get(Constants.OBJECTIVE_ID_ATTRIBUTE_DATA_NAME).equals(Constants.NULL_ATTRIBUTE)) {
+			recipients.add(this.appUserService
+					.readElementary(this.objectiveService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))).getCreator().getId()));
+			for (final AppUserObjectiveAssignment assignment : this.objectiveService
+					.readWithAssignments(Long.parseLong(attributes.get(Constants.OBJECTIVE_ID_ATTRIBUTE_DATA_NAME))).getAssignedUsers()) {
+				recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+			}
+		} else if (!attributes.get(Constants.PROJECT_ID_ATTRIBUTE_DATA_NAME).equals(Constants.NULL_ATTRIBUTE)) {
+			recipients.add(this.appUserService
+					.readElementary(this.projectService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))).getCreator().getId()));
+			for (final AppUserProjectAssignment assignment : this.projectService
+					.readWithAssignments(Long.parseLong(attributes.get(Constants.PROJECT_ID_ATTRIBUTE_DATA_NAME))).getAssignedUsers()) {
+				recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+			}
+		} else if (!attributes.get(Constants.SUBMODULE_ID_ATTRIBUTE_DATA_NAME).equals(Constants.NULL_ATTRIBUTE)) {
+			recipients.add(this.appUserService
+					.readElementary(this.submoduleService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))).getCreator().getId()));
+			for (final AppUserSubmoduleAssignment assignment : this.submoduleService
+					.readWithAssignments(Long.parseLong(attributes.get(Constants.SUBMODULE_ID_ATTRIBUTE_DATA_NAME))).getAssignedUsers()) {
+				recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+			}
 		}
 		recipients.remove(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))));
 		this.handleCreationProperties(attributes, Constants.TASK_DATA_NAME, recipients);
