@@ -27,6 +27,10 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private ObjectiveRepresentor objective;
 	private ProjectRepresentor project;
 	private SubmoduleRepresentor submodule;
+	private List<List<TaskRepresentor>> dependantChain;
+	private List<List<TaskRepresentor>> dependencyChain;
+	private int dependantCount;
+	private int dependencyCount;
 
 	public TaskRepresentor() {
 		this(null, "", "", 5, 0, new Date(), null, new Date(), null, new Date());
@@ -34,7 +38,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator,
 			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -50,6 +54,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.impediments = new ArrayList<>();
 		this.dependantTasks = new ArrayList<>();
 		this.taskDependencies = new ArrayList<>();
+		this.dependantChain = new ArrayList<>();
+		this.dependencyChain = new ArrayList<>();
 		this.objective = null;
 		this.project = null;
 		this.submodule = null;
@@ -57,7 +63,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
 			AppUserRepresentor modifier, Date modificationDate) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
@@ -72,6 +78,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.impediments = new ArrayList<>();
 		this.dependantTasks = new ArrayList<>();
 		this.taskDependencies = new ArrayList<>();
+		this.dependantChain = new ArrayList<>();
+		this.dependencyChain = new ArrayList<>();
 		this.objective = null;
 		this.project = null;
 		this.submodule = null;
@@ -165,6 +173,38 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.submodule = submodule;
 	}
 
+	public List<List<TaskRepresentor>> getDependantChain() {
+		return this.dependantChain;
+	}
+
+	public void setDependantChain(List<List<TaskRepresentor>> dependantChain) {
+		this.dependantChain = dependantChain;
+	}
+
+	public List<List<TaskRepresentor>> getDependencyChain() {
+		return this.dependencyChain;
+	}
+
+	public void setDependencyChain(List<List<TaskRepresentor>> dependencyChain) {
+		this.dependencyChain = dependencyChain;
+	}
+
+	public int getDependantCount() {
+		int total = 0;
+		for (final List<TaskRepresentor> dependantLevel : this.dependantChain) {
+			total += dependantLevel.size();
+		}
+		return total;
+	}
+
+	public int getDependencyCount() {
+		int total = 0;
+		for (final List<TaskRepresentor> dependencyLevel : this.dependencyChain) {
+			total += dependencyLevel.size();
+		}
+		return total;
+	}
+
 	@Override
 	public String toString() {
 		return "\nTaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
@@ -177,8 +217,18 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	public String toTextMessage() {
 		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
 				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", creator_id=" + this.creator.getId() + ", creationDate="
-				+ this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id=" + this.objective.getId() + ", project_id="
-				+ this.project.getId() + ", submodule_id=" + this.submodule.getId() + "]";
+				+ this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id="
+				+ (this.objective != null ? this.objective.getId().toString() : "null") + ", project_id="
+				+ (this.project != null ? this.project.getId().toString() : "null") + ", submodule_id="
+				+ (this.submodule != null ? this.submodule.getId().toString() : "null") + "]";
+	}
+
+	public void addTaskDependency(TaskRepresentor dependency) {
+		this.taskDependencies.add(dependency);
+	}
+
+	public void addDependantTask(TaskRepresentor dependant) {
+		this.dependantTasks.add(dependant);
 	}
 
 	public void addTeam(TeamTaskAssignmentRepresentor team) {
@@ -187,6 +237,36 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public void addUser(AppUserTaskAssignmentRepresentor user) {
 		this.assignedUsers.add(user);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		final TaskRepresentor other = (TaskRepresentor) obj;
+		if (this.id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!this.id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -2,11 +2,12 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.util.Date;
 
-public abstract class AbstractTimeConstraintRepresentor {
+public abstract class AbstractTimeConstraintRepresentor extends AbstractIdentityObscuror {
 
 	private final int urgencyLevel;
 
-	public AbstractTimeConstraintRepresentor(Date deadline) {
+	public AbstractTimeConstraintRepresentor(Date deadline, Long id) {
+		super(id);
 		final Date now = new Date();
 		final long diff = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
 		if (diff < 0) {

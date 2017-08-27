@@ -34,7 +34,7 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 
 	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidentiality,
 			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -55,7 +55,7 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 
 	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential, AppUserRepresentor creator,
 			Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
 		this.status = status;

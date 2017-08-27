@@ -33,7 +33,7 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public ObjectiveRepresentor(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidential,
 			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -53,7 +53,7 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public ObjectiveRepresentor(String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidential,
 			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
 		this.priority = priority;

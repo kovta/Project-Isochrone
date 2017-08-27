@@ -29,7 +29,7 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public SubmoduleRepresentor(Long id, String name, String description, Date deadline, AppUserRepresentor creator, Date creationDate,
 			AppUserRepresentor modifier, Date modificationDate, ProjectRepresentor project) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -46,7 +46,7 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public SubmoduleRepresentor(String name, String description, Date deadline, AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier,
 			Date modificationDate, ProjectRepresentor project) {
-		super(deadline != null ? deadline : new Date());
+		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
