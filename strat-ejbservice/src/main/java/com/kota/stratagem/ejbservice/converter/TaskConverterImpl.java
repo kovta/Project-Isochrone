@@ -55,16 +55,16 @@ public class TaskConverterImpl implements TaskConverter {
 		// representor.addImpediment(this.impedimentConverter.to(impediment));
 		// }
 		// }
-		// if (task.getDependantTasks() != null) {
-		// for (final Task dependant : task.getDependantTasks()) {
-		// representor.addDependantTask(this.to(dependant));
-		// }
-		// }
-		// if (task.getTaskDependencies() != null) {
-		// for (final Task dependency : task.getTaskDependencies()) {
-		// representor.addTaskDependency(this.toElementary(dependency));
-		// }
-		// }
+		if (task.getDependantTasks() != null) {
+			for (final Task dependant : task.getDependantTasks()) {
+				representor.addDependantTask(this.toElementary(dependant));
+			}
+		}
+		if (task.getTaskDependencies() != null) {
+			for (final Task dependency : task.getTaskDependencies()) {
+				representor.addTaskDependency(this.toElementary(dependency));
+			}
+		}
 		if (task.getObjective() != null) {
 			representor.setObjective(this.objectiveConverter.toElementary(task.getObjective()));
 		}

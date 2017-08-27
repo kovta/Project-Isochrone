@@ -188,6 +188,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			}
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
 		return new ArrayList<AppUserRepresentor>(representors);
 	}
