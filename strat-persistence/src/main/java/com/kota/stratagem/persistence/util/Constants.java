@@ -34,6 +34,8 @@ public class Constants {
 	public static final String DELETION_SELECTOR = "delete";
 	public static final String ASSIGNMENT_SELECTOR = "assign";
 	public static final String DISSOCIATION_SELECTOR = "dissociation";
+	public static final String DEPENDENCY_CONFIGURATION_SELECTOR = "dependency configuration";
+	public static final String DEPENDENCY_DECONFIGURATION_SELECTOR = "dependency deconfiguration";
 
 	// Authorization
 	public static final String SYSTEM_ADMINISTRATOR_AUTHORIZATION_TITLE = "system_administrator";
@@ -57,6 +59,7 @@ public class Constants {
 	public static final String DEADLINE_DATA_NAME = "deadline";
 	public static final String CONFIDENTIALITY_DATA_NAME = "confidential";
 	public static final String COMPLETION_DATA_NAME = "completion";
+	public static final String ADMISSION_DATA_NAME = "admission";
 	public static final String CREATOR_DATA_NAME = "creator";
 	public static final String CREATOR_ID_DATA_NAME = Constants.CREATOR_DATA_NAME + Constants.DATA_SEPARATOR + Constants.ID_DATA_NAME;
 	public static final String CREATION_DATE_DATA_NAME = "creationDate";

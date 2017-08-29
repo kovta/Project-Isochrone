@@ -40,7 +40,8 @@ public class NotificationServiceImpl implements NotificationService {
 		try {
 			if (recipients.length != 0) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Notification created with empty recipient list (inducer: " + inducer + ", message: " + message + ")");
+					LOGGER.debug("Notification created with empty recipient list (inducer: " + inducer + ", message: " + message + "," + recipients.length
+							+ " recipients)");
 				}
 			}
 			final AppUser operator = this.appUserService.readElementary(inducer);

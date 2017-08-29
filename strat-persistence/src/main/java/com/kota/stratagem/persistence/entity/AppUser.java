@@ -47,7 +47,7 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t LEFT JOIN FETCH u.notifications n WHERE u.name=:"
 				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_ALL_BY_ROLE, query = "SELECT u FROM AppUser u WHERE u.role=:" + AppUserParameter.ROLE + " ORDER BY u.name"),
-		@NamedQuery(name = AppUserQuery.GET_ALL_APP_USERS, query = "SELECT u FROM AppUser u ORDER BY u.name"),
+		@NamedQuery(name = AppUserQuery.GET_ALL_APP_USERS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t ORDER BY u.name"),
 		@NamedQuery(name = AppUserQuery.REMOVE_BY_ID, query = "DELETE FROM AppUser u WHERE u.id=:" + AppUserParameter.ID)
 		//
 })
@@ -88,6 +88,9 @@ public class AppUser implements Serializable {
 
 	@Column(name = "user_notification_view_count", nullable = false)
 	private int notificationViewCount;
+
+	@Column(name = "user_image_selector", nullable = false)
+	private int imageSelector;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserObjectiveAssignment.class, mappedBy = "recipient")
 	private Set<AppUserObjectiveAssignment> objectives;
@@ -131,7 +134,7 @@ public class AppUser implements Serializable {
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
-			Date acountModificationDate, int notificationViewCount) {
+			Date acountModificationDate, int notificationViewCount, int imageSelector) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -142,10 +145,11 @@ public class AppUser implements Serializable {
 		this.accountModifier = accountModifier;
 		this.acountModificationDate = acountModificationDate;
 		this.notificationViewCount = notificationViewCount;
+		this.imageSelector = imageSelector;
 	}
 
 	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate,
-			int notificationViewCount) {
+			int notificationViewCount, int imageSelector) {
 		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
@@ -155,6 +159,7 @@ public class AppUser implements Serializable {
 		this.accountModifier = accountModifier;
 		this.acountModificationDate = acountModificationDate;
 		this.notificationViewCount = notificationViewCount;
+		this.imageSelector = imageSelector;
 	}
 
 	public Long getId() {
@@ -219,6 +224,14 @@ public class AppUser implements Serializable {
 
 	public int getNotificationViewCount() {
 		return this.notificationViewCount;
+	}
+
+	public int getImageSelector() {
+		return this.imageSelector;
+	}
+
+	public void setImageSelector(int imageSelector) {
+		this.imageSelector = imageSelector;
 	}
 
 	public void setNotificationViewCount(int notificationViewCount) {
@@ -305,11 +318,41 @@ public class AppUser implements Serializable {
 	public String toString() {
 		return "AppUser [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role=" + this.role
 				+ ", registrationDate=" + this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + ", notificationViewCount="
-				+ this.notificationViewCount + "]";
+				+ this.notificationViewCount + ", imageSelector=" + this.imageSelector + "]";
 	}
 
 	public void addNotification(Notification notification) {
 		this.notifications.add(notification);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		final AppUser other = (AppUser) obj;
+		if (this.id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!this.id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }

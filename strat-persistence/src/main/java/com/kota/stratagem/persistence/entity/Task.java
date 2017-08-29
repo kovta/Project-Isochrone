@@ -89,6 +89,9 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@Column(name = "task_deadline", nullable = true)
 	private Date deadline;
 
+	@Column(name = "task_admittance", nullable = false)
+	private Boolean admittance;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamTaskAssignment.class, mappedBy = "task")
 	private Set<TeamTaskAssignment> assignedTeams;
 
@@ -138,17 +141,19 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
+		this.admittance = this.admittance;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
 	}
 
-	public Task(String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate) {
+	public Task(String name, String description, int priority, double completion, Date deadline, Boolean admittance, Date creationDate, Date modificationDate) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
+		this.admittance = admittance;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
 	}
@@ -199,6 +204,14 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
+	}
+
+	public Boolean getAdmittance() {
+		return this.admittance;
+	}
+
+	public void setAdmittance(Boolean admittance) {
+		this.admittance = admittance;
 	}
 
 	public Set<TeamTaskAssignment> getAssignedTeams() {
@@ -268,10 +281,10 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@Override
 	public String toString() {
 		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
-				+ this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
-				+ this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies="
-				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + "]";
+				+ this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", assignedTeams=" + this.assignedTeams
+				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
+				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule="
+				+ this.submodule + "]";
 	}
 
 }

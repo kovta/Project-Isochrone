@@ -34,6 +34,8 @@ public interface AppUserService {
 
 	AppUser updateNotificationViewCount(Long id, int notificationViewCount) throws PersistenceServiceException;
 
+	AppUser updateImageSelector(Long id, int imageSelector) throws PersistenceServiceException;
+
 	void delete(Long id) throws PersistenceServiceException;
 
 	boolean exists(Long id) throws PersistenceServiceException;

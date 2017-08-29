@@ -179,12 +179,12 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 
 	private void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Remove User " + object + " Assignment by id (" + id + ")");
+			LOGGER.debug("Delete User " + object + " Assignment by id (" + id + ")");
 		}
 		try {
 			this.entityManager.createNamedQuery(query).setParameter(AssignmentParameter.ID, id).executeUpdate();
 		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error while removing  User " + object + " Assignment by id (" + id + ")! " + e.getLocalizedMessage(),
+			throw new PersistenceServiceException("Unknown error while deleting User " + object + " Assignment by id (" + id + ")! " + e.getLocalizedMessage(),
 					e);
 		}
 	}

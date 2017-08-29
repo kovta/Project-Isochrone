@@ -39,7 +39,7 @@ public class AppUserServiceImpl implements AppUserService {
 			LOGGER.debug("Create AppUser (name=" + name + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role + ")");
 		}
 		try {
-			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), null, new Date(), 0);
+			final AppUser user = new AppUser(name, passwordHash, email, role, new Date(), null, new Date(), 0, 0);
 			this.entityManager.persist(user);
 			this.entityManager.flush();
 			return user;
@@ -196,6 +196,20 @@ public class AppUserServiceImpl implements AppUserService {
 		try {
 			final AppUser user = this.readElementary(id);
 			user.setNotificationViewCount(notificationViewCount);
+			return this.entityManager.merge(user);
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error while merging AppUser! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public AppUser updateImageSelector(Long id, int imageSelector) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Update ApUser image (id: " + id + ", imageSelector=" + imageSelector + ")");
+		}
+		try {
+			final AppUser user = this.readElementary(id);
+			user.setImageSelector(imageSelector);
 			return this.entityManager.merge(user);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error while merging AppUser! " + e.getLocalizedMessage(), e);

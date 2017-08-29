@@ -60,13 +60,13 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task create(String name, String description, int priority, double completion, Date deadline, AppUser creator, Long objective, Long project,
-			Long submodule) throws PersistenceServiceException {
+	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser creator, Long objective,
+			Long project, Long submodule) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, priority, completion, deadline, new Date(), new Date());
+			final Task task = new Task(name, description, priority, completion, deadline, admittance, new Date(), new Date());
 			Objective parentObjective = null;
 			Project parentProject = null;
 			Submodule parentSubmodule = null;
@@ -154,8 +154,8 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, AppUser modifier, Long objective, Long project,
-			Long submodule) throws PersistenceServiceException {
+	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser modifier,
+			Long objective, Long project, Long submodule) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
@@ -167,6 +167,7 @@ public class TaskServiceImpl implements TaskService {
 			task.setPriority(priority);
 			task.setCompletion(completion);
 			task.setDeadline(deadline);
+			task.setAdmittance(admittance);
 			if (task.getCreator().getId() == operator.getId()) {
 				task.setModifier(task.getCreator());
 			} else if (task.getModifier().getId() != operator.getId()) {
@@ -213,18 +214,63 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void createDependency(Long dependency, Long dependant) throws PersistenceServiceException {
+	public void createDependency(Long dependency, Long dependant, Long operator) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Creating Task dependency (dependency: " + dependency + ", dependant: " + dependant + ")");
 		}
 		try {
 			final Task maintainer = this.readWithDependencies(dependant);
+			final Task satiator = this.readWithDependencies(dependency);
+			if (maintainer.getCreator().getId() == operator) {
+				maintainer.setModifier(maintainer.getCreator());
+			} else if (maintainer.getModifier().getId() != operator) {
+				maintainer.setModifier(this.appUserService.readElementary(operator));
+			}
+			maintainer.setModificationDate(new Date());
+			if (satiator.getCreator().getId() == operator) {
+				satiator.setModifier(satiator.getCreator());
+			} else if (satiator.getModifier().getId() != operator) {
+				satiator.setModifier(this.appUserService.readElementary(operator));
+			}
+			this.entityManager.merge(satiator);
+			satiator.setModificationDate(new Date());
 			final Set<Task> dependencies = maintainer.getTaskDependencies();
 			dependencies.add(this.readElementary(dependency));
 			maintainer.setTaskDependencies(dependencies);
 			this.entityManager.merge(maintainer);
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error during Task depependency addition (dependency: " + dependency + ", dependant: " + dependant
+					+ ")! " + e.getLocalizedMessage(), e);
+		}
+	}
+
+	@Override
+	public void deleteDependency(Long dependency, Long dependant, Long operator) throws PersistenceServiceException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Deleting Task dependency (dependency: " + dependency + ", dependant: " + dependant + ")");
+		}
+		try {
+			final Task maintainer = this.readWithDependencies(dependant);
+			final Task satiator = this.readWithDependencies(dependency);
+			if (maintainer.getCreator().getId() == operator) {
+				maintainer.setModifier(maintainer.getCreator());
+			} else if (maintainer.getModifier().getId() != operator) {
+				maintainer.setModifier(this.appUserService.readElementary(operator));
+			}
+			maintainer.setModificationDate(new Date());
+			if (satiator.getCreator().getId() == operator) {
+				satiator.setModifier(satiator.getCreator());
+			} else if (satiator.getModifier().getId() != operator) {
+				satiator.setModifier(this.appUserService.readElementary(operator));
+			}
+			this.entityManager.merge(satiator);
+			satiator.setModificationDate(new Date());
+			final Set<Task> dependencies = maintainer.getTaskDependencies();
+			dependencies.remove(this.readElementary(dependency));
+			maintainer.setTaskDependencies(dependencies);
+			this.entityManager.merge(maintainer);
+		} catch (final Exception e) {
+			throw new PersistenceServiceException("Unknown error during Task depependency deletion (dependency: " + dependency + ", dependant: " + dependant
 					+ ")! " + e.getLocalizedMessage(), e);
 		}
 	}
