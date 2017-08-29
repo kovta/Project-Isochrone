@@ -23,17 +23,17 @@ INSERT INTO roles (role_id, role_name) VALUES
 SELECT SETVAL('roles_role_id_seq', COALESCE(MAX(role_id), 0) ) FROM roles;
 
 INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_registration_date, user_account_modification_date, user_account_modifier, user_notification_view_count, user_image_selector) VALUES 
-(0, 'adam', '$2a$10$i2mSCec8pR886PFgaydyauLocGUCavrQMVcs7I6jJcu6v.0hye.3a', 4, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(1, 'brent', '$2a$10$at/2hcd0Lv3s20BIsPYPbeHjY0CBAsNhupFITrlPS6qzMB3g3lRW.', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(2, 'chris', '$2a$10$UxYObgg/mDYWu77wCF8V7.XqCdmdG19BOAaPCzbzvY601Sg1of7Mq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(3, 'dennis', '$2a$10$g5DOPhsfuQLqzB6yd1g.2eYswE00Zh8q77fPSc5dKjwWXV/pWMGS6', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(4, 'ellie', '$2a$10$MHLMnRaQkoybGpdvMY.F0e7jIN8IYj6hozDc12EZPOFTfoTypLZnu', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(5, 'frank', '$2a$10$7m8VIy8YWdu2p6MkXjhrfOTPzHZ0NiNBjACkqCVWjH8D8D4YaJ8DO', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(6, 'gabrille', '$2a$10$ARgEy3y3fYOzoupqwWRqzeASy5KllWKLixDWId57Dl5whjV9i888W', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(7, 'holly', '$2a$10$nExDjhpB1s/c8TKAI3U5tuVQHMCI2vr7Z0vz4CKs/I.PV5lM16wmy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(8, 'ike', '$2a$10$k5v48h9nA410N4ULAn.PnOZX2VudxIqR9I4FKUjn9qZIBlNqTqdwW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(9, 'jenny', '$2a$10$v0hqFIXP3PIUq1vx8wXGFehCjdah5qaCBO0sHgSTiZsVJBDze/lAy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0),
-(10, 'kevin', '$2a$10$zkz3vmAw/GKfiAp.R8xHDOg.3VsZJGz4rzW2Cb62W55W8mqC7sRtS', 2, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 0);
+(0, 'adam', '$2a$10$i2mSCec8pR886PFgaydyauLocGUCavrQMVcs7I6jJcu6v.0hye.3a', 4, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 1),
+(1, 'brent', '$2a$10$at/2hcd0Lv3s20BIsPYPbeHjY0CBAsNhupFITrlPS6qzMB3g3lRW.', 3, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 13),
+(2, 'chris', '$2a$10$UxYObgg/mDYWu77wCF8V7.XqCdmdG19BOAaPCzbzvY601Sg1of7Mq', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 9),
+(3, 'dennis', '$2a$10$g5DOPhsfuQLqzB6yd1g.2eYswE00Zh8q77fPSc5dKjwWXV/pWMGS6', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 5),
+(4, 'ellie', '$2a$10$MHLMnRaQkoybGpdvMY.F0e7jIN8IYj6hozDc12EZPOFTfoTypLZnu', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 6),
+(5, 'frank', '$2a$10$7m8VIy8YWdu2p6MkXjhrfOTPzHZ0NiNBjACkqCVWjH8D8D4YaJ8DO', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 3),
+(6, 'gabrille', '$2a$10$ARgEy3y3fYOzoupqwWRqzeASy5KllWKLixDWId57Dl5whjV9i888W', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 14),
+(7, 'holly', '$2a$10$nExDjhpB1s/c8TKAI3U5tuVQHMCI2vr7Z0vz4CKs/I.PV5lM16wmy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 16),
+(8, 'ike', '$2a$10$k5v48h9nA410N4ULAn.PnOZX2VudxIqR9I4FKUjn9qZIBlNqTqdwW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 7),
+(9, 'jenny', '$2a$10$v0hqFIXP3PIUq1vx8wXGFehCjdah5qaCBO0sHgSTiZsVJBDze/lAy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 2),
+(10, 'kevin', '$2a$10$zkz3vmAw/GKfiAp.R8xHDOg.3VsZJGz4rzW2Cb62W55W8mqC7sRtS', 2, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 15);
 SELECT SETVAL('app_users_user_id_seq', COALESCE(MAX(user_id), 0) ) FROM app_users;
 
 INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES 
