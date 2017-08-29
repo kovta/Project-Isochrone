@@ -200,11 +200,18 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all AppUsers : " + representors.size() + " users(s)");
 			}
+			final List<AppUserRepresentor> representorList = new ArrayList<AppUserRepresentor>(representors);
+			Collections.sort(representorList, new Comparator<AppUserRepresentor>() {
+				@Override
+				public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
+					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+				}
+			});
+			return representorList;
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
-		return new ArrayList<AppUserRepresentor>(representors);
 	}
 
 	@Override
