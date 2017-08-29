@@ -17,6 +17,8 @@ public interface AppUserProtocol {
 
 	int getAppUserNewNotificationCount(String username) throws AdaptorException;
 
+	int getAppUserImageSelector(String username) throws AdaptorException;
+
 	AppUserRepresentor getAppUser(Long id) throws AdaptorException;
 
 	AppUserRepresentor getAppUser(String username) throws AdaptorException;

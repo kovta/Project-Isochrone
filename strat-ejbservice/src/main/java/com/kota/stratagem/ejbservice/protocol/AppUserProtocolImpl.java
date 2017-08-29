@@ -145,6 +145,20 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
+	public int getAppUserImageSelector(String username) throws AdaptorException {
+		try {
+			final AppUserRepresentor representor = this.converter.toElementary(this.appUserService.readElementary(username));
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Get AppUser image selector (name: " + username + ") --> " + representor);
+			}
+			return representor.getImageSelector();
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+	}
+
+	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
 		try {
 			final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(id));
