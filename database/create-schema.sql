@@ -26,6 +26,7 @@ CREATE TABLE app_users (
 	user_account_modifier INTEGER NULL,
 	user_account_modification_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	user_notification_view_count INTEGER NULL,
+	user_image_selector INTEGER NULL,
 	CONSTRAINT PK_USER_ID PRIMARY KEY (user_id),
 	CONSTRAINT FK_USER_ROLE FOREIGN KEY (user_role)
 		REFERENCES roles (role_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -261,6 +262,7 @@ CREATE TABLE tasks (
 	task_priority INTEGER NOT NULL,
 	task_completion_percentage INTEGER NOT NULL,
 	task_deadline TIMESTAMP WITHOUT TIME ZONE NULL,
+	task_admittance BOOLEAN NOT NULL,
 	task_creator INTEGER NOT NULL,
 	task_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	task_modifier INTEGER NOT NULL,
@@ -309,7 +311,7 @@ CREATE TABLE submodule_tasks (
 	submodule_task_task_id INTEGER NOT NULL,
 	CONSTRAINT PK_SUBMODULE_TASK_ID PRIMARY KEY (submodule_task_id),
 	CONSTRAINT FK_SUBMODULE_TASK_SUBMODULE FOREIGN KEY (submodule_task_submodule_id)
-	  REFERENCES projects (project_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
 	CONSTRAINT FK_SUBMODULE_TASK_TASK FOREIGN KEY (submodule_task_task_id)
 	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
