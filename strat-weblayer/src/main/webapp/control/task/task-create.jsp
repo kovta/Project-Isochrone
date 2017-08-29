@@ -42,16 +42,31 @@
 			                </div>
 		                </div>
 	            		<div class="col-md-6">
-	            			<div class="md-form form-sm">
-								<i class="fa fa-calendar-check-o prefix"></i>
-		               			<label>Set Deadline</label>
-		               			<br/>
-	                  		</div>
-		            		<div class="md-form form-sm" id="sandbox-container">
-								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${task.deadline}"/>
+							<div class="md-form form-sm">
+								<div class="md-form form-sm">
+									<i class="fa fa-ticket prefix"></i>
+			               			<label>Set Admittance policy</label>
+			               			<br/>
+			                  	</div>
+								<div class="input-group">
+				    				<div id="radioBtn-adm" class="btn-group">
+				    					<a class="btn-sm notActive" data-toggle="admittance" data-title="1">Open</a>
+				    					<a class="btn-sm active" data-toggle="admittance" data-title="0">Closed</a>
+				    				</div>
+				    				<input type="hidden" name="admittance" id="admittance">
+				    			</div>
 			                </div>
 		                </div>
             		</div>
+            		
+            		<div class="md-form form-sm">
+						<i class="fa fa-calendar-check-o prefix"></i>
+               			<label>Set Deadline</label>
+               			<br/>
+                 		</div>
+            		<div class="md-form form-sm" id="sandbox-container">
+						<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${submodule.deadline}"/>
+	                </div>
             		
 					<div class="md-form form-sm">
 						<i class="fa fa-percent prefix"></i>

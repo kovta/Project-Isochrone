@@ -4,6 +4,7 @@ public enum Page {
 
 	HOME("home.jsp", "Home"), //
 	ERROR("error.jsp", "Error"), //
+	USER_LIST("/control/user/user-list.jsp", "UserList"), //
 	USER_VIEW("/control/user/user-view.jsp", "User"), //
 	USER_EDIT("/control/user/user-edit.jsp", "User"), //
 	OBJECTIVE_LIST("/control/objective/objective-list.jsp", "ObjectiveList"), //

@@ -61,7 +61,9 @@
 	                                		</tr>
                            			 		<tr>
 	                                			<td class="strat-detail-attribute-name">Created by</td>
-	                                			<td class="strat-detail-attribute-value">${project.creator.name}</td>
+	                                			<td class="strat-detail-attribute-value">
+	                                				<a href="User?id=<c:out value="${project.creator.id}" />">${project.creator.name}</a>
+	                                			</td>
 	                                		</tr>
                                 		    <tr>
 	                                			<td class="strat-detail-attribute-name">Creation date</td>
@@ -69,7 +71,9 @@
 	                                		</tr>
 	                                		<tr>
 	                                			<td class="strat-detail-attribute-name">Modified by</td>
-	                                			<td class="strat-detail-attribute-value">${project.modifier.name}</td>
+	                                			<td class="strat-detail-attribute-value">
+	                                				<a href="User?id=<c:out value="${project.modifier.id}" />">${project.modifier.name}</a>
+	                                			</td>
 	                                		</tr>
                                 		    <tr>
 	                                			<td class="strat-detail-attribute-name">Modification date</td>
@@ -95,11 +99,15 @@
 	                        </div>
 	                    </div>
 
+						<c:set var="supervisor" value="false" />
+						<c:if test="${operator eq project.creator.name or operator eq project.objective.creator.name}">
+							<c:set var="supervisor" value="true" />
+						</c:if>
 						<c:set var="assigned" value="false" />
 						<c:forEach items="${requestScope.project.assignedUsers}" var="assignment">
-	                    	<c:if test="${pageContext.request.remoteUser eq assignment.recipient.name}"><c:set var="assigned" value="true" /></c:if>
+	                    	<c:if test="${operator eq assignment.recipient.name}"><c:set var="assigned" value="true" /></c:if>
 						</c:forEach>
-						<c:if test="${isCentralManager or assigned}">
+						<c:if test="${supervisor or assigned}">
 		       			    <br/><br/><br/>
 		       			    <div class="card">
 	                            <div class="card-block">
@@ -109,11 +117,13 @@
 	                                <div class="md-form">
 	                                	<table class="strat-detail-table">
 		                                	<tbody>
-		                                		<tr class="match-row"><td class="text-center">
-							  		   			    <a href="Project?id=<c:out value="${project.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
-								       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Project
-								       			    </a>
-												</td></tr>
+		                                		<c:if test="${supervisor}">
+			                                		<tr class="match-row"><td class="text-center">
+								  		   			    <a href="Project?id=<c:out value="${project.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
+									       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Project
+									       			    </a>
+													</td></tr>
+												</c:if>
 												<tr class="match-row"><td>
 													<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addSubmodule" data-toggle="modal">
 												    	<i class="fa fa-list-alt tile-icon"></i><span class="icon-companion">Define Submodule</span>
@@ -124,7 +134,7 @@
 												    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 													</button>
 												</td></tr>
-												<c:if test="${isCentralManager or pageContext.request.remoteUser eq project.creator.name}">
+												<c:if test="${supervisor}">
 													<tr class="match-row"><td>
 														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
 													    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
@@ -256,7 +266,7 @@
 															<div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-																<c:if test="${isCentralManager or pageContext.request.remoteUser eq assignmentItem.entrustor.name}">
+																<c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
 																	<div class="full-width text-center">
 																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&projectId=<c:out value="${project.id}" />">Unassign user</a>
 															    	</div>
@@ -293,7 +303,7 @@
 									                        <div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <c:if test="${isCentralManager or pageContext.request.remoteUser eq assignmentItem.entrustor.name}">
+									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
 										                            <div class="full-width text-center">
 										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
 										                            </div>

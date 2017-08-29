@@ -39,7 +39,9 @@
        		<hr/>
        </c:if>
        <p class="card-text"><c:out value="${project.status.label}" /></p>
-	   <a href="Project?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect Project</a>
+       <div class="full-width text-center">
+           <a href="Project?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect Project</a>
+	   </div>
 	</div>
 	<!--/.Card content-->
 </div>

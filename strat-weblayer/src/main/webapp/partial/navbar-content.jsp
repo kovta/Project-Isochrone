@@ -41,6 +41,7 @@
             <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
 			<li class="nav-item"><a class="nav-link" href="ObjectiveList">Objectives</a></li>
             <li class="nav-item"><a class="nav-link" href="ProjectList">Projects</a></li>
+            <li class="nav-item"><a class="nav-link" href="UserList">Users</a></li>
         </ul>
         <!-- Search bar -->
 		<!-- <form class="form-inline waves-effect waves-light"><input class="form-control" type="text" placeholder="Search"></form> -->

@@ -80,7 +80,6 @@
 		                        	<div class="md-form form-sm">
 				               			<label>The confidentiality of the project</label><br/>
 	                  				</div>
-
 									<div class="input-group">
 					    				<div id="radioBtn" class="btn-group">
 		  			            			<c:choose>

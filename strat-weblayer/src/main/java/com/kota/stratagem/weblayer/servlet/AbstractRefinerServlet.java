@@ -34,6 +34,10 @@ public abstract class AbstractRefinerServlet extends HttpServlet implements Acco
 		return valid;
 	}
 
+	protected boolean notEmpty(String parameter) {
+		return (parameter != null) && !"".equals(parameter) && (parameter != "");
+	}
+
 	protected void setUserAttributes(HttpServletRequest request) {
 		try {
 			request.getSession().setAttribute(ATTR_NOTIFICATION_COUNT, this.appUserProtocol.getAppUserNewNotificationCount(request.getRemoteUser()));

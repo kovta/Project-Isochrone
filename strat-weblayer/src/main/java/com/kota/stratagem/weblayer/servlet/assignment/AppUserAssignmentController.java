@@ -33,28 +33,28 @@ public class AppUserAssignmentController extends AbstractRefinerServlet implemen
 			final String[] assignedUsers = request.getParameterValues(ASSIGNMENTS);
 			String origin = "";
 			try {
-				if (request.getParameter(OBJECTIVE) != "") {
+				if (this.notEmpty(request.getParameter(OBJECTIVE))) {
 					final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
 					origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
 						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, objective: " + objective_id + ")");
 						this.protocol.saveObjectiveAssignments(assignedUsers, objective_id);
 					}
-				} else if (request.getParameter(PROJECT) != "") {
+				} else if (this.notEmpty(request.getParameter(PROJECT))) {
 					final Long project_id = Long.parseLong(request.getParameter(PROJECT));
 					origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
 						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, project: " + project_id + ")");
 						this.protocol.saveProjectAssignments(assignedUsers, project_id);
 					}
-				} else if (request.getParameter(SUBMODULE) != "") {
+				} else if (this.notEmpty(request.getParameter(SUBMODULE))) {
 					final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
 					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
 						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, submodule: " + submodule_id + ")");
 						this.protocol.saveSubmoduleAssignments(assignedUsers, submodule_id);
 					}
-				} else if (request.getParameter(TASK) != "") {
+				} else if (this.notEmpty(request.getParameter(TASK))) {
 					final Long task_id = Long.parseLong(request.getParameter(TASK));
 					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {

@@ -61,28 +61,31 @@
                                 </div>
 	                        </div>
 	                    </div>
-	       			    <br/><br/><br/>
-	       			    <div class="card">
-                            <div class="card-block">
-                            	<div class="form-header mdb-color darken-1">
-                                	<h5><i class="fa fa-exclamation-circle"></i><span class="icon-companion"> Actions</span></h5>
-                                </div>
-                                <div class="md-form">
-                                	<table class="strat-detail-table">
-	                                	<tbody>
-	                                		<c:if test="${requestScope.operatorAccount}">
-		                                		<tr class="match-row"><td class="text-center">
-							  		   			    <a href="User?id=<c:out value="${user.id}"/>&edit=1" 
-							  		   			    	class="vertical-align-middle text-center full-width">
-								       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Profile
-								       			    </a>
-												</td></tr>
-											</c:if>
-										</tbody>
-                                	</table>
-                                </div>
-	                        </div>
-	                    </div>
+	                    
+	                    <c:if test="${requestScope.operatorAccount}">
+		       			    <br/><br/><br/>
+		       			    <div class="card">
+	                            <div class="card-block">
+	                            	<div class="form-header mdb-color darken-1">
+	                                	<h5><i class="fa fa-exclamation-circle"></i><span class="icon-companion"> Actions</span></h5>
+	                                </div>
+	                                <div class="md-form">
+	                                	<table class="strat-detail-table">
+		                                	<tbody>
+		                                		<c:if test="${requestScope.operatorAccount}">
+			                                		<tr class="match-row"><td class="text-center">
+								  		   			    <a href="User?id=<c:out value="${user.id}"/>&edit=1" 
+								  		   			    	class="vertical-align-middle text-center full-width">
+									       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Profile
+									       			    </a>
+													</td></tr>
+												</c:if>
+											</tbody>
+	                                	</table>
+	                                </div>
+		                        </div>
+		                    </div>
+	                    </c:if>
                     </div>
                 </div>
                 <!--/.Sidebar-->
@@ -229,7 +232,7 @@
 															<div class="col-lg-4">
 											                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 											                        <div class="card-block">
-											                            <h4 class="card-title text-center"><c:out value="${assignment.objective.name}" /></h4>
+											                            <h4 class="card-title"><c:out value="${assignment.objective.name}" /></h4>
 											                            <hr/>
 											                            <p class="card-text">Assigned by: 
 											                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
@@ -239,7 +242,9 @@
 											                            <p class="card-text">Date: 
 											                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 											                            </p>
-																		<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
+											                            <div class="full-width text-center">
+																			<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
+																		</div>
 																	</div>
 											                    </div>
 											                    <br/>	
@@ -269,7 +274,7 @@
 															<div class="col-lg-4">
 											                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 											                        <div class="card-block">
-											                            <h4 class="card-title text-center"><c:out value="${assignment.objective.name}" /></h4>
+											                            <h4 class="card-title"><c:out value="${assignment.objective.name}" /></h4>
 											                            <hr/>
 											                            <p class="card-text">Assigned by: 
 											                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
@@ -279,7 +284,9 @@
 											                            <p class="card-text">Date: 
 											                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 											                            </p>
-																		<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
+											                            <div class="full-width text-center">
+																			<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
+																		</div>
 																	</div>
 											                    </div>
 											                    <br/>	
@@ -311,7 +318,7 @@
 													<div class="col-lg-4">
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <h4 class="card-title text-center"><c:out value="${assignment.project.name}" /></h4>
+									                            <h4 class="card-title"><c:out value="${assignment.project.name}" /></h4>
 									                            <hr/>
 									                            <p class="card-text">Assigned by: 
 									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
@@ -321,7 +328,9 @@
 									                            <p class="card-text">Date: 
 									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 									                            </p>
-																<a href="Project?id=<c:out value="${assignment.project.id}" />" class="btn btn-primary">Inspect Project</a>
+									                            <div class="full-width text-center">
+																	<a href="Project?id=<c:out value="${assignment.project.id}" />" class="btn btn-primary">Inspect Project</a>
+																</div>
 															</div>
 									                    </div>
 									                    <br/>							                    
@@ -351,7 +360,7 @@
 													<div class="col-lg-4">
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <h4 class="card-title text-center"><c:out value="${assignment.submodule.name}" /></h4>
+									                            <h4 class="card-title"><c:out value="${assignment.submodule.name}" /></h4>
 									                            <hr/>
 									                            <p class="card-text">Assigned by: 
 									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
@@ -361,7 +370,9 @@
 									                            <p class="card-text">Date: 
 									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 									                            </p>
-																<a href="Submodule?id=<c:out value="${assignment.submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
+									                            <div class="full-width text-center">
+																	<a href="Submodule?id=<c:out value="${assignment.submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
+																</div>
 															</div>
 									                    </div>
 									                    <br/>
@@ -391,7 +402,7 @@
 													<div class="col-lg-4">
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <h4 class="card-title text-center"><c:out value="${assignment.task.name}" /></h4>
+									                            <h4 class="card-title"><c:out value="${assignment.task.name}" /></h4>
 									                            <hr/>
 									                            <p class="card-text">Assigned by: 
 									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
@@ -401,7 +412,9 @@
 									                            <p class="card-text">Date: 
 									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
 									                            </p>
-																<a href="Task?id=<c:out value="${assignment.task.id}" />" class="btn btn-primary">Inspect Task</a>
+									                            <div class="full-width text-center">
+																	<a href="Task?id=<c:out value="${assignment.task.id}" />" class="btn btn-primary">Inspect Task</a>
+																</div>
 															</div>
 									                    </div>
 									                    <br/>

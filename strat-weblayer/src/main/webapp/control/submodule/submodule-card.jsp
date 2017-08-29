@@ -59,7 +59,9 @@
 				<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
 			</c:otherwise>
 		</c:choose>
-		<a href="Submodule?id=<c:out value="${submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
+		<div class="full-width text-center">
+			<a href="Submodule?id=<c:out value="${submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
+		</div>
 	</div>
 	<!--/.Card content-->
 </div>

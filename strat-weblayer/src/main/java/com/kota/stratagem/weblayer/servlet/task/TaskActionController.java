@@ -118,21 +118,22 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
-				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, null, null, null);
+				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, false, null, null, null, null);
 				this.forward(request, response, Task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
+			final Boolean admittance = request.getParameter(ADMITTANCE).equals("1") ? true : false;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
-				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, null, null, null);
+				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, admittance, null, null, null, null);
 				this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				TaskRepresentor task = null;
 				try {
 					LOGGER.info(id == null ? "Create Task : (" + name + ")" : "Update Task : (" + id + ")");
-					task = this.taskProtocol.saveTask(id, name, description, priority, completion, deadline, request.getUserPrincipal().getName(), objective_id,
-							project_id, submodule_id);
+					task = this.taskProtocol.saveTask(id, name, description, priority, completion, deadline, admittance, request.getUserPrincipal().getName(),
+							objective_id, project_id, submodule_id);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Task created succesfully!" : "Task updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

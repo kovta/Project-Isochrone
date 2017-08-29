@@ -87,7 +87,7 @@
 				                            <td class="text-center"><c:out value="${project.tasks.size()}" /></td>
 				                            <td class="text-center">
 					                            <a href="Project?id=<c:out value="${project.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
-				                            	<c:if test="${isCentralManager}">
+				                            	<c:if test="${operator eq project.creator.name}">
 													<a href="Project?id=<c:out value="${project.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
 				                            	</c:if>
 				                            </td>

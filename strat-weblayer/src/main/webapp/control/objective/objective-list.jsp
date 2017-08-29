@@ -80,8 +80,8 @@
 			                            <td class="text-center"><c:out value="${objective.tasks.size()}" /></td>
 			                            <td class="text-center">
 				                            <a href="Objective?id=<c:out value="${objective.id}" />"><i class="fa fa-wpforms" aria-hidden="true"></i></a>
-			                            	<c:if test="${isCentralManager}">
-												<a href="Objective?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit"  aria-hidden="true"></i></a>
+			                            	<c:if test="${operator eq objective.creator.name}">
+												<a href="Objective?id=<c:out value="${objective.id}" />&edit=1"><i class="fa fa-edit" aria-hidden="true"></i></a>
 			                            	</c:if>
 			                            </td>
 			                        </tr>

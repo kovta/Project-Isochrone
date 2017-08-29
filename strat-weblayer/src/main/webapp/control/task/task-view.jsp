@@ -69,9 +69,20 @@
 												</c:choose>
 	                                			</td>
 	                                		</tr>
+	                                		<tr>
+	                                			<td class="strat-detail-attribute-name">Admittance status</td>
+	                                			<td class="strat-detail-attribute-value">
+	                               			    <c:choose>
+												    <c:when test="${requestScope.task.admittance}">Open</c:when>
+											        <c:otherwise>Closed</c:otherwise>
+												</c:choose>
+												</td>
+	                                		</tr>
                            			 		<tr>
 	                                			<td class="strat-detail-attribute-name">Created by</td>
-	                                			<td class="strat-detail-attribute-value">${task.creator.name}</td>
+	                                			<td class="strat-detail-attribute-value">
+	                                				<a href="User?id=<c:out value="${task.creator.id}" />">${task.creator.name}</a>
+	                                			</td>
 	                                		</tr>
                                 		    <tr>
 	                                			<td class="strat-detail-attribute-name">Creation date</td>
@@ -79,7 +90,9 @@
 	                                		</tr>
 	                                		<tr>
 	                                			<td class="strat-detail-attribute-name">Modified by</td>
-	                                			<td class="strat-detail-attribute-value">${task.modifier.name}</td>
+	                                			<td class="strat-detail-attribute-value">
+	                                				<a href="User?id=<c:out value="${task.modifier.id}" />">${task.modifier.name}</a>
+	                                			</td>
 	                                		</tr>
                                 		    <tr>
 	                                			<td class="strat-detail-attribute-name">Modification date</td>
@@ -105,11 +118,17 @@
 	                        </div>
 	                    </div>
 
+						<c:set var="supervisor" value="false"/>
+						<c:if test="${operator eq task.creator.name or operator eq task.objective.creator.name 
+							or operator eq task.project.creator.name or operator eq task.submodule.creator.name 
+							or operator eq task.submodule.project.creator.name or operator eq task.submodule.project.objective.creator.name}">
+							<c:set var="supervisor" value="true"/>
+						</c:if>
 						<c:set var="assigned" value="false" />
 						<c:forEach items="${requestScope.task.assignedUsers}" var="assignment">
-	                    	<c:if test="${pageContext.request.remoteUser eq assignment.recipient.name}"><c:set var="assigned" value="true" /></c:if>
+	                    	<c:if test="${operator eq assignment.recipient.name}"><c:set var="assigned" value="true" /></c:if>
 						</c:forEach>
-						<c:if test="${isCentralManager or isDepartmentManager or isGeneralManager or assigned}">
+						<c:if test="${supervisor or assigned or task.admittance}">
 		       			    <br/><br/><br/>
 		       			    <div class="card">
 	                            <div class="card-block">
@@ -119,17 +138,27 @@
 	                                <div class="md-form">
 	                                	<table class="strat-detail-table">
 		                                	<tbody>
-		                                		<tr class="match-row"><td class="text-center">
-							  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
-								       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
-								       			    </a>
-												</td></tr>
-												<tr class="match-row"><td>
-													<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addDependencies" data-toggle="modal">
-												    	<i class="fa fa-share-alt tile-icon"></i><span class="icon-companion">Add Dependencies</span>
-													</button>
-												</td></tr>
-												<c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq task.creator.name}">
+												<c:if test="${task.admittance and not assigned}">
+													<c:set var="task" value="${requestScope.task}" scope="request" />
+													<tr class="match-row"><td>
+														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#participateTask" data-toggle="modal">
+													    	<i class="fa fa-ticket tile-icon"></i><span class="icon-companion">Join Collaboration</span>
+														</button>
+													</td></tr>
+												</c:if>
+		                                		<c:if test="${supervisor or assigned}">
+			                                		<tr class="match-row"><td class="text-center">
+								  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
+									       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Task
+									       			    </a>
+													</td></tr>
+													<tr class="match-row"><td>
+														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addDependencies" data-toggle="modal">
+													    	<i class="fa fa-share-alt tile-icon"></i><span class="icon-companion">Configure Dependencies</span>
+														</button>
+													</td></tr>
+												</c:if>
+												<c:if test="${supervisor}">
 													<tr class="match-row"><td>
 														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
 													    	<i class="fa fa-group tile-icon"></i><span class="icon-companion">Distribute Assignments</span>
@@ -182,7 +211,7 @@
 	                         <br/><br/>
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
-								 <!--Panel 3-->
+								 <!--Panel 1-->
 	                             <div class="tab-pane fade active show" id="dependencyPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
 									     <c:when test="${task.taskDependencies.size() == 0 and task.dependantTasks.size() == 0}">
@@ -208,22 +237,33 @@
 												<div class="row">
 													<c:forEach items="${dependantLevel}" var="dependant">
 														<div class="col-lg-4">
-								            				<c:set var="target" value="${requestScope.task}" scope="request" />
-								                            <c:set var="task" value="${dependant}" scope="request" />
-								                            <jsp:include page="../task/task-card.jsp"></jsp:include>
-								                            <c:set var="task" value="${target}" scope="request" />
+															<c:if test="${task.completion == 100}"><br/></c:if>
+															<div class="card wow fadeIn" data-wow-delay="0.2s">
+																<div class="card-block">
+										            				<c:set var="target" value="${requestScope.task}" scope="request" />
+										                            <c:set var="task" value="${dependant}" scope="request" />
+										                            <jsp:include page="task-card-content.jsp"></jsp:include>
+										                            <c:set var="task" value="${target}" scope="request" />
+										                            <c:if test="${supervisor and level eq 1}">
+										                            	<hr/>
+																		<div class="full-width text-center">
+																			<a href="TaskDependencyDelete?dependency=<c:out value="${task.id}" />
+																				&dependant=<c:out value="${dependant.id}" />
+																				&taskId=<c:out value="${task.id}" />">Remove Dependency</a>
+																    	</div>
+														    		</c:if>
+								                            	</div>
+								                            </div>
 								                        </div>
 							                        </c:forEach>
 						                        </div>
 						                        <c:set var="level" value="${level - 1}" scope="page" />
 											</c:forEach>
-										</div>
-										<hr/>
+											<br/><br/><hr/>
 											<div class="col-lg-12">
 												<div class="text-center"><h4><c:out value="${requestScope.task.name}" /></h4></div>
 											</div>
-										<hr/>
-										<div>
+											<hr/>
 											<c:set var="levelIndicator" value="0" scope="page" />
 											<c:forEach items="${requestScope.task.dependencyChain}" var="dependencyLevel">
 												<c:set var="levelIndicator" value="${levelIndicator + 1}" scope="page" />
@@ -237,10 +277,23 @@
 												<div class="row">
 													<c:forEach items="${dependencyLevel}" var="dependency">
 														<div class="col-lg-4">
-															<c:set var="target" value="${requestScope.task}" scope="request" />
-								                            <c:set var="task" value="${dependency}" scope="request" />
-								                            <jsp:include page="../task/task-card.jsp"></jsp:include>
-								                            <c:set var="task" value="${target}" scope="request" />
+															<c:if test="${task.completion == 100}"><br/></c:if>
+															<div class="card wow fadeIn" data-wow-delay="0.2s">
+																<div class="card-block">
+																	<c:set var="target" value="${requestScope.task}" scope="request" />
+										                            <c:set var="task" value="${dependency}" scope="request" />
+										                            <jsp:include page="task-card-content.jsp"></jsp:include>
+										                            <c:set var="task" value="${target}" scope="request" />
+										                            <c:if test="${supervisor and levelIndicator eq 1}">
+										                            	<hr/>
+																		<div class="full-width text-center">
+																			<a href="TaskDependencyDelete?dependency=<c:out value="${dependency.id}" />
+																				&dependant=<c:out value="${task.id}" />
+																				&taskId=<c:out value="${task.id}" />">Remove Dependency</a>
+																    	</div>
+														    		</c:if>
+								                            	</div>
+								                            </div>
 								                        </div>
 							                        </c:forEach>
 						                        </div>
@@ -248,8 +301,7 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 3-->
-	                             <!--Panel 3-->
+	                             <!--Panel 2-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
 									     <c:when test="${task.assignedUsers.size() == 0}">
@@ -271,9 +323,11 @@
 															<div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-																<c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq assignmentItem.entrustor.name}">
+																<c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+																	<hr/>
 																	<div class="full-width text-center">
-																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&taskId=<c:out value="${task.id}" />">Unassign user</a>
+																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />
+																			&taskId=<c:out value="${task.id}" />">Unassign user</a>
 															    	</div>
 														    	</c:if>
 															</div>
@@ -285,8 +339,7 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 3-->
-	                             <!--Panel 4-->
+	                             <!--Panel 3-->
 	                             <div class="tab-pane fade" id="teamPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
 									     <c:when test="${task.assignedTeams.size() == 0}">
@@ -308,9 +361,11 @@
 									                        <div class="card-block">
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <c:if test="${isCentralManager or isDepartmentManager or pageContext.request.remoteUser eq assignmentItem.entrustor.name}">
+									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+									                            	<hr/>
 										                            <div class="full-width text-center">
-										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
+										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />
+										                            		&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
 										                            </div>
 									                            </c:if>
 									                        </div>
@@ -322,7 +377,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 4-->
 	                         </div>
 	                         <!-- /.Tabs -->
 	                    </div>
@@ -337,6 +391,7 @@
 			<jsp:include page="task-delete.jsp"></jsp:include>
 			<jsp:include page="task-alert.jsp"></jsp:include>
 			<jsp:include page="task-dependency-create.jsp"></jsp:include>
+			<jsp:include page="task-participation.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>
 			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
