@@ -255,13 +255,14 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (40, 'Dependency presentation', 'Dependencies may be inspected in task view', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (41, 'Inspection of dependency levels', 'All direct dependencies and dependants must be represented grouped by the dependency level', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (42, 'Representor constroction', 'Upon assembling Task representor we must loop through dependency and dependant lists recursively and must return a list of task lists and an interview indicating dependency level', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(43, 'Dependency addition control', 'When adding dependency and dependant tasks, the possibilities must be provided only at the parent structure level. Removal should work similarly as assignment removal. Duplicate or cycle creators must not be provided', 1, 50, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(43, 'Dependency addition control', 'When adding dependency and dependant tasks, the possibilities must be provided only at the parent structure level. Removal should work similarly as assignment removal. Duplicate or cycle creators must not be provided', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (44, 'Deadline warnings', 'Deadlines that are due in a week have warnings in orange, overdue ones in red', 1, 30, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (45, 'Correctional action generation', 'On navigating to control view on which signed in user is assigned business logic must discern deadline time reserve and remaining unfinished task count ratio. If the number surpasses the threshold (Configurable strategy) then business logic must assess all assignable workforces, and suggest the resolving of impediments', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (47, 'Submodule level test Task 2', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (48, 'Submodule level test Task 3', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(49, 'Submodule level test Task 4', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(49, 'Submodule level test Task 4', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -309,6 +310,7 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (1, 32),
 (1, 33),
 (1, 34),
+(1, 50),
 (2, 35),
 (2, 36),
 (2, 37),
