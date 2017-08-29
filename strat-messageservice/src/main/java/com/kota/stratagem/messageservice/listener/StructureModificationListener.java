@@ -52,6 +52,7 @@ public class StructureModificationListener extends AbstractDevelopmentMessageRou
 						this.taskProcessor.processModification(partitions[1], partitions[3]);
 						break;
 					default:
+						LOGGER.info("Invalid Structure type received in queue");
 						break;
 				}
 			}

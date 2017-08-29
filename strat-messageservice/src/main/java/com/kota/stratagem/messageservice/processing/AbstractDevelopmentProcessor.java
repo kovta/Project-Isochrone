@@ -19,7 +19,7 @@ import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.NotificationService;
 import com.kota.stratagem.persistence.util.Constants;
 
-public class AbstractDevelopmentProcessor {
+public abstract class AbstractDevelopmentProcessor {
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractDevelopmentProcessor.class);
 
@@ -44,7 +44,7 @@ public class AbstractDevelopmentProcessor {
 		return dataMap;
 	}
 
-	private Long[] extractUserIdentifiers(Set<AppUser> users) {
+	protected Long[] extractUserIdentifiers(Set<AppUser> users) {
 		final List<Long> identifiers = new ArrayList<Long>();
 		for (final AppUser user : users) {
 			identifiers.add(user.getId());
@@ -52,10 +52,13 @@ public class AbstractDevelopmentProcessor {
 		return identifiers.toArray(new Long[identifiers.size()]);
 	}
 
+	private boolean empty(String str) {
+		return "".equals(str) || (str == "") || (str == null);
+	}
+
 	private String divergenceSummarizer(Map<String, String> origin_attributes, Map<String, String> result_attributes) {
 		String modificationItems = "";
-		if ((origin_attributes.get(Constants.DESCRIPTION_DATA_NAME) == null) && (result_attributes.get(Constants.DESCRIPTION_DATA_NAME) != null)
-				&& !"".equals((result_attributes.get(Constants.DESCRIPTION_DATA_NAME).trim()))) {
+		if ((origin_attributes.get(Constants.DESCRIPTION_DATA_NAME) == null) && !this.empty(result_attributes.get(Constants.DESCRIPTION_DATA_NAME).trim())) {
 			modificationItems += MessageAssembler.buildAddedAttributeMessage(Constants.DESCRIPTION_DATA_NAME,
 					result_attributes.get(Constants.DESCRIPTION_DATA_NAME));
 		} else if ((origin_attributes.get(Constants.DESCRIPTION_DATA_NAME) != null) && (result_attributes.get(Constants.DESCRIPTION_DATA_NAME) == null)
@@ -64,11 +67,11 @@ public class AbstractDevelopmentProcessor {
 				modificationItems += MessageAssembler.buildRemovedAttributeMessage(Constants.DESCRIPTION_DATA_NAME);
 			}
 		}
-		final Iterator it = origin_attributes.entrySet().iterator();
+		final Iterator<?> it = origin_attributes.entrySet().iterator();
 		while (it.hasNext()) {
-			final Map.Entry pair = (Map.Entry) it.next();
+			final Map.Entry<?, ?> pair = (Map.Entry<?, ?>) it.next();
 			if ((!result_attributes.get(pair.getKey()).equals(pair.getValue())) && !Constants.DESCRIPTION_DATA_NAME.equals(pair.getKey())
-					&& !Constants.MODIFIER_ID_DATA_NAME.equals(pair.getKey())) {
+					&& !Constants.MODIFIER_ID_DATA_NAME.equals(pair.getKey()) && !Constants.ID_DATA_NAME.equals(pair.getKey())) {
 				if ((result_attributes.get(pair.getKey()) != null) && (pair.getValue() == null)) {
 					modificationItems += MessageAssembler.buildAddedAttributeMessage((String) pair.getKey(), result_attributes.get(pair.getKey()));
 				} else if ((result_attributes.get(pair.getKey()) == null) && (pair.getValue() != null)) {
@@ -132,6 +135,30 @@ public class AbstractDevelopmentProcessor {
 		try {
 			this.notificationService.create(this.appUserService.readElementary(operator).getId(),
 					MessageAssembler.buildDeletionMessage(structureType, attributes.get(Constants.NAME_DATA_NAME)), this.extractUserIdentifiers(recipients));
+		} catch (NumberFormatException | PersistenceServiceException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void handleDependencyConfigurationProperties(final Map<String, String> origin_attributes, final Map<String, String> result_attributes,
+			final String structureType, Set<AppUser> recipients) {
+		try {
+			this.notificationService.create(
+					Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME)), MessageAssembler.buildDependencyConfigurationMessage(structureType,
+							origin_attributes.get(Constants.NAME_DATA_NAME), result_attributes.get(Constants.NAME_DATA_NAME)),
+					this.extractUserIdentifiers(recipients));
+		} catch (NumberFormatException | PersistenceServiceException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void handleDependencyDeconfigurationProperties(final Map<String, String> origin_attributes, final Map<String, String> result_attributes,
+			final String structureType, Set<AppUser> recipients) {
+		try {
+			this.notificationService.create(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME)),
+					MessageAssembler.buildDependencyDeconfigurationMessage(structureType, origin_attributes.get(Constants.NAME_DATA_NAME),
+							result_attributes.get(Constants.NAME_DATA_NAME)),
+					this.extractUserIdentifiers(recipients));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();
 		}

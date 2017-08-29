@@ -8,6 +8,7 @@ import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.messageservice.processing.DependencyExtendedDevelopmentProcessor;
 import com.kota.stratagem.messageservice.processing.DevelopmentProcessor;
 import com.kota.stratagem.messageservice.qualifier.ObjectiveOriented;
 import com.kota.stratagem.messageservice.qualifier.ProjectOriented;
@@ -32,9 +33,9 @@ public class AbstractDevelopmentMessageRouter {
 
 	@Inject
 	@TaskOriented
-	protected DevelopmentProcessor taskProcessor;
+	protected DependencyExtendedDevelopmentProcessor taskProcessor;
 
-	public boolean certified(final Message message, final String operationSelector) throws JMSException {
+	protected boolean certified(final Message message, final String operationSelector) throws JMSException {
 		if (LOGGER.isDebugEnabled()) {
 			final Queue destination = (Queue) message.getJMSDestination();
 			final String queueName = destination.getQueueName();

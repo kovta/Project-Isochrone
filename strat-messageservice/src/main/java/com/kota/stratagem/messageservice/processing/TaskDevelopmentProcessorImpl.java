@@ -20,7 +20,7 @@ import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.util.Constants;
 
 @TaskOriented
-public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor implements DevelopmentProcessor {
+public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor implements DependencyExtendedDevelopmentProcessor {
 
 	@EJB
 	protected ObjectiveService objectiveService;
@@ -86,7 +86,7 @@ public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor i
 			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
 		}
 		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_NAME).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))) {
-			recipients.add(this.appUserService.readElementary(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))));
+			recipients.add(this.appUserService.readElementary(Long.parseLong(origin_attributes.get(Constants.CREATOR_ID_DATA_NAME))));
 		}
 		this.handleModificationProperties(origin_attributes, result_attributes, Constants.TASK_DATA_NAME, recipients);
 	}
@@ -99,6 +99,36 @@ public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor i
 				.readElementary(this.taskService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))).getCreator().getId()));
 		recipients.remove(this.appUserService.readElementary(operator));
 		this.handleDeletionProperties(attributes, Constants.TASK_DATA_NAME, operator, recipients);
+	}
+
+	@Override
+	public void processConfiguration(String dependant, String dependency) throws PersistenceServiceException {
+		final Map<String, String> origin_attributes = this.processMessageContent(dependant, Constants.UPDATE_SELECTOR);
+		final Map<String, String> result_attributes = this.processMessageContent(dependency, Constants.UPDATE_SELECTOR);
+		final Set<AppUser> recipients = new HashSet<>();
+		for (final AppUserTaskAssignment assignment : this.taskService.readWithAssignments(Long.parseLong(result_attributes.get(Constants.ID_DATA_NAME)))
+				.getAssignedUsers()) {
+			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+		}
+		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_NAME).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))) {
+			recipients.add(this.appUserService.readElementary(Long.parseLong(origin_attributes.get(Constants.CREATOR_ID_DATA_NAME))));
+		}
+		this.handleDependencyConfigurationProperties(origin_attributes, result_attributes, Constants.TASK_DATA_NAME, recipients);
+	}
+
+	@Override
+	public void processDeconfiguration(String dependant, String dependency) throws PersistenceServiceException {
+		final Map<String, String> origin_attributes = this.processMessageContent(dependant, Constants.UPDATE_SELECTOR);
+		final Map<String, String> result_attributes = this.processMessageContent(dependency, Constants.UPDATE_SELECTOR);
+		final Set<AppUser> recipients = new HashSet<>();
+		for (final AppUserTaskAssignment assignment : this.taskService.readWithAssignments(Long.parseLong(result_attributes.get(Constants.ID_DATA_NAME)))
+				.getAssignedUsers()) {
+			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+		}
+		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_NAME).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))) {
+			recipients.add(this.appUserService.readElementary(Long.parseLong(origin_attributes.get(Constants.CREATOR_ID_DATA_NAME))));
+		}
+		this.handleDependencyDeconfigurationProperties(origin_attributes, result_attributes, Constants.TASK_DATA_NAME, recipients);
 	}
 
 }

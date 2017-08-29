@@ -52,6 +52,7 @@ public class StructureDeletionListener extends AbstractDevelopmentMessageRouter 
 						this.taskProcessor.processDeletion(partitions[1], partitions[2]);
 						break;
 					default:
+						LOGGER.info("Invalid Structure type received in queue");
 						break;
 				}
 			}

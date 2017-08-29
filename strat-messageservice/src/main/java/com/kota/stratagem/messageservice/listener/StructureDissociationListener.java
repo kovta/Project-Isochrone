@@ -52,6 +52,7 @@ public class StructureDissociationListener extends AbstractDevelopmentMessageRou
 						this.taskProcessor.processDissociation(partitions[1]);
 						break;
 					default:
+						LOGGER.info("Invalid Structure type received in queue");
 						break;
 				}
 			}

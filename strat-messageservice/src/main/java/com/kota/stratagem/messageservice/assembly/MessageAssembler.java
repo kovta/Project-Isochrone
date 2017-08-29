@@ -39,4 +39,12 @@ public class MessageAssembler {
 		return MessageFormat.format("The {0}: {1} has been deleted.", structureType, name);
 	}
 
+	public static String buildDependencyConfigurationMessage(String structureType, String dependant, String dependency) {
+		return MessageFormat.format("The dependency {2} has been added to the {0}: {1}.", structureType, dependant, dependency);
+	}
+
+	public static String buildDependencyDeconfigurationMessage(String structureType, String dependant, String dependency) {
+		return MessageFormat.format("The dependency {2}, has been removed from the {0}: {1}.", structureType, dependant, dependency);
+	}
+
 }

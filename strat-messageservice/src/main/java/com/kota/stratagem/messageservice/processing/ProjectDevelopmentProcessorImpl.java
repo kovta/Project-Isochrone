@@ -60,7 +60,7 @@ public class ProjectDevelopmentProcessorImpl extends AbstractDevelopmentProcesso
 			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
 		}
 		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_NAME).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))) {
-			recipients.add(this.appUserService.readElementary(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME))));
+			recipients.add(this.appUserService.readElementary(Long.parseLong(origin_attributes.get(Constants.CREATOR_ID_DATA_NAME))));
 		}
 		this.handleModificationProperties(origin_attributes, result_attributes, Constants.PROJECT_DATA_NAME, recipients);
 	}
