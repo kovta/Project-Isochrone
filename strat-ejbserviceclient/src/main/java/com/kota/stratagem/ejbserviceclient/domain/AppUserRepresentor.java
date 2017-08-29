@@ -20,6 +20,7 @@ public class AppUserRepresentor implements Serializable {
 	private AppUserRepresentor accountModifier;
 	private final Date acountModificationDate;
 	private final int notificationViewCount;
+	private final int imageSelector;
 	private final List<AppUserObjectiveAssignmentRepresentor> objectives;
 	private final List<AppUserProjectAssignmentRepresentor> projects;
 	private final List<AppUserSubmoduleAssignmentRepresentor> submodules;
@@ -31,11 +32,11 @@ public class AppUserRepresentor implements Serializable {
 	private final List<NotificationRepresentor> notifications;
 
 	public AppUserRepresentor() {
-		this(null, "", "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date(), 0);
+		this(null, "", "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date(), 0, 0);
 	}
 
 	public AppUserRepresentor(Long id, String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
-			int notificationViewCount) {
+			int notificationViewCount, int imageSeletor) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -45,6 +46,7 @@ public class AppUserRepresentor implements Serializable {
 		this.registrationDate = registrationDate;
 		this.acountModificationDate = acountModificationDate;
 		this.notificationViewCount = notificationViewCount;
+		this.imageSelector = imageSeletor;
 		this.objectives = new ArrayList<>();
 		this.projects = new ArrayList<>();
 		this.submodules = new ArrayList<>();
@@ -57,7 +59,7 @@ public class AppUserRepresentor implements Serializable {
 	}
 
 	public AppUserRepresentor(String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
-			int notificationViewCount) {
+			int notificationViewCount, int imageSeletor) {
 		super();
 		this.name = name;
 		this.passwordHash = passwordHash;
@@ -66,6 +68,7 @@ public class AppUserRepresentor implements Serializable {
 		this.registrationDate = registrationDate;
 		this.acountModificationDate = acountModificationDate;
 		this.notificationViewCount = notificationViewCount;
+		this.imageSelector = imageSeletor;
 		this.objectives = new ArrayList<>();
 		this.projects = new ArrayList<>();
 		this.submodules = new ArrayList<>();
@@ -121,6 +124,10 @@ public class AppUserRepresentor implements Serializable {
 		return this.notificationViewCount;
 	}
 
+	public int getImageSelector() {
+		return this.imageSelector;
+	}
+
 	public List<AppUserObjectiveAssignmentRepresentor> getObjectives() {
 		return this.objectives;
 	}
@@ -159,12 +166,12 @@ public class AppUserRepresentor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "\nAppUserRepresentor [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role="
+		return "AppUserRepresentor [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role="
 				+ this.role + ", registrationDate=" + this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate="
-				+ this.acountModificationDate + ", notificationViewCount=" + this.notificationViewCount + ", objectives=" + this.objectives + ", projects="
-				+ this.projects + ", submodules=" + this.submodules + ", tasks=" + this.tasks + ", reportedImpediments=" + this.reportedImpediments
-				+ ", processedImpediments=" + this.processedImpediments + ", supervisedTeams=" + this.supervisedTeams + ", teamMemberships="
-				+ this.teamMemberships + ", notifications=" + this.notifications + "]";
+				+ this.acountModificationDate + ", notificationViewCount=" + this.notificationViewCount + ", imageSelector=" + this.imageSelector
+				+ ", objectives=" + this.objectives + ", projects=" + this.projects + ", submodules=" + this.submodules + ", tasks=" + this.tasks
+				+ ", reportedImpediments=" + this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams="
+				+ this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + ", notifications=" + this.notifications + "]";
 	}
 
 	public void addObjectiveAssignment(AppUserObjectiveAssignmentRepresentor objective) {

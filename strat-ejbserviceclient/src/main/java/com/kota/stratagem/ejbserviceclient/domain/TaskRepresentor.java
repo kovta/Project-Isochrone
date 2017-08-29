@@ -15,6 +15,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private final int priority;
 	private final double completion;
 	private final Date deadline;
+	private final Boolean admittance;
 	private final AppUserRepresentor creator;
 	private final Date creationDate;
 	private final AppUserRepresentor modifier;
@@ -33,11 +34,11 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private int dependencyCount;
 
 	public TaskRepresentor() {
-		this(null, "", "", 5, 0, new Date(), null, new Date(), null, new Date());
+		this(null, "", "", 5, 0, new Date(), false, null, new Date(), null, new Date());
 	}
 
-	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator,
-			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
+	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
+			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
 		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
@@ -45,6 +46,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
+		this.admittance = admittance;
 		this.creator = creator;
 		this.creationDate = creationDate;
 		this.modifier = modifier;
@@ -61,14 +63,15 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.submodule = null;
 	}
 
-	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, AppUserRepresentor creator, Date creationDate,
-			AppUserRepresentor modifier, Date modificationDate) {
+	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUserRepresentor creator,
+			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
 		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
+		this.admittance = admittance;
 		this.creator = creator;
 		this.creationDate = creationDate;
 		this.modifier = modifier;
@@ -111,6 +114,10 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public Date getDeadline() {
 		return this.deadline;
+	}
+
+	public Boolean getAdmittance() {
+		return this.admittance;
 	}
 
 	public AppUserRepresentor getCreator() {
@@ -207,17 +214,19 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	@Override
 	public String toString() {
-		return "\nTaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
-				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate=" + this.creationDate
-				+ ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers="
-				+ this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks + ", taskDependencies="
-				+ this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule=" + this.submodule + "]";
+		return "TaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
+				+ this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", creator=" + this.creator + ", creationDate="
+				+ this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams
+				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
+				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule="
+				+ this.submodule + ", dependantChain=" + this.dependantChain + ", dependencyChain=" + this.dependencyChain + ", dependantCount="
+				+ this.dependantCount + ", dependencyCount=" + this.dependencyCount + "]";
 	}
 
 	public String toTextMessage() {
 		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
-				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", creator_id=" + this.creator.getId() + ", creationDate="
-				+ this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id="
+				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", creator_id=" + this.creator.getId()
+				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id="
 				+ (this.objective != null ? this.objective.getId().toString() : "null") + ", project_id="
 				+ (this.project != null ? this.project.getId().toString() : "null") + ", submodule_id="
 				+ (this.submodule != null ? this.submodule.getId().toString() : "null") + "]";
