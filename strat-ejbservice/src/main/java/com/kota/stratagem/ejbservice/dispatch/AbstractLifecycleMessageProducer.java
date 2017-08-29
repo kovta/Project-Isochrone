@@ -26,6 +26,8 @@ public abstract class AbstractLifecycleMessageProducer {
 	protected static final String STRAT_DISSOCIATION_CONSUMER_DESTINATION = "jms/queue/stratagem-dissociation-notification-queue";
 	protected static final String STRAT_MODIFICATION_CONSUMER_DESTINATION = "jms/queue/stratagem-modification-notification-queue";
 	protected static final String STRAT_DELETION_CONSUMER_DESTINATION = "jms/queue/stratagem-deletion-notification-queue";
+	protected static final String STRAT_DEPENDENCY_CONFIGURATION_CONSUMER_DESTINATION = "jms/queue/stratagem-dependency-configuration-notification-queue";
+	protected static final String STRAT_DEPENDENCY_DECONFIGURATION_CONSUMER_DESTINATION = "jms/queue/stratagem-dependency-deconfiguration-notification-queue";
 
 	protected final Context context;
 
@@ -37,6 +39,8 @@ public abstract class AbstractLifecycleMessageProducer {
 	private MessageProducer dissociationMessageProducer;
 	private MessageProducer modificationMessageProducer;
 	private MessageProducer deletionMessageProducer;
+	private MessageProducer configurationMessageProducer;
+	private MessageProducer deconfigurationMessageProducer;
 
 	public AbstractLifecycleMessageProducer() throws NamingException {
 		super();
@@ -61,6 +65,14 @@ public abstract class AbstractLifecycleMessageProducer {
 
 	public boolean sendDeletionTextMessage(final String message) {
 		return this.sendTextMessage(message, STRAT_DELETION_CONSUMER_DESTINATION, this.deletionMessageProducer);
+	}
+
+	public boolean sendConfigurationTextMessage(final String message) {
+		return this.sendTextMessage(message, STRAT_DEPENDENCY_CONFIGURATION_CONSUMER_DESTINATION, this.configurationMessageProducer);
+	}
+
+	public boolean sendDeconfigurationTextMessage(final String message) {
+		return this.sendTextMessage(message, STRAT_DEPENDENCY_DECONFIGURATION_CONSUMER_DESTINATION, this.deconfigurationMessageProducer);
 	}
 
 	private boolean sendTextMessage(final String message, final String messageConsumerDestination, MessageProducer producer) {

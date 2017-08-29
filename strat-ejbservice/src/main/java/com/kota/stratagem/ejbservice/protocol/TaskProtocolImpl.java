@@ -221,8 +221,8 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
-	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator, Long objective,
-			Long project, Long submodule) throws AdaptorException {
+	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
+			String operator, Long objective, Long project, Long submodule) throws AdaptorException {
 		try {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(id != null ? "Update Task (id: " + id + ")" : "Create Task (" + name + ")");
@@ -232,9 +232,9 @@ public class TaskProtocolImpl implements TaskProtocol {
 				origin = this.taskConverter.toElementary(this.taskService.readElementary(id));
 			}
 			final TaskRepresentor representor = this.taskConverter.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name,
-					description, priority, completion, deadline, this.appUserService.readElementary(operator), objective, project, submodule)
-					: this.taskService.create(name, description, priority, completion, deadline, this.appUserService.readElementary(operator), objective,
-							project, submodule));
+					description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator), objective, project, submodule)
+					: this.taskService.create(name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),
+							objective, project, submodule));
 			if (id != null) {
 				this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
 			} else {
@@ -272,8 +272,45 @@ public class TaskProtocolImpl implements TaskProtocol {
 				LOGGER.debug("Save Task dependencies (source: " + source + ", " + dependencies.length + " dependencies)");
 			}
 			for (final Long dependency : dependencies) {
-				this.taskService.createDependency(dependency, source);
+				this.taskService.createDependency(dependency, source,
+						this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
+				this.overseer.configured(this.taskConverter.toElementary(this.taskService.readElementary(source)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+						+ this.taskConverter.toElementary(this.taskService.readElementary(dependency)).toTextMessage());
 			}
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public void saveTaskDependants(Long source, Long[] dependants) throws AdaptorException {
+		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Save Task dependants (source: " + source + ", " + dependants.length + " dependants)");
+			}
+			for (final Long dependant : dependants) {
+				this.taskService.createDependency(source, dependant,
+						this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
+				this.overseer.configured(this.taskConverter.toElementary(this.taskService.readElementary(dependant)).toTextMessage()
+						+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toElementary(this.taskService.readElementary(source)).toTextMessage());
+			}
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public void removeTaskDependency(Long dependency, Long dependant) throws AdaptorException {
+		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Remove Task dependency (dependency: " + dependency + ", dependant: " + dependant + ")");
+			}
+			this.taskService.deleteDependency(dependency, dependant,
+					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
+			this.overseer.deconfigured(this.taskConverter.toElementary(this.taskService.readElementary(dependant)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.taskConverter.toElementary(this.taskService.readElementary(dependency)).toTextMessage());
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

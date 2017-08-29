@@ -17,11 +17,15 @@ public interface TaskProtocol {
 
 	List<TaskRepresentor> getAllTasks() throws AdaptorException;
 
-	TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, String operator, Long objective,
-			Long project, Long submodule) throws AdaptorException;
+	TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String operator,
+			Long objective, Long project, Long submodule) throws AdaptorException;
 
 	void removeTask(Long id) throws AdaptorException;
 
 	void saveTaskDependencies(Long source, Long[] dependencies) throws AdaptorException;
+
+	void saveTaskDependants(Long source, Long[] dependants) throws AdaptorException;
+
+	void removeTaskDependency(Long dependency, Long dependant) throws AdaptorException;
 
 }

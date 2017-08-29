@@ -35,4 +35,14 @@ public class LifecycleOverseerImpl extends AbstractLifecycleMessageProducer impl
 		this.sendDeletionTextMessage(representor);
 	}
 
+	@Override
+	public void configured(String representors) {
+		this.sendConfigurationTextMessage(representors);
+	}
+
+	@Override
+	public void deconfigured(String representors) {
+		this.sendDeconfigurationTextMessage(representors);
+	}
+
 }

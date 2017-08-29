@@ -15,4 +15,8 @@ public interface LifecycleOverseer {
 
 	void deleted(String representor);
 
+	void configured(String representors);
+
+	void deconfigured(String representors);
+
 }

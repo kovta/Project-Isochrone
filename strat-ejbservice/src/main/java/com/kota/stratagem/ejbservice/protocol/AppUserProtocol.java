@@ -39,4 +39,6 @@ public interface AppUserProtocol {
 
 	void equalizeViewedNotifications(AppUserRepresentor operator) throws AdaptorException;
 
+	void saveImageSelector(int imageSelector) throws AdaptorException;
+
 }

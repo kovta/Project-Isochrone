@@ -35,16 +35,16 @@ public class AppUserConverterImpl implements AppUserConverter {
 		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
 		final AppUserRepresentor representor = user.getId() != null
 				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate(), user.getNotificationViewCount())
+						user.getAcountModificationDate(), user.getNotificationViewCount(), user.getImageSelector())
 				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate(), user.getNotificationViewCount());
+						user.getAcountModificationDate(), user.getNotificationViewCount(), user.getImageSelector());
 		return representor;
 	}
 
 	@Override
 	public AppUserRepresentor toSimplified(AppUser user) {
 		final AppUserRepresentor representor = this.toElementary(user);
-		if (user.getNotifications() != null) {
+		if ((user.getNotifications() != null) && !user.getNotifications().isEmpty()) {
 			for (final Notification notification : user.getNotifications()) {
 				representor.addNotification(this.notificationConverter.to(notification));
 			}
@@ -53,28 +53,16 @@ public class AppUserConverterImpl implements AppUserConverter {
 	}
 
 	@Override
+	public AppUserRepresentor toSubComplete(AppUser user) {
+		final AppUserRepresentor representorProxy = this.toElementary(user);
+		final AppUserRepresentor representor = this.addAssignments(representorProxy, user);
+		return representor;
+	}
+
+	@Override
 	public AppUserRepresentor toComplete(AppUser user) {
-		final AppUserRepresentor representor = this.toSimplified(user);
-		if (user.getObjectives() != null) {
-			for (final AppUserObjectiveAssignment objective : user.getObjectives()) {
-				representor.addObjectiveAssignment(this.assignmentConverter.to(objective));
-			}
-		}
-		if (user.getProjects() != null) {
-			for (final AppUserProjectAssignment project : user.getProjects()) {
-				representor.addProjectAssignment(this.assignmentConverter.to(project));
-			}
-		}
-		if (user.getSubmodules() != null) {
-			for (final AppUserSubmoduleAssignment submodule : user.getSubmodules()) {
-				representor.addSubmoduleAssignment(this.assignmentConverter.to(submodule));
-			}
-		}
-		if (user.getTasks() != null) {
-			for (final AppUserTaskAssignment task : user.getTasks()) {
-				representor.addTaskAssignment(this.assignmentConverter.to(task));
-			}
-		}
+		final AppUserRepresentor representorProxy = this.toSimplified(user);
+		final AppUserRepresentor representor = this.addAssignments(representorProxy, user);
 		// if (user.getReportedImpediments() != null) {
 		// for (final Impediment impediment : user.getReportedImpediments()) {
 		// representor.addReportedImpediment(this.impedimentConverter.to(impediment));
@@ -101,11 +89,44 @@ public class AppUserConverterImpl implements AppUserConverter {
 		return representor;
 	}
 
+	private AppUserRepresentor addAssignments(AppUserRepresentor representor, AppUser user) {
+		if (user.getObjectives() != null) {
+			for (final AppUserObjectiveAssignment objective : user.getObjectives()) {
+				representor.addObjectiveAssignment(this.assignmentConverter.to(objective));
+			}
+		}
+		if (user.getProjects() != null) {
+			for (final AppUserProjectAssignment project : user.getProjects()) {
+				representor.addProjectAssignment(this.assignmentConverter.to(project));
+			}
+		}
+		if (user.getSubmodules() != null) {
+			for (final AppUserSubmoduleAssignment submodule : user.getSubmodules()) {
+				representor.addSubmoduleAssignment(this.assignmentConverter.to(submodule));
+			}
+		}
+		if (user.getTasks() != null) {
+			for (final AppUserTaskAssignment task : user.getTasks()) {
+				representor.addTaskAssignment(this.assignmentConverter.to(task));
+			}
+		}
+		return representor;
+	}
+
 	@Override
 	public Set<AppUserRepresentor> toElementary(Set<AppUser> users) {
 		final Set<AppUserRepresentor> representors = new HashSet<>();
 		for (final AppUser user : users) {
 			representors.add(this.toElementary(user));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<AppUserRepresentor> toSubComplete(Set<AppUser> users) {
+		final Set<AppUserRepresentor> representors = new HashSet<>();
+		for (final AppUser user : users) {
+			representors.add(this.toSubComplete(user));
 		}
 		return representors;
 	}

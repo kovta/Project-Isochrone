@@ -182,7 +182,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
 		Set<AppUserRepresentor> representors = new HashSet<AppUserRepresentor>();
 		try {
-			representors = this.converter.toComplete(this.appUserService.readAll());
+			representors = this.converter.toSubComplete(this.appUserService.readAll());
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Fetch all AppUsers : " + representors.size() + " users(s)");
 			}
@@ -270,7 +270,20 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
+	}
 
+	@Override
+	public void saveImageSelector(int imageSelector) throws AdaptorException {
+		try {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Save AppUser profile image (image: " + imageSelector + ")");
+			}
+			this.appUserService.updateImageSelector(
+					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), imageSelector);
+		} catch (final PersistenceServiceException e) {
+			LOGGER.error(e, e);
+			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		}
 	}
 
 }
