@@ -10,6 +10,10 @@
 				<entry name="jms/queue/stratagem-assignment-notification-queue" />
 				<entry name="java:jboss/exported/jms/queue/stratagem-assignment-notification-queue" />
 			</jms-queue>
+			<jms-queue name="stratagem-dissociation-notification-queue">
+				<entry name="jms/queue/stratagem-dissociation-notification-queue" />
+				<entry name="java:jboss/exported/jms/queue/stratagem-dissociation-notification-queue" />
+			</jms-queue>
 			<jms-queue name="stratagem-modification-notification-queue">
 				<entry name="jms/queue/stratagem-modification-notification-queue" />
 				<entry name="java:jboss/exported/jms/queue/stratagem-modification-notification-queue" />
@@ -17,6 +21,14 @@
 			<jms-queue name="stratagem-deletion-notification-queue">
 				<entry name="jms/queue/stratagem-deletion-notification-queue" />
 				<entry name="java:jboss/exported/jms/queue/stratagem-deletion-notification-queue" />
+			</jms-queue>
+			<jms-queue name="stratagem-dependency-configuration-notification-queue">
+				<entry name="jms/queue/stratagem-dependency-configuration-notification-queue" />
+				<entry name="java:jboss/exported/jms/queue/stratagem-dependency-configuration-notification-queue" />
+			</jms-queue>
+			<jms-queue name="stratagem-dependency-deconfiguration-notification-queue">
+				<entry name="jms/queue/stratagem-dependency-deconfiguration-notification-queue" />
+				<entry name="java:jboss/exported/jms/queue/stratagem-dependency-deconfiguration-notification-queue" />
 			</jms-queue>
 		</jms-destinations>
 	</hornetq-server>
