@@ -26,8 +26,8 @@
                         <div class="card">
                             <div class="card-block">
                             	<div class="card-avatar form-content">
-                                	<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK"
-                                	style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                	<c:set var="selector" value="${requestScope.user.imageSelector}" scope="request"/>
+									<jsp:include page="user-avatar-selector.jsp"></jsp:include>
                             	</div>
                         		<div class="padding-top"><h3 class="h3-responsive text-center">${user.name}</h3></div>
                         		<p class="text-center grey-text">${user.role.label}</p>

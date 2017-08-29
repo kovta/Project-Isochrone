@@ -13,12 +13,12 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.weblayer.common.Page;
+import com.kota.stratagem.weblayer.common.appuser.AppUserAttribute;
 import com.kota.stratagem.weblayer.common.appuser.AppUserParameter;
-import com.kota.stratagem.weblayer.common.assignment.AssignmentAttribute;
 import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
 @WebServlet("/UserImage")
-public class AppUserImageServlet extends AbstractRefinerServlet implements AppUserParameter, AssignmentAttribute {
+public class AppUserImageServlet extends AbstractRefinerServlet implements AppUserParameter, AppUserAttribute {
 
 	private static final long serialVersionUID = -2010345699510377465L;
 
@@ -37,10 +37,10 @@ public class AppUserImageServlet extends AbstractRefinerServlet implements AppUs
 			try {
 				origin = Page.USER_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id;
 				this.protocol.saveImageSelector(Integer.parseInt(image));
-				request.getSession().setAttribute(ATTR_SUCCESS, "Profile updated successfully!");
+				request.getSession().setAttribute(ATTR_USER_SUCCESS, "Profile updated successfully!");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
-				request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
+				request.getSession().setAttribute(ATTR_USER_ERROR, "Operation failed");
 			}
 		}
 		response.sendRedirect(origin);

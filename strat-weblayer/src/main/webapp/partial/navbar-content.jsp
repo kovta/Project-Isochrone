@@ -49,11 +49,12 @@
 		<ul class="navbar-nav float-right">
 			<li class="nav-item">
 				<% int notificationCount = (Integer) request.getSession().getAttribute(AccountAttribute.ATTR_NOTIFICATION_COUNT); %>
+				<% int imageSelector = (Integer) request.getSession().getAttribute(AccountAttribute.ATTR_IMAGE_SELECTOR); %>
 				<% if (notificationCount > 0) { %>
 					<a class="nav-link flex-display" href="User?name=<%= request.getUserPrincipal().getName() %>">
 						<div class="chip">
-							<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
-								style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+							<c:set var="selector" value="${imageSelector}" scope="request"/>
+							<jsp:include page="/control/user/user-avatar-selector.jsp"></jsp:include>
 							<i class="fa fa-bell"></i>
 							<span><%= notificationCount %></span>
 						</div>
@@ -61,9 +62,11 @@
 					</a>
 				<% } else { %>
 					<a class="nav-link" href="User?name=<%= request.getUserPrincipal().getName() %>">
-						<img class="line-avatar rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
-							style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-						<strong><%= request.getUserPrincipal().getName() %></strong>
+						<div class="line-avatar">
+							<c:set var="selector" value="${imageSelector}" scope="request"/>
+							<jsp:include page="/control/user/user-avatar-selector.jsp"></jsp:include>
+							<strong><%= request.getUserPrincipal().getName() %></strong>
+						</div>
 					</a>					
 				<% } %>
         	</li>

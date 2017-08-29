@@ -65,8 +65,8 @@
 			                        <tr>
 			                        	<th scope="row"><c:out value="${count}" /></th>
 			                        	<td>						
-			                        		<img class="line-avatar rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
-												style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+							    			<c:set var="selector" value="${user.imageSelector}" scope="request"/>
+											<jsp:include page="user-avatar-selector.jsp"></jsp:include>
 										</td>
 			                            <td><c:out value="${user.name}" /></td>
 			                            <td class="text-center"><c:out value="${empty user.email ? 'Not specified' : user.email}" /></td>

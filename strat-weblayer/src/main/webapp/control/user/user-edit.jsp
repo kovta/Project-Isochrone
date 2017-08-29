@@ -64,12 +64,12 @@
 		    <div class="card card-cascade narrower mb-r">
 		        <div class="admin-panel info-admin-panel">
 		            <div class="card-header mdb-color darken-1 white-text">
-		                <h5><i class="fa fa-edit"></i><span class="icon-companion"> Choose Avatar</span></h5>
+		                <h5><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="icon-companion"> Choose Avatar</span></h5>
 		            </div>
 		            <div class="card-block">
 		            	<div class="row">
 		            		<c:set var="count" value="0" scope="request"/>
-							<c:forEach begin="0" end="27" varStatus="loop">
+							<c:forEach begin="0" end="20" varStatus="loop">
 								<jsp:include page="user-avatar-edit-card.jsp"></jsp:include>
 								<c:set var="count" value="${count + 1}" scope="request"/>
 							</c:forEach>

@@ -41,6 +41,7 @@ public abstract class AbstractRefinerServlet extends HttpServlet implements Acco
 	protected void setUserAttributes(HttpServletRequest request) {
 		try {
 			request.getSession().setAttribute(ATTR_NOTIFICATION_COUNT, this.appUserProtocol.getAppUserNewNotificationCount(request.getRemoteUser()));
+			request.getSession().setAttribute(ATTR_IMAGE_SELECTOR, this.appUserProtocol.getAppUserImageSelector(request.getRemoteUser()));
 		} catch (final AdaptorException e) {
 			e.printStackTrace();
 		}

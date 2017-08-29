@@ -3,8 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 																
 <div class="card-avatar">
-	<img class="rounded-circle img-responsive" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
-		style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+ 	<c:set var="selector" value="${assignmentItem.recipient.imageSelector}" scope="request"/>
+	<jsp:include page="../user/user-avatar-selector.jsp"></jsp:include>
 </div>
  <!--Title-->
 <h4 class="text-center">

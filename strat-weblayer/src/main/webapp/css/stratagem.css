@@ -354,7 +354,7 @@ input[type="checkbox" i] {
     height: auto;
     box-shadow: none!important;
     text-align: center;
-    margin: -7rem 1rem 1rem;
+    margin: -6rem 1rem 1rem;
     padding: 1.5rem;
     border: none;
     -webkit-box-orient: vertical;
@@ -373,14 +373,13 @@ input[type="checkbox" i] {
 }
 .card-avatar img {
 	width: 130px;
-	height: 130px;
 	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
 	border-style: none;
     vertical-align: middle;
 }
-.line-avatar {
+.line-avatar > img {
     width: 24px;
-    padding-right: 3px;
+    height: 23px;
 	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
 	border-style: none;
     vertical-align: middle;
@@ -486,7 +485,3 @@ input[type="checkbox" i] {
     display: flex;
 }
 
-/* Test */
-.img-test {
-	background-image: url("../img/avatar/43174-O3PTAF1.png")no-repeat center center fixed;
-}

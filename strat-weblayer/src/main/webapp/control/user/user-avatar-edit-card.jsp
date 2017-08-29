@@ -6,8 +6,8 @@
 	<div class="card wow fadeIn" data-wow-delay="0.2s">
     	<div class="card-block">
     		<div class="card-avatar">
-				<img class="rounded-circle img-responsive img-test" src="https://www.filepicker.io/api/file/9dXFgbwRRlKXzHDItGEK" 
-					style="border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+    			<c:set var="selector" value="${count}" scope="request"/>
+				<jsp:include page="user-avatar-selector.jsp"></jsp:include>
 			</div>
         	<h4 class="card-title text-center">Avatar <c:out value="${requestScope.count}" /></h4>
             <hr/>
