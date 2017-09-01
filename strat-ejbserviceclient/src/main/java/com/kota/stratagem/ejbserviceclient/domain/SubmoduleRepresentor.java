@@ -22,6 +22,9 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
 	private double completion;
+	private List<TaskRepresentor> overdueTasks;
+	private List<TaskRepresentor> ongoingTasks;
+	private List<TaskRepresentor> completedtasks;
 
 	public SubmoduleRepresentor() {
 		this(null, "", "", new Date(), null, new Date(), null, new Date(), null);

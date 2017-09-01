@@ -19,7 +19,6 @@ public abstract class AbstractTimeConstraintRepresentor extends AbstractIdentity
 		} else {
 			this.urgencyLevel = 0;
 		}
-
 	}
 
 	public int getUrgencyLevel() {
