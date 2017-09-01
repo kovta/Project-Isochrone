@@ -2,16 +2,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:if test="${submodule.completion == 100}">
+<c:if test="${submodule.completion eq 100 or submodule.urgencyLevel eq 3}">
 	<br/>
 </c:if>
 <!--Card-->
 <div class="card wow fadeIn" data-wow-delay="0.2s">
     <!--Card content-->
 	<div class="card-block">
-		<c:if test="${submodule.completion == 100}">
-			<div class="form-header success-color success-header">
+		<c:if test="${submodule.completion eq 100}">
+			<div class="form-header success-color card-alert-header">
 	       		<i class="fa fa-check-circle"></i>
+	        </div>
+	   	</c:if>
+	   	<c:if test="${submodule.completion ne 100 and submodule.urgencyLevel eq 3}">
+			<div class="form-header danger-color card-alert-header">
+	       		<i class="fa fa-exclamation-triangle"></i>
 	        </div>
 	   	</c:if>
        	<!--Title-->
@@ -22,17 +27,17 @@
            	<p class="card-text">
 				Deadline:
 				<c:choose>
-					<c:when test="${submodule.urgencyLevel == 3}">
+					<c:when test="${submodule.urgencyLevel eq 3 and submodule.completion ne 100}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
 					</c:when>
-					<c:when test="${submodule.urgencyLevel == 2}">
+					<c:when test="${submodule.urgencyLevel eq 2 and submodule.completion ne 100}">
 						<span class="heavy-warning-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
 					</c:when>
-					<c:when test="${submodule.urgencyLevel == 1}">
+					<c:when test="${submodule.urgencyLevel eq 1 and submodule.completion ne 100}">
 						<span class="warning-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
@@ -47,10 +52,10 @@
        	<hr/>
 		</c:if>
 		<c:choose>
-			<c:when test="${submodule.tasks.size() == 0}">
+			<c:when test="${submodule.tasks.size() eq 0}">
 				<p class="card-text"><c:out value="No tasks registered" /></p>
 			</c:when>
-			<c:when test="${submodule.tasks.size() == 1}">
+			<c:when test="${submodule.tasks.size() eq 1}">
 				<p class="card-text"><c:out value="${submodule.tasks.size()} Task" /></p>
 				<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
 			</c:when>

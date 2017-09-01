@@ -182,7 +182,7 @@ footer.page-footer {
 	opacity: 0.6;
     min-width: 330px;
 }
-.success-header {
+.card-alert-header {
     margin-left: 33%;
     margin-right: 33%;
     margin-bottom: 2rem !important;

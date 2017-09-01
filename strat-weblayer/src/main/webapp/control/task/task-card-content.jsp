@@ -2,9 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:if test="${task.completion == 100}">
-	<div class="form-header success-color success-header">
+<c:if test="${task.completion eq 100}">
+	<div class="form-header success-color card-alert-header">
        	<i class="fa fa-check-circle"></i>
+    </div>
+</c:if>
+<c:if test="${task.completion ne 100 and task.urgencyLevel eq 3}">
+	<div class="form-header danger-color card-alert-header">
+       	<i class="fa fa-exclamation-triangle"></i>
     </div>
 </c:if>
 <!--Title-->
@@ -15,17 +20,17 @@
 	<p class="card-text">
 		Deadline:
 		<c:choose>
-			<c:when test="${task.urgencyLevel == 3}">
+			<c:when test="${task.urgencyLevel eq 3 and task.completion ne 100}">
 				<span class="danger-text">
 					<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
 				</span>
 			</c:when>
-			<c:when test="${task.urgencyLevel == 2}">
+			<c:when test="${task.urgencyLevel eq 2 and task.completion ne 100}">
 				<span class="heavy-warning-text">
 					<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
 				</span>
 			</c:when>
-			<c:when test="${task.urgencyLevel == 1}">
+			<c:when test="${task.urgencyLevel eq 1 and task.completion ne 100}">
 				<span class="warning-text">
 					<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
 				</span>

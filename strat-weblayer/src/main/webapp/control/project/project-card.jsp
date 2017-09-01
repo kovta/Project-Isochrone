@@ -6,6 +6,11 @@
 <div class="card wow fadeIn" data-wow-delay="0.2s">
     <!--Card content-->
 	<div class="card-block">
+		<c:if test="${project.urgencyLevel eq 3}">
+			<div class="form-header danger-color card-alert-header">
+		       	<i class="fa fa-exclamation-triangle"></i>
+		    </div>
+		</c:if>
 	    <!--Title-->
 		<h4 class="card-title"><c:out value="${project.name}" /></h4>
 		<hr/>

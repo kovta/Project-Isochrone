@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:if test="${task.completion == 100}">
+<c:if test="${task.completion eq 100 or task.urgencyLevel eq 3}">
 	<br/>
 </c:if>
 <!--Card-->
