@@ -51,7 +51,7 @@ INSERT INTO authorizations (authorization_user_id, authorization_role_id) VALUES
 
 INSERT INTO teams (team_id, team_name, team_leader, team_creator, team_creation_date, team_modifier, team_modification_date) VALUES
 (0, 'Management', 0, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(1, 'DevOps', 2, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Dev Ops', 2, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (2, 'Back-end development', 3, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (3, 'Front-end development', 8, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Quality assurance', 3, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
@@ -134,7 +134,7 @@ INSERT INTO projects (project_id, project_name, project_description, project_sta
 (3, 'Codename -NOVA-', 'Augmented reality utility tool for enterprise management', 5, '2017/05/26 00:00:00', TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Reopening unconfirmed tickets', 'Revisioning questionable tickets', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Resolving of Very High level tickets due to schema migration', 'Our last service migration caused problems in push sub-module. The problem is more complex than just a quick refactor', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Back-end training orginization', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Back-end training', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (8, 'Test Project', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
@@ -218,7 +218,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 1, 100, '2016/09/10 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'REST', 'Create REST API module', 2, 5, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (8, 'RMI', 'Create Remote EJB module', 2, 30, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -237,7 +237,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (23, 'Submodule level test Task 1', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(25, 'Create header for all structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 20, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(25, 'Create header for specified structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (26, 'Objective level test Task 1', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (27, 'Add links to profile view from all refrences', 'View must be accessible at all questionable points of delegation and responsibility', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (28, 'Add profile inspection button to navbar', 'Signed in user must have access to own profile information at all times', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -324,6 +324,17 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (5, 45),
 (5, 46);
 
+INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
+(23, 47),
+(23, 48),
+(47, 49),
+(48, 49);
+
+INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
+(0, 4, '5 0:00:00', '4 0:00:00', '3 0:00:00'),
+(1, 5, '3 0:00:00', '2 0:00:00', '1 0:00:00');
+SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id), 0) ) FROM task_estimations;
+
 -- ###########################################################################################
 
 INSERT INTO impediment_statuses (status_id, status_name) VALUES
@@ -352,16 +363,6 @@ INSERT INTO remedies (remedy_id, remedy_description, remedy_impediment_id, remed
 (0, 'Use service control tool to generate project structure from existing endpoint meta data', 1, '2015/12/13 14:20:00', 1, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (1, 'Request authorization key and administrative user for base64 auth parameter when connecting', 2, '2016/04/20 17:35:00', 4, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('remedies_remedy_id_seq', COALESCE(MAX(remedy_id), 0) ) FROM remedies;
-
--- ###########################################################################################
-
-INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
-(5, 4);
-
-INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
-(0, 4, '5 0:00:00', '4 0:00:00', '3 0:00:00'),
-(1, 6, '7 0:00:00', '5 0:00:00', '3 0:00:00');
-SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id), 0) ) FROM task_estimations;
 
 -- ###########################################################################################
 
