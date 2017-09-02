@@ -27,6 +27,13 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 	private final List<AppUserProjectAssignmentRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
 	private final ObjectiveRepresentor objective;
+	private double completion;
+	private List<SubmoduleRepresentor> overdueSubmodules;
+	private List<SubmoduleRepresentor> ongoingSubmodules;
+	private List<SubmoduleRepresentor> completedSubmodules;
+	private List<TaskRepresentor> overdueTasks;
+	private List<TaskRepresentor> ongoingTasks;
+	private List<TaskRepresentor> completedTasks;
 
 	public ProjectRepresentor() {
 		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null, new Date(), null, new Date(), null);
@@ -139,6 +146,105 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 
 	public ObjectiveRepresentor getObjective() {
 		return this.objective;
+	}
+
+	public double getCompletion() {
+		int progressSum = 0, taskCount = 0;
+		for (final TaskRepresentor task : this.getTasks()) {
+			progressSum += task.getCompletion();
+			taskCount++;
+		}
+		for (final SubmoduleRepresentor submodule : this.getSubmodules()) {
+			for (final TaskRepresentor submoduleTask : submodule.getTasks()) {
+				progressSum += submoduleTask.getCompletion();
+				taskCount++;
+			}
+		}
+		return taskCount != 0 ? progressSum / taskCount : 0;
+	}
+
+	public List<SubmoduleRepresentor> getOverdueSubmodules() {
+		if (this.overdueSubmodules == null) {
+			this.overdueSubmodules = new ArrayList<SubmoduleRepresentor>();
+		} else {
+			this.overdueSubmodules.clear();
+		}
+		for (final SubmoduleRepresentor representor : this.getSubmodules()) {
+			if ((representor.getUrgencyLevel() == 3) && (representor.getCompletion() != 100)) {
+				this.overdueSubmodules.add(representor);
+			}
+		}
+		return this.overdueSubmodules;
+	}
+
+	public List<SubmoduleRepresentor> getOngoingSubmodules() {
+		if (this.ongoingSubmodules == null) {
+			this.ongoingSubmodules = new ArrayList<SubmoduleRepresentor>();
+		} else {
+			this.ongoingSubmodules.clear();
+		}
+		for (final SubmoduleRepresentor representor : this.getSubmodules()) {
+			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
+				this.ongoingSubmodules.add(representor);
+			}
+		}
+		return this.ongoingSubmodules;
+	}
+
+	public List<SubmoduleRepresentor> getCompletedSubmodules() {
+		if (this.completedSubmodules == null) {
+			this.completedSubmodules = new ArrayList<SubmoduleRepresentor>();
+		} else {
+			this.completedSubmodules.clear();
+		}
+		for (final SubmoduleRepresentor representor : this.getSubmodules()) {
+			if (representor.getCompletion() == 100) {
+				this.completedSubmodules.add(representor);
+			}
+		}
+		return this.completedSubmodules;
+	}
+
+	public List<TaskRepresentor> getOverdueTasks() {
+		if (this.overdueTasks == null) {
+			this.overdueTasks = new ArrayList<TaskRepresentor>();
+		} else {
+			this.overdueTasks.clear();
+		}
+		for (final TaskRepresentor representor : this.getTasks()) {
+			if ((representor.getUrgencyLevel() == 3) && (representor.getCompletion() != 100)) {
+				this.overdueTasks.add(representor);
+			}
+		}
+		return this.overdueTasks;
+	}
+
+	public List<TaskRepresentor> getOngoingTasks() {
+		if (this.ongoingTasks == null) {
+			this.ongoingTasks = new ArrayList<TaskRepresentor>();
+		} else {
+			this.ongoingTasks.clear();
+		}
+		for (final TaskRepresentor representor : this.getTasks()) {
+			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
+				this.ongoingTasks.add(representor);
+			}
+		}
+		return this.ongoingTasks;
+	}
+
+	public List<TaskRepresentor> getCompletedTasks() {
+		if (this.completedTasks == null) {
+			this.completedTasks = new ArrayList<TaskRepresentor>();
+		} else {
+			this.completedTasks.clear();
+		}
+		for (final TaskRepresentor representor : this.getTasks()) {
+			if (representor.getCompletion() == 100) {
+				this.completedTasks.add(representor);
+			}
+		}
+		return this.completedTasks;
 	}
 
 	@Override

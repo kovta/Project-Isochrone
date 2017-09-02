@@ -24,7 +24,7 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private double completion;
 	private List<TaskRepresentor> overdueTasks;
 	private List<TaskRepresentor> ongoingTasks;
-	private List<TaskRepresentor> completedtasks;
+	private List<TaskRepresentor> completedTasks;
 
 	public SubmoduleRepresentor() {
 		this(null, "", "", new Date(), null, new Date(), null, new Date(), null);
@@ -121,6 +121,48 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 			progressSum += task.getCompletion();
 		}
 		return this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
+	}
+
+	public List<TaskRepresentor> getOverdueTasks() {
+		if (this.overdueTasks == null) {
+			this.overdueTasks = new ArrayList<TaskRepresentor>();
+		} else {
+			this.overdueTasks.clear();
+		}
+		for (final TaskRepresentor representor : this.getTasks()) {
+			if ((representor.getUrgencyLevel() == 3) && (representor.getCompletion() != 100)) {
+				this.overdueTasks.add(representor);
+			}
+		}
+		return this.overdueTasks;
+	}
+
+	public List<TaskRepresentor> getOngoingTasks() {
+		if (this.ongoingTasks == null) {
+			this.ongoingTasks = new ArrayList<TaskRepresentor>();
+		} else {
+			this.ongoingTasks.clear();
+		}
+		for (final TaskRepresentor representor : this.getTasks()) {
+			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
+				this.ongoingTasks.add(representor);
+			}
+		}
+		return this.ongoingTasks;
+	}
+
+	public List<TaskRepresentor> getCompletedTasks() {
+		if (this.completedTasks == null) {
+			this.completedTasks = new ArrayList<TaskRepresentor>();
+		} else {
+			this.completedTasks.clear();
+		}
+		for (final TaskRepresentor representor : this.getTasks()) {
+			if (representor.getCompletion() == 100) {
+				this.completedTasks.add(representor);
+			}
+		}
+		return this.completedTasks;
 	}
 
 	@Override
