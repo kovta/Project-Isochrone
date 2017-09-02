@@ -59,14 +59,26 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Submodule (id: " + id + ") --> " + representor);
 			}
-			Collections.sort(representor.getTasks(), new Comparator<TaskRepresentor>() {
+			Collections.sort(representor.getOverdueTasks(), new Comparator<TaskRepresentor>() {
 				@Override
 				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-					final int c = (int) obj_a.getCompletion() - (int) obj_b.getCompletion();
+					final int c = obj_a.getDeadline().compareTo(obj_b.getDeadline());
 					if (c == 0) {
-						return obj_a.getName().compareTo(obj_b.getName());
+						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 					}
-					return c * -1;
+					return c;
+				}
+			});
+			Collections.sort(representor.getOngoingTasks(), new Comparator<TaskRepresentor>() {
+				@Override
+				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+				}
+			});
+			Collections.sort(representor.getCompletedTasks(), new Comparator<TaskRepresentor>() {
+				@Override
+				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 				}
 			});
 			Collections.sort(representor.getAssignedUsers(), new Comparator<AppUserSubmoduleAssignmentRepresentor>() {

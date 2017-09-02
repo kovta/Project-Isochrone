@@ -55,14 +55,14 @@ public class AppUserConverterImpl implements AppUserConverter {
 	@Override
 	public AppUserRepresentor toSubComplete(AppUser user) {
 		final AppUserRepresentor representorProxy = this.toElementary(user);
-		final AppUserRepresentor representor = this.addAssignments(representorProxy, user);
+		final AppUserRepresentor representor = this.includeAssignments(representorProxy, user);
 		return representor;
 	}
 
 	@Override
 	public AppUserRepresentor toComplete(AppUser user) {
 		final AppUserRepresentor representorProxy = this.toSimplified(user);
-		final AppUserRepresentor representor = this.addAssignments(representorProxy, user);
+		final AppUserRepresentor representor = this.includeAssignments(representorProxy, user);
 		// if (user.getReportedImpediments() != null) {
 		// for (final Impediment impediment : user.getReportedImpediments()) {
 		// representor.addReportedImpediment(this.impedimentConverter.to(impediment));
@@ -89,7 +89,7 @@ public class AppUserConverterImpl implements AppUserConverter {
 		return representor;
 	}
 
-	private AppUserRepresentor addAssignments(AppUserRepresentor representor, AppUser user) {
+	private AppUserRepresentor includeAssignments(AppUserRepresentor representor, AppUser user) {
 		if (user.getObjectives() != null) {
 			for (final AppUserObjectiveAssignment objective : user.getObjectives()) {
 				representor.addObjectiveAssignment(this.assignmentConverter.to(objective));

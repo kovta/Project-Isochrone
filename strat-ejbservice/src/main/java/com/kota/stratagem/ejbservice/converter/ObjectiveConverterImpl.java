@@ -63,7 +63,17 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 
 	@Override
 	public ObjectiveRepresentor toComplete(Objective objective) {
-		final ObjectiveRepresentor representor = this.toSimplified(objective);
+		final ObjectiveRepresentor representor = this.toElementary(objective);
+		if (objective.getProjects() != null) {
+			for (final Project project : objective.getProjects()) {
+				representor.addProject(this.projectConverter.toSimplified(project));
+			}
+		}
+		if (objective.getTasks() != null) {
+			for (final Task task : objective.getTasks()) {
+				representor.addTask(this.taskConverter.toElementary(task));
+			}
+		}
 		if (objective.getAssignedTeams() != null) {
 			for (final TeamObjectiveAssignment teamAssignment : objective.getAssignedTeams()) {
 				representor.addTeamAssignment(this.assignmentConverter.to(teamAssignment));
