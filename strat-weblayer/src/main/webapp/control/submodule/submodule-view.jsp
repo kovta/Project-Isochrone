@@ -27,64 +27,10 @@
                             <div class="card-block">
                                 <div class="padding-top"><h3 class="h3-responsive text-center">${submodule.name}</h3></div>
                                 <div class="md-form">
-                                	<table class="strat-detail-table">
-	                                	<tbody>
-	                                		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-    	                               		<tr>
-	                                			<td class="strat-detail-attribute-name">Parent Project</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="Project?id=<c:out value="${submodule.project.id}" />">${submodule.project.name}</a>
-	                                			</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Deadline</td>
-	                                			<td class="strat-detail-attribute-value">
-												<c:choose>
-												    <c:when test="${empty submodule.deadline}"><span class="font-no-content">None</span></c:when>
-											        <c:otherwise>${submodule.deadline}</c:otherwise>
-												</c:choose>
-	                                			</td>
-	                                		</tr>
-                           			 		<tr>
-	                                			<td class="strat-detail-attribute-name">Created by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${submodule.creator.id}" />">${submodule.creator.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Creation date</td>
-	                                			<td class="strat-detail-attribute-value">${submodule.creationDate}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Modified by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${submodule.modifier.id}" />">${submodule.modifier.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Modification date</td>
-	                                			<td class="strat-detail-attribute-value">${submodule.modificationDate}</td>
-	                                		</tr>
-											<c:choose>
-											    <c:when test="${empty submodule.description}">
-											    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											    	<tr><td colspan="2" class="strat-detail-description">
-											    		<p class="text-center"><span class="font-no-content">No Description</span></p>
-										    		</td></tr>
-											    </c:when>
-										        <c:otherwise>
-										        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">Description</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">...</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">${submodule.description}</p></td></tr>
-										        </c:otherwise>
-											</c:choose>
-										</tbody>
-                                	</table>
+                                	<jsp:include page="submodule-detail-table.jsp"></jsp:include>
                                 </div>
 	                        </div>
 	                    </div>
-
 						<c:set var="supervisor" value="false" />
 						<c:if test="${operator eq submodule.creator.name or operator eq submodule.project.creator.name or operator eq submodule.project.objective.creator.name}">
 							<c:set var="supervisor" value="true" />
@@ -165,35 +111,11 @@
 	                                 </li>
 	                             </ul>
 	                         </div>
-	                         <br/><br/>
+	                         <br/>
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
-	                             <!--Panel 2-->
-	                             <div class="tab-pane fade active show" id="taskPanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${submodule.tasks.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-				                               			<h2 class="h2-responsive">There are currently no Tasks</h2>
-				                               			<h2 class="h2-responsive">defined under this Submodule</h2>
-				                               		</div>
-			                               		</div>
-		                               		</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.submodule.tasks}" var="taskItem">
-													<div class="col-lg-4">
-							                            <c:set var="task" value="${taskItem}" scope="request" />
-							                            <jsp:include page="../task/task-card.jsp"></jsp:include>
-							                        </div>
-												</c:forEach>
-											</div>		    
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 2-->
+	                             <!--Panel 1-->
+	                             <jsp:include page="submodule-task-panel.jsp"></jsp:include>
 								 <!--Panel 3-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -217,6 +139,7 @@
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
 																<c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+																	<hr/>
 																	<div class="full-width text-center">
 																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&submoduleId=<c:out value="${submodule.id}" />">Unassign user</a>
 															    	</div>
@@ -251,13 +174,9 @@
 									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
-									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
-										                            <div class="full-width text-center">
-										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
-										                            </div>
-									                            </c:if>
+									                        	<div class="full-width text-center">
+																	<p><c:out value="${assignment.recipient.name}" /></p>
+																</div>
 									                        </div>
 									                    </div>
 									                    <br/><br/>

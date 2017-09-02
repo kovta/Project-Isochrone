@@ -28,77 +28,10 @@
                             <div class="card-block">
                                 <div class="padding-top"><h3 class="h3-responsive text-center">${project.name}</h3></div>
                                 <div class="md-form">
-                                	<table class="strat-detail-table">
-	                                	<tbody>
-											<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-    	                               		<tr>
-	                                			<td class="strat-detail-attribute-name">Parent Objective</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="Objective?id=<c:out value="${project.objective.id}" />">${project.objective.name}</a>
-	                                			</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Status</td>
-	                                			<td class="strat-detail-attribute-value">${project.status.label}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Deadline</td>
-	                                			<td class="strat-detail-attribute-value">
-												<c:choose>
-												    <c:when test="${empty project.deadline}"><span class="font-no-content">None</span></c:when>
-											        <c:otherwise>${project.deadline}</c:otherwise>
-												</c:choose>
-	                                			</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Confidentiality</td>
-	                                			<td class="strat-detail-attribute-value">
-	                               			    <c:choose>
-												    <c:when test="${requestScope.project.confidential}">Private</c:when>
-											        <c:otherwise>Public</c:otherwise>
-												</c:choose>
-												</td>
-	                                		</tr>
-                           			 		<tr>
-	                                			<td class="strat-detail-attribute-name">Created by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${project.creator.id}" />">${project.creator.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Creation date</td>
-	                                			<td class="strat-detail-attribute-value">${project.creationDate}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Modified by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${project.modifier.id}" />">${project.modifier.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Modification date</td>
-	                                			<td class="strat-detail-attribute-value">${project.modificationDate}</td>
-	                                		</tr>
-											<c:choose>
-											    <c:when test="${empty project.description}">
-											    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											    	<tr><td colspan="2" class="strat-detail-description">
-											    		<p class="text-center"><span class="font-no-content">No Description</span></p>
-										    		</td></tr>
-											    </c:when>
-										        <c:otherwise>
-										        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">Description</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">...</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">${project.description}</p></td></tr>
-										        </c:otherwise>
-											</c:choose>
-										</tbody>
-                                	</table>
+                                	<jsp:include page="project-detail-table.jsp"></jsp:include>
                                 </div>
 	                        </div>
 	                    </div>
-
 						<c:set var="supervisor" value="false" />
 						<c:if test="${operator eq project.creator.name or operator eq project.objective.creator.name}">
 							<c:set var="supervisor" value="true" />
@@ -189,61 +122,13 @@
 	                                 </li>
 	                             </ul>
 	                         </div>
-	                         <br/><br/>
+	                         <br/>
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
 	                         	 <!--Panel 1-->
-	                             <div class="tab-pane fade active show" id="submodulePanel" role="tabpanel" aria-expanded="true">
-		                             <c:choose>
-									     <c:when test="${project.submodules.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-													<div class="text-center content-padder">
-														<h2 class="h2-responsive">There are currently no Submodules</h2>
-														<h2 class="h2-responsive">defined under this Project</h2>
-													</div>
-												</div>
-											</div>
-										</c:when>
-										<c:otherwise>
-										    <div class="row">
-												<c:forEach items="${requestScope.project.submodules}" var="submoduleItem">
-													<div class="col-lg-4">
-							                     		<c:set var="submodule" value="${submoduleItem}" scope="request" />
-							                            <jsp:include page="../submodule/submodule-card.jsp"></jsp:include>
-							                        </div>
-												</c:forEach>
-											</div>
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 1-->
+	                             <jsp:include page="project-submodule-panel.jsp"></jsp:include>
 	                             <!--Panel 2-->
-	                             <div class="tab-pane fade" id="taskPanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${project.tasks.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-				                               			<h2 class="h2-responsive">There are currently no Tasks</h2>
-				                               			<h2 class="h2-responsive">defined under this Project</h2>
-				                               		</div>
-			                               		</div>
-		                               		</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.project.tasks}" var="taskItem">
-													<div class="col-lg-4">
-							                            <c:set var="task" value="${taskItem}" scope="request" />
-							                            <jsp:include page="../task/task-card.jsp"></jsp:include>
-							                        </div>
-												</c:forEach>
-											</div>		    
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 2-->
+								 <jsp:include page="project-task-panel.jsp"></jsp:include>
 								 <!--Panel 3-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -267,6 +152,7 @@
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
 																<c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+																	<hr/>
 																	<div class="full-width text-center">
 																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&projectId=<c:out value="${project.id}" />">Unassign user</a>
 															    	</div>
@@ -280,7 +166,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 3-->
 	                             <!--Panel 4-->
 	                             <div class="tab-pane fade" id="teamPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -301,13 +186,9 @@
 									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
-									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
-										                            <div class="full-width text-center">
-										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
-										                            </div>
-									                            </c:if>
+									                        	<div class="full-width text-center">
+																	<p><c:out value="${assignment.recipient.name}" /></p>
+																</div>
 									                        </div>
 									                    </div>
 									                    <br/><br/>
@@ -317,7 +198,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 4-->
 	                         </div>
 	                         <!-- /.Tabs -->
 	                    </div>

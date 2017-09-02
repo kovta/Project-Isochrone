@@ -62,26 +62,9 @@
 				                        	<th scope="row"><c:out value="${count}" /></th>
 				                            <td><c:out value="${project.name}" /></td>
 				                            <td class="text-center">
-												<c:choose>
-													<c:when test="${project.status.label == 'Proposed'}"><i class="fa fa-share-square-o"></i></c:when>
-													<c:when test="${project.status.label == 'Pending'}"><i class="fa fa-ellipsis-h"></i></c:when>
-													<c:when test="${project.status.label == 'Initiated'}"><i class="fa fa-arrow-circle-right"></i></c:when>
-													<c:when test="${project.status.label == 'Under analysis'}"><i class="fa fa-pie-chart"></i></c:when>
-													<c:when test="${project.status.label == 'In design'}"><i class="fa fa-crop"></i></c:when>
-													<c:when test="${project.status.label == 'In development'}"><i class="fa fa-cogs"></i></c:when>
-													<c:when test="${project.status.label == 'Canceled'}"><i class="fa fa-stop-circle-o"></i></c:when>
-													<c:when test="${project.status.label == 'Testing'}"><i class="fa fa-flask"></i></c:when>
-													<c:when test="${project.status.label == 'Validating'}"><i class="fa fa-bar-chart"></i></c:when>
-													<c:when test="${project.status.label == 'Deploying'}"><i class="fa fa-arrow-circle-o-up"></i></c:when>
-													<c:when test="${project.status.label == 'Implementing'}"><i class="fa fa-factory"></i></c:when>
-													<c:when test="${project.status.label == 'Integrating'}"><i class="fa fa-cubes"></i></c:when>
-													<c:when test="${project.status.label == 'Live'}"><i class="fa fa-feed"></i></c:when>
-													<c:when test="${project.status.label == 'Maintained by operations'}"><i class="fa fa-dashboard"></i></c:when>
-													<c:when test="${project.status.label == 'Upgrading'}"><i class="fa fa-angle-double-up"></i></c:when>
-													<c:when test="${project.status.label == 'Disposed'}"><i class="fa fa-level-down"></i></c:when>
-													<c:otherwise></c:otherwise>
-												</c:choose>
-				                            	<span class="icon-companion"><c:out value="${project.status.label}" /></span>
+					                            <c:set var="status" value="${project.status.label}" scope="request"/>
+					                            <jsp:include page="project-status-icon-selector.jsp"></jsp:include>
+					                            <span class="icon-companion"><c:out value="${project.status.label}" /></span>
 				                            </td>
 				                            <td class="text-center"><c:out value="${project.submodules.size()}" /></td>
 				                            <td class="text-center"><c:out value="${project.tasks.size()}" /></td>

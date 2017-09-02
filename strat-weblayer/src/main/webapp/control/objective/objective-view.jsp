@@ -28,75 +28,10 @@
                             <div class="card-block">
                         		<div class="padding-top"><h3 class="h3-responsive text-center">${objective.name}</h3></div>      	
                                 <div class="md-form">
-                                	<table class="strat-detail-table">
-	                                	<tbody>
-	                                		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Status</td>
-	                                			<td class="strat-detail-attribute-value">${objective.status.label}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Priority</td>
-	                                			<td class="strat-detail-attribute-value">${objective.priority}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Deadline</td>
-	                                			<td class="strat-detail-attribute-value">
-												<c:choose>
-												    <c:when test="${empty objective.deadline}"><span class="font-no-content">None</span></c:when>
-											        <c:otherwise>${objective.deadline}</c:otherwise>
-												</c:choose>
-	                                			</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Confidentiality</td>
-	                                			<td class="strat-detail-attribute-value">
-	                               			    <c:choose>
-												    <c:when test="${requestScope.objective.confidential}">Private</c:when>
-											        <c:otherwise>Public</c:otherwise>
-												</c:choose>
-												</td>
-	                                		</tr>
-                           			 		<tr>
-	                                			<td class="strat-detail-attribute-name">Created by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${objective.creator.id}" />">${objective.creator.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Creation date</td>
-	                                			<td class="strat-detail-attribute-value">${objective.creationDate}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Modified by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${objective.modifier.id}" />">${objective.modifier.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Modification date</td>
-	                                			<td class="strat-detail-attribute-value">${objective.modificationDate}</td>
-	                                		</tr>
-											<c:choose>
-											    <c:when test="${empty objective.description}">
-											    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											    	<tr><td colspan="2" class="strat-detail-description">
-											    		<p class="text-center"><span class="font-no-content">No Description</span></p>
-										    		</td></tr>
-											    </c:when>
-										        <c:otherwise>
-										        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">Description</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">...</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">${objective.description}</p></td></tr>
-										        </c:otherwise>
-											</c:choose>
-										</tbody>
-                                	</table>
+                                	<jsp:include page="objective-detail-table.jsp"></jsp:include>
                                 </div>
 	                        </div>
 	                    </div>
-
 						<c:set var="supervisor" value="false" />
 						<c:if test="${operator eq objective.creator.name}">
 							<c:set var="supervisor" value="true" />
@@ -187,61 +122,13 @@
 	                                 </li>
 	                             </ul>
 	                         </div>
-	                         <br/><br/>
+	                         <br/>
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
 	                         	 <!--Panel 1-->
-	                             <div class="tab-pane fade active show" id="projectPanel" role="tabpanel" aria-expanded="true">
-		                             <c:choose>
-									     <c:when test="${objective.projects.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-													<div class="text-center content-padder">
-														<h2 class="h2-responsive">There are currently no Projects</h2>
-														<h2 class="h2-responsive">defined under this Objective</h2>
-													</div>
-												</div>
-											</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.objective.projects}" var="projectItem">
-													<div class="col-lg-4">
-														<c:set var="project" value="${projectItem}" scope="request" />
-														<jsp:include page="../project/project-card.jsp"></jsp:include>
-													</div>
-												</c:forEach>
-											</div>
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 1-->
+								 <jsp:include page="objective-project-panel.jsp"></jsp:include>
 	                             <!--Panel 2-->
-	                             <div class="tab-pane fade" id="taskPanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${objective.tasks.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-				                               			<h2 class="h2-responsive">There are currently no Tasks</h2>
-				                               			<h2 class="h2-responsive">defined under this Objective</h2>
-				                               		</div>
-			                               		</div>
-		                               		</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.objective.tasks}" var="taskItem">
-													<div class="col-lg-4">
-							                            <c:set var="task" value="${taskItem}" scope="request" />
-							                            <jsp:include page="../task/task-card.jsp"></jsp:include>
-							                        </div>
-												</c:forEach>
-											</div>		    
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 2-->
+								 <jsp:include page="objective-task-panel.jsp"></jsp:include>
 								 <!--Panel 3-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -265,6 +152,7 @@
 									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
 									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
 									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+									                            	<hr/>
 										                            <div class="full-width text-center">
 																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
 															    	</div>
@@ -278,7 +166,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 3-->
 	                             <!--Panel 4-->
 	                             <div class="tab-pane fade" id="teamPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -299,13 +186,7 @@
 									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
-									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
-										                            <div class="full-width text-center">
-										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign team</a>
-										                            </div>
-									                            </c:if>
+									                        	<p><c:out value="${assignment.recipient.name}" /></p>
 									                        </div>
 									                    </div>
 									                    <br/><br/>
@@ -315,7 +196,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 4-->
 	                         </div>
 	                         <!-- /.Tabs -->
 	                    </div>

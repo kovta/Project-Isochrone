@@ -43,7 +43,23 @@
        		</p>
        		<hr/>
        </c:if>
-       <p class="card-text"><c:out value="${project.status.label}" /></p>
+	   <p class="card-text">
+		   <c:set var="status" value="${project.status.label}" scope="request"/>
+	       <jsp:include page="project-status-icon-selector.jsp"></jsp:include>
+	       <span class="icon-companion"><c:out value="${project.status.label}" /></span>
+       </p>
+       <hr/>
+	   <c:choose>
+			<c:when test="${project.submodules.size() eq 0}"><p class="card-text"><c:out value="No Submodules defined" /></p></c:when>
+			<c:when test="${project.submodules.size() eq 1}"><p class="card-text"><c:out value="${project.submodules.size()} Submodule" /></p></c:when>
+			<c:otherwise><p class="card-text"><c:out value="${project.submodules.size()} Submodules" /></p></c:otherwise>
+		</c:choose>
+	   	<c:choose>
+			<c:when test="${project.tasks.size() eq 0}"><p class="card-text"><c:out value="No Tasks registered" /></p></c:when>
+			<c:when test="${project.tasks.size() eq 1}"><p class="card-text"><c:out value="${project.tasks.size()} Task" /></p></c:when>
+			<c:otherwise><p class="card-text"><c:out value="${project.tasks.size()} Tasks" /></p></c:otherwise>
+		</c:choose>
+	   <p class="card-text"><c:out value="${project.completion}% Completed" /></p>
        <div class="full-width text-center">
            <a href="Project?id=<c:out value="${project.id}" />" class="btn btn-primary">Inspect Project</a>
 	   </div>

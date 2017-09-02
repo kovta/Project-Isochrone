@@ -27,97 +27,10 @@
                             <div class="card-block">
 								<div class="padding-top"><h3 class="h3-responsive text-center">${task.name}</h3></div>
                                 <div class="md-form">
-                                	<table class="strat-detail-table">
-	                                	<tbody>
-	                                		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											<tr>
-												<c:choose>
-												    <c:when test="${not empty task.objective}">
-				                               			<td class="strat-detail-attribute-name">Parent Objective</td>
-			                                			<td class="strat-detail-attribute-value">
-			                                				<a href="Objective?id=<c:out value="${task.objective.id}" />">${task.objective.name}</a>
-			                                			</td>
-												    </c:when>
-												    <c:when test="${not empty task.project}">	
-			                                			<td class="strat-detail-attribute-name">Parent Project</td>
-			                                			<td class="strat-detail-attribute-value">
-			                                				<a href="Project?id=<c:out value="${task.project.id}" />">${task.project.name}</a>
-			                                			</td>
-												    </c:when>
-											        <c:otherwise>
-						                      			<td class="strat-detail-attribute-name">Parent Submodule</td>
-			                                			<td class="strat-detail-attribute-value">
-			                                				<a href="Submodule?id=<c:out value="${task.submodule.id}" />">${task.submodule.name}</a>
-			                                			</td>
-											        </c:otherwise>
-												</c:choose>
-											</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Priority</td>
-	                                			<td class="strat-detail-attribute-value">${task.priority}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Completion</td>
-	                                			<td class="strat-detail-attribute-value">${task.completion} %</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Deadline</td>
-	                                			<td class="strat-detail-attribute-value">
-												<c:choose>
-												    <c:when test="${empty task.deadline}"><span class="font-no-content">None</span></c:when>
-											        <c:otherwise>${task.deadline}</c:otherwise>
-												</c:choose>
-	                                			</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Admittance status</td>
-	                                			<td class="strat-detail-attribute-value">
-	                               			    <c:choose>
-												    <c:when test="${requestScope.task.admittance}">Open</c:when>
-											        <c:otherwise>Closed</c:otherwise>
-												</c:choose>
-												</td>
-	                                		</tr>
-                           			 		<tr>
-	                                			<td class="strat-detail-attribute-name">Created by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${task.creator.id}" />">${task.creator.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Creation date</td>
-	                                			<td class="strat-detail-attribute-value">${task.creationDate}</td>
-	                                		</tr>
-	                                		<tr>
-	                                			<td class="strat-detail-attribute-name">Modified by</td>
-	                                			<td class="strat-detail-attribute-value">
-	                                				<a href="User?id=<c:out value="${task.modifier.id}" />">${task.modifier.name}</a>
-	                                			</td>
-	                                		</tr>
-                                		    <tr>
-	                                			<td class="strat-detail-attribute-name">Modification date</td>
-	                                			<td class="strat-detail-attribute-value">${task.modificationDate}</td>
-	                                		</tr>
-											<c:choose>
-											    <c:when test="${empty task.description}">
-											    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											    	<tr><td colspan="2" class="strat-detail-description">
-											    		<p class="text-center"><span class="font-no-content">No Description</span></p>
-										    		</td></tr>
-											    </c:when>
-										        <c:otherwise>
-										        	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">Description</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">...</p></td></tr>
-											        <tr><td colspan="2" class="strat-detail-description"><p class="text-center">${task.description}</p></td></tr>
-										        </c:otherwise>
-											</c:choose>
-										</tbody>
-                                	</table>
+									<jsp:include page="task-detail-table.jsp"></jsp:include>
                                 </div>
 	                        </div>
 	                    </div>
-
 						<c:set var="supervisor" value="false"/>
 						<c:if test="${operator eq task.creator.name or operator eq task.objective.creator.name 
 							or operator eq task.project.creator.name or operator eq task.submodule.creator.name 
@@ -208,100 +121,12 @@
 	                                 </li>
 	                             </ul>
 	                         </div>
-	                         <br/><br/>
+	                         <br/>
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
 								 <!--Panel 1-->
-	                             <div class="tab-pane fade active show" id="dependencyPanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${task.taskDependencies.size() == 0 and task.dependantTasks.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-				                               			<h2 class="h2-responsive">There are currently no Dependency Configurations</h2>
-				                               			<h2 class="h2-responsive">for this Task</h2>
-				                               		</div>
-			                               		</div>
-		                               		</div>
-										</c:when>
-										<c:otherwise>
-											<c:set var="level" value="${requestScope.task.dependantChain.size()}" scope="page" />
-											<c:forEach items="${requestScope.task.dependantChain}" var="dependantLevel">
-									            <div class="row wow fadeIn" data-wow-delay="0.2s">
-							                        <div class="col-lg-12">
-							                            <div class="divider-new">
-							                                <h2 class="h4-responsive wow fadeIn">Dependant level: <c:out value="${level}" /></h2>
-							                            </div>
-							                        </div>
-							                    </div>
-												<div class="row">
-													<c:forEach items="${dependantLevel}" var="dependant">
-														<div class="col-lg-4">
-															<c:if test="${task.completion == 100}"><br/></c:if>
-															<div class="card wow fadeIn" data-wow-delay="0.2s">
-																<div class="card-block">
-										            				<c:set var="target" value="${requestScope.task}" scope="request" />
-										                            <c:set var="task" value="${dependant}" scope="request" />
-										                            <jsp:include page="task-card-content.jsp"></jsp:include>
-										                            <c:set var="task" value="${target}" scope="request" />
-										                            <c:if test="${supervisor and level eq 1}">
-										                            	<hr/>
-																		<div class="full-width text-center">
-																			<a href="TaskDependencyDelete?dependency=<c:out value="${task.id}" />
-																				&dependant=<c:out value="${dependant.id}" />
-																				&taskId=<c:out value="${task.id}" />">Remove Dependency</a>
-																    	</div>
-														    		</c:if>
-								                            	</div>
-								                            </div>
-								                        </div>
-							                        </c:forEach>
-						                        </div>
-						                        <c:set var="level" value="${level - 1}" scope="page" />
-											</c:forEach>
-											<br/><br/><hr/>
-											<div class="col-lg-12">
-												<div class="text-center"><h4><c:out value="${requestScope.task.name}" /></h4></div>
-											</div>
-											<hr/>
-											<c:set var="levelIndicator" value="0" scope="page" />
-											<c:forEach items="${requestScope.task.dependencyChain}" var="dependencyLevel">
-												<c:set var="levelIndicator" value="${levelIndicator + 1}" scope="page" />
-									            <div class="row wow fadeIn" data-wow-delay="0.2s">
-							                        <div class="col-lg-12">
-							                            <div class="divider-new">
-							                                <h2 class="h4-responsive wow fadeIn">Dependency level: <c:out value="${levelIndicator}" /></h2>
-							                            </div>
-							                        </div>
-							                    </div>
-												<div class="row">
-													<c:forEach items="${dependencyLevel}" var="dependency">
-														<div class="col-lg-4">
-															<c:if test="${task.completion == 100}"><br/></c:if>
-															<div class="card wow fadeIn" data-wow-delay="0.2s">
-																<div class="card-block">
-																	<c:set var="target" value="${requestScope.task}" scope="request" />
-										                            <c:set var="task" value="${dependency}" scope="request" />
-										                            <jsp:include page="task-card-content.jsp"></jsp:include>
-										                            <c:set var="task" value="${target}" scope="request" />
-										                            <c:if test="${supervisor and levelIndicator eq 1}">
-										                            	<hr/>
-																		<div class="full-width text-center">
-																			<a href="TaskDependencyDelete?dependency=<c:out value="${dependency.id}" />
-																				&dependant=<c:out value="${task.id}" />
-																				&taskId=<c:out value="${task.id}" />">Remove Dependency</a>
-																    	</div>
-														    		</c:if>
-								                            	</div>
-								                            </div>
-								                        </div>
-							                        </c:forEach>
-						                        </div>
-											</c:forEach>
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--Panel 2-->
+								 <jsp:include page="task-dependency-pane.jsp"></jsp:include>
+								 <!--Panel 2-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
 									     <c:when test="${task.assignedUsers.size() == 0}">
@@ -359,15 +184,9 @@
 									                    <br/><br/><br/>
 									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
 									                        <div class="card-block">
-									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
-									                            <jsp:include page="../assignment/assignment-card-content.jsp"></jsp:include>
-									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
-									                            	<hr/>
-										                            <div class="full-width text-center">
-										                            	<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />
-										                            		&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
-										                            </div>
-									                            </c:if>
+									                        	<div class="full-width text-center">
+																	<p><c:out value="${assignment.recipient.name}" /></p>
+																</div>
 									                        </div>
 									                    </div>
 									                    <br/><br/>

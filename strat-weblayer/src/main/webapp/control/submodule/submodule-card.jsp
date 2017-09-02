@@ -52,18 +52,11 @@
        	<hr/>
 		</c:if>
 		<c:choose>
-			<c:when test="${submodule.tasks.size() eq 0}">
-				<p class="card-text"><c:out value="No tasks registered" /></p>
-			</c:when>
-			<c:when test="${submodule.tasks.size() eq 1}">
-				<p class="card-text"><c:out value="${submodule.tasks.size()} Task" /></p>
-				<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
-			</c:when>
-			<c:otherwise>
-				<p class="card-text"><c:out value="${submodule.tasks.size()} Tasks" /></p>
-				<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
-			</c:otherwise>
+			<c:when test="${submodule.tasks.size() eq 0}"><p class="card-text"><c:out value="No Tasks registered" /></p></c:when>
+			<c:when test="${submodule.tasks.size() eq 1}"><p class="card-text"><c:out value="${submodule.tasks.size()} Task" /></p></c:when>
+			<c:otherwise><p class="card-text"><c:out value="${submodule.tasks.size()} Tasks" /></p></c:otherwise>
 		</c:choose>
+		<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
 		<div class="full-width text-center">
 			<a href="Submodule?id=<c:out value="${submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
 		</div>
