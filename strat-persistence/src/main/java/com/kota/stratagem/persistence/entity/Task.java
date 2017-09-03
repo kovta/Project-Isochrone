@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -125,6 +126,10 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Submodule submodule;
 
+	@NotFound(action = NotFoundAction.IGNORE)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = TaskEstimation.class, mappedBy = "task")
+	private TaskEstimation estimation;
+
 	public Task() {
 		this.assignedTeams = new HashSet<>();
 		this.assignedUsers = new HashSet<>();
@@ -133,7 +138,8 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Date creationDate, Date modificationDate) {
+	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, Date creationDate,
+			Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -141,7 +147,7 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
-		this.admittance = this.admittance;
+		this.admittance = admittance;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
 	}
@@ -278,13 +284,21 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.submodule = submodule;
 	}
 
+	public TaskEstimation getEstimation() {
+		return this.estimation;
+	}
+
+	public void setEstimation(TaskEstimation estimation) {
+		this.estimation = estimation;
+	}
+
 	@Override
 	public String toString() {
 		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
 				+ this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", assignedTeams=" + this.assignedTeams
 				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
 				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule="
-				+ this.submodule + "]";
+				+ this.submodule + ", estimation=" + this.estimation + "]";
 	}
 
 }

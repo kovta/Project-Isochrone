@@ -13,7 +13,7 @@ import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 public interface TaskService {
 
 	Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser creator, Long objective,
-			Long project, Long submodule) throws PersistenceServiceException;
+			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) throws PersistenceServiceException;
 
 	Task readElementary(Long id) throws PersistenceServiceException;
 
@@ -30,7 +30,7 @@ public interface TaskService {
 	Set<Task> readAll() throws PersistenceServiceException;
 
 	Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser modifier, Long objective,
-			Long project, Long submodule) throws PersistenceServiceException;
+			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) throws PersistenceServiceException;
 
 	void delete(Long id) throws PersistenceServiceException;
 

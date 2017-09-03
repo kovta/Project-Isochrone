@@ -20,6 +20,7 @@ import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
+import com.kota.stratagem.persistence.entity.TaskEstimation;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.TaskParameter;
 import com.kota.stratagem.persistence.query.TaskQuery;
@@ -61,12 +62,17 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser creator, Long objective,
-			Long project, Long submodule) throws PersistenceServiceException {
+			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
 			final Task task = new Task(name, description, priority, completion, deadline, admittance, new Date(), new Date());
+			if (duration != null) {
+				task.setEstimation(new TaskEstimation(duration, duration, duration));
+			} else if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
+				task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic));
+			}
 			Objective parentObjective = null;
 			Project parentProject = null;
 			Submodule parentSubmodule = null;
@@ -155,7 +161,8 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser modifier,
-			Long objective, Long project, Long submodule) throws PersistenceServiceException {
+			Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic)
+			throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Update Task (id: " + id + ", name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
@@ -180,6 +187,11 @@ public class TaskServiceImpl implements TaskService {
 				task.setProject(this.projectService.readWithTasks(project));
 			} else if (submodule != null) {
 				task.setSubmodule(this.submoduleService.readWithTasks(submodule));
+			}
+			if (duration != null) {
+				task.setEstimation(new TaskEstimation(duration, duration, duration));
+			} else if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
+				task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic));
 			}
 			return this.entityManager.merge(task);
 		} catch (final Exception e) {
