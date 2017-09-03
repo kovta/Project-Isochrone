@@ -328,9 +328,9 @@ CREATE TABLE task_dependencies (
 CREATE TABLE task_estimations (
 	estimation_id SERIAL NOT NULL,
 	estimation_task INTEGER NOT NULL,
-	estimation_pessimist INTERVAL NOT NULL,
-	estimation_realist INTERVAL NOT NULL,
-	estimation_optimist INTERVAL NOT NULL,
+	estimation_pessimist INTEGER NOT NULL,
+	estimation_realist INTEGER NOT NULL,
+	estimation_optimist INTEGER NOT NULL,
 	CONSTRAINT PK_TASK_ESTIMATION_ID PRIMARY KEY (estimation_id),
 	CONSTRAINT FK_TASK_ESTIMATION_TASK FOREIGN KEY (estimation_task)
 	  REFERENCES tasks (task_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT

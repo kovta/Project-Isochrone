@@ -331,8 +331,8 @@ INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUE
 (48, 49);
 
 INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
-(0, 4, '5 0:00:00', '4 0:00:00', '3 0:00:00'),
-(1, 5, '3 0:00:00', '2 0:00:00', '1 0:00:00');
+(0, 4, '5', '4', '3'),
+(1, 5, '3', '2', '1');
 SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id), 0) ) FROM task_estimations;
 
 -- ###########################################################################################
