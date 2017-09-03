@@ -133,7 +133,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				try {
 					LOGGER.info(id == null ? "Create Task : (" + name + ")" : "Update Task : (" + id + ")");
 					task = this.taskProtocol.saveTask(id, name, description, priority, completion, deadline, admittance, request.getUserPrincipal().getName(),
-							objective_id, project_id, submodule_id);
+							objective_id, project_id, submodule_id, null, null, null, null);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Task created succesfully!" : "Task updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

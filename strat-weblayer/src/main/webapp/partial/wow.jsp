@@ -58,10 +58,22 @@
 </script>
 
 <script>
+	$('#radioBtn-dur a').on('click', function(){
+	    var sel = $(this).data('title');
+	    var tog = $(this).data('toggle');
+	    $('#'+tog).prop('value', sel);
+	    $('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
+	    $('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
+	    $('input[name="durationType"]').val($(this).data('title'))
+	})
+</script>
+
+<script>
 	$("#compslider").slider({
 	    ticks: [0, 25, 50, 75, 100],
 	    ticks_labels: ['0%', '25%', '50%', '75%', '100%'],
-	    ticks_snap_bounds: 7
+	    ticks_snap_bounds: 7,
+	    value: 0
 	});
 </script>
 

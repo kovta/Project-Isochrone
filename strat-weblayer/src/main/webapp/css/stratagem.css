@@ -89,8 +89,14 @@ footer.page-footer {
 .space-left {
 	padding-left: 20px;
 }
+.margin-left {
+	margin-left: 45%;
+}
 .full-width {
 	width: 100%;
+}
+.extra-width {
+	width: 105%;
 }
 .full-height {
 	height: 100%;
@@ -230,6 +236,14 @@ footer.page-footer {
     background-color: #2e3850;
 }
 #radioBtn-adm .notActive {
+    color: #ffffff;
+    background-color: #c0c0c0;
+}
+#radioBtn-dur .active {
+    color: #ffffff;
+    background-color: #2e3850;
+}
+#radioBtn-dur .notActive {
     color: #ffffff;
     background-color: #c0c0c0;
 }

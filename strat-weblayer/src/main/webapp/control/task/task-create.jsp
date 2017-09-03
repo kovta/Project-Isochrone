@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<!--Modal: Objective Form-->
+<!--Modal: Task Creation Form-->
 <div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="taskModal" aria-hidden="true">
     <div class="modal-dialog cascading-modal" role="document">
         <!--Content-->
@@ -63,10 +63,41 @@
 						<i class="fa fa-calendar-check-o prefix"></i>
                			<label>Set Deadline</label>
                			<br/>
-                 		</div>
+                 	</div>
             		<div class="md-form form-sm" id="sandbox-container">
 						<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${submodule.deadline}"/>
 	                </div>
+	                
+	                <div class="md-form form-sm">
+						<i class="fa fa-hourglass-end prefix"></i>
+               			<label>Set Expected Duration</label>
+               			<div class="input-group margin-left">
+		    				<div id="radioBtn-dur" class="btn-group">
+		    					<a class="btn-sm notActive" data-toggle="durationType" data-title="0">Set Duration</a>
+		    					<a class="btn-sm active" data-toggle="durationType" data-title="1">Estimations</a>
+		    				</div>
+		    				<input type="hidden" name="durationType" id="durationType">
+		    			</div>
+               			<br/>
+               			<div class="md-form form-sm">
+	         				<input type="number" id="durationField" class="form-control" name="duration" 
+		                    	min="0" placeholder="Set Duration in days" value="">
+		                </div>
+		                <div class="row">
+            				<div class="col-md-4">
+            					<input type="number" id="pessimisticDurationField" class="form-control" style="width: 105%"
+            						name="pessimisticDuration" min="0" placeholder="Pessimistic estimate" value="">
+            				</div>
+            				<div class="col-md-4">
+            					<input type="number" id="realisticDurationField" class="form-control" style="width: 105%" 
+            						name="realisticDuration" min="0" placeholder="Realistic estimate" value="">
+            				</div>
+            				<div class="col-md-4">
+            					<input type="number" id="optimisticDurationField" class="form-control" 
+            						name="optimisticDuration" min="0" placeholder="Optimisitc estimate" value="">
+            				</div>
+            			</div>
+                 	</div>
             		
 					<div class="md-form form-sm">
 						<i class="fa fa-percent prefix"></i>
@@ -74,10 +105,9 @@
                			<br/>
                   	</div>
 					<div class="md-form form-sm">
-						<input class="full-width" id="compslider" type="text" name="completion" value="${task.completion}"
-						data-slider-ticks="[0, 25 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
-						data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]'/>
-						<!-- <input type="text" id="slider-input" name="completion" class="slider" value="${task.completion}" /> -->
+						<input class="full-width slider-horizontal" id="compslider" type="text" name="completion" value="${task.completion}"
+						data-slider-ticks="[0, 25, 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
+						data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]' data-value="${task.completion}"/>
 	                </div>
             		
 	                <div class="md-form form-sm">
@@ -100,4 +130,4 @@
         <!--/.Content-->
     </div>
 </div>
-<!--Modal: Objective Form-->
+<!--Modal: Task Creation Form-->

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor" %>
 
-<!--Modal: Objective Form-->
+<!--Modal: Assignment Creation Form-->
 <div class="modal fade" id="addAssignments" tabindex="-1" role="dialog" aria-labelledby="assignmentModal" aria-hidden="true">
     <div class="modal-dialog cascading-modal" role="document">
         <!--Content-->
@@ -85,4 +85,4 @@
         <!--/.Content-->
     </div>
 </div>
-<!--Modal: Objective Form-->
+<!--Modal: Assignment Creation Form-->
