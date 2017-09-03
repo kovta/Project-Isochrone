@@ -222,7 +222,8 @@ public class TaskProtocolImpl implements TaskProtocol {
 
 	@Override
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
-			String operator, Long objective, Long project, Long submodule) throws AdaptorException {
+			String operator, Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic)
+			throws AdaptorException {
 		try {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(id != null ? "Update Task (id: " + id + ")" : "Create Task (" + name + ")");
@@ -231,10 +232,11 @@ public class TaskProtocolImpl implements TaskProtocol {
 			if (id != null) {
 				origin = this.taskConverter.toElementary(this.taskService.readElementary(id));
 			}
-			final TaskRepresentor representor = this.taskConverter.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name,
-					description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator), objective, project, submodule)
-					: this.taskService.create(name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),
-							objective, project, submodule));
+			final TaskRepresentor representor = this.taskConverter.toComplete(
+					((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name, description, priority, completion, deadline, admittance,
+							this.appUserService.readElementary(operator), objective, project, submodule, duration, pessimistic, realistic, optimistic)
+							: this.taskService.create(name, description, priority, completion, deadline, admittance,
+									this.appUserService.readElementary(operator), objective, project, submodule, duration, pessimistic, realistic, optimistic));
 			if (id != null) {
 				this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
 			} else {

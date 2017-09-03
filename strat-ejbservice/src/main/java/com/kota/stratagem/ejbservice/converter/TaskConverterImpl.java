@@ -44,6 +44,16 @@ public class TaskConverterImpl implements TaskConverter {
 				: new TaskRepresentor(task.getName(), task.getDescription().trim(), task.getPriority(), task.getCompletion(), task.getDeadline(),
 						task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
 						this.appUserConverter.toElementary(task.getModifier()), task.getModificationDate());
+		if (task.getEstimation() != null) {
+			if ((task.getEstimation().getPessimistic() == task.getEstimation().getRealistic())
+					|| (task.getEstimation().getRealistic() == task.getEstimation().getOptimistic())) {
+				representor.setDuration(task.getEstimation().getRealistic());
+			} else {
+				representor.setPessimistic(task.getEstimation().getPessimistic());
+				representor.setRealistic(task.getEstimation().getRealistic());
+				representor.setOptimistic(task.getEstimation().getOptimistic());
+			}
+		}
 		return representor;
 	}
 

@@ -18,7 +18,7 @@ public interface TaskProtocol {
 	List<TaskRepresentor> getAllTasks() throws AdaptorException;
 
 	TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String operator,
-			Long objective, Long project, Long submodule) throws AdaptorException;
+			Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) throws AdaptorException;
 
 	void removeTask(Long id) throws AdaptorException;
 
