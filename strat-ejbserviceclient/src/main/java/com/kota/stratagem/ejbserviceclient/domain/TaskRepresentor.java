@@ -28,6 +28,11 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private ObjectiveRepresentor objective;
 	private ProjectRepresentor project;
 	private SubmoduleRepresentor submodule;
+	private Boolean estimated;
+	private Double duration;
+	private Double pessimistic;
+	private Double realistic;
+	private Double optimistic;
 	private List<List<TaskRepresentor>> dependantChain;
 	private List<List<TaskRepresentor>> dependencyChain;
 	private int dependantCount;
@@ -58,9 +63,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.taskDependencies = new ArrayList<>();
 		this.dependantChain = new ArrayList<>();
 		this.dependencyChain = new ArrayList<>();
-		this.objective = null;
-		this.project = null;
-		this.submodule = null;
 	}
 
 	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUserRepresentor creator,
@@ -83,9 +85,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.taskDependencies = new ArrayList<>();
 		this.dependantChain = new ArrayList<>();
 		this.dependencyChain = new ArrayList<>();
-		this.objective = null;
-		this.project = null;
-		this.submodule = null;
 	}
 
 	public Long getId() {
@@ -180,6 +179,42 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.submodule = submodule;
 	}
 
+	public Boolean getEstimated() {
+		return !((this.pessimistic == this.realistic) && (this.realistic == this.optimistic));
+	}
+
+	public Double getDuration() {
+		return this.duration;
+	}
+
+	public void setDuration(Double duration) {
+		this.duration = duration;
+	}
+
+	public Double getPessimistic() {
+		return this.pessimistic;
+	}
+
+	public void setPessimistic(Double pessimistic) {
+		this.pessimistic = pessimistic;
+	}
+
+	public Double getRealistic() {
+		return this.realistic;
+	}
+
+	public void setRealistic(Double realistic) {
+		this.realistic = realistic;
+	}
+
+	public Double getOptimistic() {
+		return this.optimistic;
+	}
+
+	public void setOptimistic(Double optimistic) {
+		this.optimistic = optimistic;
+	}
+
 	public List<List<TaskRepresentor>> getDependantChain() {
 		return this.dependantChain;
 	}
@@ -219,7 +254,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 				+ this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", assignedTeams=" + this.assignedTeams
 				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
 				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule="
-				+ this.submodule + ", dependantChain=" + this.dependantChain + ", dependencyChain=" + this.dependencyChain + ", dependantCount="
+				+ this.submodule + ", duration=" + this.duration + ", pessimistic=" + this.pessimistic + ", realistic=" + this.realistic + ", optimistic="
+				+ this.optimistic + ", dependantChain=" + this.dependantChain + ", dependencyChain=" + this.dependencyChain + ", dependantCount="
 				+ this.dependantCount + ", dependencyCount=" + this.dependencyCount + "]";
 	}
 
@@ -229,7 +265,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id="
 				+ (this.objective != null ? this.objective.getId().toString() : "null") + ", project_id="
 				+ (this.project != null ? this.project.getId().toString() : "null") + ", submodule_id="
-				+ (this.submodule != null ? this.submodule.getId().toString() : "null") + "]";
+				+ (this.submodule != null ? this.submodule.getId().toString() : "null") + ", duration=" + this.duration + ", pessimistic=" + this.pessimistic
+				+ ", realistic=" + this.realistic + ", optimistic=" + this.optimistic + "]";
 	}
 
 	public void addTaskDependency(TaskRepresentor dependency) {
