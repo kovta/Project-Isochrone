@@ -27,18 +27,22 @@ public class TaskEstimation implements Serializable {
 	private Long id;
 
 	@Column(name = "estimation_pessimist", nullable = false)
-	private final double pessimistic;
+	private double pessimistic;
 
 	@Column(name = "estimation_realist", nullable = false)
-	private final double realistic;
+	private double realistic;
 
 	@Column(name = "estimation_optimist", nullable = false)
-	private final double optimistic;
+	private double optimistic;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Task.class)
 	@JoinColumn(name = "estimation_task", referencedColumnName = "task_id", nullable = false)
 	private Task task;
 
+	public TaskEstimation() {
+		super();
+	}
+	
 	public TaskEstimation(Long id, double pessimistic, double realistic, double optimistic) {
 		super();
 		this.id = id;
