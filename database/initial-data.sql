@@ -190,7 +190,7 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (0, 'Submodule structure implementation', 'Adding submodules as a new level into the CPM stack', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (1, 'User assignment implementation', 'User and team level assignment functionality is imperative for proper delegation of responsibility', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (2, 'Notification subscription implementation', 'Invested users must be notified on key item modifications', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(3, 'Adding Project manager and Product owner funcitonality', 'Highest level project responsibility delegation must be clear at least on project level. Other leading elements wil be discerned with the help of assignments', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Estimation, and analysis for Task dependency chain', 'Critical time, slack, and overall statistic calculus for Submodule level Task dependency configurations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Test Submodule', '', NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
