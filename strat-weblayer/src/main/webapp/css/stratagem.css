@@ -113,6 +113,12 @@ footer.page-footer {
 .flex-display {
 	display: flex;
 }
+.initial-display {
+	display: initial;
+}
+.no-display {
+	display: none;
+}
 .bottom-content {
 	float: bottom;
 }

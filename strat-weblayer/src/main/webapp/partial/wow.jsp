@@ -64,7 +64,14 @@
 	    $('#'+tog).prop('value', sel);
 	    $('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
 	    $('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
-	    $('input[name="durationType"]').val($(this).data('title'))
+	    $('input[name="durationType"]').val($(this).data('title'));
+	    if(sel) {
+	    	document.getElementById("estimationRow").style.display='flex';
+	    	document.getElementById("setDurationRow").style.display='none';
+	    } else {
+	    	document.getElementById("estimationRow").style.display='none';
+	    	document.getElementById("setDurationRow").style.display='flex';
+	    }
 	})
 </script>
 

@@ -73,17 +73,17 @@
                			<label>Set Expected Duration</label>
                			<div class="input-group margin-left">
 		    				<div id="radioBtn-dur" class="btn-group">
-		    					<a class="btn-sm notActive" data-toggle="durationType" data-title="0">Set Duration</a>
-		    					<a class="btn-sm active" data-toggle="durationType" data-title="1">Estimations</a>
+		    					<a class="btn-sm active" data-toggle="durationType" data-title="0">Set Duration</a>
+		    					<a class="btn-sm notActive" data-toggle="durationType" data-title="1">Estimations</a>
 		    				</div>
 		    				<input type="hidden" name="durationType" id="durationType">
 		    			</div>
                			<br/>
-               			<div class="md-form form-sm">
+               			<div class="md-form form-sm flex-display" id="setDurationRow">
 	         				<input type="number" id="durationField" class="form-control" name="duration" 
 		                    	min="0" placeholder="Set Duration in days" value="">
 		                </div>
-		                <div class="row">
+		                <div class="row no-display" id="estimationRow">
             				<div class="col-md-4">
             					<input type="number" id="pessimisticDurationField" class="form-control" style="width: 105%"
             						name="pessimisticDuration" min="0" placeholder="Pessimistic estimate" value="">
