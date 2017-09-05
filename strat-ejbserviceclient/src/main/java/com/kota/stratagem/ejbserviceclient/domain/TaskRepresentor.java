@@ -39,10 +39,10 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private int dependencyCount;
 
 	public TaskRepresentor() {
-		this(null, "", "", 5, 0, new Date(), false, null, new Date(), null, new Date());
+		this(null, "", "", 5, 0, new Date(), null, false, null, new Date(), null, new Date());
 	}
 
-	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
+	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance,
 			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
 		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
@@ -65,8 +65,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.dependencyChain = new ArrayList<>();
 	}
 
-	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUserRepresentor creator,
-			Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
+	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance,
+			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
 		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
@@ -180,7 +180,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	}
 
 	public Boolean getEstimated() {
-		return !((this.pessimistic == this.realistic) && (this.realistic == this.optimistic));
+		return ((this.pessimistic != null) && (this.realistic != null) && (this.optimistic != null));
 	}
 
 	public Double getDuration() {

@@ -13,7 +13,6 @@ public class AppUserRepresentor implements Serializable {
 
 	private Long id;
 	private final String name;
-	private final String passwordHash;
 	private final String email;
 	private final RoleRepresentor role;
 	private final Date registrationDate;
@@ -32,15 +31,14 @@ public class AppUserRepresentor implements Serializable {
 	private final List<NotificationRepresentor> notifications;
 
 	public AppUserRepresentor() {
-		this(null, "", "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date(), 0, 0);
+		this(null, "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date(), 0, 0);
 	}
 
-	public AppUserRepresentor(Long id, String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
+	public AppUserRepresentor(Long id, String name, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
 			int notificationViewCount, int imageSeletor) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.passwordHash = passwordHash;
 		this.email = email;
 		this.role = role;
 		this.registrationDate = registrationDate;
@@ -58,11 +56,10 @@ public class AppUserRepresentor implements Serializable {
 		this.notifications = new ArrayList<>();
 	}
 
-	public AppUserRepresentor(String name, String passwordHash, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
-			int notificationViewCount, int imageSeletor) {
+	public AppUserRepresentor(String name, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate, int notificationViewCount,
+			int imageSeletor) {
 		super();
 		this.name = name;
-		this.passwordHash = passwordHash;
 		this.email = email;
 		this.role = role;
 		this.registrationDate = registrationDate;
@@ -90,10 +87,6 @@ public class AppUserRepresentor implements Serializable {
 
 	public String getName() {
 		return this.name;
-	}
-
-	public String getPasswordHash() {
-		return this.passwordHash;
 	}
 
 	public String getEmail() {
@@ -166,12 +159,12 @@ public class AppUserRepresentor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AppUserRepresentor [id=" + this.id + ", name=" + this.name + ", passwordHash=" + this.passwordHash + ", email=" + this.email + ", role="
-				+ this.role + ", registrationDate=" + this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate="
-				+ this.acountModificationDate + ", notificationViewCount=" + this.notificationViewCount + ", imageSelector=" + this.imageSelector
-				+ ", objectives=" + this.objectives + ", projects=" + this.projects + ", submodules=" + this.submodules + ", tasks=" + this.tasks
-				+ ", reportedImpediments=" + this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams="
-				+ this.supervisedTeams + ", teamMemberships=" + this.teamMemberships + ", notifications=" + this.notifications + "]";
+		return "AppUserRepresentor [id=" + this.id + ", name=" + this.name + ", email=" + this.email + ", role=" + this.role + ", registrationDate="
+				+ this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate=" + this.acountModificationDate
+				+ ", notificationViewCount=" + this.notificationViewCount + ", imageSelector=" + this.imageSelector + ", objectives=" + this.objectives
+				+ ", projects=" + this.projects + ", submodules=" + this.submodules + ", tasks=" + this.tasks + ", reportedImpediments="
+				+ this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams=" + this.supervisedTeams
+				+ ", teamMemberships=" + this.teamMemberships + ", notifications=" + this.notifications + "]";
 	}
 
 	public void addObjectiveAssignment(AppUserObjectiveAssignmentRepresentor objective) {
