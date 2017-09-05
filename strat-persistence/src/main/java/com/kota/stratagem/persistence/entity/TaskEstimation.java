@@ -10,13 +10,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.kota.stratagem.persistence.parameter.TaskParameter;
+import com.kota.stratagem.persistence.query.TaskEstimationQuery;
+
 @Entity
 @Table(name = "task_estimations")
 @SequenceGenerator(name = "taskEstimationGenerator", sequenceName = "task_estimations_estimation_id_seq", allocationSize = 1)
+@NamedQueries(value = { //
+		@NamedQuery(name = TaskEstimationQuery.REMOVE_BY_TASK_ID, query = "DELETE FROM TaskEstimation te WHERE te.task.id=:" + TaskParameter.ID)
+		//
+})
 public class TaskEstimation implements Serializable {
 
 	private static final long serialVersionUID = -1311102550104986804L;
@@ -42,20 +51,22 @@ public class TaskEstimation implements Serializable {
 	public TaskEstimation() {
 		super();
 	}
-	
-	public TaskEstimation(Long id, double pessimistic, double realistic, double optimistic) {
+
+	public TaskEstimation(Long id, double pessimistic, double realistic, double optimistic, Task task) {
 		super();
 		this.id = id;
 		this.pessimistic = pessimistic;
 		this.realistic = realistic;
 		this.optimistic = optimistic;
+		this.task = task;
 	}
 
-	public TaskEstimation(double pessimistic, double realistic, double optimistic) {
+	public TaskEstimation(double pessimistic, double realistic, double optimistic, Task task) {
 		super();
 		this.pessimistic = pessimistic;
 		this.realistic = realistic;
 		this.optimistic = optimistic;
+		this.task = task;
 	}
 
 	public Long getId() {

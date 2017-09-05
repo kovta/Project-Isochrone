@@ -90,6 +90,9 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@Column(name = "task_deadline", nullable = true)
 	private Date deadline;
 
+	@Column(name = "task_duration", nullable = true)
+	private Double duration;
+
 	@Column(name = "task_admittance", nullable = false)
 	private Boolean admittance;
 
@@ -138,8 +141,8 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, Date creationDate,
-			Date modificationDate) {
+	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance,
+			Date creationDate, Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -147,18 +150,21 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
+		this.duration = duration;
 		this.admittance = admittance;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
 	}
 
-	public Task(String name, String description, int priority, double completion, Date deadline, Boolean admittance, Date creationDate, Date modificationDate) {
+	public Task(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance, Date creationDate,
+			Date modificationDate) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.completion = completion;
 		this.deadline = deadline;
+		this.duration = duration;
 		this.admittance = admittance;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
@@ -210,6 +216,14 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
+	}
+
+	public Double getDuration() {
+		return this.duration;
+	}
+
+	public void setDuration(Double duration) {
+		this.duration = duration;
 	}
 
 	public Boolean getAdmittance() {
@@ -295,8 +309,8 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@Override
 	public String toString() {
 		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", assignedTeams=" + this.assignedTeams
-				+ ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
+				+ this.completion + ", deadline=" + this.deadline + ", duration=" + this.duration + ", admittance=" + this.admittance + ", assignedTeams="
+				+ this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
 				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule="
 				+ this.submodule + ", estimation=" + this.estimation + "]";
 	}

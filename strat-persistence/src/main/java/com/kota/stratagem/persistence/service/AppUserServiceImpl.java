@@ -175,7 +175,9 @@ public class AppUserServiceImpl implements AppUserService {
 			final AppUser user = this.readComplete(id);
 			final AppUser operator = this.readElementary(modifier);
 			user.setName(name);
-			user.setPasswordHash(passwordHash);
+			if (passwordHash != null) {
+				user.setPasswordHash(passwordHash);
+			}
 			user.setEmail(email);
 			user.setRole(role);
 			if (user.getAccountModifier().getId() != operator.getId()) {

@@ -23,6 +23,7 @@ import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TaskEstimation;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.parameter.TaskParameter;
+import com.kota.stratagem.persistence.query.TaskEstimationQuery;
 import com.kota.stratagem.persistence.query.TaskQuery;
 
 @Stateless(mappedName = "ejb/taskService")
@@ -67,11 +68,9 @@ public class TaskServiceImpl implements TaskService {
 			LOGGER.debug("Create Task (name: " + name + ", description: " + description + ", completion: " + completion + ")");
 		}
 		try {
-			final Task task = new Task(name, description, priority, completion, deadline, admittance, new Date(), new Date());
-			if (duration != null) {
-				task.setEstimation(new TaskEstimation(duration, duration, duration));
-			} else if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
-				task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic));
+			final Task task = new Task(name, description, priority, completion, deadline, duration, admittance, new Date(), new Date());
+			if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
+				task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
 			}
 			Objective parentObjective = null;
 			Project parentProject = null;
@@ -174,6 +173,7 @@ public class TaskServiceImpl implements TaskService {
 			task.setPriority(priority);
 			task.setCompletion(completion);
 			task.setDeadline(deadline);
+			task.setDuration(duration);
 			task.setAdmittance(admittance);
 			if (task.getCreator().getId() == operator.getId()) {
 				task.setModifier(task.getCreator());
@@ -188,10 +188,8 @@ public class TaskServiceImpl implements TaskService {
 			} else if (submodule != null) {
 				task.setSubmodule(this.submoduleService.readWithTasks(submodule));
 			}
-			if (duration != null) {
-				task.setEstimation(new TaskEstimation(duration, duration, duration));
-			} else if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
-				task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic));
+			if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
+				task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
 			}
 			return this.entityManager.merge(task);
 		} catch (final Exception e) {
@@ -206,6 +204,7 @@ public class TaskServiceImpl implements TaskService {
 			LOGGER.debug("Remove Task by id (" + id + ")");
 		}
 		try {
+			this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(TaskQuery.REMOVE_BY_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 		} catch (final Exception e) {
 			throw new PersistenceServiceException("Unknown error while removing Task by id (" + id + ")! " + e.getLocalizedMessage(), e);
