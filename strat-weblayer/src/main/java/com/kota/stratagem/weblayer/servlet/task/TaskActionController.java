@@ -85,55 +85,75 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Long id = null, objective_id = null, project_id = null, submodule_id = null;
-			String returnPoint = "";
-			if ((request.getParameter(ID) != "") && (request.getParameter(ID) != null)) {
+			String returnPoint = null;
+			if (this.notEmpty(request.getParameter(ID))) {
 				id = Long.parseLong(request.getParameter(ID));
 				returnPoint = (Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + id);
 			} else {
-				if (request.getParameter(PARENT_OBJECTIVE) != "") {
+				if (this.notEmpty(request.getParameter(PARENT_OBJECTIVE))) {
 					objective_id = Long.parseLong(request.getParameter(PARENT_OBJECTIVE));
 					returnPoint = (Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id);
-				} else if (request.getParameter(PARENT_PROJECT) != "") {
+				} else if (this.notEmpty(request.getParameter(PARENT_PROJECT))) {
 					project_id = Long.parseLong(request.getParameter(PARENT_PROJECT));
 					returnPoint = (Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id);
-				} else if (request.getParameter(PARENT_SUBMODULE) != "") {
+				} else if (this.notEmpty(request.getParameter(PARENT_SUBMODULE))) {
 					submodule_id = Long.parseLong(request.getParameter(PARENT_SUBMODULE));
 					returnPoint = (Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id);
+				} else {
+					returnPoint = Page.ERROR.getUrl();
 				}
 			}
 			final String name = request.getParameter(NAME);
 			final String description = request.getParameter(DESCRIPTION);
-			int priorityTemp = 0;
-			if (request.getParameter(PRIORITY) != "") {
-				priorityTemp = Integer.parseInt(request.getParameter(PRIORITY));
+			int priority = 10;
+			if (this.notEmpty(request.getParameter(PRIORITY))) {
+				priority = Integer.parseInt(request.getParameter(PRIORITY));
 			}
-			final int priority = priorityTemp;
 			final double completion = Double.parseDouble(request.getParameter(COMPLETION));
-			Date deadlineTemp = null;
+			Date deadline = null;
 			try {
 				final DateFormat extractionFormat = new SimpleDateFormat("MM/dd/yyyy");
-				if (request.getParameter(DEADLINE) != "") {
-					deadlineTemp = extractionFormat.parse(request.getParameter(DEADLINE));
+				if (this.notEmpty(request.getParameter(DEADLINE))) {
+					deadline = extractionFormat.parse(request.getParameter(DEADLINE));
 				}
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
-				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, false, null, null, null, null);
+				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, false, null, null, null, null);
 				this.forward(request, response, Task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
-			final Date deadline = deadlineTemp;
+			Double duration = null, pessimistic = null, realistic = null, optimistic = null;
+			if (request.getParameter(DURATION_TYPE).equals("1")) {
+				if (this.notEmpty(request.getParameter(PESSIMISTIC_DURATION)) && this.notEmpty(request.getParameter(REALISTIC_DURATION))
+						&& this.notEmpty(request.getParameter(OPTIMISTIC_DURATION))) {
+					pessimistic = Double.parseDouble(request.getParameter(PESSIMISTIC_DURATION));
+					realistic = Double.parseDouble(request.getParameter(REALISTIC_DURATION));
+					optimistic = Double.parseDouble(request.getParameter(OPTIMISTIC_DURATION));
+				} else if (this.notEmpty(request.getParameter(PESSIMISTIC_DURATION)) || this.notEmpty(request.getParameter(REALISTIC_DURATION))
+						|| this.notEmpty(request.getParameter(OPTIMISTIC_DURATION))) {
+					LOGGER.info("Failed attempt to modify Task : (" + name + ")");
+					request.getSession().setAttribute(ATTR_ERROR, "Partial estimations not allowed");
+					final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, false, null, null, null, null);
+					this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				}
+			} else {
+				if (this.notEmpty(request.getParameter(DURATION))) {
+					duration = Double.parseDouble(request.getParameter(DURATION));
+				}
+			}
 			final Boolean admittance = request.getParameter(ADMITTANCE).equals("1") ? true : false;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
-				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, admittance, null, null, null, null);
+				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, duration, admittance, null, null, null,
+						null);
 				this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				TaskRepresentor task = null;
 				try {
 					LOGGER.info(id == null ? "Create Task : (" + name + ")" : "Update Task : (" + id + ")");
 					task = this.taskProtocol.saveTask(id, name, description, priority, completion, deadline, admittance, request.getUserPrincipal().getName(),
-							objective_id, project_id, submodule_id, null, null, null, null);
+							objective_id, project_id, submodule_id, duration, pessimistic, realistic, optimistic);
 					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Task created succesfully!" : "Task updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);

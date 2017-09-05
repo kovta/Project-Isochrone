@@ -105,8 +105,7 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 			try {
 				LOGGER.info("Update AppUser: (" + id + ", email: " + email + ")");
 				final AppUserRepresentor userTemp = this.appUserProtocol.getAppUser(id);
-				user = this.appUserProtocol.saveAppUser(id, userTemp.getName(), userTemp.getPasswordHash(), email, userTemp.getRole(),
-						request.getUserPrincipal().getName());
+				user = this.appUserProtocol.saveAppUser(id, userTemp.getName(), null, email, userTemp.getRole(), request.getUserPrincipal().getName());
 				request.getSession().setAttribute(ATTR_USER_SUCCESS, "Account updated successfully!");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);

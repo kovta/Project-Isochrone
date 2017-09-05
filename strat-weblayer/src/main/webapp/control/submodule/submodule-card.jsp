@@ -56,7 +56,9 @@
 			<c:when test="${submodule.tasks.size() eq 1}"><p class="card-text"><c:out value="${submodule.tasks.size()} Task" /></p></c:when>
 			<c:otherwise><p class="card-text"><c:out value="${submodule.tasks.size()} Tasks" /></p></c:otherwise>
 		</c:choose>
-		<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
+		<c:if test="${submodule.tasks.size() ne 0}">
+			<p class="card-text"><c:out value="${submodule.completion}% Completed" /></p>
+		</c:if>
 		<div class="full-width text-center">
 			<a href="Submodule?id=<c:out value="${submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
 		</div>

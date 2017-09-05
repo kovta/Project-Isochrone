@@ -97,14 +97,48 @@
 						    </c:choose>
 						    <!--/.Second row-->
 		                    <div class="row">
-		                        <div class="col-md-12">
+		                        <div class="col-md-6">
 		                        	<div class="md-form form-sm">
 				               			<label>The deadline of the Task</label><br/>
 	                  				</div>
 		                            <div class="md-form" id="sandbox-container">
-										<input placeholder="None" type="text" class="form-control" name="deadline" ${not supervisor ? "disabled" : ""}
-											value="<fmt:formatDate type="date" value="${task.deadline}" pattern="MM/dd/yyyy" />"/>
+										<div class="flex-display">
+											<input placeholder="None" type="text" class="form-control" name="deadline" ${not supervisor ? "disabled" : ""}
+												value="<fmt:formatDate type="date" value="${task.deadline}" pattern="MM/dd/yyyy" />"/>
+										</div>
 		                            </div>
+								</div>
+								<div class="col-md-6">
+									<div class="md-form form-sm">
+			               				<label>The expected duration of the Task</label>
+			               				<div class="input-group margin-left">
+						    				<div id="radioBtn-dur" class="btn-group">
+						    					<a class="btn-sm active" data-toggle="durationType" data-title="0">Set Duration</a>
+						    					<a class="btn-sm notActive" data-toggle="durationType" data-title="1">Estimations</a>
+						    				</div>
+						    				<input type="hidden" name="durationType" id="durationType">
+						    			</div>
+			               			</div>
+				               		<div class="md-form">
+				               			<div class="flex-display" id="setDurationRow">
+					         				<input type="number" id="durationField" class="form-control" name="duration" 
+						                    	min="0" placeholder="Set Duration in days" value="">
+						                </div>
+						                <div class="row no-display" id="estimationRow">
+				            				<div class="col-md-4">
+				            					<input type="number" id="pessimisticDurationField" class="form-control" style="width: 105%"
+				            						name="pessimisticDuration" min="0" placeholder="Pessimistic estimate" value="">
+				            				</div>
+				            				<div class="col-md-4">
+				            					<input type="number" id="realisticDurationField" class="form-control" style="width: 105%" 
+				            						name="realisticDuration" min="0" placeholder="Realistic estimate" value="">
+				            				</div>
+				            				<div class="col-md-4">
+				            					<input type="number" id="optimisticDurationField" class="form-control" 
+				            						name="optimisticDuration" min="0" placeholder="Optimisitc estimate" value="">
+				            				</div>
+				            			</div>
+				            		</div>
 								</div>
 							</div>
 							<!--/.Third row-->
@@ -120,20 +154,7 @@
 					                </div>
 								</div>
 							</div>
-							<!--/.Fourth row-->
-		                    <div class="row">
-		                        <div class="col-md-12">
-		                        	<div class="md-form form-sm">
-				               			<label>The completion of the Task</label><br/>
-	                  				</div>
-                      				<div class="md-form form-sm">
-										<input class="full-width" id="compslider" type="text" name="completion" value="${task.completion}"
-										data-slider-ticks="[0, 25 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
-										data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]'/>
-					                </div>
-								</div>
-							</div>
-   		                    <!--Fifth row-->
+   		                    <!--Fourth row-->
 		                    <div class="row">
 		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
@@ -145,7 +166,7 @@
 		                            </div>
 		                        </div>
 		                    </div>
-		                    <!-- Sixth row -->
+		                    <!-- Fifth row -->
 		                    <div class="row">
 		                        <div class="col-md-6 text-center">
 		                        	<a href="Task?id=<c:out value="${task.id}" />" class="btn btn-outline-info mr-auto full-form-footer-button">
