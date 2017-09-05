@@ -1,8 +1,8 @@
-DROP TABLE review_invitations;
-DROP TABLE reviews;
-
 DROP TABLE user_notifications;
 DROP TABLE notifications;
+
+DROP TABLE review_invitations;
+DROP TABLE reviews;
 
 DROP TABLE user_objective_assignments;
 DROP TABLE user_project_assignments;

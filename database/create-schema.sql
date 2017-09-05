@@ -262,6 +262,7 @@ CREATE TABLE tasks (
 	task_priority INTEGER NOT NULL,
 	task_completion_percentage INTEGER NOT NULL,
 	task_deadline TIMESTAMP WITHOUT TIME ZONE NULL,
+	task_duration INTEGER NULL,
 	task_admittance BOOLEAN NOT NULL,
 	task_creator INTEGER NOT NULL,
 	task_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
@@ -528,28 +529,6 @@ CREATE TABLE user_task_assignments (
 
 -- ###########################################################################################
 
-CREATE TABLE notifications (
-	notification_id SERIAL NOT NULL,
-	notification_inducer INTEGER NOT NULL,
-	notification_message CHARACTER VARYING(2000) NULL,
-	notification_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	CONSTRAINT PK_NOTIFICATION_ID PRIMARY KEY (notification_id),
-	CONSTRAINT FK_NOTIFICATION_INDUCER FOREIGN KEY (notification_inducer)
-	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
-);
-CREATE TABLE user_notifications (
-	user_notification_id SERIAL NOT NULL,
-	user_notification_user_id INTEGER NOT NULL,
-	user_notification_notification_id INTEGER NOT NULL,
-	CONSTRAINT PK_USER_NOTIFICATION_ID PRIMARY KEY (user_notification_id),
-	CONSTRAINT FK_USER_NOTIFICATION_USER_ID FOREIGN KEY (user_notification_user_id)
-	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT FK_USER_NOTIFICATION_NOTIFICATION_ID FOREIGN KEY (user_notification_notification_id)
-	  REFERENCES notifications (notification_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
-);
-
--- ###########################################################################################
-
 CREATE TABLE reviews (
 	review_id SERIAL NOT NULL,
 	review_name CHARACTER VARYING(100) NOT NULL,
@@ -569,6 +548,28 @@ CREATE TABLE review_invitations (
 	  REFERENCES reviews (review_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
 	CONSTRAINT FK_INVITATION_RECIPIENT FOREIGN KEY (invitation_recipiant)
 	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+-- ###########################################################################################
+
+CREATE TABLE notifications (
+	notification_id SERIAL NOT NULL,
+	notification_inducer INTEGER NOT NULL,
+	notification_message CHARACTER VARYING(2000) NULL,
+	notification_creation_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	CONSTRAINT PK_NOTIFICATION_ID PRIMARY KEY (notification_id),
+	CONSTRAINT FK_NOTIFICATION_INDUCER FOREIGN KEY (notification_inducer)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+CREATE TABLE user_notifications (
+	user_notification_id SERIAL NOT NULL,
+	user_notification_user_id INTEGER NOT NULL,
+	user_notification_notification_id INTEGER NOT NULL,
+	CONSTRAINT PK_USER_NOTIFICATION_ID PRIMARY KEY (user_notification_id),
+	CONSTRAINT FK_USER_NOTIFICATION_USER_ID FOREIGN KEY (user_notification_user_id)
+	  REFERENCES app_users (user_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_USER_NOTIFICATION_NOTIFICATION_ID FOREIGN KEY (user_notification_notification_id)
+	  REFERENCES notifications (notification_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 -- ###########################################################################################
@@ -615,7 +616,7 @@ ALTER TABLE team_objective_assignments OWNER TO postgres;
 ALTER TABLE team_project_assignments OWNER TO postgres;
 ALTER TABLE team_submodule_assignments OWNER TO postgres;
 ALTER TABLE team_task_assignments OWNER TO postgres;
-ALTER TABLE notifications OWNER TO postgres;
-ALTER TABLE user_notifications OWNER TO postgres;
 ALTER TABLE reviews OWNER TO postgres;
 ALTER TABLE review_invitations OWNER TO postgres;
+ALTER TABLE notifications OWNER TO postgres;
+ALTER TABLE user_notifications OWNER TO postgres;

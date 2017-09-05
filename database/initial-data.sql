@@ -211,58 +211,58 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 
 -- ###########################################################################################
 
-INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_completion_percentage, task_deadline, task_admittance, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
-(0, 'Use-case test tool', 'Creating tool for efficient use-case testing', 2, 30, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(1, 'Print matching', 'Matching watermark prints', 1, 85, '2016/08/14 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(2, 'Extraction planning', 'Planning extraction approach', 0, 60, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 1, 100, '2016/09/10 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'REST', 'Create REST API module', 2, 5, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'RMI', 'Create Remote EJB module', 2, 30, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(10, 'Olingo error', 'Default implementation in client system not sufficient', 2, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(14, 'Add default sorting to all lists', 'Collection sizes have higher priority', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(15, 'Project level test Task 1', '', 10, 100, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(16, 'Add submodules to database', 'Add definitions and initial data, and extend existing tables', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(17, 'Update persistence layer', 'Add Submodule entity, and expand existing ones with associations', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(18, 'Add submodule representors', 'Domain objects must be updated', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(19, 'Add submodule protocols', 'Expand business layer for submodules', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(23, 'Submodule level test Task 1', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(25, 'Create header for specified structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(26, 'Objective level test Task 1', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(27, 'Add links to profile view from all refrences', 'View must be accessible at all questionable points of delegation and responsibility', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(28, 'Add profile inspection button to navbar', 'Signed in user must have access to own profile information at all times', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(29, 'Add form for profile editing, with possible extension for future avatar selection', 'User data modification must be made possible on email level for now, and later for name', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(30, 'Add main control level assignment structures due to additionally stored attributes', 'Assignment entruster, and creation date storage is paramount for tracability', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(31, 'Add assignment distribution control to respective views', 'Asignments can only be distributed according to authorization level', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(32, 'Assignment removal implementation', 'Asignment deletion does not need to be traced only reported with notification to the unassigned parties in later builds', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(33, 'Assignment listing in main control structures and profile views', 'All assignments must be displayed in an orderly manor', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(34, 'Assignment distribution should also be implemented on team level', 'This requires manager level manipulation of team structures. Assignment would be tied to team leader authorization level', 1, 10, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(35, 'Structure wiring', 'User and team subscriptions must be added for all major structures', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(36, 'Assignment level triggering', 'Assignments must always trigger notifications', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(37, 'Update level triggering', 'Updates trigger notification creations for effected parties', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(38, 'Association strategy', 'Only single Notification must be created at all times, and multiple join records will attach users and teams', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(39, 'List based presentation', 'In profile view Notifications are ordered by team memberships and individual subscriptions', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(40, 'Dependency presentation', 'Dependencies may be inspected in task view', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(41, 'Inspection of dependency levels', 'All direct dependencies and dependants must be represented grouped by the dependency level', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(42, 'Representor constroction', 'Upon assembling Task representor we must loop through dependency and dependant lists recursively and must return a list of task lists and an interview indicating dependency level', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(43, 'Dependency addition control', 'When adding dependency and dependant tasks, the possibilities must be provided only at the parent structure level. Removal should work similarly as assignment removal. Duplicate or cycle creators must not be provided', 1, 100, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(44, 'Deadline warnings', 'Deadlines that are due in a week have warnings in orange, overdue ones in red', 1, 30, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(45, 'Correctional action generation', 'On navigating to control view on which signed in user is assigned business logic must discern deadline time reserve and remaining unfinished task count ratio. If the number surpasses the threshold (Configurable strategy) then business logic must assess all assignable workforces, and suggest the resolving of impediments', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(47, 'Submodule level test Task 2', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(48, 'Submodule level test Task 3', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(49, 'Submodule level test Task 4', '', 10, 10, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 0, '2017/12/01 00:00:00', FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_completion_percentage, task_deadline, task_duration, task_admittance, task_creator, task_creation_date, task_modifier, task_modification_date) VALUES 
+(0, 'Use-case test tool', 'Creating tool for efficient use-case testing', 2, 30, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(1, 'Print matching', 'Matching watermark prints', 1, 85, '2016/08/14 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(2, 'Extraction planning', 'Planning extraction approach', 0, 60, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(3, 'Backup system allocation', 'Allocating backup systems for overload evasion', 1, 100, '2016/09/10 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'REST', 'Create REST API module', 2, 5, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'RMI', 'Create Remote EJB module', 2, 30, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(10, 'Olingo error', 'Default implementation in client system not sufficient', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(14, 'Add default sorting to all lists', 'Collection sizes have higher priority', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(15, 'Project level test Task 1', '', 10, 100, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(16, 'Add submodules to database', 'Add definitions and initial data, and extend existing tables', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(17, 'Update persistence layer', 'Add Submodule entity, and expand existing ones with associations', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(18, 'Add submodule representors', 'Domain objects must be updated', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(19, 'Add submodule protocols', 'Expand business layer for submodules', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(23, 'Submodule level test Task 1', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(25, 'Create header for specified structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(26, 'Objective level test Task 1', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(27, 'Add links to profile view from all refrences', 'View must be accessible at all questionable points of delegation and responsibility', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(28, 'Add profile inspection button to navbar', 'Signed in user must have access to own profile information at all times', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(29, 'Add form for profile editing, with possible extension for future avatar selection', 'User data modification must be made possible on email level for now, and later for name', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(30, 'Add main control level assignment structures due to additionally stored attributes', 'Assignment entruster, and creation date storage is paramount for tracability', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(31, 'Add assignment distribution control to respective views', 'Asignments can only be distributed according to authorization level', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(32, 'Assignment removal implementation', 'Asignment deletion does not need to be traced only reported with notification to the unassigned parties in later builds', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(33, 'Assignment listing in main control structures and profile views', 'All assignments must be displayed in an orderly manor', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(34, 'Assignment distribution should also be implemented on team level', 'This requires manager level manipulation of team structures. Assignment would be tied to team leader authorization level', 1, 10, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(35, 'Structure wiring', 'User and team subscriptions must be added for all major structures', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(36, 'Assignment level triggering', 'Assignments must always trigger notifications', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(37, 'Update level triggering', 'Updates trigger notification creations for effected parties', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(38, 'Association strategy', 'Only single Notification must be created at all times, and multiple join records will attach users and teams', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(39, 'List based presentation', 'In profile view Notifications are ordered by team memberships and individual subscriptions', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(40, 'Dependency presentation', 'Dependencies may be inspected in task view', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(41, 'Inspection of dependency levels', 'All direct dependencies and dependants must be represented grouped by the dependency level', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(42, 'Representor constroction', 'Upon assembling Task representor we must loop through dependency and dependant lists recursively and must return a list of task lists and an interview indicating dependency level', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(43, 'Dependency addition control', 'When adding dependency and dependant tasks, the possibilities must be provided only at the parent structure level. Removal should work similarly as assignment removal. Duplicate or cycle creators must not be provided', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(44, 'Deadline warnings', 'Deadlines that are due in a week have warnings in orange, overdue ones in red', 1, 30, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(45, 'Correctional action generation', 'On navigating to control view on which signed in user is assigned business logic must discern deadline time reserve and remaining unfinished task count ratio. If the number surpasses the threshold (Configurable strategy) then business logic must assess all assignable workforces, and suggest the resolving of impediments', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(47, 'Submodule level test Task 2', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(48, 'Submodule level test Task 3', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(49, 'Submodule level test Task 4', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -387,10 +387,6 @@ SELECT SETVAL('user_task_assignments_assignment_id_seq', COALESCE(MAX(assignment
 
 -- ###########################################################################################
 
--- INSERT INTO notifications
-
--- ###########################################################################################
-
 INSERT INTO reviews (review_id, review_name, review_description, review_organizer, review_date) VALUES
 (0, 'ARPA integration code review', 'Let us analyze our progress made with the new AR SDK', 0, '2016/09/15 14:00:00'),
 (1, 'Sprint review', 'Let us see what we have accomplished in our bi-weekly retrospective', 1, '2016/11/03 10:30:00');
@@ -401,3 +397,22 @@ INSERT INTO review_invitations (invitaion_review, invitation_recipiant) VALUES
 (0, 3),
 (0, 6),
 (0, 7);
+
+-- ###########################################################################################
+
+INSERT INTO notifications (notification_id, notification_inducer, notification_message, notification_creation_date) VALUES
+(0, 0, 'Welcome to stratagem!', '2015/01/01 00:00:00');
+SELECT SETVAL('notifications_notification_id_seq', 1) FROM notifications;
+
+INSERT INTO user_notifications (user_notification_user_id, user_notification_notification_id) VALUES
+(0, 0),
+(1, 0),
+(2, 0),
+(3, 0),
+(4, 0),
+(5, 0),
+(6, 0),
+(7, 0),
+(8, 0),
+(9, 0),
+(10, 0);
