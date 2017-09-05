@@ -140,9 +140,10 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Submodule (id: " + id + ")");
 			}
-			this.overseer.deleted(this.submoduleConverter.toElementary(this.submoduleSerive.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
+			final String message = this.submoduleConverter.toElementary(this.submoduleSerive.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			this.submoduleSerive.delete(id);
+			this.overseer.deleted(message);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());

@@ -69,16 +69,16 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Get Project (id: " + id + ") --> " + representor);
 			}
-			Collections.sort(representor.getSubmodules(), new Comparator<SubmoduleRepresentor>() {
-				@Override
-				public int compare(SubmoduleRepresentor obj_a, SubmoduleRepresentor obj_b) {
-					final int c = obj_a.getTasks().size() - obj_b.getTasks().size();
-					if (c == 0) {
-						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-					}
-					return c * -1;
-				}
-			});
+			// Collections.sort(representor.getSubmodules(), new Comparator<SubmoduleRepresentor>() {
+			// @Override
+			// public int compare(SubmoduleRepresentor obj_a, SubmoduleRepresentor obj_b) {
+			// final int c = obj_a.getTasks().size() - obj_b.getTasks().size();
+			// if (c == 0) {
+			// return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+			// }
+			// return c * -1;
+			// }
+			// });
 			Collections.sort(representor.getOverdueSubmodules(), new Comparator<SubmoduleRepresentor>() {
 				@Override
 				public int compare(SubmoduleRepresentor obj_a, SubmoduleRepresentor obj_b) {
@@ -246,9 +246,10 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Project (id: " + id + ")");
 			}
-			this.overseer.deleted(this.projectConverter.toElementary(this.projectService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
+			final String message = this.projectConverter.toElementary(this.projectService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			this.projectService.delete(id);
+			this.overseer.deleted(message);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());

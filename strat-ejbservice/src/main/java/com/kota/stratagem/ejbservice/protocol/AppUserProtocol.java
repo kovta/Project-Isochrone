@@ -33,7 +33,7 @@ public interface AppUserProtocol {
 
 	List<AppUserRepresentor> getAllAppUsers() throws AdaptorException;
 
-	AppUserRepresentor saveAppUser(Long id, String name, String passwordHash, String email, RoleRepresentor role, String operator) throws AdaptorException;
+	AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, String operator) throws AdaptorException;
 
 	void removeAppUser(Long id) throws AdaptorException;
 

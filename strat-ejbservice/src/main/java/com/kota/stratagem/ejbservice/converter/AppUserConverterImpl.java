@@ -34,10 +34,10 @@ public class AppUserConverterImpl implements AppUserConverter {
 	public AppUserRepresentor toElementary(AppUser user) {
 		final RoleRepresentor role = RoleRepresentor.valueOf(user.getRole().toString());
 		final AppUserRepresentor representor = user.getId() != null
-				? new AppUserRepresentor(user.getId(), user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate(), user.getNotificationViewCount(), user.getImageSelector())
-				: new AppUserRepresentor(user.getName(), user.getPasswordHash(), user.getEmail(), role, user.getRegistrationDate(),
-						user.getAcountModificationDate(), user.getNotificationViewCount(), user.getImageSelector());
+				? new AppUserRepresentor(user.getId(), user.getName(), user.getEmail(), role, user.getRegistrationDate(), user.getAcountModificationDate(),
+						user.getNotificationViewCount(), user.getImageSelector())
+				: new AppUserRepresentor(user.getName(), user.getEmail(), role, user.getRegistrationDate(), user.getAcountModificationDate(),
+						user.getNotificationViewCount(), user.getImageSelector());
 		return representor;
 	}
 

@@ -184,9 +184,10 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Remove Objective (id: " + id + ")");
 			}
-			this.overseer.deleted(this.converter.toElementary(this.objectiveService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
+			final String message = this.converter.toElementary(this.objectiveService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			this.objectiveService.delete(id);
+			this.overseer.deleted(message);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());

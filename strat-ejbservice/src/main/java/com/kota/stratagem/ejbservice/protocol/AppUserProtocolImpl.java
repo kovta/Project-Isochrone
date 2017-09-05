@@ -241,9 +241,9 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(id != null ? "Update AppUser (id: " + id + ")" : "Create AppUser (" + name + ")");
 			}
-			return this.converter
-					.toComplete(((id != null) && this.appUserService.exists(id)) ? this.appUserService.update(id, name, password, email, userRole, operator)
-							: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole));
+			return this.converter.toComplete(((id != null) && this.appUserService.exists(id))
+					? this.appUserService.update(id, name, password != null ? password : null, email, userRole, operator)
+					: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole));
 		} catch (final PersistenceServiceException e) {
 			LOGGER.error(e, e);
 			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());

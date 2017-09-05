@@ -39,20 +39,15 @@ public class TaskConverterImpl implements TaskConverter {
 	public TaskRepresentor toElementary(Task task) {
 		final TaskRepresentor representor = task.getId() != null
 				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription().trim(), task.getPriority(), task.getCompletion(), task.getDeadline(),
-						task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
+						task.getDuration(), task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
 						this.appUserConverter.toElementary(task.getModifier()), task.getModificationDate())
 				: new TaskRepresentor(task.getName(), task.getDescription().trim(), task.getPriority(), task.getCompletion(), task.getDeadline(),
-						task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
+						task.getDuration(), task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
 						this.appUserConverter.toElementary(task.getModifier()), task.getModificationDate());
 		if (task.getEstimation() != null) {
-			if ((task.getEstimation().getPessimistic() == task.getEstimation().getRealistic())
-					|| (task.getEstimation().getRealistic() == task.getEstimation().getOptimistic())) {
-				representor.setDuration(task.getEstimation().getRealistic());
-			} else {
-				representor.setPessimistic(task.getEstimation().getPessimistic());
-				representor.setRealistic(task.getEstimation().getRealistic());
-				representor.setOptimistic(task.getEstimation().getOptimistic());
-			}
+			representor.setPessimistic(task.getEstimation().getPessimistic());
+			representor.setRealistic(task.getEstimation().getRealistic());
+			representor.setOptimistic(task.getEstimation().getOptimistic());
 		}
 		return representor;
 	}

@@ -94,20 +94,24 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 			}
 			switch (object) {
 				case Constants.OBJECTIVE_DATA_NAME:
-					this.overseer.dissociated(this.converter.to(this.assignmentService.readObjectiveAssignment(id)).toTextMessage());
+					final String msg_a = this.converter.to(this.assignmentService.readObjectiveAssignment(id)).toTextMessage();
 					this.assignmentService.deleteObjectiveAssignment(id);
+					this.overseer.dissociated(msg_a);
 					break;
 				case Constants.PROJECT_DATA_NAME:
-					this.overseer.dissociated(this.converter.to(this.assignmentService.readProjectAssignment(id)).toTextMessage());
+					final String msg_b = this.converter.to(this.assignmentService.readProjectAssignment(id)).toTextMessage();
 					this.assignmentService.deleteProjectAssignment(id);
+					this.overseer.dissociated(msg_b);
 					break;
 				case Constants.SUBMODULE_DATA_NAME:
-					this.overseer.dissociated(this.converter.to(this.assignmentService.readSubmoduleAssignment(id)).toTextMessage());
+					final String msg_c = this.converter.to(this.assignmentService.readSubmoduleAssignment(id)).toTextMessage();
 					this.assignmentService.deleteSubmoduleAssignment(id);
+					this.overseer.dissociated(msg_c);
 					break;
 				case Constants.TASK_DATA_NAME:
-					this.overseer.dissociated(this.converter.to(this.assignmentService.readTaskAssignment(id)).toTextMessage());
+					final String msg_d = this.converter.to(this.assignmentService.readTaskAssignment(id)).toTextMessage();
 					this.assignmentService.deleteTaskAssignment(id);
+					this.overseer.dissociated(msg_d);
 					break;
 				default:
 					break;
