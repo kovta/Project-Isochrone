@@ -39,8 +39,8 @@
 	                                			<td class="strat-detail-attribute-name">Email address</td>
 	                                			<td class="strat-detail-attribute-value">
 	                                			<c:choose>
-												    <c:when test="${empty user.email}"><span class="font-no-content">None specified</span></c:when>
-											        <c:otherwise>${user.email} </c:otherwise>
+												    <c:when test="${empty user.email}"><span class="font-no-content">Not specified</span></c:when>
+											        <c:otherwise>${user.email}</c:otherwise>
 												</c:choose>
 												</td>
 	                                		</tr>

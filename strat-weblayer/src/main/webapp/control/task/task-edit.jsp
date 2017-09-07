@@ -66,7 +66,7 @@
 											<div class="input-group">
 							    				<div id="radioBtn-adm" class="btn-group">
 				  			            			<c:choose>
-								      			      	<c:when test="${task.admittance == false}">
+								      			      	<c:when test="${not task.admittance}">
 									    					<a class="btn-sm notActive" data-toggle="admittance" data-title="1">Open</a>
 									    					<a class="btn-sm active" data-toggle="admittance" data-title="0">Closed</a>
 										                </c:when>
@@ -113,31 +113,63 @@
 			               				<label>The expected duration of the Task</label>
 			               				<div class="input-group margin-left">
 						    				<div id="radioBtn-dur" class="btn-group">
-						    					<a class="btn-sm active" data-toggle="durationType" data-title="0">Set Duration</a>
-						    					<a class="btn-sm notActive" data-toggle="durationType" data-title="1">Estimations</a>
+						    					<c:choose>
+								      			    <c:when test="${not task.estimated}">
+								    					<a class="btn-sm active" data-toggle="durationType" data-title="0">Set Duration</a>
+								    					<a class="btn-sm notActive" data-toggle="durationType" data-title="1">Estimations</a>
+										            </c:when>
+										            <c:otherwise>
+								    					<a class="btn-sm notActive" data-toggle="durationType" data-title="0">Set Duration</a>
+								    					<a class="btn-sm active" data-toggle="durationType" data-title="1">Estimations</a>
+													</c:otherwise>
+									            </c:choose>
 						    				</div>
 						    				<input type="hidden" name="durationType" id="durationType">
 						    			</div>
 			               			</div>
 				               		<div class="md-form">
-				               			<div class="flex-display" id="setDurationRow">
-					         				<input type="number" id="durationField" class="form-control" name="duration" 
-						                    	min="0" placeholder="Set Duration in days" value="">
-						                </div>
-						                <div class="row no-display" id="estimationRow">
-				            				<div class="col-md-4">
-				            					<input type="number" id="pessimisticDurationField" class="form-control" style="width: 105%"
-				            						name="pessimisticDuration" min="0" placeholder="Pessimistic estimate" value="">
-				            				</div>
-				            				<div class="col-md-4">
-				            					<input type="number" id="realisticDurationField" class="form-control" style="width: 105%" 
-				            						name="realisticDuration" min="0" placeholder="Realistic estimate" value="">
-				            				</div>
-				            				<div class="col-md-4">
-				            					<input type="number" id="optimisticDurationField" class="form-control" 
-				            						name="optimisticDuration" min="0" placeholder="Optimisitc estimate" value="">
-				            				</div>
-				            			</div>
+				               			<c:choose>
+						      			    <c:when test="${not task.estimated}">
+						               			<div class="flex-display" id="setDurationRow">
+							         				<input type="number" id="durationField" class="form-control" name="duration" 
+								                    	min="0" placeholder="Set Duration in days" value="${task.duration}">
+								                </div>
+								                <div class="row no-display" id="estimationRow">
+						            				<div class="col-md-4">
+						            					<input type="number" id="pessimisticDurationField" class="form-control" style="width: 105%"
+						            						name="pessimisticDuration" min="0" placeholder="Pessimistic estimate" value="${task.pessimistic}">
+						            				</div>
+						            				<div class="col-md-4">
+						            					<input type="number" id="realisticDurationField" class="form-control" style="width: 105%" 
+						            						name="realisticDuration" min="0" placeholder="Realistic estimate" value="${task.realistic}">
+						            				</div>
+						            				<div class="col-md-4">
+						            					<input type="number" id="optimisticDurationField" class="form-control" 
+						            						name="optimisticDuration" min="0" placeholder="Optimisitc estimate" value="${task.optimistic}">
+						            				</div>
+						            			</div>
+								            </c:when>
+								            <c:otherwise>
+						               			<div class="no-display" id="setDurationRow">
+							         				<input type="number" id="durationField" class="form-control" name="duration" 
+								                    	min="0" placeholder="Set Duration in days" value="${task.duration}">
+								                </div>
+								                <div class="row flex-display" id="estimationRow">
+						            				<div class="col-md-4">
+						            					<input type="number" id="pessimisticDurationField" class="form-control" style="width: 105%"
+						            						name="pessimisticDuration" min="0" placeholder="Pessimistic estimate" value="${task.pessimistic}">
+						            				</div>
+						            				<div class="col-md-4">
+						            					<input type="number" id="realisticDurationField" class="form-control" style="width: 105%" 
+						            						name="realisticDuration" min="0" placeholder="Realistic estimate" value="${task.realistic}">
+						            				</div>
+						            				<div class="col-md-4">
+						            					<input type="number" id="optimisticDurationField" class="form-control" 
+						            						name="optimisticDuration" min="0" placeholder="Optimisitc estimate" value="${task.optimistic}">
+						            				</div>
+						            			</div>
+											</c:otherwise>
+							            </c:choose>
 				            		</div>
 								</div>
 							</div>

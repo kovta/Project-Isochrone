@@ -39,7 +39,7 @@
 			<td class="strat-detail-attribute-name">Deadline</td>
 			<td class="strat-detail-attribute-value">
 				<c:choose>
-					<c:when test="${empty task.deadline}"><span class="font-no-content">None</span></c:when>
+					<c:when test="${empty task.deadline}"><span class="font-no-content">Not specified</span></c:when>
 					<c:when test="${task.urgencyLevel eq 3 and task.completion ne 100}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${task.deadline}" pattern="yyyy-MM-dd" />
@@ -70,6 +70,31 @@
 				</c:choose>
 			</td>
 		</tr>
+		<tr>
+			<td class="strat-detail-attribute-name">Duration</td>
+			<td class="strat-detail-attribute-value">
+				<c:choose>
+					<c:when test="${not task.estimated and empty task.duration}"><span class="font-no-content">Not specified</span></c:when>
+					<c:when test="${not empty task.duration and task.duration eq 1}">${task.duration} day</c:when>
+					<c:when test="${not empty task.duration and task.duration ne 1}">${task.duration} days</c:when>
+					<c:otherwise>Estimated</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+		<c:if test="${task.estimated}">
+			<tr>
+				<td class="strat-detail-attribute-name">Pessimistic</td>
+				<td class="strat-detail-attribute-value">${task.pessimistic}<c:out value="${task.pessimistic eq 1 ? ' day' : ' days'}" /></td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Realistic</td>
+				<td class="strat-detail-attribute-value">${task.realistic}<c:out value="${task.realistic eq 1 ? ' day' : ' days'}" /></td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Optimistic</td>
+				<td class="strat-detail-attribute-value">${task.optimistic}<c:out value="${task.optimistic eq 1 ? ' day' : ' days'}" /></td>
+			</tr>
+		</c:if>
 		<tr>
 			<td class="strat-detail-attribute-name">Admittance status</td>
 			<td class="strat-detail-attribute-value">
