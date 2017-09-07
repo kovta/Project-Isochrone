@@ -3,19 +3,17 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.kota.stratagem.ejbserviceclient.domain.RemedyRepresentor;
 import com.kota.stratagem.persistence.entity.Remedy;
 
-@Stateless
 public class RemedyConverterImpl implements RemedyConverter {
 
-	@EJB
+	@Inject
 	private ImpedimentConverter impedimentConverter;
 
-	@EJB
+	@Inject
 	private AppUserConverter appUserConverter;
 
 	@Override

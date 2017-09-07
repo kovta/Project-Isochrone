@@ -3,8 +3,7 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
@@ -13,19 +12,18 @@ import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.Team;
 
-@Stateless
 public class TeamConverterImpl implements TeamConverter {
 
-	@EJB
+	@Inject
 	private AppUserConverter appUserConverter;
 
-	@EJB
+	@Inject
 	private ObjectiveConverter objectiveConverter;
 
-	@EJB
+	@Inject
 	private ProjectConverter projectConverter;
 
-	@EJB
+	@Inject
 	private TaskConverter taskConverter;
 
 	@Override

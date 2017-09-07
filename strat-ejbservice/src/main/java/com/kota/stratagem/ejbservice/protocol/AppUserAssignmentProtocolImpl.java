@@ -39,7 +39,7 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 	@EJB
 	private AppUserService appUserService;
 
-	@EJB
+	@Inject
 	private AssignmentConverter converter;
 
 	@Inject

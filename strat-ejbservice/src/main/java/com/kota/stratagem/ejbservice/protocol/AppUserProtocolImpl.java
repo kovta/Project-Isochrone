@@ -11,11 +11,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.apache.log4j.Logger;
-
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.AppUserConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.interceptor.Regulated;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AbstractAppUserAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
@@ -31,19 +30,17 @@ import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
-import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.security.encryption.PasswordGenerationService;
 
+@Regulated
 @Stateless(mappedName = "ejb/appUserProtocol")
 public class AppUserProtocolImpl implements AppUserProtocol {
-
-	private static final Logger LOGGER = Logger.getLogger(AppUserProtocolImpl.class);
 
 	@EJB
 	private AppUserService appUserService;
 
-	@EJB
+	@Inject
 	private AppUserConverter converter;
 
 	@EJB
@@ -55,43 +52,36 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {
 		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
 		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
-		try {
-			for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
-					.getSubordinateRoles()) {
-				final List<AppUserRepresentor> userList = new ArrayList<>(
-						this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
-				for (final T assignment : assignments) {
-					if (userList.contains(assignment.getRecipient())) {
-						userList.remove(assignment.getRecipient());
-					}
-				}
-				if (userList.size() > 0) {
-					clusters.add(userList);
-				}
-			}
-			for (final List<AppUserRepresentor> cluster : clusters) {
-				Collections.sort(cluster, new Comparator<AppUserRepresentor>() {
-					@Override
-					public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
-						return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-					}
-				});
-			}
-			final List<AppUserRepresentor> self = new ArrayList<>();
-			self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
+				.getSubordinateRoles()) {
+			final List<AppUserRepresentor> userList = new ArrayList<>(
+					this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
 			for (final T assignment : assignments) {
-				if (self.contains(assignment.getRecipient())) {
-					self.remove(assignment.getRecipient());
+				if (userList.contains(assignment.getRecipient())) {
+					userList.remove(assignment.getRecipient());
 				}
 			}
-			if (self.size() > 0) {
-				clusters.add(self);
+			if (userList.size() > 0) {
+				clusters.add(userList);
 			}
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all AppUsers assignable by : " + operator + " | " + clusters.size() + " group(s)");
+		}
+		for (final List<AppUserRepresentor> cluster : clusters) {
+			Collections.sort(cluster, new Comparator<AppUserRepresentor>() {
+				@Override
+				public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
+					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+				}
+			});
+		}
+		final List<AppUserRepresentor> self = new ArrayList<>();
+		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		for (final T assignment : assignments) {
+			if (self.contains(assignment.getRecipient())) {
+				self.remove(assignment.getRecipient());
 			}
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
+		}
+		if (self.size() > 0) {
+			clusters.add(self);
 		}
 		return clusters;
 	}
@@ -132,86 +122,45 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public int getAppUserNewNotificationCount(String username) throws AdaptorException {
-		try {
-			final AppUserRepresentor representor = this.converter.toSimplified(this.appUserService.readWithNotifications(username));
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Get AppUser notification count (name: " + username + ") --> " + representor);
-			}
-			return (representor.getNotifications().size() - representor.getNotificationViewCount());
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		final AppUserRepresentor representor = this.converter.toSimplified(this.appUserService.readWithNotifications(username));
+		return (representor.getNotifications().size() - representor.getNotificationViewCount());
 	}
 
 	@Override
 	public int getAppUserImageSelector(String username) throws AdaptorException {
-		try {
-			final AppUserRepresentor representor = this.converter.toElementary(this.appUserService.readElementary(username));
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Get AppUser image selector (name: " + username + ") --> " + representor);
-			}
-			return representor.getImageSelector();
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		return this.converter.toElementary(this.appUserService.readElementary(username)).getImageSelector();
 	}
 
 	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
-		try {
-			final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(id));
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Get AppUser (id: " + id + ")");
-			}
-			if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
-				this.equalizeViewedNotifications(representor);
-			}
-			return this.sortUserCollections(representor);
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(id));
+		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
+			this.equalizeViewedNotifications(representor);
 		}
+		return this.sortUserCollections(representor);
 	}
 
 	@Override
 	public AppUserRepresentor getAppUser(String username) throws AdaptorException {
-		try {
-			final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(username));
-			if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
-				this.equalizeViewedNotifications(representor);
-			}
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Get AppUser (username: " + username + ")");
-			}
-			return this.sortUserCollections(representor);
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
+		final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(username));
+		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
+			this.equalizeViewedNotifications(representor);
 		}
+		return this.sortUserCollections(representor);
 	}
 
 	@Override
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
 		Set<AppUserRepresentor> representors = new HashSet<AppUserRepresentor>();
-		try {
-			representors = this.converter.toSubComplete(this.appUserService.readAll());
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Fetch all AppUsers : " + representors.size() + " users(s)");
+		representors = this.converter.toSubComplete(this.appUserService.readAll());
+		final List<AppUserRepresentor> representorList = new ArrayList<AppUserRepresentor>(representors);
+		Collections.sort(representorList, new Comparator<AppUserRepresentor>() {
+			@Override
+			public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
+				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
 			}
-			final List<AppUserRepresentor> representorList = new ArrayList<AppUserRepresentor>(representors);
-			Collections.sort(representorList, new Comparator<AppUserRepresentor>() {
-				@Override
-				public int compare(AppUserRepresentor obj_a, AppUserRepresentor obj_b) {
-					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-				}
-			});
-			return representorList;
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		});
+		return representorList;
 	}
 
 	@Override
@@ -236,75 +185,35 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, String operator) throws AdaptorException {
-		try {
-			final Role userRole = Role.valueOf(role.getName());
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug(id != null ? "Update AppUser (id: " + id + ")" : "Create AppUser (" + name + ")");
-			}
-			return this.converter.toComplete(((id != null) && this.appUserService.exists(id))
-					? this.appUserService.update(id, name, password != null ? password : null, email, userRole, operator)
-					: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, userRole));
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		return this.converter.toComplete(((id != null) && this.appUserService.exists(id))
+				? this.appUserService.update(id, name, password != null ? password : null, email, Role.valueOf(role.getName()), operator)
+				: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, Role.valueOf(role.getName())));
 	}
 
 	@Override
 	public void removeAppUser(Long id) throws AdaptorException {
 		try {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Remove AppUser (id: " + id + ")");
-			}
 			this.appUserService.delete(id);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
 		}
 	}
 
 	@Override
 	public boolean isOperatorAccount(AppUserRepresentor operator) throws AdaptorException {
-		try {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Verify logged in AppUser account (id: " + operator.getId() + ")");
-			}
-			return this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId() == operator
-					.getId();
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		return this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId() == operator.getId();
 	}
 
 	@Override
 	public void equalizeViewedNotifications(AppUserRepresentor operator) throws AdaptorException {
-		try {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Equalize logged in AppUser notification view count (id: " + operator.getId() + ")");
-			}
-			this.appUserService.updateNotificationViewCount(operator.getId(), operator.getNotifications().size());
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		this.appUserService.updateNotificationViewCount(operator.getId(), operator.getNotifications().size());
 	}
 
 	@Override
 	public void saveImageSelector(int imageSelector) throws AdaptorException {
-		try {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Save AppUser profile image (image: " + imageSelector + ")");
-			}
-			this.appUserService.updateImageSelector(
-					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), imageSelector);
-		} catch (final PersistenceServiceException e) {
-			LOGGER.error(e, e);
-			throw new AdaptorException(ApplicationError.UNEXPECTED, e.getLocalizedMessage());
-		}
+		this.appUserService.updateImageSelector(
+				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), imageSelector);
 	}
 
 }

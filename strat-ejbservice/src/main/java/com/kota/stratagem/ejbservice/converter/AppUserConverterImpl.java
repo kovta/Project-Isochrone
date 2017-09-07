@@ -3,8 +3,7 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
@@ -15,19 +14,18 @@ import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.Notification;
 
-@Stateless
 public class AppUserConverterImpl implements AppUserConverter {
 
-	@EJB
-	private ImpedimentConverter impedimentConverter;
+	// @Inject
+	// private ImpedimentConverter impedimentConverter;
+	//
+	// @Inject
+	// private TeamConverter teamConverter;
 
-	@EJB
-	private TeamConverter teamConverter;
-
-	@EJB
+	@Inject
 	private AssignmentConverter assignmentConverter;
 
-	@EJB
+	@Inject
 	private NotificationConverter notificationConverter;
 
 	@Override

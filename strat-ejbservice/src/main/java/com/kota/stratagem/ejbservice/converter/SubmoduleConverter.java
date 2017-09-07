@@ -2,12 +2,9 @@ package com.kota.stratagem.ejbservice.converter;
 
 import java.util.Set;
 
-import javax.ejb.Local;
-
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.persistence.entity.Submodule;
 
-@Local
 public interface SubmoduleConverter {
 
 	SubmoduleRepresentor toElementary(Submodule submodule);

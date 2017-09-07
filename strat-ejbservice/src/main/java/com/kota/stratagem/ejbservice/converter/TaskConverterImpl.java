@@ -3,36 +3,31 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
 
-@Stateless
 public class TaskConverterImpl implements TaskConverter {
 
-	@EJB
+	@Inject
 	private AppUserConverter appUserConverter;
 
-	@EJB
-	private TeamConverter teamConverter;
-
-	@EJB
+	@Inject
 	private ObjectiveConverter objectiveConverter;
 
-	@EJB
+	@Inject
 	private ProjectConverter projectConverter;
 
-	@EJB
+	@Inject
 	private SubmoduleConverter submoduleConverter;
 
-	@EJB
-	private ImpedimentConverter impedimentConverter;
+	// @Inject
+	// private ImpedimentConverter impedimentConverter;
 
-	@EJB
+	@Inject
 	private AssignmentConverter assignmentConverter;
 
 	@Override

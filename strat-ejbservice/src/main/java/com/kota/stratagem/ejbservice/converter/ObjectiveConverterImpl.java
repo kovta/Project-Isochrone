@@ -3,8 +3,7 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
@@ -14,22 +13,18 @@ import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamObjectiveAssignment;
 
-@Stateless
 public class ObjectiveConverterImpl implements ObjectiveConverter {
 
-	@EJB
+	@Inject
 	private AppUserConverter appUserConverter;
 
-	@EJB
-	private TeamConverter teamConverter;
-
-	@EJB
+	@Inject
 	private ProjectConverter projectConverter;
 
-	@EJB
+	@Inject
 	private TaskConverter taskConverter;
 
-	@EJB
+	@Inject
 	private AssignmentConverter assignmentConverter;
 
 	@Override
