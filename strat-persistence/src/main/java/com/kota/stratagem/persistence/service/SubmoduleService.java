@@ -7,27 +7,27 @@ import javax.ejb.Local;
 
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Submodule;
-import com.kota.stratagem.persistence.exception.PersistenceServiceException;
+import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 
 @Local
 public interface SubmoduleService {
 
-	Submodule create(String name, String description, Date deadline, AppUser creator, Long project) throws PersistenceServiceException;
+	Submodule create(String name, String description, Date deadline, AppUser creator, Long project);
 
-	Submodule readElementary(Long id) throws PersistenceServiceException;
+	Submodule readElementary(Long id);
 
-	Submodule readWithAssignments(Long id) throws PersistenceServiceException;
+	Submodule readWithAssignments(Long id);
 
-	Submodule readWithTasks(Long id) throws PersistenceServiceException;
+	Submodule readWithTasks(Long id);
 
-	Submodule readComplete(Long id) throws PersistenceServiceException;
+	Submodule readComplete(Long id);
 
-	Set<Submodule> readAll() throws PersistenceServiceException;
+	Set<Submodule> readAll();
 
-	Submodule update(Long id, String name, String description, Date deadline, AppUser modifier) throws PersistenceServiceException;
+	Submodule update(Long id, String name, String description, Date deadline, AppUser modifier);
 
-	void delete(Long id) throws PersistenceServiceException;
+	void delete(Long id) throws CoherentPersistenceServiceException;
 
-	boolean exists(Long id) throws PersistenceServiceException;
+	boolean exists(Long id);
 
 }

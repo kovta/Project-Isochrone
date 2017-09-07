@@ -18,7 +18,9 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Notification;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
+import com.kota.stratagem.persistence.interceptor.Contained;
 
+@Contained
 @Stateless(mappedName = "ejb/notificationService")
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -34,32 +36,19 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public void create(Long inducer, String message, Long[] recipients) throws PersistenceServiceException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Create Notification (inducer: " + inducer + ", message: " + message + ")");
+		final AppUser operator = this.appUserService.readElementary(inducer);
+		final Notification notification = new Notification(message, new Date(), operator);
+		final Set<AppUser> recipientSet = new HashSet<AppUser>();
+		for (final Long recipient : recipients) {
+			recipientSet.add(this.appUserService.readElementary(recipient));
 		}
-		try {
-			if (recipients.length != 0) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Notification created with empty recipient list (inducer: " + inducer + ", message: " + message + "," + recipients.length
-							+ " recipients)");
-				}
+		notification.setRecipients(recipientSet);
+		this.entityManager.merge(notification);
+		this.entityManager.flush();
+		if (recipients.length == 0) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Notification created with empty recipient list as log entry (inducer: " + inducer + ", message: " + message + ")");
 			}
-			final AppUser operator = this.appUserService.readElementary(inducer);
-			final Notification notification = new Notification(message, new Date(), operator);
-			final Set<AppUser> recipientSet = new HashSet<AppUser>();
-			for (final Long recipient : recipients) {
-				recipientSet.add(this.appUserService.readElementary(recipient));
-			}
-			notification.setRecipients(recipientSet);
-			this.entityManager.merge(notification);
-			this.entityManager.flush();
-			if (recipients.length == 0) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Notification created with empty recipient list as log entry (inducer: " + inducer + ", message: " + message + ")");
-				}
-			}
-		} catch (final Exception e) {
-			throw new PersistenceServiceException("Unknown error during persisting Notification (" + message + ")! " + e.getLocalizedMessage(), e);
 		}
 	}
 
