@@ -1,4 +1,4 @@
-package com.kota.stratagem.webservice;
+package com.kota.stratagem.webservice.processing;
 
 import java.util.List;
 
