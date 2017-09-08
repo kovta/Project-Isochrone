@@ -29,4 +29,10 @@ public class TeamSubmoduleAssignmentRepresentor extends AbstractTeamAssignmentRe
 		return "TeamSubmoduleAssignmentRepresentor [submodule=" + this.submodule + "]";
 	}
 
+	@Override
+	public String toTextMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

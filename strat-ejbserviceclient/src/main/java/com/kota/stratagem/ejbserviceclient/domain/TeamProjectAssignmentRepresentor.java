@@ -28,4 +28,10 @@ public class TeamProjectAssignmentRepresentor extends AbstractTeamAssignmentRepr
 		return "TeamProjectAssignmentRepresentor [project=" + this.project + "]";
 	}
 
+	@Override
+	public String toTextMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

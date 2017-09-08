@@ -261,6 +261,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 				+ ", dependantCount=" + this.dependantCount + ", dependencyCount=" + this.dependencyCount + "]";
 	}
 
+	@Override
 	public String toTextMessage() {
 		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
 				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", creator_id=" + this.creator.getId()

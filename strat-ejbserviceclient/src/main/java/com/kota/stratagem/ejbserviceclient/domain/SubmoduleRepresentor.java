@@ -173,6 +173,7 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 				+ ", project=" + this.project + "]";
 	}
 
+	@Override
 	public String toTextMessage() {
 		return "SubmoduleRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline
 				+ ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", project_id="

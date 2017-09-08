@@ -2,7 +2,9 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.util.Date;
 
-public abstract class AbstractAssignmentRepresentor {
+import com.kota.stratagem.ejbserviceclient.domain.designation.Dispatchable;
+
+public abstract class AbstractAssignmentRepresentor implements Dispatchable {
 
 	protected Long id;
 	protected final AppUserRepresentor entrustor;

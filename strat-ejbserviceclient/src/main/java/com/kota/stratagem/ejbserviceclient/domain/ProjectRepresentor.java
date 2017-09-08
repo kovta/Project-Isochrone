@@ -256,6 +256,7 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 				+ this.objective + "]";
 	}
 
+	@Override
 	public String toTextMessage() {
 		return "ProjectRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
 				+ this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate

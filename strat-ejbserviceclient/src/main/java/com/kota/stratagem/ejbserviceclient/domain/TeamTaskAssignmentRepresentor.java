@@ -28,4 +28,10 @@ public class TeamTaskAssignmentRepresentor extends AbstractTeamAssignmentReprese
 		return "TeamTaskAssignmentRepresentor [task=" + this.task + "]";
 	}
 
+	@Override
+	public String toTextMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -3,7 +3,7 @@ package com.kota.stratagem.ejbserviceclient.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class AbstractTeamAssignmentRepresentor extends AbstractAssignmentRepresentor implements Serializable {
+public abstract class AbstractTeamAssignmentRepresentor extends AbstractAssignmentRepresentor implements Serializable {
 
 	private static final long serialVersionUID = 5065695607623054548L;
 

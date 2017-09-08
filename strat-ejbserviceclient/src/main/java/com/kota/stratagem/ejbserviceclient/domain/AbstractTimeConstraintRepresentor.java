@@ -2,7 +2,9 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.util.Date;
 
-public abstract class AbstractTimeConstraintRepresentor extends AbstractIdentityObscuror {
+import com.kota.stratagem.ejbserviceclient.domain.designation.Dispatchable;
+
+public abstract class AbstractTimeConstraintRepresentor extends AbstractIdentityObscuror implements Dispatchable {
 
 	private final int urgencyLevel;
 

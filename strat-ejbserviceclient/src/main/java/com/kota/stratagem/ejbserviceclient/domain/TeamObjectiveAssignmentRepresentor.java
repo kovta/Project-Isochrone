@@ -34,4 +34,10 @@ public class TeamObjectiveAssignmentRepresentor extends AbstractTeamAssignmentRe
 		return "TeamObjectiveAssignmentRepresentor [recipient=" + this.recipient + ", objective=" + this.objective + "]";
 	}
 
+	@Override
+	public String toTextMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

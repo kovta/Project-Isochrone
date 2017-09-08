@@ -30,6 +30,7 @@ public class AppUserObjectiveAssignmentRepresentor extends AbstractAppUserAssign
 		return "UserObjectiveAssignmentRepresentor [recipient=" + this.recipient + ", objective=" + this.objective + "]";
 	}
 
+	@Override
 	public String toTextMessage() {
 		return "AppUserObjectiveAssignmentRepresentor | [id=" + this.id + ", objective_id=" + this.objective.getId() + ", objective_name="
 				+ this.objective.getName() + ", recipient_id=" + this.recipient.getId() + ", entrustor_id=" + this.entrustor.getId() + ", creationDate="
