@@ -5,6 +5,7 @@
 		
 	<interceptors>
 		<class>com.kota.stratagem.ejbservice.interceptor.RegulatedInterceptor</class>
+		<class>com.kota.stratagem.ejbservice.interceptor.OverseenInterceptor</class>
 	</interceptors>
 	
 </beans>

@@ -3,7 +3,8 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
@@ -13,24 +14,25 @@ import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamProjectAssignment;
 
+@Stateless
 public class ProjectConverterImpl implements ProjectConverter {
 
-	@Inject
+	@EJB
 	private ObjectiveConverter objectiveConverter;
 
-	@Inject
+	@EJB
 	private SubmoduleConverter submoduleConverter;
 
-	@Inject
+	@EJB
 	private TaskConverter taskConverter;
 
-	@Inject
+	@EJB
 	private AppUserConverter appUserConverter;
 
-	// @Inject
+	// @EJB
 	// private ImpedimentConverter impedimentConverter;
 
-	@Inject
+	@EJB
 	private AssignmentConverter assignmentConverter;
 
 	@Override

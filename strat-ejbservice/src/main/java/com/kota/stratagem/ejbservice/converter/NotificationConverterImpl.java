@@ -3,14 +3,16 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.NotificationRepresentor;
 import com.kota.stratagem.persistence.entity.Notification;
 
+@Stateless
 public class NotificationConverterImpl implements NotificationConverter {
 
-	@Inject
+	@EJB
 	private AppUserConverter appUserConverter;
 
 	@Override

@@ -20,7 +20,7 @@ public class RegulatedInterceptor implements Serializable {
 	private static final Logger LOGGER = Logger.getLogger(RegulatedInterceptor.class);
 
 	@AroundInvoke
-	public Object logMethodInvocations(InvocationContext context) throws Exception {
+	public Object regulateMethodInvocations(InvocationContext context) throws Exception {
 		final StringBuilder info = new StringBuilder();
 		info.append(context.getTarget().getClass().getName()).append(".").append(context.getMethod().getName()).append("(");
 		final String signature = info.toString() + ")";
@@ -28,7 +28,7 @@ public class RegulatedInterceptor implements Serializable {
 		if (parameters != null) {
 			int i = parameters.length - 1;
 			for (final Object parameter : parameters) {
-				info.append(parameter.toString());
+				info.append(parameter != null ? parameter.toString() : "null");
 				if (i > 0) {
 					info.append(",");
 				}

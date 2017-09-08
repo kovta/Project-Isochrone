@@ -2,6 +2,8 @@ package com.kota.stratagem.ejbservice.converter;
 
 import java.util.Set;
 
+import javax.ejb.Local;
+
 import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserProjectAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserSubmoduleAssignmentRepresentor;
@@ -19,6 +21,7 @@ import com.kota.stratagem.persistence.entity.TeamProjectAssignment;
 import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
 
+@Local
 public interface AssignmentConverter {
 
 	AppUserObjectiveAssignmentRepresentor to(AppUserObjectiveAssignment assignment);

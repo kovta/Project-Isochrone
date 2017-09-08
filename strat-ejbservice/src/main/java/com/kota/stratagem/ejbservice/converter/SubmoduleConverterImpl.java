@@ -3,7 +3,8 @@ package com.kota.stratagem.ejbservice.converter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
@@ -11,18 +12,19 @@ import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
 
+@Stateless
 public class SubmoduleConverterImpl implements SubmoduleConverter {
 
-	@Inject
+	@EJB
 	private ProjectConverter projectConverter;
 
-	@Inject
+	@EJB
 	private TaskConverter taskConverter;
 
-	@Inject
+	@EJB
 	private AppUserConverter appUserConverter;
 
-	@Inject
+	@EJB
 	private AssignmentConverter assignmentConverter;
 
 	@Override

@@ -24,18 +24,6 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 	@EJB
 	private AppUserAssignmentService assignmentService;
 
-	// @EJB
-	// private AppUserObjectiveAssignmentService objectiveAssignmentService;
-	//
-	// @EJB
-	// private AppUserProjectAssignmentService projectAssignmentService;
-	//
-	// @EJB
-	// private AppUserSubmoduleAssignmentService submoduleAssignmentService;
-	//
-	// @EJB
-	// private AppUserTaskAssignmentService taskAssignmentService;
-
 	@EJB
 	private AppUserService appUserService;
 
@@ -55,7 +43,6 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 			}
 			final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			for (final String recipient : recipients) {
-				// StructureHandlers.structureMap.get(object);
 				switch (object) {
 					case Constants.OBJECTIVE_DATA_NAME:
 						this.overseer.assigned(
