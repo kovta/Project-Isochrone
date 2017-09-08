@@ -95,8 +95,7 @@ public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor i
 	public void processDeletion(String message, String operator) throws PersistenceServiceException {
 		final Map<String, String> attributes = this.processMessageContent(message, Constants.DELETION_SELECTOR);
 		final Set<AppUser> recipients = new HashSet<>();
-		recipients.add(this.appUserService
-				.readElementary(this.taskService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))).getCreator().getId()));
+		recipients.add(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME))));
 		recipients.remove(this.appUserService.readElementary(operator));
 		this.handleDeletionProperties(attributes, Constants.TASK_DATA_NAME, operator, recipients);
 	}
