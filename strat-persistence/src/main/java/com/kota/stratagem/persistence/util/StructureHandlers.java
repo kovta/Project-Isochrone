@@ -8,7 +8,7 @@ import com.kota.stratagem.persistence.service.delegation.AppUserProjectAssignmen
 import com.kota.stratagem.persistence.service.delegation.AppUserSubmoduleAssignmentServiceImpl;
 import com.kota.stratagem.persistence.service.delegation.AppUserTaskAssignmentServiceImpl;
 
-public class ControlHandlers {
+public class StructureHandlers {
 
 	public static final Map<String, Class<? extends AbstractAppUserAssignmentService>> serviceMap = PopulateServiceMap();
 

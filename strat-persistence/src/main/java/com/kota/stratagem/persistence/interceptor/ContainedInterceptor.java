@@ -19,7 +19,7 @@ public class ContainedInterceptor implements Serializable {
 	private static final Logger LOGGER = Logger.getLogger(ContainedInterceptor.class);
 
 	@AroundInvoke
-	public Object logMethodInvocations(InvocationContext context) throws Exception {
+	public Object containMethodInvocations(InvocationContext context) throws Exception {
 		final StringBuilder info = new StringBuilder();
 		info.append(context.getTarget().getClass().getName()).append(".").append(context.getMethod().getName()).append("(");
 		final String signature = info.toString() + ")";
@@ -27,9 +27,9 @@ public class ContainedInterceptor implements Serializable {
 		if (parameters != null) {
 			int i = parameters.length - 1;
 			for (final Object parameter : parameters) {
-				info.append(parameter.toString());
+				info.append(parameter != null ? parameter.toString() : "null");
 				if (i > 0) {
-					info.append(",");
+					info.append(", ");
 				}
 				i--;
 			}
