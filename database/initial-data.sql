@@ -262,7 +262,13 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (47, 'Submodule level test Task 2', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (48, 'Submodule level test Task 3', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (49, 'Submodule level test Task 4', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(51, 'Calculate required work days for submodule completion', 'If even one task completion time is given, be it estiated or not, it will be added to the submodule completion time. Expected duration in case of estimations. This value is a sum of all durations', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(52, 'Calculate critical completion time', 'Calculate submodule expected completion time with critical path method. If no dependency configurations are given. The generated start and finish tasks will connect all activities, making the longest task the critical time. Otherwise, dependency tree must bee traversed and processed', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(53, 'Estimate submodule duration with 95% confidence level', 'Using beta distribution, expected duration, variance and standard deviation, give reliable submodule duration estimate', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(54, 'Give probability of submodule finishing before given deadline', 'If submodule deadline is registered, produce probability with PERT methodology whether the remaining time is sufficient for completion', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(55, 'Implement adaptable model for duration, and pre-deadline completion estimations', 'Upon making both calculations the algorithm must adapt to the current level of progress. This involves excluding completed tasks from the dependency chain and building the network model with only the unfinished entries of the list', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(56, 'Estimation summary for higher level structures', 'Calculated durational estimates can be summed up for Project, and Objective levels', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -322,7 +328,13 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (4, 43),
 (5, 44),
 (5, 45),
-(5, 46);
+(5, 46),
+(3, 51),
+(3, 52),
+(3, 53),
+(3, 54),
+(3, 55),
+(3, 56);
 
 INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (23, 47),
