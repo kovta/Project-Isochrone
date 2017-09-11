@@ -14,23 +14,10 @@
 			<td class="strat-detail-attribute-value">${objective.priority}</td>
 		</tr>
 		<tr>
-			<td class="strat-detail-attribute-name">Completion</td>
-			<td class="strat-detail-attribute-value">${objective.completion} %</td>
-		</tr>
-		<tr>
 			<td class="strat-detail-attribute-name">Deadline</td>
 			<td class="strat-detail-attribute-value">
-				<c:choose>
-					<c:when test="${empty objective.deadline}"><span class="font-no-content">None</span></c:when>
-					<c:otherwise>${objective.deadline}</c:otherwise>
-				</c:choose>
-			</td>
-		</tr>
-		<tr>
-			<td class="strat-detail-attribute-name">Confidentiality</td>
-			<td class="strat-detail-attribute-value">
 			    <c:choose>
-					<c:when test="${requestScope.objective.confidential}">Private</c:when>
+					<c:when test="${empty project.deadline}">Not specified</c:when>
 					<c:when test="${objective.urgencyLevel eq 3 and objective.completion ne 100}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${objective.deadline}" pattern="yyyy-MM-dd" />
@@ -60,6 +47,19 @@
 					</c:otherwise>
 				</c:choose>
 			</td>
+		</tr>
+		<tr>
+			<td class="strat-detail-attribute-name">Confidentiality</td>
+			<td class="strat-detail-attribute-value">
+				<c:choose>
+					<c:when test="${requestScope.objective.confidential}"><span class="font-no-content">Private</span></c:when>
+					<c:otherwise>Public</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+		<tr>
+			<td class="strat-detail-attribute-name">Completion</td>
+			<td class="strat-detail-attribute-value">${objective.completion} %</td>
 		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>

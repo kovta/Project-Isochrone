@@ -17,7 +17,7 @@
 	<br/><br/>
 	
 	<c:choose>
-	    <c:when test="${requestScope.projects.isEmpty()}">
+	    <c:when test="${requestScope.parentObjectives.isEmpty()}">
             <div class="divider-new">
 		        <h2 class="h2-responsive wow fadeIn">No Projects have been initiated</h2>
 		    </div><br/>

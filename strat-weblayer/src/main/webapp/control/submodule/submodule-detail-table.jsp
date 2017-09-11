@@ -12,31 +12,27 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="strat-detail-attribute-name">Completion</td>
-			<td class="strat-detail-attribute-value">${submodule.completion} %</td>
-		</tr>
-		<tr>
 			<td class="strat-detail-attribute-name">Deadline</td>
 			<td class="strat-detail-attribute-value">
 				<c:choose>
-					<c:when test="${empty submodule.deadline}"><span class="font-no-content">None</span></c:when>
-  					<c:when test="${submodule.urgencyLevel eq 3 and submodule.completion ne 100}">
+					<c:when test="${empty submodule.deadline}"><span class="font-no-content">Not Specified</span></c:when>
+  					<c:when test="${submodule.urgencyLevel eq 3 and not submodule.completed}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 							<i class="fa fa-exclamation-triangle"></i>
 						</span>
 					</c:when>
-					<c:when test="${submodule.urgencyLevel eq 2 and submodule.completion ne 100}">
+					<c:when test="${submodule.urgencyLevel eq 2 and not submodule.completed}">
 						<span class="heavy-warning-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
 					</c:when>
-					<c:when test="${submodule.urgencyLevel eq 1 and submodule.completion ne 100}">
+					<c:when test="${submodule.urgencyLevel eq 1 and not submodule.completed}">
 						<span class="warning-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
 					</c:when>
-					<c:when test="${submodule.completion eq 100}">
+					<c:when test="${submodule.completed}">
 						<span class="success-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 							<i class="fa fa-check"></i>
@@ -51,12 +47,30 @@
 			</td>
 		</tr>
 		<tr>
+			<td class="strat-detail-attribute-name">Completion</td>
+			<td class="strat-detail-attribute-value">${submodule.completion} %</td>
+		</tr>
+		<c:if test="${submodule.durationSum ne 0}">
+			<tr>
+				<td class="strat-detail-attribute-name">Progression</td>
+				<td class="strat-detail-attribute-value">${(submodule.completedDurationSum / submodule.durationSum) * 100} %</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Total duration</td>
+				<td class="strat-detail-attribute-value">${submodule.durationSum}<c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" /></td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Finished work</td>
+				<td class="strat-detail-attribute-value">${submodule.completedDurationSum}<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" /></td>
+			</tr>
+		</c:if>
+		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>
 			<td class="strat-detail-attribute-value">
 				<a href="User?id=<c:out value="${submodule.creator.id}" />">${submodule.creator.name}</a>
 			</td>
 		</tr>
-		    <tr>
+	    <tr>
 			<td class="strat-detail-attribute-name">Creation date</td>
 			<td class="strat-detail-attribute-value">${submodule.creationDate}</td>
 		</tr>

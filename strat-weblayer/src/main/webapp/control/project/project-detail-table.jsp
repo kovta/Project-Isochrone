@@ -16,14 +16,10 @@
 			<td class="strat-detail-attribute-value">${project.status.label}</td>
 		</tr>
 		<tr>
-			<td class="strat-detail-attribute-name">Completion</td>
-			<td class="strat-detail-attribute-value">${project.completion} %</td>
-		</tr>
-		<tr>
 			<td class="strat-detail-attribute-name">Deadline</td>
 			<td class="strat-detail-attribute-value">
 				<c:choose>
-					<c:when test="${empty project.deadline}"><span class="font-no-content">None</span></c:when>
+					<c:when test="${empty project.deadline}"><span class="font-no-content">Not specified</span></c:when>
 					<c:when test="${project.urgencyLevel eq 3 and project.completion ne 100}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${project.deadline}" pattern="yyyy-MM-dd" />
@@ -62,6 +58,10 @@
 					<c:otherwise>Public</c:otherwise>
 				</c:choose>
 			</td>
+		</tr>
+		<tr>
+			<td class="strat-detail-attribute-name">Completion</td>
+			<td class="strat-detail-attribute-value">${project.completion} %</td>
 		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>

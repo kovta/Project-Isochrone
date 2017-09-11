@@ -12,11 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.ProjectProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectCriteria;
-import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.FormValue;
@@ -60,12 +58,13 @@ public class ProjectListController extends AbstractRefinerServlet implements Pro
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, ProjectCriteria criteria, String categoryValue)
 			throws ServletException, IOException {
-		try {
-			final List<ProjectRepresentor> projects = this.protocol.getAllProjects(criteria);
-			request.setAttribute(ATTR_PROJECTS, projects);
-		} catch (final AdaptorException e) {
-			LOGGER.error(e, e);
-		}
+		// Significant performance destabilizer
+		// try {
+		// final List<ProjectRepresentor> projects = this.protocol.getAllProjects(criteria);
+		// request.setAttribute(ATTR_PROJECTS, projects);
+		// } catch (final AdaptorException e) {
+		// LOGGER.error(e, e);
+		// }
 		request.setAttribute(ATTR_STATUS, categoryValue);
 		final RequestDispatcher view = request.getRequestDispatcher(Page.PROJECT_LIST.getJspName());
 		view.forward(request, response);
