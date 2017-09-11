@@ -13,8 +13,12 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private final String name;
 	private final String description;
 	private final int priority;
+	private Boolean completed;
+	private Boolean ongoing;
+	private Boolean unstarted;
 	private final double completion;
 	private final Date deadline;
+	private Boolean durationProvided;
 	private Boolean estimated;
 	private Double duration;
 	private Double pessimistic;
@@ -109,6 +113,18 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		return this.priority;
 	}
 
+	public Boolean getCompleted() {
+		return this.completion == 100;
+	}
+
+	public Boolean getOngoing() {
+		return (this.completion < 100) && (this.completion > 0);
+	}
+
+	public Boolean getUnstarted() {
+		return this.completion == 0;
+	}
+
 	public double getCompletion() {
 		return this.completion;
 	}
@@ -179,6 +195,10 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public void setSubmodule(SubmoduleRepresentor submodule) {
 		this.submodule = submodule;
+	}
+
+	public Boolean getDurationProvided() {
+		return (this.duration != null);
 	}
 
 	public Boolean getEstimated() {

@@ -2,6 +2,8 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +23,12 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final List<TeamSubmoduleAssignmentRepresentor> assignedTeams;
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
+	private Boolean completed;
+	private Boolean ongoing;
+	private Boolean unstarted;
 	private double completion;
+	private Double durationSum;
+	private Double completedDurationSum;
 	private List<TaskRepresentor> overdueTasks;
 	private List<TaskRepresentor> ongoingTasks;
 	private List<TaskRepresentor> completedTasks;
@@ -115,12 +122,48 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 		return this.project;
 	}
 
+	public Boolean getCompleted() {
+		return this.getCompletion() == 100;
+	}
+
+	public Boolean getOngoing() {
+		return (this.getCompletion() < 100) && (this.getCompletion() > 0);
+	}
+
+	public Boolean getUnstarted() {
+		return this.getCompletion() == 0;
+	}
+
 	public double getCompletion() {
 		int progressSum = 0;
 		for (final TaskRepresentor task : this.getTasks()) {
 			progressSum += task.getCompletion();
 		}
 		return this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
+	}
+
+	public Double getDurationSum() {
+		Double durationSum = (double) 0;
+		for (final TaskRepresentor task : this.getTasks()) {
+			if (task.getEstimated()) {
+
+			} else if (task.getDurationProvided()) {
+				durationSum += task.getDuration();
+			}
+		}
+		return durationSum;
+	}
+
+	public Double getCompletedDurationSum() {
+		Double durationSum = (double) 0;
+		for (final TaskRepresentor task : this.getTasks()) {
+			if (task.getEstimated()) {
+
+			} else if (task.getCompleted() && task.getDurationProvided()) {
+				durationSum += task.getDuration();
+			}
+		}
+		return durationSum;
 	}
 
 	public List<TaskRepresentor> getOverdueTasks() {
@@ -134,6 +177,16 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 				this.overdueTasks.add(representor);
 			}
 		}
+		Collections.sort(this.overdueTasks, new Comparator<TaskRepresentor>() {
+			@Override
+			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+				final int c = obj_a.getDeadline().compareTo(obj_b.getDeadline());
+				if (c == 0) {
+					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+				}
+				return c;
+			}
+		});
 		return this.overdueTasks;
 	}
 
@@ -148,6 +201,12 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 				this.ongoingTasks.add(representor);
 			}
 		}
+		Collections.sort(this.ongoingTasks, new Comparator<TaskRepresentor>() {
+			@Override
+			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+			}
+		});
 		return this.ongoingTasks;
 	}
 
@@ -162,6 +221,12 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 				this.completedTasks.add(representor);
 			}
 		}
+		Collections.sort(this.completedTasks, new Comparator<TaskRepresentor>() {
+			@Override
+			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
+				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
+			}
+		});
 		return this.completedTasks;
 	}
 
