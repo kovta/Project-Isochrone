@@ -18,7 +18,6 @@ import com.kota.stratagem.ejbservice.interceptor.Regulated;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserSubmoduleAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
@@ -29,7 +28,7 @@ import com.kota.stratagem.persistence.util.Constants;
 public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 
 	@EJB
-	private SubmoduleService submoduleSerive;
+	private SubmoduleService submoduleService;
 
 	@EJB
 	private AppUserService appUserService;
@@ -45,29 +44,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 
 	@Override
 	public SubmoduleRepresentor getSubmodule(Long id) throws AdaptorException {
-		final SubmoduleRepresentor representor = this.submoduleConverter.toComplete(this.submoduleSerive.readComplete(id));
-		Collections.sort(representor.getOverdueTasks(), new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				final int c = obj_a.getDeadline().compareTo(obj_b.getDeadline());
-				if (c == 0) {
-					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-				}
-				return c;
-			}
-		});
-		Collections.sort(representor.getOngoingTasks(), new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-			}
-		});
-		Collections.sort(representor.getCompletedTasks(), new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-			}
-		});
+		final SubmoduleRepresentor representor = this.submoduleConverter.toComplete(this.submoduleService.readComplete(id));
 		Collections.sort(representor.getAssignedUsers(), new Comparator<AppUserSubmoduleAssignmentRepresentor>() {
 			@Override
 			public int compare(AppUserSubmoduleAssignmentRepresentor obj_a, AppUserSubmoduleAssignmentRepresentor obj_b) {
@@ -79,18 +56,18 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 
 	@Override
 	public List<SubmoduleRepresentor> getAllSubmodules() throws AdaptorException {
-		return new ArrayList<SubmoduleRepresentor>(this.submoduleConverter.toSimplified(this.submoduleSerive.readAll()));
+		return new ArrayList<SubmoduleRepresentor>(this.submoduleConverter.toSimplified(this.submoduleService.readAll()));
 	}
 
 	@Override
 	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
 		SubmoduleRepresentor origin = null;
 		if (id != null) {
-			origin = this.submoduleConverter.toElementary(this.submoduleSerive.readElementary(id));
+			origin = this.submoduleConverter.toElementary(this.submoduleService.readElementary(id));
 		}
-		final SubmoduleRepresentor representor = this.submoduleConverter.toComplete(((id != null) && this.submoduleSerive.exists(id))
-				? this.submoduleSerive.update(id, name, description, deadline, this.appUserService.readElementary(operator))
-				: this.submoduleSerive.create(name, description, deadline, this.appUserService.readElementary(operator), project));
+		final SubmoduleRepresentor representor = this.submoduleConverter.toComplete(((id != null) && this.submoduleService.exists(id))
+				? this.submoduleService.update(id, name, description, deadline, this.appUserService.readElementary(operator))
+				: this.submoduleService.create(name, description, deadline, this.appUserService.readElementary(operator), project));
 		if (id != null) {
 			this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
 		} else {
@@ -102,9 +79,9 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@Override
 	public void removeSubmodule(Long id) throws AdaptorException {
 		try {
-			final String message = this.submoduleConverter.toElementary(this.submoduleSerive.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+			final String message = this.submoduleConverter.toElementary(this.submoduleService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
 					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
-			this.submoduleSerive.delete(id);
+			this.submoduleService.delete(id);
 			this.overseer.deleted(message);
 		} catch (final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
