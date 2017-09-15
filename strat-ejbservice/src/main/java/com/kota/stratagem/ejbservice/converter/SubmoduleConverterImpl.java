@@ -13,7 +13,7 @@ import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
 
 @Stateless
-public class SubmoduleConverterImpl implements SubmoduleConverter {
+public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter implements SubmoduleConverter {
 
 	@EJB
 	private ProjectConverter projectConverter;
@@ -31,14 +31,15 @@ public class SubmoduleConverterImpl implements SubmoduleConverter {
 	public SubmoduleRepresentor toElementary(Submodule submodule) {
 		final SubmoduleRepresentor representor = submodule.getId() != null
 				? new SubmoduleRepresentor(submodule.getId(), submodule.getName(), submodule.getDescription().trim(), submodule.getDeadline(),
-						this.appUserConverter.toElementary(submodule.getCreator()), submodule.getCreationDate(),
-						this.appUserConverter.toElementary(submodule.getModifier()), submodule.getModificationDate(),
 						submodule.getProject() != null ? this.projectConverter.toElementary(submodule.getProject()) : null)
 				: new SubmoduleRepresentor(submodule.getName(), submodule.getDescription().trim(), submodule.getDeadline(),
-						this.appUserConverter.toElementary(submodule.getCreator()), submodule.getCreationDate(),
-						this.appUserConverter.toElementary(submodule.getModifier()), submodule.getModificationDate(),
 						submodule.getProject() != null ? this.projectConverter.toElementary(submodule.getProject()) : null);
 		return representor;
+	}
+
+	@Override
+	public SubmoduleRepresentor toDispatchable(Submodule submodule) {
+		return this.inculdeMonitoringFields(this.toElementary(submodule), submodule);
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class SubmoduleConverterImpl implements SubmoduleConverter {
 				representor.addUser(this.assignmentConverter.to(user));
 			}
 		}
-		return representor;
+		return this.inculdeMonitoringFields(representor, submodule);
 	}
 
 	@Override

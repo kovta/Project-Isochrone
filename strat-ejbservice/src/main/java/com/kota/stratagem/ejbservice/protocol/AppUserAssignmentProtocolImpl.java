@@ -44,22 +44,22 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 			final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			for (final String recipient : recipients) {
 				switch (object) {
-					case Constants.OBJECTIVE_DATA_NAME:
+					case Constants.OBJECTIVE_DATA_LABEL:
 						this.overseer.assigned(
 								this.converter.to(this.assignmentService.createObjectiveAssignment(this.appUserService.readElementary(operator).getId(),
 										this.appUserService.readElementary(recipient).getId(), subject)).toTextMessage());
 						break;
-					case Constants.PROJECT_DATA_NAME:
+					case Constants.PROJECT_DATA_LABEL:
 						this.overseer
 								.assigned(this.converter.to(this.assignmentService.createProjectAssignment(this.appUserService.readElementary(operator).getId(),
 										this.appUserService.readElementary(recipient).getId(), subject)).toTextMessage());
 						break;
-					case Constants.SUBMODULE_DATA_NAME:
+					case Constants.SUBMODULE_DATA_LABEL:
 						this.overseer.assigned(
 								this.converter.to(this.assignmentService.createSubmoduleAssignment(this.appUserService.readElementary(operator).getId(),
 										this.appUserService.readElementary(recipient).getId(), subject)).toTextMessage());
 						break;
-					case Constants.TASK_DATA_NAME:
+					case Constants.TASK_DATA_LABEL:
 						this.overseer
 								.assigned(this.converter.to(this.assignmentService.createTaskAssignment(this.appUserService.readElementary(operator).getId(),
 										this.appUserService.readElementary(recipient).getId(), subject)).toTextMessage());
@@ -80,22 +80,22 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 				LOGGER.debug("Remove AppUser" + object + "Assignment (id: " + id + ")");
 			}
 			switch (object) {
-				case Constants.OBJECTIVE_DATA_NAME:
+				case Constants.OBJECTIVE_DATA_LABEL:
 					final String msg_a = this.converter.to(this.assignmentService.readObjectiveAssignment(id)).toTextMessage();
 					this.assignmentService.deleteObjectiveAssignment(id);
 					this.overseer.dissociated(msg_a);
 					break;
-				case Constants.PROJECT_DATA_NAME:
+				case Constants.PROJECT_DATA_LABEL:
 					final String msg_b = this.converter.to(this.assignmentService.readProjectAssignment(id)).toTextMessage();
 					this.assignmentService.deleteProjectAssignment(id);
 					this.overseer.dissociated(msg_b);
 					break;
-				case Constants.SUBMODULE_DATA_NAME:
+				case Constants.SUBMODULE_DATA_LABEL:
 					final String msg_c = this.converter.to(this.assignmentService.readSubmoduleAssignment(id)).toTextMessage();
 					this.assignmentService.deleteSubmoduleAssignment(id);
 					this.overseer.dissociated(msg_c);
 					break;
-				case Constants.TASK_DATA_NAME:
+				case Constants.TASK_DATA_LABEL:
 					final String msg_d = this.converter.to(this.assignmentService.readTaskAssignment(id)).toTextMessage();
 					this.assignmentService.deleteTaskAssignment(id);
 					this.overseer.dissociated(msg_d);
@@ -111,42 +111,42 @@ public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol 
 
 	@Override
 	public void saveObjectiveAssignments(String[] recipients, Long objective) throws AdaptorException {
-		this.saveAssignments(recipients, objective, Constants.OBJECTIVE_DATA_NAME);
+		this.saveAssignments(recipients, objective, Constants.OBJECTIVE_DATA_LABEL);
 	}
 
 	@Override
 	public void saveProjectAssignments(String[] recipients, Long project) throws AdaptorException {
-		this.saveAssignments(recipients, project, Constants.PROJECT_DATA_NAME);
+		this.saveAssignments(recipients, project, Constants.PROJECT_DATA_LABEL);
 	}
 
 	@Override
 	public void saveSubmoduleAssignments(String[] recipients, Long submodule) throws AdaptorException {
-		this.saveAssignments(recipients, submodule, Constants.SUBMODULE_DATA_NAME);
+		this.saveAssignments(recipients, submodule, Constants.SUBMODULE_DATA_LABEL);
 	}
 
 	@Override
 	public void saveTaskAssignments(String[] recipients, Long task) throws AdaptorException {
-		this.saveAssignments(recipients, task, Constants.TASK_DATA_NAME);
+		this.saveAssignments(recipients, task, Constants.TASK_DATA_LABEL);
 	}
 
 	@Override
 	public void removeObjectiveAssignment(Long id) throws AdaptorException {
-		this.removeAssignment(id, Constants.OBJECTIVE_DATA_NAME);
+		this.removeAssignment(id, Constants.OBJECTIVE_DATA_LABEL);
 	}
 
 	@Override
 	public void removeProjectAssignment(Long id) throws AdaptorException {
-		this.removeAssignment(id, Constants.PROJECT_DATA_NAME);
+		this.removeAssignment(id, Constants.PROJECT_DATA_LABEL);
 	}
 
 	@Override
 	public void removeSubmoduleAssignment(Long id) throws AdaptorException {
-		this.removeAssignment(id, Constants.SUBMODULE_DATA_NAME);
+		this.removeAssignment(id, Constants.SUBMODULE_DATA_LABEL);
 	}
 
 	@Override
 	public void removeTaskAssignment(Long id) throws AdaptorException {
-		this.removeAssignment(id, Constants.TASK_DATA_NAME);
+		this.removeAssignment(id, Constants.TASK_DATA_LABEL);
 	}
 
 }

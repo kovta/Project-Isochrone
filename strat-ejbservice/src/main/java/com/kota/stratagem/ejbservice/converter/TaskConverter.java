@@ -12,6 +12,8 @@ public interface TaskConverter {
 
 	TaskRepresentor toElementary(Task task);
 
+	TaskRepresentor toDispatchable(Task task);
+
 	TaskRepresentor toSimplified(Task task);
 
 	TaskRepresentor toComplete(Task task);

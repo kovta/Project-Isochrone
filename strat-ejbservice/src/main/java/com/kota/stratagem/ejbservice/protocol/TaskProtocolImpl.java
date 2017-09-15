@@ -24,7 +24,6 @@ import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
-import com.kota.stratagem.persistence.service.TeamService;
 import com.kota.stratagem.persistence.util.Constants;
 
 @Regulated
@@ -42,9 +41,6 @@ public class TaskProtocolImpl implements TaskProtocol {
 
 	@EJB
 	private TaskService taskService;
-
-	@EJB
-	private TeamService teamService;
 
 	@EJB
 	private AppUserService appUserService;
@@ -191,7 +187,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 			throws AdaptorException {
 		TaskRepresentor origin = null;
 		if (id != null) {
-			origin = this.taskConverter.toElementary(this.taskService.readElementary(id));
+			origin = this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(id));
 		}
 		final TaskRepresentor representor = this.taskConverter.toComplete(((id != null) && this.taskService.exists(id))
 				? this.taskService.update(id, name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),
@@ -208,7 +204,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 
 	@Override
 	public void removeTask(Long id) throws AdaptorException {
-		final String message = this.taskConverter.toElementary(this.taskService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+		final String message = this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
 				+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 		this.taskService.delete(id);
 		this.overseer.deleted(message);
@@ -219,8 +215,8 @@ public class TaskProtocolImpl implements TaskProtocol {
 		for (final Long dependency : dependencies) {
 			this.taskService.createDependency(dependency, source,
 					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
-			this.overseer.configured(this.taskConverter.toElementary(this.taskService.readElementary(source)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.taskConverter.toElementary(this.taskService.readElementary(dependency)).toTextMessage());
+			this.overseer.configured(this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(source)).toTextMessage()
+					+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependency)).toTextMessage());
 		}
 	}
 
@@ -229,8 +225,8 @@ public class TaskProtocolImpl implements TaskProtocol {
 		for (final Long dependant : dependants) {
 			this.taskService.createDependency(source, dependant,
 					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
-			this.overseer.configured(this.taskConverter.toElementary(this.taskService.readElementary(dependant)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.taskConverter.toElementary(this.taskService.readElementary(source)).toTextMessage());
+			this.overseer.configured(this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependant)).toTextMessage()
+					+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(source)).toTextMessage());
 		}
 	}
 
@@ -238,8 +234,8 @@ public class TaskProtocolImpl implements TaskProtocol {
 	public void removeTaskDependency(Long dependency, Long dependant) throws AdaptorException {
 		this.taskService.deleteDependency(dependency, dependant,
 				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
-		this.overseer.deconfigured(this.taskConverter.toElementary(this.taskService.readElementary(dependant)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-				+ this.taskConverter.toElementary(this.taskService.readElementary(dependency)).toTextMessage());
+		this.overseer.deconfigured(this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependant)).toTextMessage()
+				+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependency)).toTextMessage());
 	}
 
 }

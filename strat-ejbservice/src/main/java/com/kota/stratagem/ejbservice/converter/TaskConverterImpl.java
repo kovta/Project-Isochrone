@@ -12,10 +12,7 @@ import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
 
 @Stateless
-public class TaskConverterImpl implements TaskConverter {
-
-	@EJB
-	private AppUserConverter appUserConverter;
+public class TaskConverterImpl extends AbstractMonitoredEntityConverter implements TaskConverter {
 
 	@EJB
 	private ObjectiveConverter objectiveConverter;
@@ -36,17 +33,20 @@ public class TaskConverterImpl implements TaskConverter {
 	public TaskRepresentor toElementary(Task task) {
 		final TaskRepresentor representor = task.getId() != null
 				? new TaskRepresentor(task.getId(), task.getName(), task.getDescription().trim(), task.getPriority(), task.getCompletion(), task.getDeadline(),
-						task.getDuration(), task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
-						this.appUserConverter.toElementary(task.getModifier()), task.getModificationDate())
+						task.getDuration(), task.getAdmittance())
 				: new TaskRepresentor(task.getName(), task.getDescription().trim(), task.getPriority(), task.getCompletion(), task.getDeadline(),
-						task.getDuration(), task.getAdmittance(), this.appUserConverter.toElementary(task.getCreator()), task.getCreationDate(),
-						this.appUserConverter.toElementary(task.getModifier()), task.getModificationDate());
+						task.getDuration(), task.getAdmittance());
 		if (task.getEstimation() != null) {
 			representor.setPessimistic(task.getEstimation().getPessimistic());
 			representor.setRealistic(task.getEstimation().getRealistic());
 			representor.setOptimistic(task.getEstimation().getOptimistic());
 		}
 		return representor;
+	}
+
+	@Override
+	public TaskRepresentor toDispatchable(Task task) {
+		return this.inculdeMonitoringFields(this.toElementary(task), task);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class TaskConverterImpl implements TaskConverter {
 				representor.addUser(this.assignmentConverter.to(user));
 			}
 		}
-		return representor;
+		return this.inculdeMonitoringFields(representor, task);
 	}
 
 	@Override

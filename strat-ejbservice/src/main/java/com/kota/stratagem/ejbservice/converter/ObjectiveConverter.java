@@ -12,6 +12,8 @@ public interface ObjectiveConverter {
 
 	ObjectiveRepresentor toElementary(Objective objective);
 
+	ObjectiveRepresentor toDispatchable(Objective objective);
+
 	ObjectiveRepresentor toSimplified(Objective objective);
 
 	ObjectiveRepresentor toComplete(Objective objective);

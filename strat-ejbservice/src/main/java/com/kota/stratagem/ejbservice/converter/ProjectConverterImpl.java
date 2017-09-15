@@ -15,7 +15,7 @@ import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamProjectAssignment;
 
 @Stateless
-public class ProjectConverterImpl implements ProjectConverter {
+public class ProjectConverterImpl extends AbstractMonitoredEntityConverter implements ProjectConverter {
 
 	@EJB
 	private ObjectiveConverter objectiveConverter;
@@ -40,14 +40,15 @@ public class ProjectConverterImpl implements ProjectConverter {
 		final ProjectStatusRepresentor status = ProjectStatusRepresentor.valueOf(project.getStatus().toString());
 		final ProjectRepresentor representor = project.getId() != null
 				? new ProjectRepresentor(project.getId(), project.getName(), project.getDescription().trim(), status, project.getDeadline(),
-						project.getConfidential(), this.appUserConverter.toElementary(project.getCreator()), project.getCreationDate(),
-						this.appUserConverter.toElementary(project.getModifier()), project.getModificationDate(),
-						project.getObjective() != null ? this.objectiveConverter.toElementary(project.getObjective()) : null)
+						project.getConfidential(), project.getObjective() != null ? this.objectiveConverter.toElementary(project.getObjective()) : null)
 				: new ProjectRepresentor(project.getName(), project.getDescription().trim(), status, project.getDeadline(), project.getConfidential(),
-						this.appUserConverter.toElementary(project.getCreator()), project.getCreationDate(),
-						this.appUserConverter.toElementary(project.getModifier()), project.getModificationDate(),
 						this.objectiveConverter.toElementary(project.getObjective()));
 		return representor;
+	}
+
+	@Override
+	public ProjectRepresentor toDispatchable(Project project) {
+		return this.inculdeMonitoringFields(this.toElementary(project), project);
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class ProjectConverterImpl implements ProjectConverter {
 				representor.addUser(this.assignmentConverter.to(user));
 			}
 		}
-		return representor;
+		return this.inculdeMonitoringFields(representor, project);
 	}
 
 	@Override

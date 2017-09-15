@@ -138,7 +138,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 		final ObjectiveStatus objectiveStatus = ObjectiveStatus.valueOf(status.name());
 		ObjectiveRepresentor origin = null;
 		if (id != null) {
-			origin = this.converter.toElementary(this.objectiveService.readElementary(id));
+			origin = this.converter.toDispatchable(this.objectiveService.readWithMonitoring(id));
 		}
 		final ObjectiveRepresentor representor = this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
 				? this.objectiveService.update(id, name, description, priority, objectiveStatus, deadline, confidentiality, operator)
@@ -154,7 +154,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	@Override
 	public void removeObjective(Long id) throws AdaptorException {
 		try {
-			final String message = this.converter.toElementary(this.objectiveService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+			final String message = this.converter.toDispatchable(this.objectiveService.readWithMonitoring(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
 					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			this.objectiveService.delete(id);
 			this.overseer.deleted(message);

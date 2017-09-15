@@ -12,6 +12,8 @@ public interface ProjectConverter {
 
 	ProjectRepresentor toElementary(Project project);
 
+	ProjectRepresentor toDispatchable(Project project);
+
 	ProjectRepresentor toSimplified(Project project);
 
 	ProjectRepresentor toComplete(Project project);

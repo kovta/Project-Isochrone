@@ -63,7 +63,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
 		SubmoduleRepresentor origin = null;
 		if (id != null) {
-			origin = this.submoduleConverter.toElementary(this.submoduleService.readElementary(id));
+			origin = this.submoduleConverter.toDispatchable(this.submoduleService.readWithMonitoring(id));
 		}
 		final SubmoduleRepresentor representor = this.submoduleConverter.toComplete(((id != null) && this.submoduleService.exists(id))
 				? this.submoduleService.update(id, name, description, deadline, this.appUserService.readElementary(operator))
@@ -79,8 +79,8 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@Override
 	public void removeSubmodule(Long id) throws AdaptorException {
 		try {
-			final String message = this.submoduleConverter.toElementary(this.submoduleService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+			final String message = this.submoduleConverter.toDispatchable(this.submoduleService.readWithMonitoring(id)).toTextMessage()
+					+ Constants.PAYLOAD_SEPARATOR + this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			this.submoduleService.delete(id);
 			this.overseer.deleted(message);
 		} catch (final CoherentPersistenceServiceException e) {

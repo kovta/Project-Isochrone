@@ -15,7 +15,7 @@ import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TeamObjectiveAssignment;
 
 @Stateless
-public class ObjectiveConverterImpl implements ObjectiveConverter {
+public class ObjectiveConverterImpl extends AbstractMonitoredEntityConverter implements ObjectiveConverter {
 
 	@EJB
 	private AppUserConverter appUserConverter;
@@ -34,12 +34,15 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 		final ObjectiveStatusRepresentor status = ObjectiveStatusRepresentor.valueOf(objective.getStatus().toString());
 		final ObjectiveRepresentor representor = objective.getId() != null
 				? new ObjectiveRepresentor(objective.getId(), objective.getName(), objective.getDescription().trim(), objective.getPriority(), status,
-						objective.getDeadline(), objective.getConfidential(), this.appUserConverter.toElementary(objective.getCreator()),
-						objective.getCreationDate(), this.appUserConverter.toElementary(objective.getModifier()), objective.getModificationDate())
+						objective.getDeadline(), objective.getConfidential())
 				: new ObjectiveRepresentor(objective.getName(), objective.getDescription().trim(), objective.getPriority(), status, objective.getDeadline(),
-						objective.getConfidential(), this.appUserConverter.toElementary(objective.getCreator()), objective.getCreationDate(),
-						this.appUserConverter.toElementary(objective.getModifier()), objective.getModificationDate());
+						objective.getConfidential());
 		return representor;
+	}
+
+	@Override
+	public ObjectiveRepresentor toDispatchable(Objective objective) {
+		return this.inculdeMonitoringFields(this.toElementary(objective), objective);
 	}
 
 	@Override
@@ -81,7 +84,7 @@ public class ObjectiveConverterImpl implements ObjectiveConverter {
 				representor.addUserAssignment(this.assignmentConverter.to(userAssignment));
 			}
 		}
-		return representor;
+		return this.inculdeMonitoringFields(representor, objective);
 	}
 
 	@Override

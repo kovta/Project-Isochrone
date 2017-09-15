@@ -185,7 +185,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 		final ProjectStatus projectStatus = ProjectStatus.valueOf(status.name());
 		ProjectRepresentor origin = null;
 		if (id != null) {
-			origin = this.projectConverter.toElementary(this.projectService.readElementary(id));
+			origin = this.projectConverter.toDispatchable(this.projectService.readWithMonitoring(id));
 		}
 		final ProjectRepresentor representor = this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
 				? this.projectService.update(id, name, description, projectStatus, deadline, confidential, operator)
@@ -202,8 +202,8 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	@Override
 	public void removeProject(Long id) throws AdaptorException {
 		try {
-			final String message = this.projectConverter.toElementary(this.projectService.readElementary(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-					+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+			final String message = this.projectConverter.toDispatchable(this.projectService.readWithMonitoring(id)).toTextMessage()
+					+ Constants.PAYLOAD_SEPARATOR + this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 			this.projectService.delete(id);
 			this.overseer.deleted(message);
 		} catch (final CoherentPersistenceServiceException e) {
