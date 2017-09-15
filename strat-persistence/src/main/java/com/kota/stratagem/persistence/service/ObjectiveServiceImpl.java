@@ -10,9 +10,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
@@ -23,12 +24,12 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
-@Stateless(mappedName = "ejb/objectiveService")
+@Stateless(mappedName = PersistenceServiceConfiguration.OBJECTIVE_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ObjectiveServiceImpl implements ObjectiveService {
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@EJB
@@ -48,6 +49,12 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	@Override
 	public Objective readElementary(Long id) {
 		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Objective readWithMonitoring(Long id) {
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_MONITORING, Objective.class).setParameter(ObjectiveParameter.ID, id)
+				.getSingleResult();
 	}
 
 	@Override

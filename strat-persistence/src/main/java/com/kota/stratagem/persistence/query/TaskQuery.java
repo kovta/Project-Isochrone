@@ -4,6 +4,7 @@ public class TaskQuery {
 
 	public static final String COUNT_BY_ID = "Tasks.countById";
 	public static final String GET_BY_ID = "Tasks.getById";
+	public static final String GET_BY_ID_WITH_MONITORING = "Tasks.getByIdWithMonitoring";
 	public static final String GET_BY_ID_WITH_ASSIGNMENTS = "Tasks.getByIdWithAssignments";
 	public static final String GET_BY_ID_WITH_DEPENDENCIES = "Tasks.getByIdWithDependencies";
 	public static final String GET_BY_ID_WITH_DEPENDANTS = "Tasks.getByIdWithDependants";

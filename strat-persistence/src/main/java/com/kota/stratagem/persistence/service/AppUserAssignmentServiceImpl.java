@@ -8,13 +8,14 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AbstractAppUserAssignment;
-import com.kota.stratagem.persistence.entity.AbstractMonitoredItem;
+import com.kota.stratagem.persistence.entity.AbstractMonitoredEntity;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.AppUserObjectiveAssignment;
 import com.kota.stratagem.persistence.entity.AppUserProjectAssignment;
@@ -32,14 +33,14 @@ import com.kota.stratagem.persistence.query.AppUserSubmoduleAssignmentQuery;
 import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 import com.kota.stratagem.persistence.util.Constants;
 
-@Stateless(mappedName = "ejb/appUserAssignmentService")
+@Stateless(mappedName = PersistenceServiceConfiguration.APP_USER_ASSIGNMENT_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 
 	private static final Logger LOGGER = Logger.getLogger(AppUserAssignmentServiceImpl.class);
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@EJB
@@ -57,7 +58,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 	@EJB
 	private TaskService taskService;
 
-	private <T extends AbstractMonitoredItem, E extends AbstractAppUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
+	private <T extends AbstractMonitoredEntity, E extends AbstractAppUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
 			throws PersistenceServiceException {
 		subject.setEntrustor(this.mergeOperators(entrustor, object));
 		subject.setRecipient(this.mergeOperators(recipient, object));
@@ -65,7 +66,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 		this.entityManager.flush();
 	}
 
-	private <T extends AbstractMonitoredItem> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
+	private <T extends AbstractMonitoredEntity> AppUser mergeOperators(Long subject, T object) throws PersistenceServiceException {
 		if (object.getCreator().getId() == subject) {
 			return object.getCreator();
 		} else if (object.getModifier().getId() == subject) {
@@ -156,25 +157,25 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 
 	@Override
 	public AppUserObjectiveAssignment readObjectiveAssignment(Long id) throws PersistenceServiceException {
-		return (AppUserObjectiveAssignment) this.readAssignment(id, AppUserObjectiveAssignmentQuery.GET_BY_ID, Constants.OBJECTIVE_DATA_NAME,
+		return (AppUserObjectiveAssignment) this.readAssignment(id, AppUserObjectiveAssignmentQuery.GET_BY_ID, Constants.OBJECTIVE_DATA_LABEL,
 				AppUserObjectiveAssignment.class);
 	}
 
 	@Override
 	public AppUserProjectAssignment readProjectAssignment(Long id) throws PersistenceServiceException {
-		return (AppUserProjectAssignment) this.readAssignment(id, AppUserProjectAssignmentQuery.GET_BY_ID, Constants.PROJECT_DATA_NAME,
+		return (AppUserProjectAssignment) this.readAssignment(id, AppUserProjectAssignmentQuery.GET_BY_ID, Constants.PROJECT_DATA_LABEL,
 				AppUserProjectAssignment.class);
 	}
 
 	@Override
 	public AppUserSubmoduleAssignment readSubmoduleAssignment(Long id) throws PersistenceServiceException {
-		return (AppUserSubmoduleAssignment) this.readAssignment(id, AppUserSubmoduleAssignmentQuery.GET_BY_ID, Constants.SUBMODULE_DATA_NAME,
+		return (AppUserSubmoduleAssignment) this.readAssignment(id, AppUserSubmoduleAssignmentQuery.GET_BY_ID, Constants.SUBMODULE_DATA_LABEL,
 				AppUserSubmoduleAssignment.class);
 	}
 
 	@Override
 	public AppUserTaskAssignment readTaskAssignment(Long id) throws PersistenceServiceException {
-		return (AppUserTaskAssignment) this.readAssignment(id, AppUserTaskAssignmentQuery.GET_BY_ID, Constants.TASK_DATA_NAME, AppUserTaskAssignment.class);
+		return (AppUserTaskAssignment) this.readAssignment(id, AppUserTaskAssignmentQuery.GET_BY_ID, Constants.TASK_DATA_LABEL, AppUserTaskAssignment.class);
 	}
 
 	private void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
@@ -191,22 +192,22 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 
 	@Override
 	public void deleteObjectiveAssignment(Long id) throws PersistenceServiceException {
-		this.removeAssignment(id, AppUserObjectiveAssignmentQuery.REMOVE_BY_ID, Constants.OBJECTIVE_DATA_NAME);
+		this.removeAssignment(id, AppUserObjectiveAssignmentQuery.REMOVE_BY_ID, Constants.OBJECTIVE_DATA_LABEL);
 	}
 
 	@Override
 	public void deleteProjectAssignment(Long id) throws PersistenceServiceException {
-		this.removeAssignment(id, AppUserProjectAssignmentQuery.REMOVE_BY_ID, Constants.PROJECT_DATA_NAME);
+		this.removeAssignment(id, AppUserProjectAssignmentQuery.REMOVE_BY_ID, Constants.PROJECT_DATA_LABEL);
 	}
 
 	@Override
 	public void deleteSubmoduleAssignment(Long id) throws PersistenceServiceException {
-		this.removeAssignment(id, AppUserSubmoduleAssignmentQuery.REMOVE_BY_ID, Constants.SUBMODULE_DATA_NAME);
+		this.removeAssignment(id, AppUserSubmoduleAssignmentQuery.REMOVE_BY_ID, Constants.SUBMODULE_DATA_LABEL);
 	}
 
 	@Override
 	public void deleteTaskAssignment(Long id) throws PersistenceServiceException {
-		this.removeAssignment(id, AppUserTaskAssignmentQuery.REMOVE_BY_ID, Constants.TASK_DATA_NAME);
+		this.removeAssignment(id, AppUserTaskAssignmentQuery.REMOVE_BY_ID, Constants.TASK_DATA_LABEL);
 	}
 
 }

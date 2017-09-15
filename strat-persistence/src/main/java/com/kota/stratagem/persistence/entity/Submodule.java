@@ -38,11 +38,13 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = SubmoduleQuery.COUNT_BY_ID, query = "SELECT COUNT(sm) FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID, query = "SELECT sm FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_MONITORING, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.creator crt LEFT JOIN FETCH sm.modifier mod WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
-		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at LEFT JOIN FETCH sm.creator LEFT JOIN FETCH sm.modifier WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_ALL_SUBMODULES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t ORDER BY sm.name"),
 		@NamedQuery(name = SubmoduleQuery.REMOVE_BY_ID, query = "DELETE FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID)
@@ -59,7 +61,7 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "submodule_modifier", referencedColumnName = "user_id", nullable = false))
 		//
 })
-public class Submodule extends AbstractMonitoredItem implements Serializable {
+public class Submodule extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = -1940935516451348184L;
 

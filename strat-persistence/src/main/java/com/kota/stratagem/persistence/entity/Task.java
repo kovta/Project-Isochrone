@@ -40,6 +40,8 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = TaskQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Task t WHERE t.id=:" + TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID, query = "SELECT t FROM Task t WHERE t.id=:" + TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_MONITORING, query = "SELECT t FROM Task t LEFT JOIN FETCH t.creator crt LEFT JOIN FETCH t.modifier mod WHERE t.id=:"
+				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
 				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td WHERE t.id=:"
@@ -48,7 +50,7 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt WHERE t.id=:"
 				+ TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
+		@NamedQuery(name = TaskQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at LEFT JOIN FETCH t.creator LEFT JOIN FETCH t.modifier WHERE t.id=:"
 				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_ALL_TASKS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks LEFT JOIN FETCH t.taskDependencies ORDER BY t.name"),
 		@NamedQuery(name = TaskQuery.REMOVE_BY_ID, query = "DELETE FROM Task t WHERE t.id=:" + TaskParameter.ID)
@@ -65,7 +67,7 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "task_modifier", referencedColumnName = "user_id", nullable = false))
 		//
 })
-public class Task extends AbstractMonitoredItem implements Serializable {
+public class Task extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = -6357816746519911429L;
 
@@ -309,10 +311,8 @@ public class Task extends AbstractMonitoredItem implements Serializable {
 	@Override
 	public String toString() {
 		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", duration=" + this.duration + ", admittance=" + this.admittance + ", assignedTeams="
-				+ this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks=" + this.dependantTasks
-				+ ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule="
-				+ this.submodule + ", estimation=" + this.estimation + "]";
+				+ this.completion + ", deadline=" + this.deadline + ", duration=" + this.duration + ", admittance=" + this.admittance + ", estimation="
+				+ this.estimation + "]";
 	}
 
 }

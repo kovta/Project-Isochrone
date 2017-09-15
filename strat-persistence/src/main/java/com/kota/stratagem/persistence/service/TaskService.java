@@ -16,6 +16,8 @@ public interface TaskService {
 
 	Task readElementary(Long id);
 
+	Task readWithMonitoring(Long id);
+
 	Task readWithAssignments(Long id);
 
 	Task readWithDependencies(Long id);

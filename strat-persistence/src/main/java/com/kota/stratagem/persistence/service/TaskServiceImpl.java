@@ -10,9 +10,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
@@ -25,12 +26,12 @@ import com.kota.stratagem.persistence.query.TaskEstimationQuery;
 import com.kota.stratagem.persistence.query.TaskQuery;
 
 @Contained
-@Stateless(mappedName = "ejb/taskService")
+@Stateless(mappedName = PersistenceServiceConfiguration.TASK_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class TaskServiceImpl implements TaskService {
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@EJB
@@ -55,37 +56,18 @@ public class TaskServiceImpl implements TaskService {
 		Objective parentObjective = null;
 		Project parentProject = null;
 		Submodule parentSubmodule = null;
-		AppUser operatorTemp = null;
 		if (objective != null) {
 			parentObjective = this.objectiveService.readElementary(objective);
 			task.setObjective(parentObjective);
-			if (parentObjective.getCreator().getId() == creator.getId()) {
-				operatorTemp = parentObjective.getCreator();
-			} else {
-				operatorTemp = this.appUserService.readElementary(creator.getId());
-			}
 		} else if (project != null) {
 			parentProject = this.projectService.readElementary(project);
 			task.setProject(parentProject);
-			if (parentProject.getCreator().getId() == creator.getId()) {
-				operatorTemp = parentProject.getCreator();
-			} else {
-				operatorTemp = this.appUserService.readElementary(creator.getId());
-			}
 		} else if (submodule != null) {
 			parentSubmodule = this.submoduleService.readElementary(submodule);
 			task.setSubmodule(parentSubmodule);
-			if (parentSubmodule.getCreator().getId() == creator.getId()) {
-				operatorTemp = parentSubmodule.getCreator();
-			} else {
-				operatorTemp = this.appUserService.readElementary(creator.getId());
-			}
-		} else {
-			operatorTemp = this.appUserService.readElementary(creator.getId());
 		}
-		final AppUser operator = operatorTemp;
-		task.setCreator(operator);
-		task.setModifier(operator);
+		task.setCreator(creator);
+		task.setModifier(creator);
 		this.entityManager.merge(task);
 		this.entityManager.flush();
 		return task;
@@ -94,6 +76,11 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public Task readElementary(Long id) {
 		return this.entityManager.createNamedQuery(TaskQuery.GET_BY_ID, Task.class).setParameter(TaskParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Task readWithMonitoring(Long id) {
+		return this.entityManager.createNamedQuery(TaskQuery.GET_BY_ID_WITH_MONITORING, Task.class).setParameter(TaskParameter.ID, id).getSingleResult();
 	}
 
 	@Override

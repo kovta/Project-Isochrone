@@ -16,6 +16,8 @@ public interface SubmoduleService {
 
 	Submodule readElementary(Long id);
 
+	Submodule readWithMonitoring(Long id);
+
 	Submodule readWithAssignments(Long id);
 
 	Submodule readWithTasks(Long id);

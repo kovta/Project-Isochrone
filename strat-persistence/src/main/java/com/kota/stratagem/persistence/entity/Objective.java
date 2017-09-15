@@ -37,6 +37,8 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = ObjectiveQuery.COUNT_BY_ID, query = "SELECT COUNT(o) FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID, query = "SELECT o FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID),
+		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_MONITORING, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.creator crt LEFT JOIN FETCH o.modifier mod WHERE o.id=:"
+				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.assignedUsers au LEFT JOIN FETCH o.assignedTeams at WHERE o.id=:"
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.tasks t WHERE o.id=:"
@@ -45,7 +47,7 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t WHERE o.id=:"
 				+ ObjectiveParameter.ID),
-		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_COMPLETE, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH p.submodules psm LEFT JOIN FETCH psm.tasks smt LEFT JOIN FETCH p.tasks pt LEFT JOIN FETCH o.tasks t LEFT JOIN FETCH o.assignedUsers au LEFT JOIN FETCH o.assignedTeams at WHERE o.id=:"
+		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_COMPLETE, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH p.submodules psm LEFT JOIN FETCH psm.tasks smt LEFT JOIN FETCH p.tasks pt LEFT JOIN FETCH o.tasks t LEFT JOIN FETCH o.assignedUsers au LEFT JOIN FETCH o.assignedTeams at LEFT JOIN FETCH o.creator LEFT JOIN FETCH o.modifier WHERE o.id=:"
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_ALL_OBJECTIVES, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p LEFT JOIN FETCH o.tasks t ORDER BY o.name"),
 		@NamedQuery(name = ObjectiveQuery.REMOVE_BY_ID, query = "DELETE FROM Objective o WHERE o.id=:" + ObjectiveParameter.ID)
@@ -62,7 +64,7 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "objective_modifier", referencedColumnName = "user_id", nullable = false))
 		//
 })
-public class Objective extends AbstractMonitoredItem implements Serializable {
+public class Objective extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = 3624081320738998792L;
 

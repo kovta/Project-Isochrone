@@ -10,15 +10,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @MappedSuperclass
-public abstract class AbstractMonitoredItem {
+public abstract class AbstractMonitoredEntity {
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = AppUser.class)
 	protected AppUser creator;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date creationDate;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = AppUser.class)
 	protected AppUser modifier;
 
 	@Temporal(TemporalType.TIMESTAMP)

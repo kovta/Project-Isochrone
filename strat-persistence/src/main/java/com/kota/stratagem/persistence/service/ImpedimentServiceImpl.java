@@ -9,11 +9,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Impediment;
 import com.kota.stratagem.persistence.entity.Project;
@@ -27,14 +28,14 @@ import com.kota.stratagem.persistence.parameter.ImpedimentParameter;
 import com.kota.stratagem.persistence.query.ImpedimentQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
-@Stateless(mappedName = "ejb/impedimentService")
+@Stateless(mappedName = PersistenceServiceConfiguration.IMPEDIMENT_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ImpedimentServiceImpl implements ImpedimentService {
 
 	private static final Logger LOGGER = Logger.getLogger(ImpedimentServiceImpl.class);
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@Override

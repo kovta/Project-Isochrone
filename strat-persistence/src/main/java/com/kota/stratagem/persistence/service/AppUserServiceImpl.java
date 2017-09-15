@@ -9,9 +9,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Notification;
 import com.kota.stratagem.persistence.entity.trunk.Role;
@@ -22,12 +23,12 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
-@Stateless(mappedName = "ejb/appUserService")
+@Stateless(mappedName = PersistenceServiceConfiguration.APP_USER_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AppUserServiceImpl implements AppUserService {
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@Override
@@ -36,7 +37,6 @@ public class AppUserServiceImpl implements AppUserService {
 		this.entityManager.persist(user);
 		this.entityManager.flush();
 		return user;
-
 	}
 
 	@Override

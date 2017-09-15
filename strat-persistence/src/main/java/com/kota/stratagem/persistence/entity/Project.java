@@ -38,6 +38,8 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = ProjectQuery.COUNT_BY_ID, query = "SELECT COUNT(p) FROM Project p WHERE p.id=:" + ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID, query = "SELECT p FROM Project p WHERE p.id=:" + ProjectParameter.ID),
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_MONITORING, query = "SELECT p FROM Project p LEFT JOIN FETCH p.creator crt LEFT JOIN FETCH p.modifier mod WHERE p.id=:"
+				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.assignedUsers au LEFT JOIN FETCH p.assignedTeams at WHERE p.id=:"
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
@@ -45,7 +47,7 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.id=:"
 				+ ProjectParameter.ID),
-		@NamedQuery(name = ProjectQuery.GET_BY_ID_COMPLETE, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t LEFT JOIN FETCH p.assignedUsers au LEFT JOIN FETCH p.assignedTeams at WHERE p.id=:"
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_COMPLETE, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t LEFT JOIN FETCH p.assignedUsers au LEFT JOIN FETCH p.assignedTeams at LEFT JOIN FETCH p.creator LEFT JOIN FETCH p.modifier WHERE p.id=:"
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_ALL_BY_STATUS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.status=:"
 				+ ProjectParameter.STATUS + " ORDER BY p.name"),
@@ -64,7 +66,7 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "project_modifier", referencedColumnName = "user_id", nullable = false))
 		//
 })
-public class Project extends AbstractMonitoredItem implements Serializable {
+public class Project extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = -6784523546510114561L;
 

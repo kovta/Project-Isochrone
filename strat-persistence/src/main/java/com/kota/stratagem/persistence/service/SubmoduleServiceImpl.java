@@ -10,9 +10,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Submodule;
@@ -23,12 +24,12 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
-@Stateless(mappedName = "ejb/submoduleService")
+@Stateless(mappedName = PersistenceServiceConfiguration.SUBMODULE_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class SubmoduleServiceImpl implements SubmoduleService {
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@EJB
@@ -58,6 +59,12 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	@Override
 	public Submodule readElementary(Long id) {
 		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Submodule readWithMonitoring(Long id) {
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_MONITORING, Submodule.class).setParameter(SubmoduleParameter.ID, id)
+				.getSingleResult();
 	}
 
 	@Override

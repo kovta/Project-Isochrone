@@ -54,7 +54,7 @@ import com.kota.stratagem.persistence.query.ImpedimentQuery;
 		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "impediment_modifier", referencedColumnName = "user_id", nullable = false))
 		//
 })
-public class Impediment extends AbstractMonitoredItem implements Serializable {
+public class Impediment extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = -8501472567228998129L;
 

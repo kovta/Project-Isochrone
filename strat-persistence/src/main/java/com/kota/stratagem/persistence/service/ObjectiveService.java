@@ -16,6 +16,8 @@ public interface ObjectiveService {
 
 	Objective readElementary(Long id);
 
+	Objective readWithMonitoring(Long id);
+
 	Objective readWithAssignments(Long id);
 
 	Objective readWithTasks(Long id);

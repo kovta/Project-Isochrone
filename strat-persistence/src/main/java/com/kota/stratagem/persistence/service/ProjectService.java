@@ -16,6 +16,8 @@ public interface ProjectService {
 
 	Project readElementary(Long id);
 
+	Project readWithMonitoring(Long id);
+
 	Project readWithAssignments(Long id);
 
 	Project readWithTasks(Long id);

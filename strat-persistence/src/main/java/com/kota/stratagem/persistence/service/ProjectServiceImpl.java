@@ -10,9 +10,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
@@ -24,12 +25,12 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
-@Stateless(mappedName = "ejb/projectService")
+@Stateless(mappedName = PersistenceServiceConfiguration.PROJECT_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ProjectServiceImpl implements ProjectService {
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@EJB
@@ -59,6 +60,12 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Project readElementary(Long id) {
 		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Project readWithMonitoring(Long id) {
+		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_MONITORING, Project.class).setParameter(ProjectParameter.ID, id)
+				.getSingleResult();
 	}
 
 	@Override

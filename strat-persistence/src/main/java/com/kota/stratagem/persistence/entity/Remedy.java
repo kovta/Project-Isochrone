@@ -46,7 +46,7 @@ import com.kota.stratagem.persistence.query.RemedyQuery;
 		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "remedy_modifier", referencedColumnName = "user_id", nullable = false))
 		//
 })
-public class Remedy extends AbstractMonitoredItem implements Serializable {
+public class Remedy extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = 3249113805246989076L;
 
