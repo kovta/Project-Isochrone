@@ -105,7 +105,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Project : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
-				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, null, false, null, null, null, null, null);
+				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, null, false, null);
 				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
@@ -114,7 +114,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				LOGGER.info("Failed attempt to modify Project : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Project name required");
 				// new attributes must be requested
-				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null, null, null, null, null);
+				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null);
 				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				ProjectRepresentor project = null;

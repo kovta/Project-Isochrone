@@ -119,7 +119,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
-				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, false, null, null, null, null);
+				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, false);
 				this.forward(request, response, Task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			Double duration = null, pessimistic = null, realistic = null, optimistic = null;
@@ -133,7 +133,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 						|| this.notEmpty(request.getParameter(OPTIMISTIC_DURATION))) {
 					LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 					request.getSession().setAttribute(ATTR_ERROR, "Partial estimations not allowed");
-					final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, false, null, null, null, null);
+					final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, false);
 					this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 				}
 			} else {
@@ -145,8 +145,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
-				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, duration, admittance, null, null, null,
-						null);
+				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, duration, admittance);
 				this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				TaskRepresentor task = null;

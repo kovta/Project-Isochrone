@@ -79,7 +79,7 @@
 	$("#compslider").slider({
 	    ticks: [0, 25, 50, 75, 100],
 	    ticks_labels: ['0%', '25%', '50%', '75%', '100%'],
-	    ticks_snap_bounds: 7,
+	    ticks_snap_bounds: 2,
 	    value: 0
 	});
 </script>

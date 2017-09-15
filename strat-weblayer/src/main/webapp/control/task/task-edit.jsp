@@ -114,7 +114,7 @@
 			               				<div class="input-group margin-left">
 						    				<div id="radioBtn-dur" class="btn-group">
 						    					<c:choose>
-								      			    <c:when test="${not task.estimated}">
+								      			    <c:when test="${not task.isEstimated()}">
 								    					<a class="btn-sm active" data-toggle="durationType" data-title="0">Set Duration</a>
 								    					<a class="btn-sm notActive" data-toggle="durationType" data-title="1">Estimations</a>
 										            </c:when>
@@ -129,7 +129,7 @@
 			               			</div>
 				               		<div class="md-form">
 				               			<c:choose>
-						      			    <c:when test="${not task.estimated}">
+						      			    <c:when test="${not task.isEstimated()}">
 						               			<div class="flex-display" id="setDurationRow">
 							         				<input type="number" id="durationField" class="form-control" name="duration" 
 								                    	min="0" placeholder="Set Duration in days" value="${task.duration}">
@@ -181,7 +181,7 @@
 	                  				</div>
                       				<div class="md-form form-sm">
 										<input class="full-width" id="compslider" type="text" name="completion" value="${task.completion}"
-										data-slider-ticks="[0, 25 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
+										data-slider-ticks="[0, 25, 50, 75, 100]" data-slider-ticks-snap-bounds="2" 
 										data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]'/>
 					                </div>
 								</div>

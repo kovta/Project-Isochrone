@@ -16,23 +16,23 @@
 			<td class="strat-detail-attribute-value">
 				<c:choose>
 					<c:when test="${empty submodule.deadline}"><span class="font-no-content">Not Specified</span></c:when>
-  					<c:when test="${submodule.urgencyLevel eq 3 and not submodule.completed}">
+  					<c:when test="${submodule.urgencyLevel eq 3 and not submodule.isCompleted()}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 							<i class="fa fa-exclamation-triangle"></i>
 						</span>
 					</c:when>
-					<c:when test="${submodule.urgencyLevel eq 2 and not submodule.completed}">
+					<c:when test="${submodule.urgencyLevel eq 2 and not submodule.isCompleted()}">
 						<span class="heavy-warning-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
 					</c:when>
-					<c:when test="${submodule.urgencyLevel eq 1 and not submodule.completed}">
+					<c:when test="${submodule.urgencyLevel eq 1 and not submodule.isCompleted()}">
 						<span class="warning-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 						</span>
 					</c:when>
-					<c:when test="${submodule.completed}">
+					<c:when test="${submodule.isCompleted()}">
 						<span class="success-text">
 							<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
 							<i class="fa fa-check"></i>

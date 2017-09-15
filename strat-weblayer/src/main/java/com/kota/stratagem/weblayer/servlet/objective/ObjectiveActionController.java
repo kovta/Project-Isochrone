@@ -108,7 +108,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
-				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, null, false, null, null, null, null);
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, null, false);
 				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
@@ -116,8 +116,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
-				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality, null, null,
-						null, null);
+				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality);
 				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				ObjectiveRepresentor objective = null;

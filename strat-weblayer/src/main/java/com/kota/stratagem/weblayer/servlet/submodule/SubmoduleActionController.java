@@ -104,14 +104,14 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 			} catch (final ParseException e) {
 				LOGGER.info("Failed attempt to modify Submodule : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
-				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, null, null, null, null, null, null);
+				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, null, null);
 				this.forward(request, response, submodule, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			}
 			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Submodule : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Submodule name required");
-				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, deadline, null, null, null, null, null);
+				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, deadline, null);
 				this.forward(request, response, submodule, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {
 				SubmoduleRepresentor submodule = null;

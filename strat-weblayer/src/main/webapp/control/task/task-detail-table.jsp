@@ -74,14 +74,14 @@
 			<td class="strat-detail-attribute-name">Duration</td>
 			<td class="strat-detail-attribute-value">
 				<c:choose>
-					<c:when test="${not task.estimated and empty task.duration}"><span class="font-no-content">Not specified</span></c:when>
+					<c:when test="${not task.isEstimated() and empty task.duration}"><span class="font-no-content">Not specified</span></c:when>
 					<c:when test="${not empty task.duration and task.duration eq 1}">${task.duration} day</c:when>
 					<c:when test="${not empty task.duration and task.duration ne 1}">${task.duration} days</c:when>
 					<c:otherwise>Estimated</c:otherwise>
 				</c:choose>
 			</td>
 		</tr>
-		<c:if test="${task.estimated}">
+		<c:if test="${task.isEstimated()}">
 			<tr>
 				<td class="strat-detail-attribute-name">Pessimistic</td>
 				<td class="strat-detail-attribute-value">${task.pessimistic}<c:out value="${task.pessimistic eq 1 ? ' day' : ' days'}" /></td>
