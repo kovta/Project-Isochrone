@@ -17,10 +17,6 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 	private final ProjectStatusRepresentor status;
 	private final Date deadline;
 	private final Boolean confidential;
-	private final AppUserRepresentor creator;
-	private final Date creationDate;
-	private final AppUserRepresentor modifier;
-	private final Date modificationDate;
 	private final List<SubmoduleRepresentor> submodules;
 	private final List<TaskRepresentor> tasks;
 	private final List<TeamProjectAssignmentRepresentor> assignedTeams;
@@ -36,11 +32,11 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 	private List<TaskRepresentor> completedTasks;
 
 	public ProjectRepresentor() {
-		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null, new Date(), null, new Date(), null);
+		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null);
 	}
 
 	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidentiality,
-			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
+			ObjectiveRepresentor objective) {
 		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
@@ -48,10 +44,6 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidentiality;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
 		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
@@ -60,18 +52,14 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 		this.objective = objective;
 	}
 
-	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential, AppUserRepresentor creator,
-			Date creationDate, AppUserRepresentor modifier, Date modificationDate, ObjectiveRepresentor objective) {
+	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
+			ObjectiveRepresentor objective) {
 		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
 		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
@@ -106,22 +94,6 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 
 	public Boolean getConfidential() {
 		return this.confidential;
-	}
-
-	public AppUserRepresentor getCreator() {
-		return this.creator;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public AppUserRepresentor getModifier() {
-		return this.modifier;
-	}
-
-	public Date getModificationDate() {
-		return this.modificationDate;
 	}
 
 	public List<SubmoduleRepresentor> getSubmodules() {

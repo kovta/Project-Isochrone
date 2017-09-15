@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.kota.stratagem.ejbserviceclient.domain.designation.Dispatchable;
 
-public abstract class AbstractTimeConstraintRepresentor extends AbstractIdentityObscuror implements Dispatchable {
+public abstract class AbstractTimeConstraintRepresentor extends AbstractMonitoredRepresentor implements Dispatchable {
 
 	private final int urgencyLevel;
 

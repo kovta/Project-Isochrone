@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
+public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable, Comparable<TaskRepresentor> {
 
 	private static final long serialVersionUID = -552279169521037564L;
 
@@ -13,22 +13,13 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private final String name;
 	private final String description;
 	private final int priority;
-	private Boolean completed;
-	private Boolean ongoing;
-	private Boolean unstarted;
 	private final double completion;
 	private final Date deadline;
-	private Boolean durationProvided;
-	private Boolean estimated;
 	private Double duration;
 	private Double pessimistic;
 	private Double realistic;
 	private Double optimistic;
 	private final Boolean admittance;
-	private final AppUserRepresentor creator;
-	private final Date creationDate;
-	private final AppUserRepresentor modifier;
-	private final Date modificationDate;
 	private final List<TeamTaskAssignmentRepresentor> assignedTeams;
 	private final List<AppUserTaskAssignmentRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
@@ -43,11 +34,10 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private int dependencyCount;
 
 	public TaskRepresentor() {
-		this(null, "", "", 5, 0, new Date(), null, false, null, new Date(), null, new Date());
+		this(null, "", "", 5, 0, new Date(), null, false);
 	}
 
-	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance,
-			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
+	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance) {
 		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
@@ -57,10 +47,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.deadline = deadline;
 		this.duration = duration;
 		this.admittance = admittance;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.impediments = new ArrayList<>();
@@ -70,8 +56,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.dependencyChain = new ArrayList<>();
 	}
 
-	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance,
-			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
+	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance) {
 		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
@@ -80,10 +65,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.deadline = deadline;
 		this.duration = duration;
 		this.admittance = admittance;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 		this.impediments = new ArrayList<>();
@@ -113,15 +94,15 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		return this.priority;
 	}
 
-	public Boolean getCompleted() {
+	public Boolean isCompleted() {
 		return this.completion == 100;
 	}
 
-	public Boolean getOngoing() {
+	public Boolean isOngoing() {
 		return (this.completion < 100) && (this.completion > 0);
 	}
 
-	public Boolean getUnstarted() {
+	public Boolean isUnstarted() {
 		return this.completion == 0;
 	}
 
@@ -135,22 +116,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public Boolean getAdmittance() {
 		return this.admittance;
-	}
-
-	public AppUserRepresentor getCreator() {
-		return this.creator;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public AppUserRepresentor getModifier() {
-		return this.modifier;
-	}
-
-	public Date getModificationDate() {
-		return this.modificationDate;
 	}
 
 	public List<TeamTaskAssignmentRepresentor> getAssignedTeams() {
@@ -197,11 +162,11 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.submodule = submodule;
 	}
 
-	public Boolean getDurationProvided() {
+	public Boolean isDurationProvided() {
 		return (this.duration != null);
 	}
 
-	public Boolean getEstimated() {
+	public Boolean isEstimated() {
 		return ((this.pessimistic != null) && (this.realistic != null) && (this.optimistic != null));
 	}
 
@@ -272,7 +237,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	@Override
 	public String toString() {
 		return "TaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", estimated=" + this.estimated + ", duration=" + this.duration + ", pessimistic="
+				+ this.completion + ", deadline=" + this.deadline + ", estimated=" + this.isEstimated() + ", duration=" + this.duration + ", pessimistic="
 				+ this.pessimistic + ", realistic=" + this.realistic + ", optimistic=" + this.optimistic + ", admittance=" + this.admittance + ", creator="
 				+ this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate
 				+ ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks="
@@ -336,6 +301,12 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public int compareTo(TaskRepresentor o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

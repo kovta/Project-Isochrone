@@ -18,10 +18,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 	private ObjectiveStatusRepresentor status;
 	private final Date deadline;
 	private final Boolean confidential;
-	private final AppUserRepresentor creator;
-	private final Date creationDate;
-	private final AppUserRepresentor modifier;
-	private final Date modificationDate;
 	private List<ProjectRepresentor> projects;
 	private List<TaskRepresentor> tasks;
 	private List<TeamObjectiveAssignmentRepresentor> assignedTeams;
@@ -35,11 +31,11 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 	private List<TaskRepresentor> completedTasks;
 
 	public ObjectiveRepresentor() {
-		this(null, "", "", 10, ObjectiveStatusRepresentor.PLANNED, null, false, null, new Date(), null, new Date());
+		this(null, "", "", 10, ObjectiveStatusRepresentor.PLANNED, null, false);
 	}
 
-	public ObjectiveRepresentor(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidential,
-			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
+	public ObjectiveRepresentor(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
+			Boolean confidential) {
 		super(deadline != null ? deadline : new Date(), id);
 		this.id = id;
 		this.name = name;
@@ -48,18 +44,13 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
 		this.projects = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
 	}
 
-	public ObjectiveRepresentor(String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidential,
-			AppUserRepresentor creator, Date creationDate, AppUserRepresentor modifier, Date modificationDate) {
+	public ObjectiveRepresentor(String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidential) {
 		super(deadline != null ? deadline : new Date(), null);
 		this.name = name;
 		this.description = description;
@@ -67,10 +58,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 		this.status = status;
 		this.deadline = deadline;
 		this.confidential = confidential;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
 		this.projects = new ArrayList<>();
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
@@ -95,22 +82,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public Boolean getConfidential() {
 		return this.confidential;
-	}
-
-	public AppUserRepresentor getCreator() {
-		return this.creator;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public AppUserRepresentor getModifier() {
-		return this.modifier;
-	}
-
-	public Date getModificationDate() {
-		return this.modificationDate;
 	}
 
 	public String getDescription() {
