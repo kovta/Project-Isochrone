@@ -39,16 +39,16 @@ public class StructureAssignmentListener extends AbstractDevelopmentMessageRoute
 				final String[] partitions = content.split(Pattern.quote(Constants.PAYLOAD_SEPARATOR));
 				final String structureSelector = partitions[0];
 				switch (structureSelector) {
-					case Constants.APP_USER_OBJECTIVE_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+					case Constants.APP_USER_OBJECTIVE_ASSIGNMENT_REPRESENTOR_DATA_LABEL:
 						this.objectiveProcessor.processAssignment(partitions[1]);
 						break;
-					case Constants.APP_USER_PROJECT_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+					case Constants.APP_USER_PROJECT_ASSIGNMENT_REPRESENTOR_DATA_LABEL:
 						this.projectProcessor.processAssignment(partitions[1]);
 						break;
-					case Constants.APP_USER_SUBMODULE_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+					case Constants.APP_USER_SUBMODULE_ASSIGNMENT_REPRESENTOR_DATA_LABEL:
 						this.submoduleProcessor.processAssignment(partitions[1]);
 						break;
-					case Constants.APP_USER_TASK_ASSIGNMENT_REPRESENTOR_DATA_NAME:
+					case Constants.APP_USER_TASK_ASSIGNMENT_REPRESENTOR_DATA_LABEL:
 						this.taskProcessor.processAssignment(partitions[1]);
 						break;
 					default:

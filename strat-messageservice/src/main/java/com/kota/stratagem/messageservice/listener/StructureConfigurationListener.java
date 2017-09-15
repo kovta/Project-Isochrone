@@ -39,7 +39,7 @@ public class StructureConfigurationListener extends AbstractDevelopmentMessageRo
 				final String[] partitions = content.split(Pattern.quote(Constants.PAYLOAD_SEPARATOR));
 				final String structureSelector = partitions[0];
 				switch (structureSelector) {
-					case Constants.TASK_REPRESENTOR_DATA_NAME:
+					case Constants.TASK_REPRESENTOR_DATA_LABEL:
 						this.taskProcessor.processConfiguration(partitions[1], partitions[3]);
 						break;
 					default:

@@ -39,16 +39,16 @@ public class StructureDeletionListener extends AbstractDevelopmentMessageRouter 
 				final String[] partitions = content.split(Pattern.quote(Constants.PAYLOAD_SEPARATOR));
 				final String structureSelector = partitions[0];
 				switch (structureSelector) {
-					case Constants.OBJECTIVE_REPRESENTOR_DATA_NAME:
+					case Constants.OBJECTIVE_REPRESENTOR_DATA_LABEL:
 						this.objectiveProcessor.processDeletion(partitions[1], partitions[2]);
 						break;
-					case Constants.PROJECT_REPRESENTOR_DATA_NAME:
+					case Constants.PROJECT_REPRESENTOR_DATA_LABEL:
 						this.projectProcessor.processDeletion(partitions[1], partitions[2]);
 						break;
-					case Constants.SUBMODULE_REPRESENTOR_DATA_NAME:
+					case Constants.SUBMODULE_REPRESENTOR_DATA_LABEL:
 						this.submoduleProcessor.processDeletion(partitions[1], partitions[2]);
 						break;
-					case Constants.TASK_REPRESENTOR_DATA_NAME:
+					case Constants.TASK_REPRESENTOR_DATA_LABEL:
 						this.taskProcessor.processDeletion(partitions[1], partitions[2]);
 						break;
 					default:

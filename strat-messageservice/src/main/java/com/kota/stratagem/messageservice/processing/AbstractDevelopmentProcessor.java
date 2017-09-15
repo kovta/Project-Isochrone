@@ -58,20 +58,20 @@ public abstract class AbstractDevelopmentProcessor {
 
 	private String divergenceSummarizer(Map<String, String> origin_attributes, Map<String, String> result_attributes) {
 		String modificationItems = "";
-		if ((origin_attributes.get(Constants.DESCRIPTION_DATA_NAME) == null) && !this.empty(result_attributes.get(Constants.DESCRIPTION_DATA_NAME).trim())) {
-			modificationItems += MessageAssembler.buildAddedAttributeMessage(Constants.DESCRIPTION_DATA_NAME,
-					result_attributes.get(Constants.DESCRIPTION_DATA_NAME));
-		} else if ((origin_attributes.get(Constants.DESCRIPTION_DATA_NAME) != null) && (result_attributes.get(Constants.DESCRIPTION_DATA_NAME) == null)
-				&& !"".equals((origin_attributes.get(Constants.DESCRIPTION_DATA_NAME).trim()))) {
-			if (!origin_attributes.get(Constants.DESCRIPTION_DATA_NAME).trim().equals((result_attributes.get(Constants.DESCRIPTION_DATA_NAME).trim()))) {
-				modificationItems += MessageAssembler.buildRemovedAttributeMessage(Constants.DESCRIPTION_DATA_NAME);
+		if ((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL) == null) && !this.empty(result_attributes.get(Constants.DESCRIPTION_DATA_LABEL).trim())) {
+			modificationItems += MessageAssembler.buildAddedAttributeMessage(Constants.DESCRIPTION_DATA_LABEL,
+					result_attributes.get(Constants.DESCRIPTION_DATA_LABEL));
+		} else if ((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL) != null) && (result_attributes.get(Constants.DESCRIPTION_DATA_LABEL) == null)
+				&& !"".equals((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL).trim()))) {
+			if (!origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL).equals(result_attributes.get(Constants.DESCRIPTION_DATA_LABEL))) {
+				modificationItems += MessageAssembler.buildRemovedAttributeMessage(Constants.DESCRIPTION_DATA_LABEL);
 			}
 		}
 		final Iterator<?> it = origin_attributes.entrySet().iterator();
 		while (it.hasNext()) {
 			final Map.Entry<?, ?> pair = (Map.Entry<?, ?>) it.next();
-			if ((!result_attributes.get(pair.getKey()).equals(pair.getValue())) && !Constants.DESCRIPTION_DATA_NAME.equals(pair.getKey())
-					&& !Constants.MODIFIER_ID_DATA_NAME.equals(pair.getKey()) && !Constants.ID_DATA_NAME.equals(pair.getKey())) {
+			if (!Constants.DESCRIPTION_DATA_LABEL.equals(pair.getKey()) && !result_attributes.get(pair.getKey()).equals(pair.getValue())
+					&& !Constants.MODIFIER_ID_DATA_LABEL.equals(pair.getKey()) && !Constants.ID_DATA_LABEL.equals(pair.getKey())) {
 				if ((result_attributes.get(pair.getKey()) != null) && (pair.getValue() == null)) {
 					modificationItems += MessageAssembler.buildAddedAttributeMessage((String) pair.getKey(), result_attributes.get(pair.getKey()));
 				} else if ((result_attributes.get(pair.getKey()) == null) && (pair.getValue() != null)) {
@@ -88,9 +88,10 @@ public abstract class AbstractDevelopmentProcessor {
 
 	protected void handleCreationProperties(final Map<String, String> attributes, final String structureType, Set<AppUser> recipients) {
 		try {
-			this.notificationService.create(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_NAME)),
-					MessageAssembler.buildCreationMessage(structureType, attributes.get(Constants.NAME_DATA_NAME), attributes.get(Constants.PRIORITY_DATA_NAME),
-							attributes.get(Constants.DEADLINE_DATA_NAME), attributes.get(Constants.CONFIDENTIALITY_DATA_NAME)),
+			this.notificationService.create(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL)),
+					MessageAssembler.buildCreationMessage(structureType, attributes.get(Constants.NAME_DATA_LABEL),
+							attributes.get(Constants.PRIORITY_DATA_LABEL), attributes.get(Constants.DEADLINE_DATA_LABEL),
+							attributes.get(Constants.CONFIDENTIALITY_DATA_LABEL)),
 					this.extractUserIdentifiers(recipients));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();
@@ -100,8 +101,8 @@ public abstract class AbstractDevelopmentProcessor {
 	protected void handleAssignmentProperties(final Map<String, String> attributes, final String structureType, final String structureName) {
 		try {
 			final Set<AppUser> recipient = new HashSet<>();
-			recipient.add(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.RECIPIENT_ID_DATA_NAME))));
-			this.notificationService.create(Long.parseLong(attributes.get(Constants.ENTRUSTOR_ID_DATA_NAME)),
+			recipient.add(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.RECIPIENT_ID_DATA_LABEL))));
+			this.notificationService.create(Long.parseLong(attributes.get(Constants.ENTRUSTOR_ID_DATA_LABEL)),
 					MessageAssembler.buildAssignmentMessage(structureType, structureName), this.extractUserIdentifiers(recipient));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();
@@ -111,8 +112,8 @@ public abstract class AbstractDevelopmentProcessor {
 	protected void handleDissociationProperties(final Map<String, String> attributes, final String structureType, final String structureName) {
 		try {
 			final Set<AppUser> recipient = new HashSet<>();
-			recipient.add(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.RECIPIENT_ID_DATA_NAME))));
-			this.notificationService.create(Long.parseLong(attributes.get(Constants.ENTRUSTOR_ID_DATA_NAME)),
+			recipient.add(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.RECIPIENT_ID_DATA_LABEL))));
+			this.notificationService.create(Long.parseLong(attributes.get(Constants.ENTRUSTOR_ID_DATA_LABEL)),
 					MessageAssembler.buildDissociationMessage(structureType, structureName), this.extractUserIdentifiers(recipient));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();
@@ -122,8 +123,8 @@ public abstract class AbstractDevelopmentProcessor {
 	protected void handleModificationProperties(final Map<String, String> origin_attributes, final Map<String, String> result_attributes,
 			final String structureType, Set<AppUser> recipients) {
 		try {
-			this.notificationService.create(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME)),
-					MessageAssembler.buildModificationBaseMessage(structureType, origin_attributes.get(Constants.NAME_DATA_NAME))
+			this.notificationService.create(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_LABEL)),
+					MessageAssembler.buildModificationBaseMessage(structureType, origin_attributes.get(Constants.NAME_DATA_LABEL))
 							+ this.divergenceSummarizer(origin_attributes, result_attributes),
 					this.extractUserIdentifiers(recipients));
 		} catch (NumberFormatException | PersistenceServiceException e) {
@@ -134,7 +135,7 @@ public abstract class AbstractDevelopmentProcessor {
 	protected void handleDeletionProperties(final Map<String, String> attributes, final String structureType, String operator, Set<AppUser> recipients) {
 		try {
 			this.notificationService.create(this.appUserService.readElementary(operator).getId(),
-					MessageAssembler.buildDeletionMessage(structureType, attributes.get(Constants.NAME_DATA_NAME)), this.extractUserIdentifiers(recipients));
+					MessageAssembler.buildDeletionMessage(structureType, attributes.get(Constants.NAME_DATA_LABEL)), this.extractUserIdentifiers(recipients));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();
 		}
@@ -144,8 +145,8 @@ public abstract class AbstractDevelopmentProcessor {
 			final String structureType, Set<AppUser> recipients) {
 		try {
 			this.notificationService.create(
-					Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME)), MessageAssembler.buildDependencyConfigurationMessage(structureType,
-							origin_attributes.get(Constants.NAME_DATA_NAME), result_attributes.get(Constants.NAME_DATA_NAME)),
+					Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_LABEL)), MessageAssembler.buildDependencyConfigurationMessage(structureType,
+							origin_attributes.get(Constants.NAME_DATA_LABEL), result_attributes.get(Constants.NAME_DATA_LABEL)),
 					this.extractUserIdentifiers(recipients));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();
@@ -155,9 +156,9 @@ public abstract class AbstractDevelopmentProcessor {
 	protected void handleDependencyDeconfigurationProperties(final Map<String, String> origin_attributes, final Map<String, String> result_attributes,
 			final String structureType, Set<AppUser> recipients) {
 		try {
-			this.notificationService.create(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_NAME)),
-					MessageAssembler.buildDependencyDeconfigurationMessage(structureType, origin_attributes.get(Constants.NAME_DATA_NAME),
-							result_attributes.get(Constants.NAME_DATA_NAME)),
+			this.notificationService.create(Long.parseLong(result_attributes.get(Constants.MODIFIER_ID_DATA_LABEL)),
+					MessageAssembler.buildDependencyDeconfigurationMessage(structureType, origin_attributes.get(Constants.NAME_DATA_LABEL),
+							result_attributes.get(Constants.NAME_DATA_LABEL)),
 					this.extractUserIdentifiers(recipients));
 		} catch (NumberFormatException | PersistenceServiceException e) {
 			e.printStackTrace();

@@ -39,16 +39,16 @@ public class StructureModificationListener extends AbstractDevelopmentMessageRou
 				final String[] partitions = content.split(Pattern.quote(Constants.PAYLOAD_SEPARATOR));
 				final String structureSelector = partitions[0];
 				switch (structureSelector) {
-					case Constants.OBJECTIVE_REPRESENTOR_DATA_NAME:
+					case Constants.OBJECTIVE_REPRESENTOR_DATA_LABEL:
 						this.objectiveProcessor.processModification(partitions[1], partitions[3]);
 						break;
-					case Constants.PROJECT_REPRESENTOR_DATA_NAME:
+					case Constants.PROJECT_REPRESENTOR_DATA_LABEL:
 						this.projectProcessor.processModification(partitions[1], partitions[3]);
 						break;
-					case Constants.SUBMODULE_REPRESENTOR_DATA_NAME:
+					case Constants.SUBMODULE_REPRESENTOR_DATA_LABEL:
 						this.submoduleProcessor.processModification(partitions[1], partitions[3]);
 						break;
-					case Constants.TASK_REPRESENTOR_DATA_NAME:
+					case Constants.TASK_REPRESENTOR_DATA_LABEL:
 						this.taskProcessor.processModification(partitions[1], partitions[3]);
 						break;
 					default:
