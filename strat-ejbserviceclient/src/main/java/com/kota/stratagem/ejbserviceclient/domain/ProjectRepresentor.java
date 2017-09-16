@@ -23,6 +23,7 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 	private final List<AppUserProjectAssignmentRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
 	private final ObjectiveRepresentor objective;
+
 	private double completion;
 	private List<SubmoduleRepresentor> overdueSubmodules;
 	private List<SubmoduleRepresentor> ongoingSubmodules;
@@ -35,21 +36,10 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null);
 	}
 
-	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidentiality,
+	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			ObjectiveRepresentor objective) {
-		super(deadline != null ? deadline : new Date(), id);
+		this(name, description, status, deadline, confidential, objective);
 		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.status = status;
-		this.deadline = deadline;
-		this.confidential = confidentiality;
-		this.submodules = new ArrayList<>();
-		this.tasks = new ArrayList<>();
-		this.assignedTeams = new ArrayList<>();
-		this.assignedUsers = new ArrayList<>();
-		this.impediments = new ArrayList<>();
-		this.objective = objective;
 	}
 
 	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
@@ -120,103 +110,72 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 		return this.objective;
 	}
 
+	public Boolean isCompleted() {
+		return this.getCompletion() == 100;
+	}
+
+	public Boolean isOngoing() {
+		return (this.getCompletion() < 100) && (this.getCompletion() > 0);
+	}
+
+	public Boolean isUnstarted() {
+		return this.getCompletion() == 0;
+	}
+
 	public double getCompletion() {
-		int progressSum = 0, taskCount = 0;
-		for (final TaskRepresentor task : this.getTasks()) {
-			progressSum += task.getCompletion();
-			taskCount++;
-		}
-		for (final SubmoduleRepresentor submodule : this.getSubmodules()) {
-			for (final TaskRepresentor submoduleTask : submodule.getTasks()) {
-				progressSum += submoduleTask.getCompletion();
-				taskCount++;
-			}
-		}
-		return taskCount != 0 ? progressSum / taskCount : 0;
+		return this.completion;
+	}
+
+	public void setCompletion(double completion) {
+		this.completion = completion;
 	}
 
 	public List<SubmoduleRepresentor> getOverdueSubmodules() {
-		if (this.overdueSubmodules == null) {
-			this.overdueSubmodules = new ArrayList<SubmoduleRepresentor>();
-		} else {
-			this.overdueSubmodules.clear();
-		}
-		for (final SubmoduleRepresentor representor : this.getSubmodules()) {
-			if ((representor.getUrgencyLevel() == 3) && (representor.getCompletion() != 100)) {
-				this.overdueSubmodules.add(representor);
-			}
-		}
 		return this.overdueSubmodules;
 	}
 
+	public void setOverdueSubmodules(List<SubmoduleRepresentor> overdueSubmodules) {
+		this.overdueSubmodules = overdueSubmodules;
+	}
+
 	public List<SubmoduleRepresentor> getOngoingSubmodules() {
-		if (this.ongoingSubmodules == null) {
-			this.ongoingSubmodules = new ArrayList<SubmoduleRepresentor>();
-		} else {
-			this.ongoingSubmodules.clear();
-		}
-		for (final SubmoduleRepresentor representor : this.getSubmodules()) {
-			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
-				this.ongoingSubmodules.add(representor);
-			}
-		}
 		return this.ongoingSubmodules;
 	}
 
+	public void setOngoingSubmodules(List<SubmoduleRepresentor> ongoingSubmodules) {
+		this.ongoingSubmodules = ongoingSubmodules;
+	}
+
 	public List<SubmoduleRepresentor> getCompletedSubmodules() {
-		if (this.completedSubmodules == null) {
-			this.completedSubmodules = new ArrayList<SubmoduleRepresentor>();
-		} else {
-			this.completedSubmodules.clear();
-		}
-		for (final SubmoduleRepresentor representor : this.getSubmodules()) {
-			if (representor.getCompletion() == 100) {
-				this.completedSubmodules.add(representor);
-			}
-		}
 		return this.completedSubmodules;
 	}
 
+	public void setCompletedSubmodules(List<SubmoduleRepresentor> completedSubmodules) {
+		this.completedSubmodules = completedSubmodules;
+	}
+
 	public List<TaskRepresentor> getOverdueTasks() {
-		if (this.overdueTasks == null) {
-			this.overdueTasks = new ArrayList<TaskRepresentor>();
-		} else {
-			this.overdueTasks.clear();
-		}
-		for (final TaskRepresentor representor : this.getTasks()) {
-			if ((representor.getUrgencyLevel() == 3) && (representor.getCompletion() != 100)) {
-				this.overdueTasks.add(representor);
-			}
-		}
 		return this.overdueTasks;
 	}
 
+	public void setOverdueTasks(List<TaskRepresentor> overdueTasks) {
+		this.overdueTasks = overdueTasks;
+	}
+
 	public List<TaskRepresentor> getOngoingTasks() {
-		if (this.ongoingTasks == null) {
-			this.ongoingTasks = new ArrayList<TaskRepresentor>();
-		} else {
-			this.ongoingTasks.clear();
-		}
-		for (final TaskRepresentor representor : this.getTasks()) {
-			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
-				this.ongoingTasks.add(representor);
-			}
-		}
 		return this.ongoingTasks;
 	}
 
+	public void setOngoingTasks(List<TaskRepresentor> ongoingTasks) {
+		this.ongoingTasks = ongoingTasks;
+	}
+
 	public List<TaskRepresentor> getCompletedTasks() {
-		if (this.completedTasks == null) {
-			this.completedTasks = new ArrayList<TaskRepresentor>();
-		} else {
-			this.completedTasks.clear();
-		}
-		for (final TaskRepresentor representor : this.getTasks()) {
-			if (representor.getCompletion() == 100) {
-				this.completedTasks.add(representor);
-			}
-		}
 		return this.completedTasks;
+	}
+
+	public void setCompletedTasks(List<TaskRepresentor> completedTasks) {
+		this.completedTasks = completedTasks;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable, Comparable<TaskRepresentor> {
+public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -552279169521037564L;
 
@@ -28,6 +28,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private ObjectiveRepresentor objective;
 	private ProjectRepresentor project;
 	private SubmoduleRepresentor submodule;
+
 	private List<List<TaskRepresentor>> dependantChain;
 	private List<List<TaskRepresentor>> dependencyChain;
 	private int dependantCount;
@@ -301,12 +302,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public int compareTo(TaskRepresentor o) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

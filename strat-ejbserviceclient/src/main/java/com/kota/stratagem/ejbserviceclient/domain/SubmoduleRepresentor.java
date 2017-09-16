@@ -2,8 +2,6 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +17,7 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final List<TeamSubmoduleAssignmentRepresentor> assignedTeams;
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
+
 	private double completion;
 	private Double durationSum;
 	private Double completedDurationSum;
@@ -31,15 +30,8 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	}
 
 	public SubmoduleRepresentor(Long id, String name, String description, Date deadline, ProjectRepresentor project) {
-		super(deadline != null ? deadline : new Date(), id);
+		this(name, description, deadline, project);
 		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.deadline = deadline;
-		this.tasks = new ArrayList<>();
-		this.assignedTeams = new ArrayList<>();
-		this.assignedUsers = new ArrayList<>();
-		this.project = project;
 	}
 
 	public SubmoduleRepresentor(String name, String description, Date deadline, ProjectRepresentor project) {
@@ -102,99 +94,51 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	}
 
 	public double getCompletion() {
-		int progressSum = 0;
-		for (final TaskRepresentor task : this.getTasks()) {
-			progressSum += task.getCompletion();
-		}
-		return this.getTasks().size() != 0 ? progressSum / this.getTasks().size() : 0;
+		return this.completion;
+	}
+
+	public void setCompletion(double completion) {
+		this.completion = completion;
 	}
 
 	public Double getDurationSum() {
-		Double durationSum = (double) 0;
-		for (final TaskRepresentor task : this.getTasks()) {
-			if (task.isEstimated()) {
+		return this.durationSum;
+	}
 
-			} else if (task.isDurationProvided()) {
-				durationSum += task.getDuration();
-			}
-		}
-		return durationSum;
+	public void setDurationSum(Double durationSum) {
+		this.durationSum = durationSum;
 	}
 
 	public Double getCompletedDurationSum() {
-		Double durationSum = (double) 0;
-		for (final TaskRepresentor task : this.getTasks()) {
-			if (task.isEstimated()) {
+		return this.completedDurationSum;
+	}
 
-			} else if (task.isCompleted() && task.isDurationProvided()) {
-				durationSum += task.getDuration();
-			}
-		}
-		return durationSum;
+	public void setCompletedDurationSum(Double completedDurationSum) {
+		this.completedDurationSum = completedDurationSum;
 	}
 
 	public List<TaskRepresentor> getOverdueTasks() {
-		if (this.overdueTasks == null) {
-			this.overdueTasks = new ArrayList<TaskRepresentor>();
-		} else {
-			this.overdueTasks.clear();
-		}
-		for (final TaskRepresentor representor : this.getTasks()) {
-			if ((representor.getUrgencyLevel() == 3) && (representor.getCompletion() != 100)) {
-				this.overdueTasks.add(representor);
-			}
-		}
-		Collections.sort(this.overdueTasks, new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				final int c = obj_a.getDeadline().compareTo(obj_b.getDeadline());
-				if (c == 0) {
-					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-				}
-				return c;
-			}
-		});
 		return this.overdueTasks;
 	}
 
+	public void setOverdueTasks(List<TaskRepresentor> overdueTasks) {
+		this.overdueTasks = overdueTasks;
+	}
+
 	public List<TaskRepresentor> getOngoingTasks() {
-		if (this.ongoingTasks == null) {
-			this.ongoingTasks = new ArrayList<TaskRepresentor>();
-		} else {
-			this.ongoingTasks.clear();
-		}
-		for (final TaskRepresentor representor : this.getTasks()) {
-			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
-				this.ongoingTasks.add(representor);
-			}
-		}
-		Collections.sort(this.ongoingTasks, new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-			}
-		});
 		return this.ongoingTasks;
 	}
 
+	public void setOngoingTasks(List<TaskRepresentor> ongoingTasks) {
+		this.ongoingTasks = ongoingTasks;
+	}
+
 	public List<TaskRepresentor> getCompletedTasks() {
-		if (this.completedTasks == null) {
-			this.completedTasks = new ArrayList<TaskRepresentor>();
-		} else {
-			this.completedTasks.clear();
-		}
-		for (final TaskRepresentor representor : this.getTasks()) {
-			if (representor.getCompletion() == 100) {
-				this.completedTasks.add(representor);
-			}
-		}
-		Collections.sort(this.completedTasks, new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-			}
-		});
 		return this.completedTasks;
+	}
+
+	public void setCompletedTasks(List<TaskRepresentor> completedTasks) {
+		this.completedTasks = completedTasks;
 	}
 
 	@Override
