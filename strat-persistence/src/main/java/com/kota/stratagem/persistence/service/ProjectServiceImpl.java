@@ -40,16 +40,10 @@ public class ProjectServiceImpl implements ProjectService {
 	private ObjectiveService objectiveService;
 
 	@Override
-	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, Long creator, Long objective) {
+	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String creator, Long objective) {
 		final Objective parentObjective = this.objectiveService.readElementary(objective);
+		final AppUser operator = this.appUserService.readElementary(creator);
 		final Project project = new Project(name, description, status, deadline, confidentiality, new Date(), new Date(), parentObjective);
-		AppUser operatorTemp;
-		if (parentObjective.getCreator().getId() == creator) {
-			operatorTemp = parentObjective.getCreator();
-		} else {
-			operatorTemp = this.appUserService.readElementary(creator);
-		}
-		final AppUser operator = operatorTemp;
 		project.setCreator(operator);
 		project.setModifier(operator);
 		this.entityManager.merge(project);

@@ -12,7 +12,7 @@ import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceExcept
 @Local
 public interface ProjectService {
 
-	Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, Long creator, Long objective);
+	Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String creator, Long objective);
 
 	Project readElementary(Long id);
 

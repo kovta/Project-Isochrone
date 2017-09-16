@@ -82,7 +82,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			LOGGER.debug("Create User Objective Assignment (objective=" + objective + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
-			final Objective targetObjective = this.objectiveService.readElementary(objective);
+			final Objective targetObjective = this.objectiveService.readWithMonitoring(objective);
 			final AppUserObjectiveAssignment assignment = new AppUserObjectiveAssignment(targetObjective, new Date());
 			this.persistAssignment(assignment, targetObjective, entrustor, recipient);
 			return assignment;
@@ -98,7 +98,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			LOGGER.debug("Create User Project Assignment (project=" + project + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
-			final Project targetProject = this.projectService.readElementary(project);
+			final Project targetProject = this.projectService.readWithMonitoring(project);
 			final AppUserProjectAssignment assignment = new AppUserProjectAssignment(targetProject, new Date());
 			this.persistAssignment(assignment, targetProject, entrustor, recipient);
 			return assignment;
@@ -114,7 +114,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			LOGGER.debug("Create User Objective Assignment (submodule=" + submodule + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
-			final Submodule targetSubmodule = this.submoduleService.readElementary(submodule);
+			final Submodule targetSubmodule = this.submoduleService.readWithMonitoring(submodule);
 			final AppUserSubmoduleAssignment assignment = new AppUserSubmoduleAssignment(targetSubmodule, new Date());
 			this.persistAssignment(assignment, targetSubmodule, entrustor, recipient);
 			return assignment;
@@ -130,7 +130,7 @@ public class AppUserAssignmentServiceImpl implements AppUserAssignmentService {
 			LOGGER.debug("Create User Task Assignment (task=" + task + ", recipient=" + recipient + ", entrustor=" + entrustor + ")");
 		}
 		try {
-			final Task targetTask = this.taskService.readElementary(task);
+			final Task targetTask = this.taskService.readWithMonitoring(task);
 			final AppUserTaskAssignment assignment = new AppUserTaskAssignment(targetTask, new Date());
 			this.persistAssignment(assignment, targetTask, entrustor, recipient);
 			return assignment;
