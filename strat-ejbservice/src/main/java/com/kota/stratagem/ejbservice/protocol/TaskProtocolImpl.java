@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
+import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -27,7 +28,7 @@ import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.util.Constants;
 
 @Regulated
-@Stateless(mappedName = "ejb/taskProtocol")
+@Stateless(mappedName = EJBServiceConfiguration.TASK_PROTOCOL_SIGNATURE)
 public class TaskProtocolImpl implements TaskProtocol {
 
 	@EJB
