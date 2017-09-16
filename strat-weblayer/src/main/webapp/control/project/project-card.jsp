@@ -59,7 +59,7 @@
 			<c:when test="${project.tasks.size() eq 1}"><p class="card-text"><c:out value="${project.tasks.size()} Task" /></p></c:when>
 			<c:otherwise><p class="card-text"><c:out value="${project.tasks.size()} Tasks" /></p></c:otherwise>
 	   </c:choose>
-	   <c:if test="${project.submodules.size() ne 0 and project.tasks.size() ne 0}">
+	   <c:if test="${project.submodules.size() ne 0 or project.tasks.size() ne 0}">
 	       <p class="card-text"><c:out value="${project.completion}% Completed" /></p>
 	   </c:if>
        <div class="full-width text-center">
