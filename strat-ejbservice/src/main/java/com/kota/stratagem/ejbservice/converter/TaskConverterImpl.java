@@ -59,12 +59,12 @@ public class TaskConverterImpl extends AbstractMonitoredEntityConverter implemen
 		// }
 		if (task.getDependantTasks() != null) {
 			for (final Task dependant : task.getDependantTasks()) {
-				representor.addDependantTask(this.toElementary(dependant));
+				representor.addDependant(this.toElementary(dependant));
 			}
 		}
 		if (task.getTaskDependencies() != null) {
 			for (final Task dependency : task.getTaskDependencies()) {
-				representor.addTaskDependency(this.toElementary(dependency));
+				representor.addDependency(this.toElementary(dependency));
 			}
 		}
 		if (task.getObjective() != null) {

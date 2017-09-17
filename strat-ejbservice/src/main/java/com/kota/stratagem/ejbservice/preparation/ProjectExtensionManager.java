@@ -78,10 +78,14 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 			taskCount++;
 		}
 		for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
+			int submoduleProgress = 0, submoduleTaskCount = 0;
 			for (final TaskRepresentor submoduleTask : submodule.getTasks()) {
 				progressSum += submoduleTask.getCompletion();
+				submoduleProgress += submoduleTask.getCompletion();
 				taskCount++;
+				submoduleTaskCount++;
 			}
+			submodule.setCompletion(submoduleTaskCount != 0 ? submoduleProgress / submoduleTaskCount : 0);
 		}
 		this.representor.setCompletion(taskCount != 0 ? progressSum / taskCount : 0);
 	}

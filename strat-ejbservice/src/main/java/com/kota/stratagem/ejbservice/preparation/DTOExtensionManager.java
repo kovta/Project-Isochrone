@@ -2,12 +2,17 @@ package com.kota.stratagem.ejbservice.preparation;
 
 import java.util.List;
 
+import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 
 public interface DTOExtensionManager {
+
+	AppUserRepresentor prepare(AppUserRepresentor representor);
+
+	List<AppUserRepresentor> prepareAppUsers(List<AppUserRepresentor> representors);
 
 	ObjectiveRepresentor prepare(ObjectiveRepresentor representor);
 
@@ -20,5 +25,7 @@ public interface DTOExtensionManager {
 	SubmoduleRepresentor prepare(SubmoduleRepresentor representor);
 
 	TaskRepresentor prepare(TaskRepresentor representor);
+
+	List<TaskRepresentor> prepareCompliantTasks(List<TaskRepresentor> representors);
 
 }

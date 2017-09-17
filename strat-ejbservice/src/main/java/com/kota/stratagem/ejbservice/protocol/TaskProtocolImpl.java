@@ -1,12 +1,8 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -15,17 +11,16 @@ import javax.inject.Inject;
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
-import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.interceptor.Regulated;
-import com.kota.stratagem.ejbserviceclient.domain.AppUserTaskAssignmentRepresentor;
+import com.kota.stratagem.ejbservice.preparation.DTOExtensionManager;
+import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
-import com.kota.stratagem.persistence.util.Constants;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.TASK_PROTOCOL_SIGNATURE)
@@ -52,99 +47,13 @@ public class TaskProtocolImpl implements TaskProtocol {
 	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
-	@EJB
-	private LifecycleOverseer overseer;
+	@Inject
+	@TaskOriented
+	private DTOExtensionManager extensionManager;
 
 	@Override
 	public TaskRepresentor getTask(Long id) throws AdaptorException {
-		final TaskRepresentor representor = this.taskConverter.toComplete(this.taskService.readComplete(id));
-		Collections.sort(representor.getAssignedUsers(), new Comparator<AppUserTaskAssignmentRepresentor>() {
-			@Override
-			public int compare(AppUserTaskAssignmentRepresentor obj_a, AppUserTaskAssignmentRepresentor obj_b) {
-				return obj_a.getRecipient().getName().toLowerCase().compareTo(obj_b.getRecipient().getName().toLowerCase());
-			}
-		});
-		final List<Long> identifiers = new ArrayList<>();
-		if (!representor.getDependantTasks().isEmpty()) {
-			final List<List<TaskRepresentor>> dependantChain = new ArrayList<>();
-			final Queue<TaskRepresentor> queue = new LinkedList<TaskRepresentor>();
-			queue.add(representor);
-			TaskRepresentor current;
-			while ((current = queue.poll()) != null) {
-				this.traverseDependants(current, queue, dependantChain, identifiers);
-			}
-			representor.setDependantChain(dependantChain);
-		}
-		if (!representor.getTaskDependencies().isEmpty()) {
-			final List<List<TaskRepresentor>> dependencyChain = new ArrayList<>();
-			final Queue<TaskRepresentor> queue = new LinkedList<TaskRepresentor>();
-			queue.add(representor);
-			TaskRepresentor current;
-			while ((current = queue.poll()) != null) {
-				this.traverseDependencies(current, queue, dependencyChain, identifiers);
-			}
-			representor.setDependencyChain(dependencyChain);
-		}
-		Collections.reverse(representor.getDependantChain());
-		for (final List<TaskRepresentor> dependantLevel : representor.getDependantChain()) {
-			Collections.sort(dependantLevel, new Comparator<TaskRepresentor>() {
-				@Override
-				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-				}
-			});
-		}
-		for (final List<TaskRepresentor> dependencyLevel : representor.getDependantChain()) {
-			Collections.sort(dependencyLevel, new Comparator<TaskRepresentor>() {
-				@Override
-				public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-					return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-				}
-			});
-		}
-		return representor;
-	}
-
-	private void traverseDependants(TaskRepresentor node, Queue<TaskRepresentor> queue, List<List<TaskRepresentor>> dependantChain, List<Long> identifiers) {
-		if (!node.getDependantTasks().isEmpty()) {
-			final List<TaskRepresentor> nodes = new ArrayList<TaskRepresentor>(node.getDependantTasks());
-			for (final TaskRepresentor dependant : node.getDependantTasks()) {
-				if (identifiers.contains(dependant.getId())) {
-					nodes.remove(dependant);
-				} else {
-					identifiers.add(dependant.getId());
-				}
-			}
-			if (!nodes.isEmpty()) {
-				dependantChain.add(nodes);
-			}
-			for (int i = 0; i < node.getDependantTasks().size(); i++) {
-				final TaskRepresentor dependantNode = this.taskConverter
-						.toSimplified(this.taskService.readWithDirectDependencies(node.getDependantTasks().get(i).getId()));
-				queue.add(dependantNode);
-			}
-		}
-	}
-
-	private void traverseDependencies(TaskRepresentor node, Queue<TaskRepresentor> queue, List<List<TaskRepresentor>> dependencyChain, List<Long> identifiers) {
-		if (!node.getTaskDependencies().isEmpty()) {
-			final List<TaskRepresentor> nodes = new ArrayList<TaskRepresentor>(node.getTaskDependencies());
-			for (final TaskRepresentor dependency : node.getTaskDependencies()) {
-				if (identifiers.contains(dependency.getId())) {
-					nodes.remove(dependency);
-				} else {
-					identifiers.add(dependency.getId());
-				}
-			}
-			if (!nodes.isEmpty()) {
-				dependencyChain.add(nodes);
-			}
-			for (int i = 0; i < node.getTaskDependencies().size(); i++) {
-				final TaskRepresentor dependencyNode = this.taskConverter
-						.toSimplified(this.taskService.readWithDirectDependencies(node.getTaskDependencies().get(i).getId()));
-				queue.add(dependencyNode);
-			}
-		}
+		return this.extensionManager.prepare(this.taskConverter.toComplete(this.taskService.readComplete(id)));
 	}
 
 	@Override
@@ -168,13 +77,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 				configurations.remove(dependant);
 			}
 		}
-		Collections.sort(configurations, new Comparator<TaskRepresentor>() {
-			@Override
-			public int compare(TaskRepresentor obj_a, TaskRepresentor obj_b) {
-				return obj_a.getName().toLowerCase().compareTo(obj_b.getName().toLowerCase());
-			}
-		});
-		return configurations;
+		return this.extensionManager.prepareCompliantTasks(configurations);
 	}
 
 	@Override
@@ -186,29 +89,16 @@ public class TaskProtocolImpl implements TaskProtocol {
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
 			String operator, Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic)
 			throws AdaptorException {
-		TaskRepresentor origin = null;
-		if (id != null) {
-			origin = this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(id));
-		}
-		final TaskRepresentor representor = this.taskConverter.toComplete(((id != null) && this.taskService.exists(id))
-				? this.taskService.update(id, name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),
-						objective, project, submodule, duration, pessimistic, realistic, optimistic)
-				: this.taskService.create(name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),
-						objective, project, submodule, duration, pessimistic, realistic, optimistic));
-		if (id != null) {
-			this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
-		} else {
-			this.overseer.created(representor.toTextMessage());
-		}
-		return representor;
+		return this.extensionManager.prepare(this.taskConverter
+				.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name, description, priority, completion, deadline,
+						admittance, this.appUserService.readElementary(operator), objective, project, submodule, duration, pessimistic, realistic, optimistic)
+						: this.taskService.create(name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),
+								objective, project, submodule, duration, pessimistic, realistic, optimistic)));
 	}
 
 	@Override
 	public void removeTask(Long id) throws AdaptorException {
-		final String message = this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(id)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
-				+ this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 		this.taskService.delete(id);
-		this.overseer.deleted(message);
 	}
 
 	@Override
@@ -216,8 +106,6 @@ public class TaskProtocolImpl implements TaskProtocol {
 		for (final Long dependency : dependencies) {
 			this.taskService.createDependency(dependency, source,
 					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
-			this.overseer.configured(this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(source)).toTextMessage()
-					+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependency)).toTextMessage());
 		}
 	}
 
@@ -226,8 +114,6 @@ public class TaskProtocolImpl implements TaskProtocol {
 		for (final Long dependant : dependants) {
 			this.taskService.createDependency(source, dependant,
 					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
-			this.overseer.configured(this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependant)).toTextMessage()
-					+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(source)).toTextMessage());
 		}
 	}
 
@@ -235,8 +121,6 @@ public class TaskProtocolImpl implements TaskProtocol {
 	public void removeTaskDependency(Long dependency, Long dependant) throws AdaptorException {
 		this.taskService.deleteDependency(dependency, dependant,
 				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
-		this.overseer.deconfigured(this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependant)).toTextMessage()
-				+ Constants.PAYLOAD_SEPARATOR + this.taskConverter.toDispatchable(this.taskService.readWithMonitoring(dependency)).toTextMessage());
 	}
 
 }

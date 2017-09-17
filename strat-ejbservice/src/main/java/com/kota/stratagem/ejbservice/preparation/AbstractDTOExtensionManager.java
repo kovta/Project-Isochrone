@@ -2,12 +2,29 @@ package com.kota.stratagem.ejbservice.preparation;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 
 public abstract class AbstractDTOExtensionManager implements DTOExtensionManager {
+
+	protected static final Logger LOGGER = Logger.getLogger(AbstractDTOExtensionManager.class);
+
+	@Override
+	public AppUserRepresentor prepare(AppUserRepresentor representor) {
+		this.sortBaseCollections();
+		return null;
+	}
+
+	@Override
+	public List<AppUserRepresentor> prepareAppUsers(List<AppUserRepresentor> representors) {
+		this.sortJointCollection();
+		return null;
+	}
 
 	@Override
 	public ObjectiveRepresentor prepare(ObjectiveRepresentor representor) {
@@ -51,6 +68,12 @@ public abstract class AbstractDTOExtensionManager implements DTOExtensionManager
 		this.sortSpecializedCollections();
 		this.sortBaseCollections();
 		return representor;
+	}
+
+	@Override
+	public List<TaskRepresentor> prepareCompliantTasks(List<TaskRepresentor> representors) {
+		this.sortJointCollection();
+		return null;
 	}
 
 	protected abstract void addRepresentorSpecificProperties();

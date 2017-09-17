@@ -74,16 +74,22 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 			taskCount++;
 		}
 		for (final ProjectRepresentor project : this.representor.getProjects()) {
+			int projectProgress = 0, projectTaskCount = 0;
 			for (final TaskRepresentor projectTask : project.getTasks()) {
 				progressSum += projectTask.getCompletion();
+				projectProgress += projectTask.getCompletion();
 				taskCount++;
+				projectTaskCount++;
 			}
 			for (final SubmoduleRepresentor projectSubmodule : project.getSubmodules()) {
 				for (final TaskRepresentor submoduleTask : projectSubmodule.getTasks()) {
 					progressSum += submoduleTask.getCompletion();
+					projectProgress += submoduleTask.getCompletion();
 					taskCount++;
+					projectTaskCount++;
 				}
 			}
+			project.setCompletion(projectTaskCount != 0 ? projectProgress / projectTaskCount : 0);
 		}
 		this.representor.setCompletion(taskCount != 0 ? progressSum / taskCount : 0);
 	}
