@@ -268,7 +268,8 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (53, 'Estimate submodule duration with 95% confidence level', 'Using beta distribution, expected duration, variance and standard deviation, give reliable submodule duration estimate', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (54, 'Give probability of submodule finishing before given deadline', 'If submodule deadline is registered, produce probability with PERT methodology whether the remaining time is sufficient for completion', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (55, 'Implement adaptable model for duration, and pre-deadline completion estimations', 'Upon making both calculations the algorithm must adapt to the current level of progress. This involves excluding completed tasks from the dependency chain and building the network model with only the unfinished entries of the list', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(56, 'Estimation summary for higher level structures', 'Calculated durational estimates can be summed up for Project, and Objective levels', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(56, 'Estimation summary for higher level structures', 'Calculated durational estimates can be summed up for Project, and Objective levels', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(57, 'Present calculated values on respected views', 'Values to be added are: 1) Remaining work days and progression. 2) Critical/Expected completion date. 3) If values are estimated completion date estimation with high confidence level. 4) If deadline is registered pre-deadline finish forcasting. If values are set expected completion time subtracted from deadline. If value is negative we are behind schedule, otherwise we are ahead of schedule, in case of 0 we are on schedule. If values are estimates otherwise calculated chance of finishing before deadline must be given.', 1, 20, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -334,7 +335,8 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (3, 53),
 (3, 54),
 (3, 55),
-(3, 56);
+(3, 56),
+(3, 57);
 
 INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (23, 47),
@@ -344,7 +346,11 @@ INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUE
 
 INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
 (0, 4, '5', '4', '3'),
-(1, 5, '3', '2', '1');
+(1, 5, '3', '2', '1'),
+(2, 23, '7', '3', '2'),
+(3, 47, '5', '4', '3'),
+(4, 48, '6', '3', '1'),
+(5, 49, '3', '2', '1');
 SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id), 0) ) FROM task_estimations;
 
 -- ###########################################################################################
