@@ -97,7 +97,7 @@ public class AppUserServiceImpl implements AppUserService {
 		if (user.getAccountModifier().getId() != operator.getId()) {
 			user.setAccountModifier(operator);
 		}
-		user.setAcountModificationDate(new Date());
+		user.setAccountModificationDate(new Date());
 		return this.entityManager.merge(user);
 	}
 

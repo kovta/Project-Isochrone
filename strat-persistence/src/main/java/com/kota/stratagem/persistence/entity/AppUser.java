@@ -84,7 +84,7 @@ public class AppUser implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "user_account_modification_date", nullable = false)
-	private Date acountModificationDate;
+	private Date accountModificationDate;
 
 	@Column(name = "user_notification_view_count", nullable = false)
 	private int notificationViewCount;
@@ -134,7 +134,7 @@ public class AppUser implements Serializable {
 	}
 
 	public AppUser(Long id, String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier,
-			Date acountModificationDate, int notificationViewCount, int imageSelector) {
+			Date accountModificationDate, int notificationViewCount, int imageSelector) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -143,12 +143,12 @@ public class AppUser implements Serializable {
 		this.role = role;
 		this.registrationDate = registrationDate;
 		this.accountModifier = accountModifier;
-		this.acountModificationDate = acountModificationDate;
+		this.accountModificationDate = accountModificationDate;
 		this.notificationViewCount = notificationViewCount;
 		this.imageSelector = imageSelector;
 	}
 
-	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date acountModificationDate,
+	public AppUser(String name, String passwordHash, String email, Role role, Date registrationDate, AppUser accountModifier, Date accountModificationDate,
 			int notificationViewCount, int imageSelector) {
 		super();
 		this.name = name;
@@ -157,7 +157,7 @@ public class AppUser implements Serializable {
 		this.role = role;
 		this.registrationDate = registrationDate;
 		this.accountModifier = accountModifier;
-		this.acountModificationDate = acountModificationDate;
+		this.accountModificationDate = accountModificationDate;
 		this.notificationViewCount = notificationViewCount;
 		this.imageSelector = imageSelector;
 	}
@@ -218,8 +218,8 @@ public class AppUser implements Serializable {
 		this.accountModifier = accountModifier;
 	}
 
-	public Date getAcountModificationDate() {
-		return this.acountModificationDate;
+	public Date getAccountModificationDate() {
+		return this.accountModificationDate;
 	}
 
 	public int getNotificationViewCount() {
@@ -238,8 +238,8 @@ public class AppUser implements Serializable {
 		this.notificationViewCount = notificationViewCount;
 	}
 
-	public void setAcountModificationDate(Date acountModificationDate) {
-		this.acountModificationDate = acountModificationDate;
+	public void setAccountModificationDate(Date acountModificationDate) {
+		this.accountModificationDate = acountModificationDate;
 	}
 
 	public Set<AppUserObjectiveAssignment> getObjectives() {
@@ -317,7 +317,7 @@ public class AppUser implements Serializable {
 	@Override
 	public String toString() {
 		return "AppUser [id=" + this.id + ", name=" + this.name + ", email=" + this.email + ", role=" + this.role + ", registrationDate="
-				+ this.registrationDate + ", acountModificationDate=" + this.acountModificationDate + ", notificationViewCount=" + this.notificationViewCount
+				+ this.registrationDate + ", acountModificationDate=" + this.accountModificationDate + ", notificationViewCount=" + this.notificationViewCount
 				+ ", imageSelector=" + this.imageSelector + "]";
 	}
 
