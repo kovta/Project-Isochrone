@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
+import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
+import com.kota.stratagem.ejbserviceclient.domain.designation.DefinitiveCPMNode;
+import com.kota.stratagem.ejbserviceclient.domain.designation.EstimatedCPMNode;
+
+public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable, DefinitiveCPMNode, EstimatedCPMNode {
 
 	private static final long serialVersionUID = -552279169521037564L;
 
@@ -39,22 +43,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	}
 
 	public TaskRepresentor(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance) {
-		super(deadline != null ? deadline : new Date(), id);
+		this(name, description, priority, completion, deadline, duration, admittance);
 		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.priority = priority;
-		this.completion = completion;
-		this.deadline = deadline;
-		this.duration = duration;
-		this.admittance = admittance;
-		this.assignedTeams = new ArrayList<>();
-		this.assignedUsers = new ArrayList<>();
-		this.impediments = new ArrayList<>();
-		this.dependantTasks = new ArrayList<>();
-		this.taskDependencies = new ArrayList<>();
-		this.dependantChain = new ArrayList<>();
-		this.dependencyChain = new ArrayList<>();
 	}
 
 	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance) {
@@ -139,6 +129,16 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		return this.taskDependencies;
 	}
 
+	@Override
+	public List<CPMNode> getDependencies() {
+		return new ArrayList<CPMNode>(this.taskDependencies);
+	}
+
+	@Override
+	public List<CPMNode> getDependants() {
+		return new ArrayList<CPMNode>(this.dependantTasks);
+	}
+
 	public ObjectiveRepresentor getObjective() {
 		return this.objective;
 	}
@@ -171,6 +171,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		return ((this.pessimistic != null) && (this.realistic != null) && (this.optimistic != null));
 	}
 
+	@Override
 	public Double getDuration() {
 		return this.duration;
 	}
@@ -179,6 +180,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.duration = duration;
 	}
 
+	@Override
 	public Double getPessimistic() {
 		return this.pessimistic;
 	}
@@ -187,6 +189,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.pessimistic = pessimistic;
 	}
 
+	@Override
 	public Double getRealistic() {
 		return this.realistic;
 	}
@@ -195,6 +198,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.realistic = realistic;
 	}
 
+	@Override
 	public Double getOptimistic() {
 		return this.optimistic;
 	}
@@ -220,19 +224,19 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	}
 
 	public int getDependantCount() {
-		int total = 0;
-		for (final List<TaskRepresentor> dependantLevel : this.dependantChain) {
-			total += dependantLevel.size();
-		}
-		return total;
+		return this.dependantCount;
+	}
+
+	public void setDependantCount(int dependantCount) {
+		this.dependantCount = dependantCount;
 	}
 
 	public int getDependencyCount() {
-		int total = 0;
-		for (final List<TaskRepresentor> dependencyLevel : this.dependencyChain) {
-			total += dependencyLevel.size();
-		}
-		return total;
+		return this.dependencyCount;
+	}
+
+	public void setDependencyCount(int dependencyCount) {
+		this.dependencyCount = dependencyCount;
 	}
 
 	@Override
@@ -258,12 +262,14 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 				+ ", realistic=" + this.realistic + ", optimistic=" + this.optimistic + "]";
 	}
 
-	public void addTaskDependency(TaskRepresentor dependency) {
-		this.taskDependencies.add(dependency);
+	@Override
+	public void addDependency(CPMNode dependency) {
+		this.taskDependencies.add((TaskRepresentor) dependency);
 	}
 
-	public void addDependantTask(TaskRepresentor dependant) {
-		this.dependantTasks.add(dependant);
+	@Override
+	public void addDependant(CPMNode dependant) {
+		this.dependantTasks.add((TaskRepresentor) dependant);
 	}
 
 	public void addTeam(TeamTaskAssignmentRepresentor team) {

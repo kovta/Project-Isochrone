@@ -17,7 +17,7 @@ public class AppUserRepresentor implements Serializable {
 	private final RoleRepresentor role;
 	private final Date registrationDate;
 	private AppUserRepresentor accountModifier;
-	private final Date acountModificationDate;
+	private final Date accountModificationDate;
 	private final int notificationViewCount;
 	private final int imageSelector;
 	private final List<AppUserObjectiveAssignmentRepresentor> objectives;
@@ -34,36 +34,20 @@ public class AppUserRepresentor implements Serializable {
 		this(null, "", "", RoleRepresentor.PRISTINE_USER, new Date(), new Date(), 0, 0);
 	}
 
-	public AppUserRepresentor(Long id, String name, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate,
+	public AppUserRepresentor(Long id, String name, String email, RoleRepresentor role, Date registrationDate, Date accountModificationDate,
 			int notificationViewCount, int imageSeletor) {
-		super();
+		this(name, email, role, registrationDate, accountModificationDate, notificationViewCount, imageSeletor);
 		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.role = role;
-		this.registrationDate = registrationDate;
-		this.acountModificationDate = acountModificationDate;
-		this.notificationViewCount = notificationViewCount;
-		this.imageSelector = imageSeletor;
-		this.objectives = new ArrayList<>();
-		this.projects = new ArrayList<>();
-		this.submodules = new ArrayList<>();
-		this.tasks = new ArrayList<>();
-		this.reportedImpediments = new ArrayList<>();
-		this.processedImpediments = new ArrayList<>();
-		this.supervisedTeams = new ArrayList<>();
-		this.teamMemberships = new ArrayList<>();
-		this.notifications = new ArrayList<>();
 	}
 
-	public AppUserRepresentor(String name, String email, RoleRepresentor role, Date registrationDate, Date acountModificationDate, int notificationViewCount,
+	public AppUserRepresentor(String name, String email, RoleRepresentor role, Date registrationDate, Date accountModificationDate, int notificationViewCount,
 			int imageSeletor) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.role = role;
 		this.registrationDate = registrationDate;
-		this.acountModificationDate = acountModificationDate;
+		this.accountModificationDate = accountModificationDate;
 		this.notificationViewCount = notificationViewCount;
 		this.imageSelector = imageSeletor;
 		this.objectives = new ArrayList<>();
@@ -109,8 +93,8 @@ public class AppUserRepresentor implements Serializable {
 		this.accountModifier = accountModifier;
 	}
 
-	public Date getAcountModificationDate() {
-		return this.acountModificationDate;
+	public Date getAccountModificationDate() {
+		return this.accountModificationDate;
 	}
 
 	public int getNotificationViewCount() {
@@ -160,7 +144,7 @@ public class AppUserRepresentor implements Serializable {
 	@Override
 	public String toString() {
 		return "AppUserRepresentor [id=" + this.id + ", name=" + this.name + ", email=" + this.email + ", role=" + this.role + ", registrationDate="
-				+ this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate=" + this.acountModificationDate
+				+ this.registrationDate + ", accountModifier=" + this.accountModifier + ", acountModificationDate=" + this.accountModificationDate
 				+ ", notificationViewCount=" + this.notificationViewCount + ", imageSelector=" + this.imageSelector + ", objectives=" + this.objectives
 				+ ", projects=" + this.projects + ", submodules=" + this.submodules + ", tasks=" + this.tasks + ", reportedImpediments="
 				+ this.reportedImpediments + ", processedImpediments=" + this.processedImpediments + ", supervisedTeams=" + this.supervisedTeams
