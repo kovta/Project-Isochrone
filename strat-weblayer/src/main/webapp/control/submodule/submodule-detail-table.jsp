@@ -5,6 +5,8 @@
 <table class="strat-detail-table">
 	<tbody>
 		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center"><td colspan="2"><span>Primary Information</span></td></tr>
+		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Parent Project</td>
 			<td class="strat-detail-attribute-value">
@@ -46,6 +48,9 @@
 				</c:choose>
 			</td>
 		</tr>
+		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center"><td colspan="2"><span>Progression Evaluation</span></td></tr>
+		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Completion</td>
 			<td class="strat-detail-attribute-value">${submodule.completion} %</td>
@@ -57,13 +62,33 @@
 			</tr>
 			<tr>
 				<td class="strat-detail-attribute-name">Total duration</td>
-				<td class="strat-detail-attribute-value">${submodule.durationSum}<c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" /></td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.completedDurationSum}" />
+					<c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" />
+				</td>
 			</tr>
 			<tr>
-				<td class="strat-detail-attribute-name">Finished work</td>
-				<td class="strat-detail-attribute-value">${submodule.completedDurationSum}<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" /></td>
+				<td class="strat-detail-attribute-name">Expected Completion Date</td>
+				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
 			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Estimated Completion Date</td>
+				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+			</tr>
+			<c:if test="${submodule.isDeadlineProvided()}">
+			<tr>
+				<td class="strat-detail-attribute-name">Deviation from Deadline</td>
+				<td class="strat-detail-attribute-value">${submodule.targetDeviation}<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'}" /></td>
+			</tr>
+				<tr>
+					<td class="strat-detail-attribute-name">Early finish probability</td>
+					<td class="strat-detail-attribute-value">${submodule.earlyFinishEstimation} %</td>
+				</tr>
+			</c:if>
 		</c:if>
+		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center"><td colspan="2"><span>Technical properties</span></td></tr>
+		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>
 			<td class="strat-detail-attribute-value">
@@ -80,16 +105,18 @@
 				<a href="User?id=<c:out value="${submodule.modifier.id}" />">${submodule.modifier.name}</a>
 			</td>
 		</tr>
-		    <tr>
+		<tr>
 			<td class="strat-detail-attribute-name">Modification date</td>
 			<td class="strat-detail-attribute-value">${submodule.modificationDate}</td>
 		</tr>
 		<c:choose>
 			<c:when test="${empty submodule.description}">
 				<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-				<tr><td colspan="2" class="strat-detail-description">
-					<p class="text-center"><span class="font-no-content">No Description</span></p>
-				</td></tr>
+				<tr>
+					<td colspan="2" class="strat-detail-description">
+						<p class="text-center"><span class="font-no-content">No Description</span></p>
+					</td>
+				</tr>
 			</c:when>
 			<c:otherwise>
 			 	  <tr><td colspan="2"><hr class="extra-margins"></td></tr>
