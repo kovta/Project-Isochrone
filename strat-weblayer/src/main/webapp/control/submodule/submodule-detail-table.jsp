@@ -4,9 +4,11 @@
 
 <table class="strat-detail-table">
 	<tbody>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-		<tr class="text-center"><td colspan="2"><span>Primary Information</span></td></tr>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Primary Information</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
+		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Parent Project</td>
 			<td class="strat-detail-attribute-value">
@@ -48,23 +50,35 @@
 				</c:choose>
 			</td>
 		</tr>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-		<tr class="text-center"><td colspan="2"><span>Progression Evaluation</span></td></tr>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Completion</td>
 			<td class="strat-detail-attribute-value">${submodule.completion} %</td>
 		</tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Progression Evaluation</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
+		</tr>
 		<c:if test="${submodule.durationSum ne 0}">
 			<tr>
 				<td class="strat-detail-attribute-name">Progression</td>
-				<td class="strat-detail-attribute-value">${(submodule.completedDurationSum / submodule.durationSum) * 100} %</td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${(submodule.completedDurationSum / submodule.durationSum) * 100}" />
+					<c:out value=" %" />
+				</td>
 			</tr>
 			<tr>
 				<td class="strat-detail-attribute-name">Total duration</td>
 				<td class="strat-detail-attribute-value">
-					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.completedDurationSum}" />
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" />
 					<c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Finished work</td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.completedDurationSum}" />
+					<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
 				</td>
 			</tr>
 			<tr>
@@ -76,19 +90,23 @@
 				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
 			</tr>
 			<c:if test="${submodule.isDeadlineProvided()}">
-			<tr>
-				<td class="strat-detail-attribute-name">Deviation from Deadline</td>
-				<td class="strat-detail-attribute-value">${submodule.targetDeviation}<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'}" /></td>
-			</tr>
+				<tr>
+					<td class="strat-detail-attribute-name">Deviation from Deadline</td>
+					<td class="strat-detail-attribute-value">${submodule.targetDeviation}<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'}" /></td>
+				</tr>
 				<tr>
 					<td class="strat-detail-attribute-name">Early finish probability</td>
-					<td class="strat-detail-attribute-value">${submodule.earlyFinishEstimation} %</td>
+					<td class="strat-detail-attribute-value">
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "2" value = "${submodule.earlyFinishEstimation * 100}" /> %
+					</td>
 				</tr>
 			</c:if>
 		</c:if>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
-		<tr class="text-center"><td colspan="2"><span>Technical properties</span></td></tr>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Technical properties</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
+		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>
 			<td class="strat-detail-attribute-value">

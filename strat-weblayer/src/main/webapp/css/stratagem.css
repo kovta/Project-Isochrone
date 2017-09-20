@@ -309,6 +309,14 @@ tr > td:first-child {
     border-bottom-color: lightgray;
     border-top-color: lightgray;
 }
+.detail-table-top-header {
+	margin-top: 18px;
+    margin-bottom: 10px;
+}
+.detail-table-bottom-header {
+	margin-top: 10px;
+    margin-bottom: 5px;
+}
 
 /* Select */
 .label-checkbox {
