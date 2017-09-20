@@ -193,9 +193,16 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (3, 'Estimation, and analysis for Task dependency chain', 'Critical time, slack, and overall statistic calculus for Submodule level Task dependency configurations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Test Submodule', '', NULL, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Test Submodule', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'User profile view implementation', 'Seperate view must be added to view user level responsibiliies', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'Team management implementation', 'Control must be made for team creation, modification, member and leader selection', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(8, 'Team management implementation', 'Control must be made for team creation, modification, member and leader selection', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Stratagem service implementation wrap-up', 'Remaining functionality must be implemented', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(10, 'User authentication', 'Client must authenticate with service based identity provider', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(11, 'Shared service communication functionality implementation', 'Client must be able to retrieve and modify the respected service structures', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(12, 'Native Android platform implementation', 'Creation of Android specific client app', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(13, 'Native iOS platform implementation', 'Creation of iOS specific client app', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(14, 'Client testing', 'Developing testing scenarios for the mobile client', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(15, 'Service testing', 'Developing testing scenarios for the back-end service', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -207,7 +214,14 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (7, 5),
 (8, 6),
 (7, 7),
-(7, 8);
+(7, 8),
+(7, 9),
+(9, 10),
+(9, 11),
+(9, 12),
+(9, 13),
+(9, 14),
+(7, 15);
 
 -- ###########################################################################################
 
@@ -219,8 +233,8 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'REST', 'Create REST API module', 2, 5, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'RMI', 'Create Remote EJB module', 2, 30, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'REST', 'Create REST API module', 2, 20, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'RMI', 'Create Remote EJB module', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (10, 'Olingo error', 'Default implementation in client system not sufficient', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (11, 'Corrupt VM auth', 'Authorizational rights have been tangled', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -236,7 +250,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (23, 'Submodule level test Task 1', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (25, 'Create header for specified structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (26, 'Objective level test Task 1', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (27, 'Add links to profile view from all refrences', 'View must be accessible at all questionable points of delegation and responsibility', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -269,7 +283,9 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (54, 'Give probability of submodule finishing before given deadline', 'If submodule deadline is registered, produce probability with PERT methodology whether the remaining time is sufficient for completion', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (55, 'Implement adaptable model for duration, and pre-deadline completion estimations', 'Upon making both calculations the algorithm must adapt to the current level of progress. This involves excluding completed tasks from the dependency chain and building the network model with only the unfinished entries of the list', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (56, 'Estimation summary for higher level structures', 'Calculated durational estimates can be summed up for Project, and Objective levels', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(57, 'Present calculated values on respected views', 'Values to be added are: 1) Remaining work days and progression. 2) Critical/Expected completion date. 3) If values are estimated completion date estimation with high confidence level. 4) If deadline is registered pre-deadline finish forcasting. If values are set expected completion time subtracted from deadline. If value is negative we are behind schedule, otherwise we are ahead of schedule, in case of 0 we are on schedule. If values are estimates otherwise calculated chance of finishing before deadline must be given.', 1, 20, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(57, 'Present calculated values on respected views', 'Values to be added are: 1) Remaining work days and progression. 2) Critical/Expected completion date. 3) If values are estimated completion date estimation with high confidence level. 4) If deadline is registered pre-deadline finish forcasting. If values are set expected completion time subtracted from deadline. If value is negative we are behind schedule, otherwise we are ahead of schedule, in case of 0 we are on schedule. If values are estimates otherwise calculated chance of finishing before deadline must be given.', 1, 20, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(58, 'Development documentation', 'Full range detailed documentation of finished work', 1, 50, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(59, 'Investigate testing possibilities', 'The requested scope is Selenium, JUnit, integration and unit testing', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -280,7 +296,8 @@ INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id
 (2, 11),
 (2, 12),
 (2, 13),
-(7, 26);
+(7, 26),
+(4, 58);
 
 INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (0, 1),
@@ -336,7 +353,8 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (3, 54),
 (3, 55),
 (3, 56),
-(3, 57);
+(3, 57),
+(15, 59);
 
 INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (23, 47),
