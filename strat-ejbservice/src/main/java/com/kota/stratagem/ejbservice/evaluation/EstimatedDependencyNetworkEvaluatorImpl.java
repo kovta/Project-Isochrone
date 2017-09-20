@@ -31,7 +31,7 @@ public class EstimatedDependencyNetworkEvaluatorImpl extends AbstractDependencyN
 	protected double calculateVariance(CPMNode node) throws InvalidNodeTypeException {
 		if (node instanceof EstimatedCPMNode) {
 			final EstimatedCPMNode element = (EstimatedCPMNode) node;
-			return (Math.sqrt((element.getOptimistic() - element.getPessimistic()) / 6));
+			return (Math.sqrt((element.getPessimistic() - element.getOptimistic()) / 6));
 		} else {
 			throw new InvalidNodeTypeException();
 		}

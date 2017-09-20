@@ -10,8 +10,8 @@ public class EstimatedCPMNodeImpl extends AbstractCPMNode implements EstimatedCP
 	Double realistic;
 	Double optimisitc;
 
-	public EstimatedCPMNodeImpl(Double pessimistic, Double realistic, Double optimisitc) {
-		super();
+	public EstimatedCPMNodeImpl(Long id, Double pessimistic, Double realistic, Double optimisitc) {
+		super(id);
 		this.pessimistic = pessimistic;
 		this.realistic = realistic;
 		this.optimisitc = optimisitc;
@@ -38,6 +38,12 @@ public class EstimatedCPMNodeImpl extends AbstractCPMNode implements EstimatedCP
 	@Override
 	public Double getOptimistic() {
 		return this.optimisitc;
+	}
+
+	@Override
+	public String toString() {
+		return "EstimatedCPMNodeImpl [id=" + this.id + "variance=" + this.variance + ", pessimistic=" + this.pessimistic + ", realistic=" + this.realistic
+				+ ", optimisitc=" + this.optimisitc + ", dependencies=" + this.dependencies + "]";
 	}
 
 }

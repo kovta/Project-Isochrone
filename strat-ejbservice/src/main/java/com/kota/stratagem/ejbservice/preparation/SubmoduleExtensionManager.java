@@ -7,12 +7,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentCreatorNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskCompletionComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
+import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
 import com.kota.stratagem.ejbservice.domain.CPMResult;
 import com.kota.stratagem.ejbservice.evaluation.DependencyNetworkEvaluator;
@@ -23,9 +25,16 @@ import com.kota.stratagem.ejbservice.qualifier.Estimated;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.persistence.service.TaskService;
 
 @SubmoduleOriented
 public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
+
+	@EJB
+	private TaskService taskService;
+
+	@Inject
+	private TaskConverter taskConverter;
 
 	@Inject
 	private CPMNodeConverter cpmNodeConverter;
@@ -97,7 +106,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	private void provideCompletedDurationSum() {
 		Double durationSum = (double) 0;
 		for (final TaskRepresentor task : this.representor.getTasks()) {
-			if (task.isEstimated()) {
+			if (task.isCompleted() && task.isEstimated()) {
 				durationSum += ((task.getPessimistic() + (4 * task.getRealistic()) + task.getOptimistic()) / 6);
 			} else if (task.isCompleted() && task.isDurationProvided()) {
 				durationSum += task.getDuration();
@@ -114,18 +123,18 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 				if (task.isEstimated() && !task.isCompleted()) {
 					estimated = true;
 					configured = true;
-					components.add(task);
+					components.add(this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(task.getId())));
 				} else if (task.isDurationProvided() && !task.isCompleted()) {
 					configured = true;
-					components.add(task);
+					components.add(this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(task.getId())));
 				}
 			}
 			CPMResult result = null;
 			try {
 				if (configured && estimated) {
-					result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(this.representor.getTasks()));
+					result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(components));
 				} else if (configured && !estimated) {
-					result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(this.representor.getTasks()));
+					result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(components));
 				}
 			} catch (InvalidNodeTypeException | CyclicDependencyException e) {
 				LOGGER.error(e, e);
@@ -138,15 +147,15 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideEstimations(CPMResult result) {
 		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.add(Calendar.DATE, result.getExpectedDuration().intValue());
-		this.representor.setExpectedCompletionDate(calendar.getTime());
 		final double estimatedDuration = ((1.645 * result.getStandardDeviation()) + result.getExpectedDuration());
 		calendar.setTime(new Date());
 		calendar.add(Calendar.DATE, (int) estimatedDuration);
 		this.representor.setEstimatedCompletionDate(calendar.getTime());
+		calendar.setTime(new Date());
+		calendar.add(Calendar.DATE, result.getExpectedDuration().intValue());
+		this.representor.setExpectedCompletionDate(calendar.getTime());
 		if (this.representor.isDeadlineProvided()) {
-			final Long difference = TimeUnit.DAYS.convert(calendar.getTime().getTime() - this.representor.getDeadline().getTime(), TimeUnit.DAYS);
+			final Long difference = TimeUnit.DAYS.convert(this.representor.getDeadline().getTime() - calendar.getTime().getTime(), TimeUnit.DAYS) / 86400000;
 			this.representor.setTargetDeviation(difference.doubleValue());
 			this.representor.setEarlyFinishEstimation(this.cumulitiveNormalDistribution(difference.doubleValue() / result.getStandardDeviation()));
 		}

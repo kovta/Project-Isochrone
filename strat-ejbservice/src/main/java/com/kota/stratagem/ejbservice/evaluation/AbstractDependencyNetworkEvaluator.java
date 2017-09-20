@@ -16,20 +16,22 @@ public abstract class AbstractDependencyNetworkEvaluator implements DependencyNe
 	@Override
 	public CPMResult evaluate(List<CPMNode> network) throws InvalidNodeTypeException, CyclicDependencyException {
 		final List<EstimatedCPMNodeImpl> nodes = new ArrayList<>();
-		final EstimatedCPMNodeImpl start = new EstimatedCPMNodeImpl((double) 0, (double) 0, (double) 0);
-		final EstimatedCPMNodeImpl end = new EstimatedCPMNodeImpl((double) 0, (double) 0, (double) 0);
+		final EstimatedCPMNodeImpl start = new EstimatedCPMNodeImpl(-2L, (double) 0, (double) 0, (double) 0);
+		final EstimatedCPMNodeImpl end = new EstimatedCPMNodeImpl(-1L, (double) 0, (double) 0, (double) 0);
 		for (final CPMNode node : network) {
 			if (node.getDependencies().isEmpty()) {
 				start.addDependant(node);
+				node.addDependency(start);
 			}
 			if (node.getDependants().isEmpty()) {
 				end.addDependency(node);
+				node.addDependant(end);
 			}
 			if (node instanceof EstimatedCPMNodeImpl) {
 				nodes.add((EstimatedCPMNodeImpl) node);
 			} else if (node instanceof DefinitiveCPMNodeImpl) {
 				final DefinitiveCPMNodeImpl element = (DefinitiveCPMNodeImpl) node;
-				nodes.add(new EstimatedCPMNodeImpl(element.getDuration(), element.getDuration(), element.getDuration()));
+				nodes.add(new EstimatedCPMNodeImpl(element.getId(), element.getDuration(), element.getDuration(), element.getDuration()));
 			} else {
 				throw new InvalidNodeTypeException();
 			}
@@ -48,7 +50,7 @@ public abstract class AbstractDependencyNetworkEvaluator implements DependencyNe
 						final EstimatedCPMNodeImpl dependency = (EstimatedCPMNodeImpl) n;
 						if (dependency.getCriticalDuration() > critical) {
 							critical = dependency.getCriticalDuration();
-							variance = dependency.getVariance();
+							variance = dependency.getVariance() != null ? dependency.getVariance() : 0;
 						}
 					}
 					node.setCriticalDuration(critical + this.calculateExpectedDuration(node));

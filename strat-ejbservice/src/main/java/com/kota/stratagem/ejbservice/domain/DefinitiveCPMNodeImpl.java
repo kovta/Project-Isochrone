@@ -6,14 +6,19 @@ public class DefinitiveCPMNodeImpl extends AbstractCPMNode implements Definitive
 
 	Double duration;
 
-	public DefinitiveCPMNodeImpl(Double duration) {
-		super();
+	public DefinitiveCPMNodeImpl(Long id, Double duration) {
+		super(id);
 		this.duration = duration;
 	}
 
 	@Override
 	public Double getDuration() {
 		return this.duration;
+	}
+
+	@Override
+	public String toString() {
+		return "DefinitiveCPMNodeImpl [id=" + this.id + "duration=" + this.duration + ", dependencies=" + this.dependencies + "]";
 	}
 
 }

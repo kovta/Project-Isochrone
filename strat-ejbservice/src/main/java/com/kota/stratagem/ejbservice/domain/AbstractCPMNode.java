@@ -7,14 +7,24 @@ import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 
 public class AbstractCPMNode implements CPMNode {
 
+	Long id;
 	double criticalDuration;
 
 	List<CPMNode> dependencies;
 	List<CPMNode> dependants;
 
-	public AbstractCPMNode() {
+	public AbstractCPMNode(Long id) {
+		this.id = id;
 		this.dependencies = new ArrayList<>();
 		this.dependants = new ArrayList<>();
+	}
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public double getCriticalDuration() {
@@ -43,6 +53,36 @@ public class AbstractCPMNode implements CPMNode {
 	@Override
 	public void addDependant(CPMNode node) {
 		this.dependants.add(node);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		final AbstractCPMNode other = (AbstractCPMNode) obj;
+		if (this.id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!this.id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }
