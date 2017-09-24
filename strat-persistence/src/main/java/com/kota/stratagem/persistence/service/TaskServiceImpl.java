@@ -138,7 +138,7 @@ public class TaskServiceImpl implements TaskService {
 		} else if (submodule != null) {
 			task.setSubmodule(this.submoduleService.readWithTasks(submodule));
 		}
-		if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
+		if ((pessimistic != null) || (realistic != null) || (optimistic != null)) {
 			task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
 			task.setDuration(null);
 		} else if (duration != null) {

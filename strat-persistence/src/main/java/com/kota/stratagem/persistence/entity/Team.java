@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,8 +24,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.kota.stratagem.persistence.parameter.TeamParameter;
 import com.kota.stratagem.persistence.query.TeamQuery;
@@ -31,12 +33,26 @@ import com.kota.stratagem.persistence.query.TeamQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = TeamQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Team t WHERE t.id=:" + TeamParameter.ID),
 		@NamedQuery(name = TeamQuery.GET_BY_ID, query = "SELECT t FROM Team t WHERE t.id=:" + TeamParameter.ID),
-		@NamedQuery(name = TeamQuery.GET_ALL_TEAMS, query = "SELECT t FROM Team t ORDER BY t.name"),
+		@NamedQuery(name = TeamQuery.GET_BY_ID_WITH_LEADER_AND_MEMBERS, query = "SELECT t FROM Team t LEFT JOIN FETCH t.leader l LEFT JOIN FETCH t.members tm WHERE t.id=:"
+				+ TeamParameter.ID),
+		@NamedQuery(name = TeamQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Team t LEFT JOIN FETCH t.leader l LEFT JOIN FETCH t.members tm LEFT JOIN FETCH t.objectives LEFT JOIN FETCH t.projects LEFT JOIN FETCH t.submodules LEFT JOIN FETCH t.tasks LEFT JOIN FETCH t.creator LEFT JOIN FETCH t.modifier WHERE t.id=:"
+				+ TeamParameter.ID),
+		@NamedQuery(name = TeamQuery.GET_ALL_TEAMS, query = "SELECT t FROM Team t LEFT JOIN FETCH t.leader l LEFT JOIN FETCH t.members tm LEFT JOIN FETCH t.objectives LEFT JOIN FETCH t.projects LEFT JOIN FETCH t.submodules LEFT JOIN FETCH t.tasks ORDER BY t.name"),
 		@NamedQuery(name = TeamQuery.REMOVE_BY_ID, query = "DELETE FROM Team t WHERE t.id=:" + TeamParameter.ID)
 		//
 })
 @SequenceGenerator(name = "teamGenerator", sequenceName = "teams_team_id_seq", allocationSize = 1)
-public class Team implements Serializable {
+@AttributeOverrides({ //
+		@AttributeOverride(name = "creationDate", column = @Column(name = "team_creation_date", nullable = false)),
+		@AttributeOverride(name = "modificationDate", column = @Column(name = "team_modification_date", nullable = false))
+		//
+})
+@AssociationOverrides({ //
+		@AssociationOverride(name = "creator", joinColumns = @JoinColumn(name = "team_creator", referencedColumnName = "user_id", nullable = false)),
+		@AssociationOverride(name = "modifier", joinColumns = @JoinColumn(name = "team_modifier", referencedColumnName = "user_id", nullable = false))
+		//
+})
+public class Team extends AbstractMonitoredEntity implements Serializable {
 
 	private static final long serialVersionUID = -3554913763648115162L;
 
@@ -48,41 +64,25 @@ public class Team implements Serializable {
 	@Column(name = "team_name", nullable = false)
 	private String name;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinColumn(name = "team_leader", referencedColumnName = "user_id", nullable = false)
 	private AppUser leader;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "team_creator", referencedColumnName = "user_id", nullable = false)
-	private AppUser creator;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "team_creation_date", nullable = false)
-	private Date creationDate;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
-	@JoinColumn(name = "team_modifier", referencedColumnName = "user_id", nullable = false)
-	private AppUser modifier;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "team_modification_date", nullable = false)
-	private Date modificationDate;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = AppUser.class)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUser.class)
 	@JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_member_team_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "team_member_user_id", nullable = false))
 	private Set<AppUser> members;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Objective.class)
-	@JoinTable(name = "team_objective_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_objective", nullable = false))
-	private Set<Objective> objectives;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamObjectiveAssignment.class, mappedBy = "recipient")
+	private Set<TeamObjectiveAssignment> objectives;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Project.class)
-	@JoinTable(name = "team_project_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_project", nullable = false))
-	private Set<Project> projects;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamProjectAssignment.class, mappedBy = "recipient")
+	private Set<TeamProjectAssignment> projects;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Task.class)
-	@JoinTable(name = "team_task_assignments", joinColumns = @JoinColumn(name = "assignment_recipient", nullable = false), inverseJoinColumns = @JoinColumn(name = "assignment_task", nullable = false))
-	private Set<Task> tasks;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamSubmoduleAssignment.class, mappedBy = "recipient")
+	private Set<TeamSubmoduleAssignment> submodules;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = TeamTaskAssignment.class, mappedBy = "recipient")
+	private Set<TeamTaskAssignment> tasks;
 
 	public Team() {
 		this.members = new HashSet<>();
@@ -91,35 +91,17 @@ public class Team implements Serializable {
 		this.tasks = new HashSet<>();
 	}
 
-	public Team(Long id, String name, AppUser leader, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate, Set<AppUser> members,
-			Set<Objective> objectives, Set<Project> projects, Set<Task> tasks) {
-		super();
+	public Team(Long id, String name, AppUser leader, Date creationDate, Date modificationDate) {
+		this(name, leader, creationDate, modificationDate);
 		this.id = id;
-		this.name = name;
-		this.leader = leader;
-		this.creator = creator;
-		this.creationDate = creationDate;
-		this.modifier = modifier;
-		this.modificationDate = modificationDate;
-		this.members = members;
-		this.objectives = objectives;
-		this.projects = projects;
-		this.tasks = tasks;
 	}
 
-	public Team(String name, AppUser leader, AppUser creator, Date creationDate, AppUser modifier, Date modificationDate, Set<AppUser> members,
-			Set<Objective> objectives, Set<Project> projects, Set<Task> tasks) {
+	public Team(String name, AppUser leader, Date creationDate, Date modificationDate) {
 		super();
 		this.name = name;
 		this.leader = leader;
-		this.creator = creator;
 		this.creationDate = creationDate;
-		this.modifier = modifier;
 		this.modificationDate = modificationDate;
-		this.members = members;
-		this.objectives = objectives;
-		this.projects = projects;
-		this.tasks = tasks;
 	}
 
 	public Long getId() {
@@ -146,34 +128,42 @@ public class Team implements Serializable {
 		this.leader = leader;
 	}
 
+	@Override
 	public AppUser getCreator() {
 		return this.creator;
 	}
 
+	@Override
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return this.creationDate;
 	}
 
+	@Override
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
+	@Override
 	public AppUser getModifier() {
 		return this.modifier;
 	}
 
+	@Override
 	public void setModifier(AppUser modifier) {
 		this.modifier = modifier;
 	}
 
+	@Override
 	public Date getModificationDate() {
 		return this.modificationDate;
 	}
 
+	@Override
 	public void setModificationDate(Date modificationDate) {
 		this.modificationDate = modificationDate;
 	}
@@ -186,27 +176,35 @@ public class Team implements Serializable {
 		this.members = members;
 	}
 
-	public Set<Objective> getObjectives() {
+	public Set<TeamObjectiveAssignment> getObjectives() {
 		return this.objectives;
 	}
 
-	public void setObjectives(Set<Objective> objectives) {
+	public void setObjectives(Set<TeamObjectiveAssignment> objectives) {
 		this.objectives = objectives;
 	}
 
-	public Set<Project> getProjects() {
+	public Set<TeamProjectAssignment> getProjects() {
 		return this.projects;
 	}
 
-	public void setProjects(Set<Project> projects) {
+	public void setProjects(Set<TeamProjectAssignment> projects) {
 		this.projects = projects;
 	}
 
-	public Set<Task> getTasks() {
+	public Set<TeamSubmoduleAssignment> getSubmodules() {
+		return this.submodules;
+	}
+
+	public void setSubmodules(Set<TeamSubmoduleAssignment> submodules) {
+		this.submodules = submodules;
+	}
+
+	public Set<TeamTaskAssignment> getTasks() {
 		return this.tasks;
 	}
 
-	public void setTasks(Set<Task> tasks) {
+	public void setTasks(Set<TeamTaskAssignment> tasks) {
 		this.tasks = tasks;
 	}
 
