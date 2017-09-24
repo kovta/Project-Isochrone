@@ -1,6 +1,7 @@
 package com.kota.stratagem.ejbservice.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -8,13 +9,20 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
+import com.kota.stratagem.ejbservice.comparison.dualistic.TeamNameComparator;
 import com.kota.stratagem.ejbservice.converter.TeamConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.interceptor.Regulated;
 import com.kota.stratagem.ejbservice.preparation.DTOExtensionManager;
 import com.kota.stratagem.ejbservice.qualifier.TeamOriented;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
+import com.kota.stratagem.ejbserviceclient.domain.AbstractTeamAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.TeamService;
@@ -47,6 +55,59 @@ public class TeamProtocolImpl implements TeamProtocol {
 	@Override
 	public List<TeamRepresentor> getAllTeams() throws AdaptorException {
 		return this.extensionManager.prepareTeams(new ArrayList<TeamRepresentor>(this.converter.toSimplified(this.teamService.readAll())));
+	}
+
+	@Override
+	public List<TeamRepresentor> getAssignableTeams(ObjectiveRepresentor objective) throws AdaptorException {
+		return this.retrieveObjectRelatedTeamList(objective.getAssignedTeams());
+	}
+
+	@Override
+	public List<TeamRepresentor> getAssignableTeams(ProjectRepresentor project) throws AdaptorException {
+		return this.retrieveObjectRelatedTeamList(project.getAssignedTeams());
+	}
+
+	@Override
+	public List<TeamRepresentor> getAssignableTeams(SubmoduleRepresentor submodule) throws AdaptorException {
+		return this.retrieveObjectRelatedTeamList(submodule.getAssignedTeams());
+	}
+
+	@Override
+	public List<TeamRepresentor> getAssignableTeams(TaskRepresentor task) throws AdaptorException {
+		return this.retrieveObjectRelatedTeamList(task.getAssignedTeams());
+	}
+
+	private <T extends AbstractTeamAssignmentRepresentor> List<TeamRepresentor> retrieveObjectRelatedTeamList(List<T> assignments) {
+		List<TeamRepresentor> allTeams = null, teamList = new ArrayList<>();
+		try {
+			allTeams = this.getAllTeams();
+			if (assignments.isEmpty()) {
+				teamList = allTeams;
+			} else {
+				final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+				for (final TeamRepresentor team : allTeams) {
+					boolean subordinateLeader = false, contains = false;
+					for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
+							.getSubordinateRoles()) {
+						if (subordinateRole.toString().equals(team.getLeader().getRole().toString())) {
+							subordinateLeader = true;
+						}
+					}
+					for (final AbstractTeamAssignmentRepresentor assignment : assignments) {
+						if (team.equals(assignment.getRecipient())) {
+							contains = true;
+						}
+					}
+					if ((subordinateLeader || team.getLeader().getName().equals(operator) || team.getCreator().getName().equals(operator)) && !contains) {
+						teamList.add(team);
+					}
+				}
+			}
+			Collections.sort(teamList, new TeamNameComparator());
+		} catch (final AdaptorException e) {
+			e.printStackTrace();
+		}
+		return teamList;
 	}
 
 	@Override

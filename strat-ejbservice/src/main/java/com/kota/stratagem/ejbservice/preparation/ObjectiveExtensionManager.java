@@ -6,10 +6,11 @@ import java.util.List;
 
 import com.kota.stratagem.ejbservice.comparison.congregated.ObjectiveSummaryComparator;
 import com.kota.stratagem.ejbservice.comparison.congregated.ProjectSummaryComparator;
-import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentCreatorNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.ProjectCompletionComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskCompletionComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueProjectComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
 import com.kota.stratagem.ejbservice.qualifier.ObjectiveOriented;
@@ -64,7 +65,8 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void sortBaseCollections() {
-		Collections.sort(this.representor.getAssignedUsers(), new AppUserAssignmentCreatorNameComparator());
+		Collections.sort(this.representor.getAssignedUsers(), new AppUserAssignmentRecipientNameComparator());
+		Collections.sort(this.representor.getAssignedTeams(), new TeamAssignmentRecipientNameComparator());
 	}
 
 	private void provideCompletion() {

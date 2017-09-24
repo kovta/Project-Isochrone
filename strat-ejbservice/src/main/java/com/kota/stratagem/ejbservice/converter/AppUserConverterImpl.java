@@ -14,15 +14,16 @@ import com.kota.stratagem.persistence.entity.AppUserProjectAssignment;
 import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.Notification;
+import com.kota.stratagem.persistence.entity.Team;
 
 @Stateless
 public class AppUserConverterImpl implements AppUserConverter {
 
 	// @EJB
 	// private ImpedimentConverter impedimentConverter;
-	//
-	// @EJB
-	// private TeamConverter teamConverter;
+
+	@EJB
+	private TeamConverter teamConverter;
 
 	@EJB
 	private AssignmentConverter assignmentConverter;
@@ -73,16 +74,16 @@ public class AppUserConverterImpl implements AppUserConverter {
 		// representor.addProcessingImpediment(this.impedimentConverter.to(impediment));
 		// }
 		// }
-		// if (user.getSupervisedTeams() != null) {
-		// for (final Team team : user.getSupervisedTeams()) {
-		// representor.addSupervisedTeam(this.teamConverter.to(team));
-		// }
-		// }
-		// if (user.getTeamMemberships() != null) {
-		// for (final Team team : user.getTeamMemberships()) {
-		// representor.addSupervisedTeam(this.teamConverter.to(team));
-		// }
-		// }
+		if (user.getSupervisedTeams() != null) {
+			for (final Team team : user.getSupervisedTeams()) {
+				representor.addSupervisedTeam(this.teamConverter.toElementary(team));
+			}
+		}
+		if (user.getTeamMemberships() != null) {
+			for (final Team team : user.getTeamMemberships()) {
+				representor.addTeamMembership(this.teamConverter.toElementary(team));
+			}
+		}
 		if (user.getAccountModifier() != null) {
 			representor.setAccountModifier(this.toElementary(user.getAccountModifier()));
 		}

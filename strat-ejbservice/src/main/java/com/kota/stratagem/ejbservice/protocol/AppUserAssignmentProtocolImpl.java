@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
+import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.AssignmentConverter;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -16,7 +17,7 @@ import com.kota.stratagem.persistence.service.AppUserAssignmentService;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.util.Constants;
 
-@Stateless(mappedName = "ejb/appUserAssignmentProtocol")
+@Stateless(mappedName = EJBServiceConfiguration.APP_USER_ASSIGNMENT_PROTOCOL_SIGNATURE)
 public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol {
 
 	private static final Logger LOGGER = Logger.getLogger(AppUserAssignmentProtocolImpl.class);

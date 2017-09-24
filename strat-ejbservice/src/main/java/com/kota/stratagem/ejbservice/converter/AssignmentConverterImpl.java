@@ -22,9 +22,13 @@ import com.kota.stratagem.persistence.entity.TeamObjectiveAssignment;
 import com.kota.stratagem.persistence.entity.TeamProjectAssignment;
 import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
+import com.kota.stratagem.persistence.service.TeamService;
 
 @Stateless
 public class AssignmentConverterImpl implements AssignmentConverter {
+
+	@EJB
+	private TeamService teamService;
 
 	@EJB
 	private AppUserConverter appUserConverter;
@@ -96,11 +100,11 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	public TeamObjectiveAssignmentRepresentor to(TeamObjectiveAssignment assignment) {
 		final TeamObjectiveAssignmentRepresentor representor = assignment.getId() != null
 				? new TeamObjectiveAssignmentRepresentor(assignment.getId(), this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.objectiveConverter.toElementary(assignment.getObjective()),
-						assignment.getCreationDate())
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.objectiveConverter.toElementary(assignment.getObjective()), assignment.getCreationDate())
 				: new TeamObjectiveAssignmentRepresentor(this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.objectiveConverter.toElementary(assignment.getObjective()),
-						assignment.getCreationDate());
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.objectiveConverter.toElementary(assignment.getObjective()), assignment.getCreationDate());
 		return representor;
 	}
 
@@ -108,11 +112,11 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	public TeamProjectAssignmentRepresentor to(TeamProjectAssignment assignment) {
 		final TeamProjectAssignmentRepresentor representor = assignment.getId() != null
 				? new TeamProjectAssignmentRepresentor(assignment.getId(), this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.projectConverter.toElementary(assignment.getProject()),
-						assignment.getCreationDate())
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.projectConverter.toElementary(assignment.getProject()), assignment.getCreationDate())
 				: new TeamProjectAssignmentRepresentor(this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.projectConverter.toElementary(assignment.getProject()),
-						assignment.getCreationDate());
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.projectConverter.toElementary(assignment.getProject()), assignment.getCreationDate());
 		return representor;
 	}
 
@@ -120,11 +124,11 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	public TeamSubmoduleAssignmentRepresentor to(TeamSubmoduleAssignment assignment) {
 		final TeamSubmoduleAssignmentRepresentor representor = assignment.getId() != null
 				? new TeamSubmoduleAssignmentRepresentor(assignment.getId(), this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.submoduleConverter.toElementary(assignment.getSubmodule()),
-						assignment.getCreationDate())
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.submoduleConverter.toElementary(assignment.getSubmodule()), assignment.getCreationDate())
 				: new TeamSubmoduleAssignmentRepresentor(this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.submoduleConverter.toElementary(assignment.getSubmodule()),
-						assignment.getCreationDate());
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.submoduleConverter.toElementary(assignment.getSubmodule()), assignment.getCreationDate());
 		return representor;
 	}
 
@@ -132,11 +136,11 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	public TeamTaskAssignmentRepresentor to(TeamTaskAssignment assignment) {
 		final TeamTaskAssignmentRepresentor representor = assignment.getId() != null
 				? new TeamTaskAssignmentRepresentor(assignment.getId(), this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.taskConverter.toElementary(assignment.getTask()),
-						assignment.getCreationDate())
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.taskConverter.toElementary(assignment.getTask()), assignment.getCreationDate())
 				: new TeamTaskAssignmentRepresentor(this.appUserConverter.toElementary(assignment.getEntrustor()),
-						this.teamConverter.toElementary(assignment.getRecipient()), this.taskConverter.toElementary(assignment.getTask()),
-						assignment.getCreationDate());
+						this.teamConverter.toElementary(this.teamService.readWithLeader(assignment.getRecipient().getId())),
+						this.taskConverter.toElementary(assignment.getTask()), assignment.getCreationDate());
 		return representor;
 	}
 

@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.kota.stratagem.ejbserviceclient.domain.AbstractAppUserAssignmentRepresentor;
 
-public class AppUserAssignmentCreatorNameComparator implements Comparator<AbstractAppUserAssignmentRepresentor> {
+public class AppUserAssignmentRecipientNameComparator implements Comparator<AbstractAppUserAssignmentRepresentor> {
 
 	@Override
 	public int compare(AbstractAppUserAssignmentRepresentor o1, AbstractAppUserAssignmentRepresentor o2) {

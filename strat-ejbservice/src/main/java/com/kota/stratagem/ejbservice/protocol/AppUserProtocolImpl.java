@@ -50,38 +50,6 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@AppUserOriented
 	private DTOExtensionManager extensionManager;
 
-	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {
-		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
-		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
-		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
-				.getSubordinateRoles()) {
-			final List<AppUserRepresentor> userList = new ArrayList<>(
-					this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
-			for (final T assignment : assignments) {
-				if (userList.contains(assignment.getRecipient())) {
-					userList.remove(assignment.getRecipient());
-				}
-			}
-			if (userList.size() > 0) {
-				clusters.add(userList);
-			}
-		}
-		final List<AppUserRepresentor> self = new ArrayList<>();
-		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
-		for (final T assignment : assignments) {
-			if (self.contains(assignment.getRecipient())) {
-				self.remove(assignment.getRecipient());
-			}
-		}
-		if (self.size() > 0) {
-			clusters.add(self);
-		}
-		for (final List<AppUserRepresentor> cluster : clusters) {
-			Collections.sort(cluster, new AppUserNameComparator());
-		}
-		return clusters;
-	}
-
 	@Override
 	public int getAppUserNewNotificationCount(String username) throws AdaptorException {
 		final AppUserRepresentor representor = this.converter.toSimplified(this.appUserService.readWithNotifications(username));
@@ -134,6 +102,38 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@Override
 	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(TaskRepresentor task) throws AdaptorException {
 		return this.retrieveObjectRelatedClusterList(task.getAssignedUsers());
+	}
+
+	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {
+		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
+		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
+				.getSubordinateRoles()) {
+			final List<AppUserRepresentor> userList = new ArrayList<>(
+					this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
+			for (final T assignment : assignments) {
+				if (userList.contains(assignment.getRecipient())) {
+					userList.remove(assignment.getRecipient());
+				}
+			}
+			if (userList.size() > 0) {
+				clusters.add(userList);
+			}
+		}
+		final List<AppUserRepresentor> self = new ArrayList<>();
+		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		for (final T assignment : assignments) {
+			if (self.contains(assignment.getRecipient())) {
+				self.remove(assignment.getRecipient());
+			}
+		}
+		if (self.size() > 0) {
+			clusters.add(self);
+		}
+		for (final List<AppUserRepresentor> cluster : clusters) {
+			Collections.sort(cluster, new AppUserNameComparator());
+		}
+		return clusters;
 	}
 
 	@Override

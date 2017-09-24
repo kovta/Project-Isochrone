@@ -5,7 +5,7 @@ import javax.ejb.Local;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 
 @Local
-public interface AppUserAssignmentProtocol {
+public interface AppUserAssignmentProtocol extends AssignmentProtocol {
 
 	void saveObjectiveAssignments(String[] recipients, Long objective) throws AdaptorException;
 
@@ -14,13 +14,5 @@ public interface AppUserAssignmentProtocol {
 	void saveSubmoduleAssignments(String[] recipients, Long submodule) throws AdaptorException;
 
 	void saveTaskAssignments(String[] recipients, Long task) throws AdaptorException;
-
-	void removeObjectiveAssignment(Long id) throws AdaptorException;
-
-	void removeProjectAssignment(Long id) throws AdaptorException;
-
-	void removeSubmoduleAssignment(Long id) throws AdaptorException;
-
-	void removeTaskAssignment(Long id) throws AdaptorException;
 
 }

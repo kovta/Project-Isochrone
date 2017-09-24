@@ -7,10 +7,11 @@ import java.util.List;
 import com.kota.stratagem.ejbservice.comparison.congregated.ObjectiveClusterComparator;
 import com.kota.stratagem.ejbservice.comparison.congregated.ProjectSummaryComparator;
 import com.kota.stratagem.ejbservice.comparison.congregated.SubmoduleSummaryComparator;
-import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentCreatorNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.SubmoduleCompletionComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskCompletionComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueSubmoduleComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
 import com.kota.stratagem.ejbservice.qualifier.ProjectOriented;
@@ -68,7 +69,8 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void sortBaseCollections() {
-		Collections.sort(this.representor.getAssignedUsers(), new AppUserAssignmentCreatorNameComparator());
+		Collections.sort(this.representor.getAssignedUsers(), new AppUserAssignmentRecipientNameComparator());
+		Collections.sort(this.representor.getAssignedTeams(), new TeamAssignmentRecipientNameComparator());
 	}
 
 	private void provideCompletion() {

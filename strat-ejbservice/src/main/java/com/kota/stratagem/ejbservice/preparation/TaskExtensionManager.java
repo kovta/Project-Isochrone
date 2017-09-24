@@ -9,8 +9,9 @@ import java.util.Queue;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentCreatorNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
@@ -60,7 +61,8 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void sortBaseCollections() {
-		Collections.sort(this.representor.getAssignedUsers(), new AppUserAssignmentCreatorNameComparator());
+		Collections.sort(this.representor.getAssignedUsers(), new AppUserAssignmentRecipientNameComparator());
+		Collections.sort(this.representor.getAssignedTeams(), new TeamAssignmentRecipientNameComparator());
 	}
 
 	@Override
