@@ -106,10 +106,10 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	private void provideCompletedDurationSum() {
 		Double durationSum = (double) 0;
 		for (final TaskRepresentor task : this.representor.getTasks()) {
-			if (task.isCompleted() && task.isEstimated()) {
-				durationSum += ((task.getPessimistic() + (4 * task.getRealistic()) + task.getOptimistic()) / 6);
-			} else if (task.isCompleted() && task.isDurationProvided()) {
-				durationSum += task.getDuration();
+			if (task.isEstimated()) {
+				durationSum += ((task.getPessimistic() + (4 * task.getRealistic()) + task.getOptimistic()) / 6) * (task.getCompletion() / 100);
+			} else if (task.isDurationProvided()) {
+				durationSum += task.getDuration() * (task.getCompletion() / 100);
 			}
 		}
 		this.representor.setCompletedDurationSum(durationSum);
@@ -131,10 +131,21 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 			}
 			CPMResult result = null;
 			try {
-				if (configured && estimated) {
-					result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(components));
-				} else if (configured && !estimated) {
-					result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(components));
+				if (configured) {
+					if (estimated) {
+						for (final TaskRepresentor component : components) {
+							final double completionRatio = ((100 - component.getCompletion()) / 100);
+							component.setPessimistic(component.getPessimistic() * completionRatio);
+							component.setRealistic(component.getRealistic() * completionRatio);
+							component.setOptimistic(component.getOptimistic() * completionRatio);
+						}
+						result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(components));
+					} else {
+						for (final TaskRepresentor component : components) {
+							component.setDuration(component.getDuration() / ((100 - component.getCompletion()) / 100));
+						}
+						result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(components));
+					}
 				}
 			} catch (InvalidNodeTypeException | CyclicDependencyException e) {
 				LOGGER.error(e, e);

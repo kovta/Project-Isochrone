@@ -23,6 +23,7 @@ import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
@@ -65,9 +66,6 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				clusters.add(userList);
 			}
 		}
-		for (final List<AppUserRepresentor> cluster : clusters) {
-			Collections.sort(cluster, new AppUserNameComparator());
-		}
 		final List<AppUserRepresentor> self = new ArrayList<>();
 		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
 		for (final T assignment : assignments) {
@@ -77,6 +75,9 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		}
 		if (self.size() > 0) {
 			clusters.add(self);
+		}
+		for (final List<AppUserRepresentor> cluster : clusters) {
+			Collections.sort(cluster, new AppUserNameComparator());
 		}
 		return clusters;
 	}
@@ -136,10 +137,58 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
+	public List<List<AppUserRepresentor>> getAssignableAppUserClusters(TeamRepresentor team) throws AdaptorException {
+		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
+		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
+				.getSubordinateRoles()) {
+			final List<AppUserRepresentor> userList = new ArrayList<>(
+					this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
+			for (final AppUserRepresentor user : team.getMembers()) {
+				if (userList.contains(user) || user.equals(team.getLeader())) {
+					userList.remove(user);
+				}
+			}
+			if (userList.size() > 0) {
+				clusters.add(userList);
+			}
+		}
+		final List<AppUserRepresentor> self = new ArrayList<>();
+		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		for (final AppUserRepresentor user : team.getMembers()) {
+			if (self.contains(user) || user.equals(team.getLeader())) {
+				self.remove(user);
+			}
+		}
+		if (self.size() > 0) {
+			clusters.add(self);
+		}
+		for (final List<AppUserRepresentor> cluster : clusters) {
+			Collections.sort(cluster, new AppUserNameComparator());
+		}
+		return clusters;
+	}
+
+	@Override
+	public List<AppUserRepresentor> getAssignableAppUsers() throws AdaptorException {
+		final List<AppUserRepresentor> users = new ArrayList<>();
+		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
+				.getSubordinateRoles()) {
+			for (final AppUserRepresentor candidate : this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName())))) {
+				users.add(candidate);
+			}
+			users.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		}
+		Collections.sort(users, new AppUserNameComparator());
+		return users;
+	}
+
+	@Override
 	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, String operator) throws AdaptorException {
-		return this.converter.toComplete(((id != null) && this.appUserService.exists(id))
+		return this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.appUserService.exists(id))
 				? this.appUserService.update(id, name, password != null ? password : null, email, Role.valueOf(role.getName()), operator)
-				: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, Role.valueOf(role.getName())));
+				: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, Role.valueOf(role.getName()))));
 	}
 
 	@Override

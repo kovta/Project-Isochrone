@@ -7,12 +7,17 @@ import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 
 public interface DTOExtensionManager {
 
 	AppUserRepresentor prepare(AppUserRepresentor representor);
 
 	List<AppUserRepresentor> prepareAppUsers(List<AppUserRepresentor> representors);
+
+	TeamRepresentor prepare(TeamRepresentor representor);
+
+	List<TeamRepresentor> prepareTeams(List<TeamRepresentor> representors);
 
 	ObjectiveRepresentor prepare(ObjectiveRepresentor representor);
 

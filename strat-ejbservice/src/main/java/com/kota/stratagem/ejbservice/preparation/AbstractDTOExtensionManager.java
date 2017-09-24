@@ -9,6 +9,7 @@ import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 
 public abstract class AbstractDTOExtensionManager implements DTOExtensionManager {
 
@@ -17,13 +18,25 @@ public abstract class AbstractDTOExtensionManager implements DTOExtensionManager
 	@Override
 	public AppUserRepresentor prepare(AppUserRepresentor representor) {
 		this.sortBaseCollections();
-		return null;
+		return representor;
 	}
 
 	@Override
 	public List<AppUserRepresentor> prepareAppUsers(List<AppUserRepresentor> representors) {
 		this.sortJointCollection();
-		return null;
+		return representors;
+	}
+
+	@Override
+	public TeamRepresentor prepare(TeamRepresentor representor) {
+		this.sortBaseCollections();
+		return representor;
+	}
+
+	@Override
+	public List<TeamRepresentor> prepareTeams(List<TeamRepresentor> representors) {
+		this.sortJointCollection();
+		return representors;
 	}
 
 	@Override
@@ -73,7 +86,7 @@ public abstract class AbstractDTOExtensionManager implements DTOExtensionManager
 	@Override
 	public List<TaskRepresentor> prepareCompliantTasks(List<TaskRepresentor> representors) {
 		this.sortJointCollection();
-		return null;
+		return representors;
 	}
 
 	protected abstract void addRepresentorSpecificProperties();
