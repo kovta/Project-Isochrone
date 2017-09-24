@@ -7,6 +7,9 @@ public enum Page {
 	USER_LIST("/control/user/user-list.jsp", "UserList"), //
 	USER_VIEW("/control/user/user-view.jsp", "User"), //
 	USER_EDIT("/control/user/user-edit.jsp", "User"), //
+	TEAM_LIST("/control/team/team-list.jsp", "TeamList"), //
+	TEAM_VIEW("/control/team/team-view.jsp", "Team"), //
+	TEAM_EDIT("/control/team/team-edit.jsp", "Team"), //
 	OBJECTIVE_LIST("/control/objective/objective-list.jsp", "ObjectiveList"), //
 	OBJECTIVE_VIEW("/control/objective/objective-view.jsp", "Objective"), //
 	OBJECTIVE_EDIT("/control/objective/objective-edit.jsp", "Objective"), //

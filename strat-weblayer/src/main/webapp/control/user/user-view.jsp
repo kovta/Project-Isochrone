@@ -110,36 +110,34 @@
 			                                 </li>
 											 <li class="nav-item tab-listener">
 				                             	 <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
-				                             	 	href="#objectivePanel" role="tab" aria-expanded="true">
-				                                 	 <span>Objective Assignments (<c:out value="${user.objectives.size()}" />)</span>
+													 href="#assignmentPanel" role="tab" aria-expanded="true">
+				                                 	 <span>Assignments (<c:out value="${user.objectives.size() 
+				                                 	 	+ user.projects.size() + user.submodules.size() + user.tasks.size()}" />)
+				                                 	 </span>
 				                                 </a>
 		                                 	 </li>
 										 </c:when>
 										 <c:otherwise>
 											 <li class="nav-item tab-listener">
 				                             	 <a class="nav-link waves-light waves-effect waves-light active" data-toggle="tab" 
-				                             	 	href="#objectivePanel" role="tab" aria-expanded="true">
-				                                 	 <span>Objective Assignments (<c:out value="${user.objectives.size()}" />)</span>
+				                             	 	href="#assignmentPanel" role="tab" aria-expanded="true">
+				                                 	<span>Assignments (<c:out value="${user.objectives.size() 
+				                                 	 	+ user.projects.size() + user.submodules.size() + user.tasks.size()}" />)
+				                                 	 </span>
 				                                 </a>
 		                                 	 </li>										 	 
 										 </c:otherwise>
 									 </c:choose>
 	                                 <li class="nav-item tab-listener">
 		                             	 <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
-		                             	 	href="#projectPanel" role="tab" aria-expanded="true">
-		                                 	 <span>Project Assignments (<c:out value="${user.projects.size()}" />)</span>
+		                             	 	href="#membershipPanel" role="tab" aria-expanded="true">
+		                                 	 <span>Team Memberships (<c:out value="${user.teamMemberships.size()}" />)</span>
 		                                 </a>
 	                                 </li>
 	                                 <li class="nav-item tab-listener">
 	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
-	                                    	href="#submodulePanel" role="tab" aria-expanded="false">
-		                                    <span>Submodule Assignments (<c:out value="${user.submodules.size()}" />)</span>
-	                                    </a>
-	                                 </li>
-	                                 <li class="nav-item tab-listener">
-	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" 
-	                                    	href="#taskPanel" role="tab" aria-expanded="false">
-		                                    <span>Task Assignments (<c:out value="${user.tasks.size()}" />)</span>
+	                                    	href="#supervisionPanel" role="tab" aria-expanded="false">
+		                                    <span>Supervised Teams (<c:out value="${user.supervisedTeams.size()}" />)</span>
 	                                    </a>
 	                                 </li>
 	                             </ul>
@@ -214,217 +212,98 @@
 	                         	 <!--Panel 1-->
 								 <c:choose>
      	                             <c:when test="${requestScope.operatorAccount}">
-			                             <div class="tab-pane fade" id="objectivePanel" role="tabpanel" aria-expanded="true">
-				                             <c:choose>
-											     <c:when test="${user.objectives.size() == 0}">
-													<div class="row wow fadeIn" data-wow-delay="0.2s">
-			                    					    <div class="col-lg-12">
-															<div class="text-center content-padder">
-																<h2 class="h2-responsive">There are currently no Objectives</h2>
-																<h2 class="h2-responsive">assigned to this User</h2>
-															</div>
-														</div>
-													</div>
-												</c:when>
-												<c:otherwise>
-													<div class="row">
-														<c:forEach items="${requestScope.user.objectives}" var="assignment">
-															<div class="col-lg-4">
-											                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-											                        <div class="card-block">
-											                            <h4 class="card-title"><c:out value="${assignment.objective.name}" /></h4>
-											                            <hr/>
-											                            <p class="card-text">Assigned by: 
-											                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
-											                            		<c:out value="${assignment.entrustor.name}" />
-											                            	</a>		
-											                            </p>
-											                            <p class="card-text">Date: 
-											                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
-											                            </p>
-											                            <div class="full-width text-center">
-																			<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
-																		</div>
-																	</div>
-											                    </div>
-											                    <br/>	
-															</div>
-														</c:forEach>
-													</div>
-												</c:otherwise>
-											</c:choose>
+			                             <div class="tab-pane fade" id="assignmentPanel" role="tabpanel" aria-expanded="true">
+				                             <jsp:include page="user-assignment-panel.jsp"></jsp:include>
 			                             </div>
 									</c:when>
 	                             	<c:otherwise>
-	                             		<div class="tab-pane fade active show" id="objectivePanel" role="tabpanel" aria-expanded="true">
-				                             <c:choose>
-											     <c:when test="${user.objectives.size() == 0}">
+	                             		<div class="tab-pane fade active show" id="assignmentPanel" role="tabpanel" aria-expanded="true">
+				                             <jsp:include page="user-assignment-panel.jsp"></jsp:include>
+			                             </div>
+	                             	</c:otherwise>
+	                             </c:choose>
+	                             <!--Panel 2-->
+	                             <div class="tab-pane fade" id="membershipPanel" role="tabpanel" aria-expanded="false">
+								     <c:choose>
+									     <c:when test="${user.teamMemberships.size() == 0}">
+											<c:choose>
+												<c:when test="${requestScope.operatorAccount}">
 													<div class="row wow fadeIn" data-wow-delay="0.2s">
-			                    					    <div class="col-lg-12">
+													    <div class="col-lg-12">
 															<div class="text-center content-padder">
-																<h2 class="h2-responsive">There are currently no Objectives</h2>
-																<h2 class="h2-responsive">assigned to this User</h2>
+																<h2 class="h2-responsive">You are currently not</h2>
+																<h2 class="h2-responsive">a Member of any Team</h2>
 															</div>
 														</div>
 													</div>
 												</c:when>
-												<c:otherwise>
-													<div class="row">
-														<c:forEach items="${requestScope.user.objectives}" var="assignment">
-															<div class="col-lg-4">
-											                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-											                        <div class="card-block">
-											                            <h4 class="card-title"><c:out value="${assignment.objective.name}" /></h4>
-											                            <hr/>
-											                            <p class="card-text">Assigned by: 
-											                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
-											                            		<c:out value="${assignment.entrustor.name}" />
-											                            	</a>		
-											                            </p>
-											                            <p class="card-text">Date: 
-											                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
-											                            </p>
-											                            <div class="full-width text-center">
-																			<a href="Objective?id=<c:out value="${assignment.objective.id}" />" class="btn btn-primary">Inspect Objective</a>
-																		</div>
-																	</div>
-											                    </div>
-											                    <br/>	
+											   <c:otherwise>
+													<div class="row wow fadeIn" data-wow-delay="0.2s">
+													    <div class="col-lg-12">
+															<div class="text-center content-padder">
+																<h2 class="h2-responsive">This User is currently not</h2>
+																<h2 class="h2-responsive">a Member of any Team</h2>
 															</div>
-														</c:forEach>
+														</div>
 													</div>
-												</c:otherwise>
-											</c:choose>
-			                             </div>
-	                             	</c:otherwise>
-	                             </c:choose>
-	                             <!--/.Panel 1-->
-	                             <!--Panel 2-->
-	                             <div class="tab-pane fade" id="projectPanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${user.projects.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-														<h2 class="h2-responsive">There are currently no Projects</h2>
-														<h2 class="h2-responsive">assigned to this User</h2>
-													</div>
-			                               		</div>
-		                               		</div>
+										   	   </c:otherwise>
+									       </c:choose>
 										</c:when>
 										<c:otherwise>
 											<div class="row">
-												<c:forEach items="${requestScope.user.projects}" var="assignment">
+												<c:forEach items="${requestScope.user.teamMemberships}" var="membership">
 													<div class="col-lg-4">
-									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <div class="card-block">
-									                            <h4 class="card-title"><c:out value="${assignment.project.name}" /></h4>
-									                            <hr/>
-									                            <p class="card-text">Assigned by: 
-									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
-									                            		<c:out value="${assignment.entrustor.name}" />
-									                            	</a>
-									                            </p>
-									                            <p class="card-text">Date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
-									                            </p>
-									                            <div class="full-width text-center">
-																	<a href="Project?id=<c:out value="${assignment.project.id}" />" class="btn btn-primary">Inspect Project</a>
-																</div>
-															</div>
-									                    </div>
-									                    <br/>							                    
-							                        </div>
-												</c:forEach>
-											</div>		    
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 2-->
-	                             <!--Panel 3-->
-	                             <div class="tab-pane fade" id="submodulePanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${user.submodules.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-				                               			<h2 class="h2-responsive">There are currently no Submodules</h2>
-														<h2 class="h2-responsive">assigned to this User</h2>
-				                               		</div>
-			                               		</div>
-		                               		</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.user.submodules}" var="assignment">
-													<div class="col-lg-4">
-									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <div class="card-block">
-									                            <h4 class="card-title"><c:out value="${assignment.submodule.name}" /></h4>
-									                            <hr/>
-									                            <p class="card-text">Assigned by: 
-									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
-									                            		<c:out value="${assignment.entrustor.name}" />
-									                            	</a>
-									                            </p>
-									                            <p class="card-text">Date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
-									                            </p>
-									                            <div class="full-width text-center">
-																	<a href="Submodule?id=<c:out value="${assignment.submodule.id}" />" class="btn btn-primary">Inspect Submodule</a>
-																</div>
-															</div>
-									                    </div>
-									                    <br/>
-							                        </div>
-												</c:forEach>
-											</div>		    
-										</c:otherwise>
-									</c:choose>
-	                             </div>
-	                             <!--/.Panel 3-->
-	                             <!--Panel 4-->
-	                             <div class="tab-pane fade" id="taskPanel" role="tabpanel" aria-expanded="false">
-								     <c:choose>
-									     <c:when test="${user.tasks.size() == 0}">
-											<div class="row wow fadeIn" data-wow-delay="0.2s">
-	                    					    <div class="col-lg-12">
-				                           			<div class="text-center content-padder">
-														<h2 class="h2-responsive">There are currently no Tasks</h2>
-														<h2 class="h2-responsive">assigned to this User</h2>
-				                               		</div>
-			                               		</div>
-		                               		</div>
-										</c:when>
-										<c:otherwise>
-											<div class="row">
-												<c:forEach items="${requestScope.user.tasks}" var="assignment">
-													<div class="col-lg-4">
-									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <div class="card-block">
-									                            <h4 class="card-title"><c:out value="${assignment.task.name}" /></h4>
-									                            <hr/>
-									                            <p class="card-text">Assigned by: 
-									                            	<a href="User?id=<c:out value="${assignment.entrustor.id}" />">
-									                            		<c:out value="${assignment.entrustor.name}" />
-									                            	</a>
-									                            </p>
-									                            <p class="card-text">Date: 
-									                            	<fmt:formatDate type="date" value="${assignment.creationDate}" pattern="yyyy-MM-dd hh:mm" />
-									                            </p>
-									                            <div class="full-width text-center">
-																	<a href="Task?id=<c:out value="${assignment.task.id}" />" class="btn btn-primary">Inspect Task</a>
-																</div>
-															</div>
-									                    </div>
-									                    <br/>
+									                    <br/><br/><br/>
+															<c:set var="team" value="${membership}" scope="request" />
+															<jsp:include page="../team/team-card.jsp"></jsp:include>
+									                    <br/><br/>
 									            	</div>
 												</c:forEach>
 											</div>		    
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 4-->
+								 <!--Panel 3-->
+	                             <div class="tab-pane fade" id="supervisionPanel" role="tabpanel" aria-expanded="false">
+								     <c:choose>
+									     <c:when test="${user.supervisedTeams.size() == 0}">
+									     	<c:choose>
+												<c:when test="${requestScope.operatorAccount}">
+													<div class="row wow fadeIn" data-wow-delay="0.2s">
+													    <div class="col-lg-12">
+															<div class="text-center content-padder">
+																<h2 class="h2-responsive">You are currently not</h2>
+																<h2 class="h2-responsive">the Supervisor of any Team</h2>
+															</div>
+														</div>
+													</div>
+												</c:when>
+												<c:otherwise>
+													<div class="row wow fadeIn" data-wow-delay="0.2s">
+			                    					    <div class="col-lg-12">
+						                           			<div class="text-center content-padder">
+						                               			<h2 class="h2-responsive">This User is currently not</h2>
+						                               			<h2 class="h2-responsive">the Supervisor of any Team</h2>
+						                               		</div>
+					                               		</div>
+				                               		</div>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<div class="row">
+												<c:forEach items="${requestScope.user.supervisedTeams}" var="supervision">
+													<div class="col-lg-4">
+									                    <br/><br/><br/>
+															<c:set var="team" value="${supervision}" scope="request" />
+															<jsp:include page="../team/team-card.jsp"></jsp:include>
+									                    <br/><br/>
+									            	</div>
+												</c:forEach>
+											</div>		    
+										</c:otherwise>
+									</c:choose>
+	                             </div>
 	                         </div>
 	                         <!-- /.Tabs -->
 	                    </div>

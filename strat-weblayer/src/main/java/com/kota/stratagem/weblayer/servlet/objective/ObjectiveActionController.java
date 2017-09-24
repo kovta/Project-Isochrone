@@ -124,7 +124,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 					LOGGER.info(id == null ? "Create Objective : (" + name + ")" : "Update Objective : (" + id + ")");
 					objective = this.objectiveProtocol.saveObjective(id, name, description, priority, status, deadline, confidentiality,
 							request.getUserPrincipal().getName());
-					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created succesfully!" : "Objective updated successfully!");
+					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Objective created successfully!" : "Objective updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");

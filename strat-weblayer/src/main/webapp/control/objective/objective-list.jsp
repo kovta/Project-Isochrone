@@ -36,7 +36,7 @@
 			<div class="small-padder"></div>
 			<div class="card">
 				<div class="card-block">
-					<table class="table table-hover">
+					<table class="table table-hover table-responsive">
 						<colgroup>
 							<col span="1" style="width: 3%;">
 							<col span="1" style="width: 42%;">

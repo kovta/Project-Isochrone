@@ -39,8 +39,11 @@
             <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
             <li class="nav-item"><a class="nav-link" href="#best-features">Features</a></li>
             <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+            <li class="nav-separator"></li>
 			<li class="nav-item"><a class="nav-link" href="ObjectiveList">Objectives</a></li>
             <li class="nav-item"><a class="nav-link" href="ProjectList">Projects</a></li>
+            <li class="nav-separator"></li>
+            <li class="nav-item"><a class="nav-link" href="TeamList">Teams</a></li>
             <li class="nav-item"><a class="nav-link" href="UserList">Users</a></li>
         </ul>
         <!-- Search bar -->

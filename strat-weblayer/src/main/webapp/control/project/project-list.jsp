@@ -35,7 +35,7 @@
 				<div class="card">
 					<div class="card-block">
 						<h2 class="icon-companion"><a href="Objective?id=<c:out value="${parentObjective.id}" />">${parentObjective.name}</a></h2>				
-						<table class="table table-hover fixed-table-layout">
+						<table class="table table-hover fixed-table-layout table-responsive">
 							<colgroup>
 								<col span="1" style="width: 3%;">
 								<col span="1" style="width: 44%;">

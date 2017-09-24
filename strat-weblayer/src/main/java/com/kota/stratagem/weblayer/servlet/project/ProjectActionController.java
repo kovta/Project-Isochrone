@@ -122,7 +122,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 					LOGGER.info(id == null ? "Create Project : (" + name + ")" : "Update Project : (" + id + ")");
 					project = this.projectProtocol.saveProject(id, name, description, status, deadline, confidentiality, request.getUserPrincipal().getName(),
 							objective_id);
-					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Project created succesfully!" : "Project updated successfully!");
+					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Project created successfully!" : "Project updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");

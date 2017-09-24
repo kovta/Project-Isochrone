@@ -28,6 +28,14 @@ body {
 .top-nav-collapse {
     background-color: #293547;
 }
+.nav-separator {
+	width: 1px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: lightgrey;
+}
 
 footer.page-footer {
     background-color: #293547;

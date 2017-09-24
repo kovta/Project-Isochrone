@@ -64,7 +64,7 @@ public class AppUserAssignmentController extends AbstractRefinerServlet implemen
 				}
 				request.getSession().setAttribute(ATTR_SUCCESS,
 						((assignedUsers != null) && (assignedUsers.length != 0))
-								? assignedUsers.length != 1 ? assignedUsers.length + " Assignments added succesfully!" : "1 Assignment added succesfully!"
+								? assignedUsers.length != 1 ? assignedUsers.length + " Assignments added successfully!" : "1 Assignment added succesfully!"
 								: "No selections were made");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);

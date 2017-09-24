@@ -118,7 +118,7 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 				try {
 					LOGGER.info(id == null ? "Create Submodule : (" + name + ")" : "Update Submodule : (" + id + ")");
 					submodule = this.submoduleProtocol.saveSubmodule(id, name, description, deadline, request.getUserPrincipal().getName(), project_id);
-					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Submodule created succesfully!" : "Submodule updated successfully!");
+					request.getSession().setAttribute(ATTR_SUCCESS, id == null ? "Submodule created successfully!" : "Submodule updated successfully!");
 				} catch (final AdaptorException e) {
 					LOGGER.error(e, e);
 					request.getSession().setAttribute(ATTR_ERROR, "Operation failed");

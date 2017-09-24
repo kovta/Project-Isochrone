@@ -92,7 +92,23 @@
 			<c:if test="${submodule.isDeadlineProvided()}">
 				<tr>
 					<td class="strat-detail-attribute-name">Deviation from Deadline</td>
-					<td class="strat-detail-attribute-value">${submodule.targetDeviation}<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'}" /></td>
+					<td class="strat-detail-attribute-value">
+						<c:choose>
+							<c:when test="${submodule.targetDeviation eq 0}"><span class="success-text">Right on schedule</span></c:when>
+							<c:when test="${submodule.targetDeviation gt 0}">
+								<span class="success-text">
+									${submodule.targetDeviation lt 0 ? -submodule.targetDeviation : submodule.targetDeviation}
+									<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'} ahead of schedule" />
+								</span>
+							</c:when>
+							<c:otherwise>
+								<span class="danger-text">
+									${submodule.targetDeviation lt 0 ? -submodule.targetDeviation : submodule.targetDeviation}
+									<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'} behind schedule" />
+								</span>
+							</c:otherwise>
+						</c:choose>
+					</td>
 				</tr>
 				<tr>
 					<td class="strat-detail-attribute-name">Early finish probability</td>
