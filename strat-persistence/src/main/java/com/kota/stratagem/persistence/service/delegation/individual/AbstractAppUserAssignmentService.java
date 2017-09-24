@@ -1,8 +1,8 @@
-package com.kota.stratagem.persistence.service.delegation;
+package com.kota.stratagem.persistence.service.delegation.individual;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -17,7 +17,7 @@ public abstract class AbstractAppUserAssignmentService implements AppUserAssignm
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractAppUserAssignmentService.class);
 
-	@PersistenceContext(unitName = "strat-persistence-unit")
+	@Inject
 	private EntityManager entityManager;
 
 	@EJB
@@ -33,6 +33,7 @@ public abstract class AbstractAppUserAssignmentService implements AppUserAssignm
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private <T extends AbstractMonitoredEntity, E extends AbstractAppUserAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient)
 			throws PersistenceServiceException {
 		subject.setEntrustor(this.mergeOperators(entrustor, object));
@@ -41,6 +42,7 @@ public abstract class AbstractAppUserAssignmentService implements AppUserAssignm
 		this.entityManager.flush();
 	}
 
+	@SuppressWarnings("unused")
 	private void removeAssignment(Long id, String query, String object) throws PersistenceServiceException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Remove User " + object + " Assignment by id (" + id + ")");

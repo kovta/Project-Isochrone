@@ -1,4 +1,4 @@
-package com.kota.stratagem.persistence.service.delegation;
+package com.kota.stratagem.persistence.service.delegation.individual;
 
 public class AppUserSubmoduleAssignmentServiceImpl extends AbstractAppUserAssignmentService implements AppUserSubmoduleAssignmentService {
 

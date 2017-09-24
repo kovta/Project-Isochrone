@@ -57,7 +57,12 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public Team readWiithLeaderAndMembers(Long id) {
+	public Team readWithLeader(Long id) {
+		return this.entityManager.createNamedQuery(TeamQuery.GET_BY_ID_WITH_LEADER, Team.class).setParameter(TeamParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Team readWithLeaderAndMembers(Long id) {
 		return this.entityManager.createNamedQuery(TeamQuery.GET_BY_ID_WITH_LEADER_AND_MEMBERS, Team.class).setParameter(TeamParameter.ID, id)
 				.getSingleResult();
 	}
@@ -112,21 +117,23 @@ public class TeamServiceImpl implements TeamService {
 
 	@Override
 	public void createMembership(Long id, String member, Long operator) {
-		final Team team = this.readWiithLeaderAndMembers(id);
+		final Team team = this.readWithLeaderAndMembers(id);
 		final AppUser selectedMember = this.appUserService.readElementary(member);
 		final Set<AppUser> members = team.getMembers();
 		members.add(selectedMember);
 		team.setMembers(members);
+		team.setModificationDate(new Date());
 		this.entityManager.merge(team);
 	}
 
 	@Override
 	public void deleteMembership(Long id, String member, Long operator) {
-		final Team team = this.readWiithLeaderAndMembers(id);
+		final Team team = this.readWithLeaderAndMembers(id);
 		final AppUser selectedMember = this.appUserService.readElementary(member);
 		final Set<AppUser> members = team.getMembers();
 		members.remove(selectedMember);
 		team.setMembers(members);
+		team.setModificationDate(new Date());
 		this.entityManager.merge(team);
 	}
 

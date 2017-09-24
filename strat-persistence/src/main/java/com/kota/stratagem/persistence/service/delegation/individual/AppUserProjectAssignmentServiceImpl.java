@@ -1,6 +1,6 @@
-package com.kota.stratagem.persistence.service.delegation;
+package com.kota.stratagem.persistence.service.delegation.individual;
 
-public class AppUserTaskAssignmentServiceImpl extends AbstractAppUserAssignmentService implements AppUserTaskAssignmentService {
+public class AppUserProjectAssignmentServiceImpl extends AbstractAppUserAssignmentService implements AppUserProjectAssignmentService {
 
 	@Override
 	public void create(Long entrustor, Long recipient, Long objective) {

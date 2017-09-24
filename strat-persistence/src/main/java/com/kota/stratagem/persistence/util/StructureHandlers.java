@@ -2,11 +2,11 @@ package com.kota.stratagem.persistence.util;
 
 import java.util.Map;
 
-import com.kota.stratagem.persistence.service.delegation.AbstractAppUserAssignmentService;
-import com.kota.stratagem.persistence.service.delegation.AppUserObjectiveAssignmentServiceImpl;
-import com.kota.stratagem.persistence.service.delegation.AppUserProjectAssignmentServiceImpl;
-import com.kota.stratagem.persistence.service.delegation.AppUserSubmoduleAssignmentServiceImpl;
-import com.kota.stratagem.persistence.service.delegation.AppUserTaskAssignmentServiceImpl;
+import com.kota.stratagem.persistence.service.delegation.individual.AbstractAppUserAssignmentService;
+import com.kota.stratagem.persistence.service.delegation.individual.AppUserObjectiveAssignmentServiceImpl;
+import com.kota.stratagem.persistence.service.delegation.individual.AppUserProjectAssignmentServiceImpl;
+import com.kota.stratagem.persistence.service.delegation.individual.AppUserSubmoduleAssignmentServiceImpl;
+import com.kota.stratagem.persistence.service.delegation.individual.AppUserTaskAssignmentServiceImpl;
 
 public class StructureHandlers {
 

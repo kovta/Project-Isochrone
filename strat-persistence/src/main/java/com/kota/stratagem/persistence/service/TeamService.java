@@ -14,7 +14,9 @@ public interface TeamService {
 
 	Team readElementary(Long id);
 
-	Team readWiithLeaderAndMembers(Long id);
+	Team readWithLeader(Long id);
+
+	Team readWithLeaderAndMembers(Long id);
 
 	Team readComplete(Long id);
 

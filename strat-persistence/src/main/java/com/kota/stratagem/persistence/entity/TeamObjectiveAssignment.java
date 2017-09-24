@@ -12,11 +12,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.kota.stratagem.persistence.parameter.AssignmentParameter;
+import com.kota.stratagem.persistence.query.TeamObjectiveAssignmentQuery;
+
 @Entity
 @Table(name = "team_objective_assignments")
+@NamedQueries(value = { //
+		@NamedQuery(name = TeamObjectiveAssignmentQuery.GET_BY_ID, query = "SELECT a FROM TeamObjectiveAssignment a WHERE a.id=:" + AssignmentParameter.ID),
+		@NamedQuery(name = TeamObjectiveAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM TeamObjectiveAssignment a WHERE a.id=:" + AssignmentParameter.ID)
+		//
+})
 @SequenceGenerator(name = "teamObjectiveAssignmentGenerator", sequenceName = "team_objective_assignments_assignment_id_seq", allocationSize = 1)
 public class TeamObjectiveAssignment extends AbstractTeamAssignment implements Serializable {
 
@@ -36,11 +46,9 @@ public class TeamObjectiveAssignment extends AbstractTeamAssignment implements S
 		this.creationDate = new Date();
 	}
 
-	public TeamObjectiveAssignment(AppUser entrustor, Team recipient, Objective objective, Date creationDate) {
+	public TeamObjectiveAssignment(Objective objective, Date creationDate) {
 		super();
 		this.objective = objective;
-		this.recipient = recipient;
-		this.entrustor = entrustor;
 		this.creationDate = creationDate;
 	}
 

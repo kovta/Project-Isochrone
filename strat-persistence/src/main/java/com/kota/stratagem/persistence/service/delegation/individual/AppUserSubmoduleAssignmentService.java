@@ -1,8 +1,8 @@
-package com.kota.stratagem.persistence.service.delegation;
+package com.kota.stratagem.persistence.service.delegation.individual;
 
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 
-public interface AppUserObjectiveAssignmentService {
+public interface AppUserSubmoduleAssignmentService {
 
 	void create(Long entrustor, Long recipient, Long objective) throws PersistenceServiceException;
 
