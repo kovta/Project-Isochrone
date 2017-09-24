@@ -167,6 +167,14 @@ public class AppUserRepresentor implements Serializable {
 		this.tasks.add(task);
 	}
 
+	public void addSupervisedTeam(TeamRepresentor team) {
+		this.supervisedTeams.add(team);
+	}
+
+	public void addTeamMembership(TeamRepresentor team) {
+		this.teamMemberships.add(team);
+	}
+
 	public void addNotification(NotificationRepresentor notification) {
 		this.notifications.add(notification);
 	}
