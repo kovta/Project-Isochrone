@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.TaskProtocol;
+import com.kota.stratagem.ejbservice.protocol.TeamProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.task.TaskAttribute;
@@ -32,10 +33,13 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 	private static final Logger LOGGER = Logger.getLogger(TaskActionController.class);
 
 	@EJB
-	TaskProtocol taskProtocol;
+	private TaskProtocol taskProtocol;
 
 	@EJB
-	AppUserProtocol appUserProtocol;
+	private AppUserProtocol appUserProtocol;
+
+	@EJB
+	private TeamProtocol teamProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,6 +67,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(task));
+				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(task));
 				request.setAttribute(ATTR_CONFIGURABLE_DEPENDENCIES, this.taskProtocol.getCompliantDependencyConfigurations(task));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);

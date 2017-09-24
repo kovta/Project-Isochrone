@@ -22,9 +22,9 @@
 		               		</div>
 		      			</c:when>
 						<c:otherwise>
-							<input type="hidden" name="objectiveId" value="${team.id}" />
+							<input type="hidden" name="id" value="${team.id}" />
 		          			<div class="md-form form-sm">
-		              			<label class="full-width text-center">Select which users to delegate</label>
+		              			<label class="full-width text-center">Select which users to add as Team Members</label>
 		              			<br/>
 		               		</div>
 			           		<div class="form-sm" id="objform35">

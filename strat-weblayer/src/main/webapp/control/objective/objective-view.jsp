@@ -154,7 +154,8 @@
 									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
 									                            	<hr/>
 										                            <div class="full-width text-center">
-																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />&objectiveId=<c:out value="${objective.id}" />">Unassign user</a>
+																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />
+																			&objectiveId=<c:out value="${objective.id}" />">Unassign User</a>
 															    	</div>
 																</c:if>
 															</div>
@@ -183,13 +184,20 @@
 											<div class="row">
 												<c:forEach items="${requestScope.objective.assignedTeams}" var="assignment">
 													<div class="col-lg-4">
-									                    <br/><br/><br/>
-									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <div class="card-block">
-									                        	<p><c:out value="${assignment.recipient.name}" /></p>
-									                        </div>
-									                    </div>
-									                    <br/><br/>
+														<br/>
+														<div class="card wow fadeIn" data-wow-delay="0.2s">
+															<div class="card-block">
+									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
+									                            <jsp:include page="../assignment/assignment-team-card-content.jsp"></jsp:include>
+									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+									                            	<hr/>
+										                            <div class="full-width text-center">
+																		<a href="TeamAssignmentDelete?id=<c:out value="${assignment.id}" />
+																			&objectiveId=<c:out value="${objective.id}" />">Unassign Team</a>
+															    	</div>
+																</c:if>
+															</div>
+														</div>
 									            	</div>
 												</c:forEach>
 											</div>		    

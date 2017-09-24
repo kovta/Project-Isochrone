@@ -253,10 +253,8 @@
 											<div class="row">
 												<c:forEach items="${requestScope.user.teamMemberships}" var="membership">
 													<div class="col-lg-4">
-									                    <br/><br/><br/>
-															<c:set var="team" value="${membership}" scope="request" />
-															<jsp:include page="../team/team-card.jsp"></jsp:include>
-									                    <br/><br/>
+														<c:set var="team" value="${membership}" scope="request" />
+														<jsp:include page="../team/team-card.jsp"></jsp:include>
 									            	</div>
 												</c:forEach>
 											</div>		    
@@ -294,10 +292,8 @@
 											<div class="row">
 												<c:forEach items="${requestScope.user.supervisedTeams}" var="supervision">
 													<div class="col-lg-4">
-									                    <br/><br/><br/>
-															<c:set var="team" value="${supervision}" scope="request" />
-															<jsp:include page="../team/team-card.jsp"></jsp:include>
-									                    <br/><br/>
+														<c:set var="team" value="${supervision}" scope="request" />
+														<jsp:include page="../team/team-card.jsp"></jsp:include>
 									            	</div>
 												</c:forEach>
 											</div>		    

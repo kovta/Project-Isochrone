@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
+import com.kota.stratagem.ejbservice.protocol.TeamProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
@@ -38,6 +39,9 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 
 	@EJB
 	private AppUserProtocol appUserProtocol;
+
+	@EJB
+	private TeamProtocol teamProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,6 +70,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(objective));
+				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(objective));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				assignmentError = true;

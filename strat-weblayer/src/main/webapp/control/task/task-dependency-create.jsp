@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!--Modal: Dependency Form-->
-<div class="modal fade" id="addDependencies" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="addDependencies" tabindex="-1" role="dialog" aria-labelledby="dependencyLabel" aria-hidden="true">
     <div class="modal-dialog cascading-modal" role="document">
         <!--Content-->
         <div class="modal-content">
@@ -22,7 +22,7 @@
 
                 <!-- Tab panels -->
                 <div class="tab-content">
-                    <!--Panel 7-->
+                    <!--Panel 1-->
                     <div class="tab-pane fade in show active" id="panel7" role="tabpanel">
                        <form action="TaskDependency" method="post">
 				            <div class="modal-body mb-1">
@@ -58,23 +58,24 @@
 											        </tr>
 											    </thead>
 												<tbody>
-												<c:forEach items="${requestScope.configurableDependencies}" var="dependency">
-													<tr class="small-padder"></tr>
-													<tr>
-														<td class="text-center">
-										                    <div class="checkbox-animated">
-									                          <label class="label-checkbox larger-font">
-														          <input type="checkbox" class="checkbox" name="dependencies" value="${dependency.id}">
-														      </label>
-										                    </div>
-									                    </td>
-									                    <td>${dependency.name}</td>
-									                    <td class="text-center">${dependency.priority}</td>
-									                    <td class="text-center"><fmt:formatDate type="date" value="${dependency.deadline}" pattern="yyyy-MM-dd" /></td>
-									                    <td class="text-center">${dependency.creator.name}</td>
-									                </tr>
-								                </c:forEach>
-											</tbody></table>
+													<c:forEach items="${requestScope.configurableDependencies}" var="dependency">
+														<tr class="small-padder"></tr>
+														<tr>
+															<td class="text-center">
+											                    <div class="checkbox-animated">
+										                          <label class="label-checkbox larger-font">
+															          <input type="checkbox" class="checkbox" name="dependencies" value="${dependency.id}">
+															      </label>
+											                    </div>
+										                    </td>
+										                    <td>${dependency.name}</td>
+										                    <td class="text-center">${dependency.priority}</td>
+										                    <td class="text-center"><fmt:formatDate type="date" value="${dependency.deadline}" pattern="yyyy-MM-dd" /></td>
+										                    <td class="text-center">${dependency.creator.name}</td>
+										                </tr>
+									                </c:forEach>
+												</tbody>
+											</table>
 											<br/>
 						                </div>
 									</c:otherwise>
@@ -99,11 +100,10 @@
 				            	</c:choose>
 				            </div>
 			            </form>
-
                     </div>
-                    <!--/.Panel 7-->
+                    <!--/.Panel 1-->
 
-                    <!--Panel 8-->
+                    <!--Panel 2-->
                     <div class="tab-pane fade" id="panel8" role="tabpanel">
                         <form action="TaskDependant" method="post">
 				            <div class="modal-body">
@@ -139,23 +139,24 @@
 											        </tr>
 											    </thead>
 												<tbody>
-												<c:forEach items="${requestScope.configurableDependencies}" var="dependant">
-													<tr class="small-padder"></tr>
-													<tr>
-														<td class="text-center">
-										                    <div class="checkbox-animated">
-									                          <label class="label-checkbox larger-font">
-														          <input type="checkbox" class="checkbox" name="dependants" value="${dependant.id}">
-														      </label>
-										                    </div>
-									                    </td>
-									                    <td>${dependant.name}</td>
-									                    <td class="text-center">${dependant.priority}</td>
-									                    <td class="text-center"><fmt:formatDate type="date" value="${dependant.deadline}" pattern="yyyy-MM-dd" /></td>
-									                    <td class="text-center">${dependant.creator.name}</td>
-									                </tr>
-								                </c:forEach>
-											</tbody></table>
+													<c:forEach items="${requestScope.configurableDependencies}" var="dependant">
+														<tr class="small-padder"></tr>
+														<tr>
+															<td class="text-center">
+											                    <div class="checkbox-animated">
+										                          <label class="label-checkbox larger-font">
+															          <input type="checkbox" class="checkbox" name="dependants" value="${dependant.id}">
+															      </label>
+											                    </div>
+										                    </td>
+										                    <td>${dependant.name}</td>
+										                    <td class="text-center">${dependant.priority}</td>
+										                    <td class="text-center"><fmt:formatDate type="date" value="${dependant.deadline}" pattern="yyyy-MM-dd" /></td>
+										                    <td class="text-center">${dependant.creator.name}</td>
+										                </tr>
+									                </c:forEach>
+												</tbody>
+											</table>
 											<br/>
 						                </div>
 									</c:otherwise>
@@ -181,7 +182,7 @@
 				            </div>
 			            </form>
                     </div>
-                    <!--/.Panel 8-->
+                    <!--/.Panel 2-->
                 </div>
 
             </div>

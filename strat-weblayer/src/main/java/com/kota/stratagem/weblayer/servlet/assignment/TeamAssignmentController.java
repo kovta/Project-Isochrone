@@ -11,60 +11,63 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
-import com.kota.stratagem.ejbservice.protocol.AppUserAssignmentProtocol;
+import com.kota.stratagem.ejbservice.protocol.TeamAssignmentProtocol;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentAttribute;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentParameter;
 import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
-@WebServlet("/AppUserAssignment")
-public class AppUserAssignmentController extends AbstractRefinerServlet implements AssignmentParameter, AssignmentAttribute {
+@WebServlet("/TeamAssignment")
+public class TeamAssignmentController extends AbstractRefinerServlet implements AssignmentParameter, AssignmentAttribute {
 
-	private static final long serialVersionUID = 4129567458088082377L;
+	private static final long serialVersionUID = 4734343452060450720L;
 
-	private static final Logger LOGGER = Logger.getLogger(AppUserAssignmentController.class);
+	private static final Logger LOGGER = Logger.getLogger(TeamAssignmentController.class);
 
 	@EJB
-	private AppUserAssignmentProtocol protocol;
+	private TeamAssignmentProtocol protocol;
 
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
-			final String[] assignedUsers = request.getParameterValues(ASSIGNMENTS);
-			String origin = "";
+			final Long[] assignedTeams = new Long[request.getParameterValues(ASSIGNMENTS).length];
+			String origin = Page.ERROR.getUrl();
 			try {
+				for (int i = 0; i < request.getParameterValues(ASSIGNMENTS).length; i++) {
+					assignedTeams[i] = Long.parseLong(request.getParameterValues(ASSIGNMENTS)[i]);
+				}
 				if (this.notEmpty(request.getParameter(OBJECTIVE))) {
 					final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
 					origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
-					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, objective: " + objective_id + ")");
-						this.protocol.saveObjectiveAssignments(assignedUsers, objective_id);
+					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, objective: " + objective_id + ")");
+						this.protocol.saveObjectiveAssignments(assignedTeams, objective_id);
 					}
 				} else if (this.notEmpty(request.getParameter(PROJECT))) {
 					final Long project_id = Long.parseLong(request.getParameter(PROJECT));
 					origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
-					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, project: " + project_id + ")");
-						this.protocol.saveProjectAssignments(assignedUsers, project_id);
+					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, project: " + project_id + ")");
+						this.protocol.saveProjectAssignments(assignedTeams, project_id);
 					}
 				} else if (this.notEmpty(request.getParameter(SUBMODULE))) {
 					final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
 					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
-					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, submodule: " + submodule_id + ")");
-						this.protocol.saveSubmoduleAssignments(assignedUsers, submodule_id);
+					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, submodule: " + submodule_id + ")");
+						this.protocol.saveSubmoduleAssignments(assignedTeams, submodule_id);
 					}
 				} else if (this.notEmpty(request.getParameter(TASK))) {
 					final Long task_id = Long.parseLong(request.getParameter(TASK));
 					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
-					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, task: " + task_id + ")");
-						this.protocol.saveTaskAssignments(assignedUsers, task_id);
+					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
+						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, task: " + task_id + ")");
+						this.protocol.saveTaskAssignments(assignedTeams, task_id);
 					}
 				}
 				request.getSession().setAttribute(ATTR_SUCCESS,
-						((assignedUsers != null) && (assignedUsers.length != 0))
-								? assignedUsers.length != 1 ? assignedUsers.length + " Assignments added successfully!" : "1 Assignment added succesfully!"
+						((assignedTeams != null) && (assignedTeams.length != 0))
+								? assignedTeams.length != 1 ? assignedTeams.length + " Assignments added successfully!" : "1 Assignment added succesfully!"
 								: "No selections were made");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);

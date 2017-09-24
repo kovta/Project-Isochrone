@@ -11,21 +11,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
-import com.kota.stratagem.ejbservice.protocol.AppUserAssignmentProtocol;
+import com.kota.stratagem.ejbservice.protocol.TeamAssignmentProtocol;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentAttribute;
 import com.kota.stratagem.weblayer.common.assignment.AssignmentParameter;
 import com.kota.stratagem.weblayer.servlet.AbstractRefinerServlet;
 
-@WebServlet("/AppUserAssignmentDelete")
-public class AppUserAssignmentDeleteServlet extends AbstractRefinerServlet implements AssignmentParameter, AssignmentAttribute {
+@WebServlet("/TeamAssignmentDelete")
+public class TeamAssignmentDeleteServlet extends AbstractRefinerServlet implements AssignmentParameter, AssignmentAttribute {
 
-	private static final long serialVersionUID = -2010345699510377465L;
+	private static final long serialVersionUID = -5778619091334827766L;
 
-	private static final Logger LOGGER = Logger.getLogger(AppUserAssignmentDeleteServlet.class);
+	private static final Logger LOGGER = Logger.getLogger(TeamAssignmentDeleteServlet.class);
 
 	@EJB
-	private AppUserAssignmentProtocol protocol;
+	private TeamAssignmentProtocol protocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

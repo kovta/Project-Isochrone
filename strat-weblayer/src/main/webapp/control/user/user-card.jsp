@@ -15,8 +15,14 @@
 		</h4>
 		<hr/>
 		<p class="text-center grey-text">${user.role.label}</p>
+		<c:if test="${operator eq requestScope.team.leader.name or operator eq requestScope.team.creator.name}">
+			<hr/>
+			<div class="full-width text-center">
+				<a href="TeamMembershipDelete?id=<c:out value="${team.id}" />
+					&member=<c:out value="${user.name}" />">Remove Team Member</a>
+	    	</div>
+    	</c:if>
 	</div>
 <!--/.Card content-->
 </div>
-<br/>
 <!--/.Card-->

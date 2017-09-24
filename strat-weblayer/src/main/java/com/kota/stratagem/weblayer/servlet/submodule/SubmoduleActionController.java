@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.SubmoduleProtocol;
+import com.kota.stratagem.ejbservice.protocol.TeamProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.submodule.SubmoduleAttribute;
@@ -32,10 +33,13 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 	private static final Logger LOGGER = Logger.getLogger(SubmoduleActionController.class);
 
 	@EJB
-	SubmoduleProtocol submoduleProtocol;
+	private SubmoduleProtocol submoduleProtocol;
 
 	@EJB
-	AppUserProtocol appUserProtocol;
+	private AppUserProtocol appUserProtocol;
+
+	@EJB
+	private TeamProtocol teamProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -64,6 +68,7 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(submodule));
+				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(submodule));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				assignmentError = true;

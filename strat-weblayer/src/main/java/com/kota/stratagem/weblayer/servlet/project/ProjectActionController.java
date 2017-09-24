@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
 import com.kota.stratagem.ejbservice.protocol.ProjectProtocol;
+import com.kota.stratagem.ejbservice.protocol.TeamProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.weblayer.common.Page;
@@ -37,6 +38,9 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 
 	@EJB
 	private AppUserProtocol appUserProtocol;
+
+	@EJB
+	private TeamProtocol teamProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,6 +69,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(project));
+				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(project));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				assignmentError = true;

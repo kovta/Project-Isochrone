@@ -152,7 +152,7 @@
 																	<hr/>
 																	<div class="full-width text-center">
 																		<a href="AppUserAssignmentDelete?id=<c:out value="${assignment.id}" />
-																			&taskId=<c:out value="${task.id}" />">Unassign user</a>
+																			&taskId=<c:out value="${task.id}" />">Unassign User</a>
 															    	</div>
 														    	</c:if>
 															</div>
@@ -181,15 +181,20 @@
 											<div class="row">
 												<c:forEach items="${requestScope.task.assignedTeams}" var="assignment">
 													<div class="col-lg-4">
-									                    <br/><br/><br/>
-									                    <div class="card wow fadeIn" data-wow-delay="0.2s">
-									                        <div class="card-block">
-									                        	<div class="full-width text-center">
-																	<p><c:out value="${assignment.recipient.name}" /></p>
-																</div>
-									                        </div>
-									                    </div>
-									                    <br/><br/>
+														<br/>
+														<div class="card wow fadeIn" data-wow-delay="0.2s">
+															<div class="card-block">
+									                            <c:set var="assignmentItem" value="${assignment}" scope="request" />
+									                            <jsp:include page="../assignment/assignment-team-card-content.jsp"></jsp:include>
+									                            <c:if test="${supervisor or operator eq assignmentItem.entrustor.name}">
+									                            	<hr/>
+										                            <div class="full-width text-center">
+																		<a href="TeamAssignmentDelete?id=<c:out value="${assignment.id}" />
+																			&taskId=<c:out value="${task.id}" />">Unassign Team</a>
+															    	</div>
+																</c:if>
+															</div>
+														</div>
 									            	</div>
 												</c:forEach>
 											</div>		    

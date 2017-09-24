@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,7 +113,7 @@
 									                    <br/><br/><br/>
 															<c:set var="user" value="${member}" scope="request" />
 															<jsp:include page="../user/user-card.jsp"></jsp:include>
-									                    <br/><br/>
+									                    <br/>
 									            	</div>
 												</c:forEach>
 											</div>		    
