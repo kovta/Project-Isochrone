@@ -1,7 +1,7 @@
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
 app_users, roles, authorizations, teams, team_members TO stratagem_std_user;
 GRANT USAGE, SELECT, UPDATE ON 
-app_users_user_id_seq, roles_role_id_seq, authorizations_authorization_id_seq, teams_team_id_seq TO stratagem_std_user;
+app_users_user_id_seq, roles_role_id_seq, authorizations_authorization_id_seq, teams_team_id_seq, team_members_team_member_id_seq TO stratagem_std_user;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON 
 objectives, projects, submodules, tasks, task_dependencies, task_estimations,
