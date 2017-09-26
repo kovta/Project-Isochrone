@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.Submodule;

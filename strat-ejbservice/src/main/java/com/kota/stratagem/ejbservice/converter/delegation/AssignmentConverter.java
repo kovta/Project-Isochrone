@@ -1,4 +1,4 @@
-package com.kota.stratagem.ejbservice.converter;
+package com.kota.stratagem.ejbservice.converter.delegation;
 
 import java.util.Set;
 
@@ -47,6 +47,14 @@ public interface AssignmentConverter {
 	Set<AppUserSubmoduleAssignmentRepresentor> toAppUserSubmoduleAssignmentSet(Set<AppUserSubmoduleAssignment> assignments);
 
 	Set<AppUserTaskAssignmentRepresentor> toAppUserTaskAssignmentSet(Set<AppUserTaskAssignment> assignments);
+
+	Set<AppUserObjectiveAssignmentRepresentor> toAppUserObjectiveAssignmentSet(TeamObjectiveAssignmentRepresentor assignment);
+
+	Set<AppUserProjectAssignmentRepresentor> toAppUserProjectAssignmentSet(TeamProjectAssignmentRepresentor assignment);
+
+	Set<AppUserSubmoduleAssignmentRepresentor> toAppUserSubmoduleAssignmentSet(TeamSubmoduleAssignmentRepresentor assignment);
+
+	Set<AppUserTaskAssignmentRepresentor> toAppUserTaskAssignmentSet(TeamTaskAssignmentRepresentor assignment);
 
 	Set<TeamObjectiveAssignmentRepresentor> toTeamObjectiveAssignmentSet(Set<TeamObjectiveAssignment> assignments);
 

@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Team;

@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.AppUser;
@@ -15,12 +16,16 @@ import com.kota.stratagem.persistence.entity.AppUserSubmoduleAssignment;
 import com.kota.stratagem.persistence.entity.AppUserTaskAssignment;
 import com.kota.stratagem.persistence.entity.Notification;
 import com.kota.stratagem.persistence.entity.Team;
+import com.kota.stratagem.persistence.service.TeamService;
 
 @Stateless
 public class AppUserConverterImpl implements AppUserConverter {
 
 	// @EJB
 	// private ImpedimentConverter impedimentConverter;
+
+	@EJB
+	private TeamService teamService;
 
 	@EJB
 	private TeamConverter teamConverter;
@@ -76,12 +81,12 @@ public class AppUserConverterImpl implements AppUserConverter {
 		// }
 		if (user.getSupervisedTeams() != null) {
 			for (final Team team : user.getSupervisedTeams()) {
-				representor.addSupervisedTeam(this.teamConverter.toElementary(team));
+				representor.addSupervisedTeam(this.teamConverter.toElementary(this.teamService.readWithLeader(team.getId())));
 			}
 		}
 		if (user.getTeamMemberships() != null) {
 			for (final Team team : user.getTeamMemberships()) {
-				representor.addTeamMembership(this.teamConverter.toElementary(team));
+				representor.addTeamMembership(this.teamConverter.toElementary(this.teamService.readWithLeader(team.getId())));
 			}
 		}
 		if (user.getAccountModifier() != null) {

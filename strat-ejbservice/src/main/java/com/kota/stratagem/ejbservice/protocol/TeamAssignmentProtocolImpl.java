@@ -6,8 +6,17 @@ import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
+import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.interceptor.Regulated;
+import com.kota.stratagem.ejbserviceclient.domain.TeamObjectiveAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TeamProjectAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TeamSubmoduleAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TeamTaskAssignmentRepresentor;
+import com.kota.stratagem.persistence.entity.TeamObjectiveAssignment;
+import com.kota.stratagem.persistence.entity.TeamProjectAssignment;
+import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
+import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
 import com.kota.stratagem.persistence.qualifier.ObjectiveFocused;
 import com.kota.stratagem.persistence.qualifier.ProjectFocused;
 import com.kota.stratagem.persistence.qualifier.SubmoduleFocused;
@@ -41,40 +50,51 @@ public class TeamAssignmentProtocolImpl implements TeamAssignmentProtocol {
 	@EJB
 	private AppUserService appUserService;
 
+	@Inject
+	private AssignmentConverter converter;
+
 	@Override
-	public void saveObjectiveAssignments(Long[] recipients, Long objective) throws AdaptorException {
-		for (final Long recipient : recipients) {
-			this.objectiveAssignmentService.create(
-					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipient,
-					objective);
+	public TeamObjectiveAssignmentRepresentor[] saveObjectiveAssignments(Long[] recipients, Long objective) throws AdaptorException {
+		TeamObjectiveAssignmentRepresentor[] assignments = new TeamObjectiveAssignmentRepresentor[recipients.length];
+		for (int i = 0; i < recipients.length; i++) {
+			assignments[i] = this.converter.to((TeamObjectiveAssignment) this.objectiveAssignmentService.create(
+					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipients[i],
+					objective));
 		}
+		return assignments;
 	}
 
 	@Override
-	public void saveProjectAssignments(Long[] recipients, Long project) throws AdaptorException {
-		for (final Long recipient : recipients) {
-			this.projectAssignmentService.create(
-					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipient,
-					project);
+	public TeamProjectAssignmentRepresentor[] saveProjectAssignments(Long[] recipients, Long project) throws AdaptorException {
+		TeamProjectAssignmentRepresentor[] assignments = new TeamProjectAssignmentRepresentor[recipients.length];
+		for (int i = 0; i < recipients.length; i++) {
+			assignments[i] = this.converter.to((TeamProjectAssignment)this.projectAssignmentService.create(
+					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipients[i],
+					project));
 		}
+		return assignments;
 	}
 
 	@Override
-	public void saveSubmoduleAssignments(Long[] recipients, Long submodule) throws AdaptorException {
-		for (final Long recipient : recipients) {
-			this.submoduleAssignmentService.create(
-					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipient,
-					submodule);
+	public TeamSubmoduleAssignmentRepresentor[] saveSubmoduleAssignments(Long[] recipients, Long submodule) throws AdaptorException {
+		TeamSubmoduleAssignmentRepresentor[] assignments = new TeamSubmoduleAssignmentRepresentor[recipients.length];
+		for (int i = 0; i < recipients.length; i++) {
+			assignments[i] = this.converter.to((TeamSubmoduleAssignment) this.submoduleAssignmentService.create(
+					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipients[i],
+					submodule));
 		}
+		return assignments;
 	}
 
 	@Override
-	public void saveTaskAssignments(Long[] recipients, Long task) throws AdaptorException {
-		for (final Long recipient : recipients) {
-			this.taskAssignmentService.create(
-					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipient,
-					task);
+	public TeamTaskAssignmentRepresentor[] saveTaskAssignments(Long[] recipients, Long task) throws AdaptorException {
+		TeamTaskAssignmentRepresentor[] assignments = new TeamTaskAssignmentRepresentor[recipients.length];
+		for (int i = 0; i < recipients.length; i++) {
+			assignments[i] = this.converter.to((TeamTaskAssignment) this.taskAssignmentService.create(
+					this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId(), recipients[i],
+					task));
 		}
+		return assignments;
 	}
 
 	@Override

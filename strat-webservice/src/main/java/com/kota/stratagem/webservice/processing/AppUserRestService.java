@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 
-@Path("/AppuserSet")
+@Path("/AppUserSet")
 public interface AppUserRestService {
 
 	@GET

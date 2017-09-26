@@ -1,4 +1,4 @@
-package com.kota.stratagem.ejbservice.converter;
+package com.kota.stratagem.ejbservice.converter.delegation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,8 +6,15 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import com.kota.stratagem.ejbservice.converter.AppUserConverter;
+import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
+import com.kota.stratagem.ejbservice.converter.ProjectConverter;
+import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
+import com.kota.stratagem.ejbservice.converter.TaskConverter;
+import com.kota.stratagem.ejbservice.converter.TeamConverter;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserProjectAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserSubmoduleAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserTaskAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamObjectiveAssignmentRepresentor;
@@ -176,6 +183,42 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 		final Set<AppUserTaskAssignmentRepresentor> representors = new HashSet<>();
 		for (final AppUserTaskAssignment assignment : assignments) {
 			representors.add(this.to(assignment));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<AppUserObjectiveAssignmentRepresentor> toAppUserObjectiveAssignmentSet(TeamObjectiveAssignmentRepresentor assignment) {
+		final Set<AppUserObjectiveAssignmentRepresentor> representors = new HashSet<>();
+		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
+			representors.add(new AppUserObjectiveAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getObjective(), assignment.getCreationDate()));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<AppUserProjectAssignmentRepresentor> toAppUserProjectAssignmentSet(TeamProjectAssignmentRepresentor assignment) {
+		final Set<AppUserProjectAssignmentRepresentor> representors = new HashSet<>();
+		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
+			representors.add(new AppUserProjectAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getProject(), assignment.getCreationDate()));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<AppUserSubmoduleAssignmentRepresentor> toAppUserSubmoduleAssignmentSet(TeamSubmoduleAssignmentRepresentor assignment) {
+		final Set<AppUserSubmoduleAssignmentRepresentor> representors = new HashSet<>();
+		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
+			representors.add(new AppUserSubmoduleAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getSubmodule(), assignment.getCreationDate()));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<AppUserTaskAssignmentRepresentor> toAppUserTaskAssignmentSet(TeamTaskAssignmentRepresentor assignment) {
+		final Set<AppUserTaskAssignmentRepresentor> representors = new HashSet<>();
+		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
+			representors.add(new AppUserTaskAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getTask(), assignment.getCreationDate()));
 		}
 		return representors;
 	}

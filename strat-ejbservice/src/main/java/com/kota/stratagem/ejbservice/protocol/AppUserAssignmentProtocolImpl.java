@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
-import com.kota.stratagem.ejbservice.converter.AssignmentConverter;
+import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
