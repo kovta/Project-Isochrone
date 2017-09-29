@@ -2,7 +2,7 @@ package com.kota.stratagem.weblayer.servlet.assignment;
 
 import java.io.IOException;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class TeamAssignmentDeleteServlet extends AbstractRefinerServlet implemen
 
 	private static final Logger LOGGER = Logger.getLogger(TeamAssignmentDeleteServlet.class);
 
-	@EJB
+	@Inject
 	private TeamAssignmentProtocol protocol;
 
 	@Override
@@ -36,41 +36,13 @@ public class TeamAssignmentDeleteServlet extends AbstractRefinerServlet implemen
 		} else {
 			try {
 				if ((request.getParameter(OBJECTIVE) != "") && (request.getParameter(OBJECTIVE) != null)) {
-					if (this.isNumeric(request.getParameter(OBJECTIVE))) {
-						final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
-						origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
-						LOGGER.info("Remove Assignment (id: " + id + ", objective: " + objective_id + ")");
-						this.protocol.removeObjectiveAssignment(Long.parseLong(id));
-					} else {
-						response.sendRedirect(Page.ERROR.getUrl());
-					}
+					origin = this.removeAssignment(request, response, id, OBJECTIVE, Page.OBJECTIVE_VIEW.getUrl());
 				} else if ((request.getParameter(PROJECT) != "") && (request.getParameter(PROJECT) != null)) {
-					if (this.isNumeric(request.getParameter(PROJECT))) {
-						final Long project_id = Long.parseLong(request.getParameter(PROJECT));
-						origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
-						LOGGER.info("Remove Assignment (id: " + id + ", project: " + project_id + ")");
-						this.protocol.removeProjectAssignment(Long.parseLong(id));
-					} else {
-						response.sendRedirect(Page.ERROR.getUrl());
-					}
+					origin = this.removeAssignment(request, response, id, PROJECT, Page.PROJECT_VIEW.getUrl());
 				} else if ((request.getParameter(SUBMODULE) != "") && (request.getParameter(SUBMODULE) != null)) {
-					if (this.isNumeric(request.getParameter(SUBMODULE))) {
-						final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
-						origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
-						LOGGER.info("Remove Assignment (id: " + id + ", submodule: " + submodule_id + ")");
-						this.protocol.removeSubmoduleAssignment(Long.parseLong(id));
-					} else {
-						response.sendRedirect(Page.ERROR.getUrl());
-					}
+					origin = this.removeAssignment(request, response, id, SUBMODULE, Page.SUBMODULE_VIEW.getUrl());
 				} else if ((request.getParameter(TASK) != "") && (request.getParameter(TASK) != null)) {
-					if (this.isNumeric(request.getParameter(TASK))) {
-						final Long task_id = Long.parseLong(request.getParameter(TASK));
-						origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
-						LOGGER.info("Remove Assignment (id: " + id + ", task: " + task_id + ")");
-						this.protocol.removeTaskAssignment(Long.parseLong(id));
-					} else {
-						response.sendRedirect(Page.ERROR.getUrl());
-					}
+					origin = this.removeAssignment(request, response, id, TASK, Page.TASK_VIEW.getUrl());
 				}
 				request.getSession().setAttribute(ATTR_SUCCESS, "Assignment removed successfully!");
 			} catch (final AdaptorException e) {
@@ -79,6 +51,31 @@ public class TeamAssignmentDeleteServlet extends AbstractRefinerServlet implemen
 			}
 		}
 		response.sendRedirect(origin);
+	}
+
+	private String removeAssignment(HttpServletRequest request, HttpServletResponse response, String id, String requestParameter, String url)
+			throws NumberFormatException, AdaptorException {
+		if (this.isNumeric(request.getParameter(requestParameter))) {
+			final Long subject_id = Long.parseLong(request.getParameter(requestParameter));
+			LOGGER.info("Remove Assignment (id: " + id + ", " + requestParameter + " : " + subject_id + ")");
+			switch (requestParameter) {
+				case OBJECTIVE:
+					this.protocol.removeObjectiveAssignment(Long.parseLong(id));
+					break;
+				case PROJECT:
+					this.protocol.removeProjectAssignment(Long.parseLong(id));
+					break;
+				case SUBMODULE:
+					this.protocol.removeSubmoduleAssignment(Long.parseLong(id));
+					break;
+				case TASK:
+					this.protocol.removeTaskAssignment(Long.parseLong(id));
+					break;
+			}
+			return url + GET_REQUEST_QUERY_APPENDER + subject_id;
+		} else {
+			return Page.ERROR.getUrl();
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +35,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveActionController.class);
 
-	@EJB
+	@Inject
 	private ObjectiveProtocol objectiveProtocol;
 
 	@EJB

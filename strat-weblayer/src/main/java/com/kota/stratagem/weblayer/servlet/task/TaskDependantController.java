@@ -2,7 +2,7 @@ package com.kota.stratagem.weblayer.servlet.task;
 
 import java.io.IOException;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class TaskDependantController extends AbstractRefinerServlet implements T
 
 	private static final Logger LOGGER = Logger.getLogger(TaskDependantController.class);
 
-	@EJB
+	@Inject
 	TaskProtocol protocol;
 
 	@Override

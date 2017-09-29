@@ -3,7 +3,7 @@ package com.kota.stratagem.weblayer.servlet.objective;
 import java.io.IOException;
 import java.util.List;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +27,7 @@ public class ObjectiveListController extends AbstractRefinerServlet implements O
 
 	private static final Logger LOGGER = Logger.getLogger(ProjectListController.class);
 
-	@EJB
+	@Inject
 	private ObjectiveProtocol protocol;
 
 	@Override

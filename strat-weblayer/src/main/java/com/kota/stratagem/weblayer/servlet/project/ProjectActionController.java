@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,7 +34,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 
 	private static final Logger LOGGER = Logger.getLogger(ProjectActionController.class);
 
-	@EJB
+	@Inject
 	private ProjectProtocol projectProtocol;
 
 	@EJB

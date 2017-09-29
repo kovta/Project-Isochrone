@@ -2,7 +2,7 @@ package com.kota.stratagem.weblayer.servlet.assignment;
 
 import java.io.IOException;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class TeamAssignmentController extends AbstractRefinerServlet implements 
 
 	private static final Logger LOGGER = Logger.getLogger(TeamAssignmentController.class);
 
-	@EJB
+	@Inject
 	private TeamAssignmentProtocol protocol;
 
 	@Override

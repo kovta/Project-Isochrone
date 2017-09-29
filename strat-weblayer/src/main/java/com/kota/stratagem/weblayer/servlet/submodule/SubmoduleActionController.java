@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +33,7 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 
 	private static final Logger LOGGER = Logger.getLogger(SubmoduleActionController.class);
 
-	@EJB
+	@Inject
 	private SubmoduleProtocol submoduleProtocol;
 
 	@EJB

@@ -2,8 +2,8 @@ package com.kota.stratagem.webservice.processing;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -17,7 +17,7 @@ public class ObjectiveRestServiceBean implements ObjectiveRestService {
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveRestServiceBean.class);
 
-	@EJB
+	@Inject
 	private ObjectiveProtocol protocol;
 
 	@Override

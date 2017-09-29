@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +33,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 
 	private static final Logger LOGGER = Logger.getLogger(TaskActionController.class);
 
-	@EJB
+	@Inject
 	private TaskProtocol taskProtocol;
 
 	@EJB

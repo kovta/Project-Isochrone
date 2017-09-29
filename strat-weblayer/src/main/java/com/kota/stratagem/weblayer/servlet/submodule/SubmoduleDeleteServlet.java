@@ -2,7 +2,7 @@ package com.kota.stratagem.weblayer.servlet.submodule;
 
 import java.io.IOException;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class SubmoduleDeleteServlet extends AbstractRefinerServlet implements Pr
 
 	private static final Logger LOGGER = Logger.getLogger(SubmoduleDeleteServlet.class);
 
-	@EJB
+	@Inject
 	private SubmoduleProtocol protocol;
 
 	@Override
