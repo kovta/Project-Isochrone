@@ -28,8 +28,8 @@ public class ProjectDevelopmentProcessorImpl extends AbstractDevelopmentProcesso
 	public void processCreation(String message) throws PersistenceServiceException {
 		final Map<String, String> attributes = this.processMessageContent(message, Constants.CREATION_SELECTOR);
 		final Set<AppUser> recipients = new HashSet<>();
-		recipients.add(this.appUserService
-				.readElementary(this.objectiveService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
+		recipients.add(this.appUserService.readElementary(
+				this.objectiveService.readWithMonitoring(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
 		for (final AppUserObjectiveAssignment assignment : this.objectiveService
 				.readWithAssignments(Long.parseLong(attributes.get(Constants.OBJECTIVE_ID_ATTRIBUTE_DATA_LABEL))).getAssignedUsers()) {
 			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));

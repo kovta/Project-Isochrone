@@ -29,7 +29,7 @@ public class SubmoduleDevelopmentProcessorImpl extends AbstractDevelopmentProces
 		final Map<String, String> attributes = this.processMessageContent(message, Constants.CREATION_SELECTOR);
 		final Set<AppUser> recipients = new HashSet<>();
 		recipients.add(this.appUserService
-				.readElementary(this.projectService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
+				.readElementary(this.projectService.readWithMonitoring(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
 		for (final AppUserProjectAssignment assignment : this.projectService
 				.readWithAssignments(Long.parseLong(attributes.get(Constants.PROJECT_ID_ATTRIBUTE_DATA_LABEL))).getAssignedUsers()) {
 			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));

@@ -40,21 +40,21 @@ public class TaskDevelopmentProcessorImpl extends AbstractDevelopmentProcessor i
 		final Set<AppUser> recipients = new HashSet<>();
 		if (!attributes.get(Constants.OBJECTIVE_ID_ATTRIBUTE_DATA_LABEL).equals(Constants.NULL_ATTRIBUTE)) {
 			recipients.add(this.appUserService.readElementary(
-					this.objectiveService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
+					this.objectiveService.readWithMonitoring(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
 			for (final AppUserObjectiveAssignment assignment : this.objectiveService
 					.readWithAssignments(Long.parseLong(attributes.get(Constants.OBJECTIVE_ID_ATTRIBUTE_DATA_LABEL))).getAssignedUsers()) {
 				recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
 			}
 		} else if (!attributes.get(Constants.PROJECT_ID_ATTRIBUTE_DATA_LABEL).equals(Constants.NULL_ATTRIBUTE)) {
-			recipients.add(this.appUserService
-					.readElementary(this.projectService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
+			recipients.add(this.appUserService.readElementary(
+					this.projectService.readWithMonitoring(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
 			for (final AppUserProjectAssignment assignment : this.projectService
 					.readWithAssignments(Long.parseLong(attributes.get(Constants.PROJECT_ID_ATTRIBUTE_DATA_LABEL))).getAssignedUsers()) {
 				recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
 			}
 		} else if (!attributes.get(Constants.SUBMODULE_ID_ATTRIBUTE_DATA_LABEL).equals(Constants.NULL_ATTRIBUTE)) {
 			recipients.add(this.appUserService.readElementary(
-					this.submoduleService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
+					this.submoduleService.readWithMonitoring(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))).getCreator().getId()));
 			for (final AppUserSubmoduleAssignment assignment : this.submoduleService
 					.readWithAssignments(Long.parseLong(attributes.get(Constants.SUBMODULE_ID_ATTRIBUTE_DATA_LABEL))).getAssignedUsers()) {
 				recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
