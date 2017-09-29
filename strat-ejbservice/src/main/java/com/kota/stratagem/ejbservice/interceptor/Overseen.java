@@ -11,6 +11,7 @@ import javax.interceptor.InterceptorBinding;
 
 import com.kota.stratagem.ejbservice.util.OperationSelector;
 
+@Deprecated
 @Inherited
 @InterceptorBinding
 @Retention(RetentionPolicy.RUNTIME)

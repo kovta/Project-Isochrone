@@ -14,6 +14,7 @@ import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbserviceclient.domain.designation.Dispatchable;
 import com.kota.stratagem.persistence.util.Constants;
 
+@Deprecated
 @Overseen
 @Interceptor
 public class OverseenInterceptor implements Serializable {

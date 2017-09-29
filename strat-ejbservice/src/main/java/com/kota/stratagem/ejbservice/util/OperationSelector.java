@@ -1,5 +1,6 @@
 package com.kota.stratagem.ejbservice.util;
 
+@Deprecated
 public enum OperationSelector {
 
 	CREATION, //

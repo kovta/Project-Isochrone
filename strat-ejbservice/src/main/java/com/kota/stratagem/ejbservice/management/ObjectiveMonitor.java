@@ -1,6 +1,6 @@
 package com.kota.stratagem.ejbservice.management;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -11,7 +11,7 @@ public class ObjectiveMonitor implements ObjectiveMonitorMBean {
 
 	private static final Logger LOGGER = Logger.getLogger(ObjectiveMonitor.class);
 
-	@EJB
+	@Inject
 	ObjectiveProtocol protocol;
 
 	public void start() throws Exception {

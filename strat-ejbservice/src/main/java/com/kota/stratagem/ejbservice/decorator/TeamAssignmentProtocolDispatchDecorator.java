@@ -18,7 +18,7 @@ import com.kota.stratagem.ejbserviceclient.domain.TeamSubmoduleAssignmentReprese
 import com.kota.stratagem.ejbserviceclient.domain.TeamTaskAssignmentRepresentor;
 
 @Decorator
-public class TeamAssignmentProtocolDispatchDecorator implements TeamAssignmentProtocol {
+public abstract class TeamAssignmentProtocolDispatchDecorator implements TeamAssignmentProtocol {
 
 	@Inject
 	@Delegate
@@ -32,59 +32,50 @@ public class TeamAssignmentProtocolDispatchDecorator implements TeamAssignmentPr
 
 	@Override
 	public TeamObjectiveAssignmentRepresentor[] saveObjectiveAssignments(Long[] recipients, Long objective) throws AdaptorException {
-		Set<AppUserObjectiveAssignmentRepresentor> representors = new HashSet<>();
-		TeamObjectiveAssignmentRepresentor[] assignments = this.protocol.saveObjectiveAssignments(recipients, objective);
-		for(TeamObjectiveAssignmentRepresentor assignment : assignments) {
+		final Set<AppUserObjectiveAssignmentRepresentor> representors = new HashSet<>();
+		final TeamObjectiveAssignmentRepresentor[] assignments = this.protocol.saveObjectiveAssignments(recipients, objective);
+		for (final TeamObjectiveAssignmentRepresentor assignment : assignments) {
 			representors.addAll(this.converter.toAppUserObjectiveAssignmentSet(assignment));
 		}
-		for(AppUserObjectiveAssignmentRepresentor representor : representors) {
-			//this.overseer.assigned(representor.toTextMessage());
+		for (final AppUserObjectiveAssignmentRepresentor representor : representors) {
+			this.overseer.assigned(representor.toTextMessage());
 		}
 		return assignments;
 	}
 
 	@Override
-	public void removeObjectiveAssignment(Long id) throws AdaptorException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removeProjectAssignment(Long id) throws AdaptorException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removeSubmoduleAssignment(Long id) throws AdaptorException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removeTaskAssignment(Long id) throws AdaptorException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public TeamProjectAssignmentRepresentor[] saveProjectAssignments(Long[] recipients, Long project) throws AdaptorException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.protocol.saveProjectAssignments(recipients, project);
 	}
 
 	@Override
 	public TeamSubmoduleAssignmentRepresentor[] saveSubmoduleAssignments(Long[] recipients, Long submodule) throws AdaptorException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.protocol.saveSubmoduleAssignments(recipients, submodule);
 	}
 
 	@Override
 	public TeamTaskAssignmentRepresentor[] saveTaskAssignments(Long[] recipients, Long task) throws AdaptorException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.protocol.saveTaskAssignments(recipients, task);
 	}
 
+	@Override
+	public void removeObjectiveAssignment(Long id) throws AdaptorException {
+		this.protocol.removeObjectiveAssignment(id);
+	}
 
+	@Override
+	public void removeProjectAssignment(Long id) throws AdaptorException {
+		this.protocol.removeProjectAssignment(id);
+	}
+
+	@Override
+	public void removeSubmoduleAssignment(Long id) throws AdaptorException {
+		this.protocol.removeSubmoduleAssignment(id);
+	}
+
+	@Override
+	public void removeTaskAssignment(Long id) throws AdaptorException {
+		this.protocol.removeTaskAssignment(id);
+	}
 
 }
