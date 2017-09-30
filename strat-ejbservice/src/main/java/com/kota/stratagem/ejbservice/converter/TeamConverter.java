@@ -12,6 +12,8 @@ public interface TeamConverter {
 
 	TeamRepresentor toElementary(Team team);
 
+	TeamRepresentor toSubSimplified(Team team);
+
 	TeamRepresentor toSimplified(Team team);
 
 	TeamRepresentor toComplete(Team team);

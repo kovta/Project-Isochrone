@@ -62,6 +62,11 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
+	public AppUserRepresentor getOperator() throws AdaptorException {
+		return this.getAppUser(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName());
+	}
+
+	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
 		final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(id));
 		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
@@ -202,8 +207,22 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
-	public boolean isOperatorAccount(AppUserRepresentor operator) throws AdaptorException {
-		return this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId() == operator.getId();
+	public boolean isOperatorAccount(AppUserRepresentor appUser) throws AdaptorException {
+		return this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId() == appUser.getId();
+	}
+
+	@Override
+	public boolean isSubordinateUser(AppUserRepresentor appUser) throws AdaptorException {
+		boolean subordinate = false;
+		for (final RoleRepresentor subordinateRole : RoleRepresentor
+				.valueOf(
+						this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getRole().toString())
+				.getSubordinateRoles()) {
+			if (appUser.getRole().getTitle().equals(subordinateRole.getTitle())) {
+				subordinate = true;
+			}
+		}
+		return subordinate;
 	}
 
 	@Override

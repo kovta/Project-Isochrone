@@ -190,8 +190,14 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	@Override
 	public Set<AppUserObjectiveAssignmentRepresentor> toAppUserObjectiveAssignmentSet(TeamObjectiveAssignmentRepresentor assignment) {
 		final Set<AppUserObjectiveAssignmentRepresentor> representors = new HashSet<>();
-		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
-			representors.add(new AppUserObjectiveAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getObjective(), assignment.getCreationDate()));
+		for (final AppUserRepresentor member : this.teamConverter.toSubSimplified(this.teamService.readWithMembers(assignment.getRecipient().getId()))
+				.getMembers()) {
+			representors
+					.add(new AppUserObjectiveAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getObjective(), assignment.getCreationDate()));
+		}
+		if (!assignment.getRecipient().getMembers().contains(assignment.getRecipient().getLeader())) {
+			representors.add(new AppUserObjectiveAssignmentRepresentor(assignment.getEntrustor(), assignment.getRecipient().getLeader(),
+					assignment.getObjective(), assignment.getCreationDate()));
 		}
 		return representors;
 	}
@@ -199,8 +205,13 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	@Override
 	public Set<AppUserProjectAssignmentRepresentor> toAppUserProjectAssignmentSet(TeamProjectAssignmentRepresentor assignment) {
 		final Set<AppUserProjectAssignmentRepresentor> representors = new HashSet<>();
-		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
+		for (final AppUserRepresentor member : this.teamConverter.toSubSimplified(this.teamService.readWithMembers(assignment.getRecipient().getId()))
+				.getMembers()) {
 			representors.add(new AppUserProjectAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getProject(), assignment.getCreationDate()));
+		}
+		if (!assignment.getRecipient().getMembers().contains(assignment.getRecipient().getLeader())) {
+			representors.add(new AppUserProjectAssignmentRepresentor(assignment.getEntrustor(), assignment.getRecipient().getLeader(), assignment.getProject(),
+					assignment.getCreationDate()));
 		}
 		return representors;
 	}
@@ -208,8 +219,14 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	@Override
 	public Set<AppUserSubmoduleAssignmentRepresentor> toAppUserSubmoduleAssignmentSet(TeamSubmoduleAssignmentRepresentor assignment) {
 		final Set<AppUserSubmoduleAssignmentRepresentor> representors = new HashSet<>();
-		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
-			representors.add(new AppUserSubmoduleAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getSubmodule(), assignment.getCreationDate()));
+		for (final AppUserRepresentor member : this.teamConverter.toSubSimplified(this.teamService.readWithMembers(assignment.getRecipient().getId()))
+				.getMembers()) {
+			representors
+					.add(new AppUserSubmoduleAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getSubmodule(), assignment.getCreationDate()));
+		}
+		if (!assignment.getRecipient().getMembers().contains(assignment.getRecipient().getLeader())) {
+			representors.add(new AppUserSubmoduleAssignmentRepresentor(assignment.getEntrustor(), assignment.getRecipient().getLeader(),
+					assignment.getSubmodule(), assignment.getCreationDate()));
 		}
 		return representors;
 	}
@@ -217,8 +234,13 @@ public class AssignmentConverterImpl implements AssignmentConverter {
 	@Override
 	public Set<AppUserTaskAssignmentRepresentor> toAppUserTaskAssignmentSet(TeamTaskAssignmentRepresentor assignment) {
 		final Set<AppUserTaskAssignmentRepresentor> representors = new HashSet<>();
-		for (AppUserRepresentor member : assignment.getRecipient().getMembers()) {
+		for (final AppUserRepresentor member : this.teamConverter.toSubSimplified(this.teamService.readWithMembers(assignment.getRecipient().getId()))
+				.getMembers()) {
 			representors.add(new AppUserTaskAssignmentRepresentor(assignment.getEntrustor(), member, assignment.getTask(), assignment.getCreationDate()));
+		}
+		if (!assignment.getRecipient().getMembers().contains(assignment.getRecipient().getLeader())) {
+			representors.add(new AppUserTaskAssignmentRepresentor(assignment.getEntrustor(), assignment.getRecipient().getLeader(), assignment.getTask(),
+					assignment.getCreationDate()));
 		}
 		return representors;
 	}

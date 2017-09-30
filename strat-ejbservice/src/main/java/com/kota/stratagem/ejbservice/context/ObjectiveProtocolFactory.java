@@ -1,14 +1,12 @@
 package com.kota.stratagem.ejbservice.context;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import com.kota.stratagem.ejbservice.domain.ConductType;
 import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
 import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocolImpl;
 import com.kota.stratagem.ejbservice.qualifier.ProtocolConduct;
 
 @Deprecated
-@ApplicationScoped
+// @ApplicationScoped
 public class ObjectiveProtocolFactory {
 
 	// @Produces

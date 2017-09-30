@@ -12,13 +12,41 @@ import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.TeamAssignmentProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserObjectiveAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserProjectAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserSubmoduleAssignmentRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.AppUserTaskAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamObjectiveAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamProjectAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamSubmoduleAssignmentRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamTaskAssignmentRepresentor;
+import com.kota.stratagem.persistence.entity.TeamObjectiveAssignment;
+import com.kota.stratagem.persistence.entity.TeamProjectAssignment;
+import com.kota.stratagem.persistence.entity.TeamSubmoduleAssignment;
+import com.kota.stratagem.persistence.entity.TeamTaskAssignment;
+import com.kota.stratagem.persistence.qualifier.ObjectiveFocused;
+import com.kota.stratagem.persistence.qualifier.ProjectFocused;
+import com.kota.stratagem.persistence.qualifier.SubmoduleFocused;
+import com.kota.stratagem.persistence.qualifier.TaskFocused;
+import com.kota.stratagem.persistence.service.delegation.group.TeamAssingmentService;
 
 @Decorator
 public abstract class TeamAssignmentProtocolDispatchDecorator implements TeamAssignmentProtocol {
+
+	@Inject
+	@ObjectiveFocused
+	private TeamAssingmentService objectiveAssignmentService;
+
+	@Inject
+	@ProjectFocused
+	private TeamAssingmentService projectAssignmentService;
+
+	@Inject
+	@SubmoduleFocused
+	private TeamAssingmentService submoduleAssignmentService;
+
+	@Inject
+	@TaskFocused
+	private TeamAssingmentService taskAssignmentService;
 
 	@Inject
 	@Delegate
@@ -45,37 +73,80 @@ public abstract class TeamAssignmentProtocolDispatchDecorator implements TeamAss
 
 	@Override
 	public TeamProjectAssignmentRepresentor[] saveProjectAssignments(Long[] recipients, Long project) throws AdaptorException {
-		return this.protocol.saveProjectAssignments(recipients, project);
+		final Set<AppUserProjectAssignmentRepresentor> representors = new HashSet<>();
+		final TeamProjectAssignmentRepresentor[] assignments = this.protocol.saveProjectAssignments(recipients, project);
+		for (final TeamProjectAssignmentRepresentor assignment : assignments) {
+			representors.addAll(this.converter.toAppUserProjectAssignmentSet(assignment));
+		}
+		for (final AppUserProjectAssignmentRepresentor representor : representors) {
+			this.overseer.assigned(representor.toTextMessage());
+		}
+		return assignments;
 	}
 
 	@Override
 	public TeamSubmoduleAssignmentRepresentor[] saveSubmoduleAssignments(Long[] recipients, Long submodule) throws AdaptorException {
-		return this.protocol.saveSubmoduleAssignments(recipients, submodule);
+		final Set<AppUserSubmoduleAssignmentRepresentor> representors = new HashSet<>();
+		final TeamSubmoduleAssignmentRepresentor[] assignments = this.protocol.saveSubmoduleAssignments(recipients, submodule);
+		for (final TeamSubmoduleAssignmentRepresentor assignment : assignments) {
+			representors.addAll(this.converter.toAppUserSubmoduleAssignmentSet(assignment));
+		}
+		for (final AppUserSubmoduleAssignmentRepresentor representor : representors) {
+			this.overseer.assigned(representor.toTextMessage());
+		}
+		return assignments;
 	}
 
 	@Override
 	public TeamTaskAssignmentRepresentor[] saveTaskAssignments(Long[] recipients, Long task) throws AdaptorException {
-		return this.protocol.saveTaskAssignments(recipients, task);
+		final Set<AppUserTaskAssignmentRepresentor> representors = new HashSet<>();
+		final TeamTaskAssignmentRepresentor[] assignments = this.protocol.saveTaskAssignments(recipients, task);
+		for (final TeamTaskAssignmentRepresentor assignment : assignments) {
+			representors.addAll(this.converter.toAppUserTaskAssignmentSet(assignment));
+		}
+		for (final AppUserTaskAssignmentRepresentor representor : representors) {
+			this.overseer.assigned(representor.toTextMessage());
+		}
+		return assignments;
 	}
 
 	@Override
 	public void removeObjectiveAssignment(Long id) throws AdaptorException {
+		final Set<AppUserObjectiveAssignmentRepresentor> assignments = this.converter
+				.toAppUserObjectiveAssignmentSet(this.converter.to((TeamObjectiveAssignment) this.objectiveAssignmentService.read(id)));
 		this.protocol.removeObjectiveAssignment(id);
+		for (final AppUserObjectiveAssignmentRepresentor assignment : assignments) {
+			this.overseer.dissociated(assignment.toTextMessage());
+		}
 	}
 
 	@Override
 	public void removeProjectAssignment(Long id) throws AdaptorException {
-		this.protocol.removeProjectAssignment(id);
+		final Set<AppUserProjectAssignmentRepresentor> assignments = this.converter
+				.toAppUserProjectAssignmentSet(this.converter.to((TeamProjectAssignment) this.projectAssignmentService.read(id)));
+		this.protocol.removeObjectiveAssignment(id);
+		for (final AppUserProjectAssignmentRepresentor assignment : assignments) {
+			this.overseer.dissociated(assignment.toTextMessage());
+		}
 	}
 
 	@Override
 	public void removeSubmoduleAssignment(Long id) throws AdaptorException {
-		this.protocol.removeSubmoduleAssignment(id);
+		final Set<AppUserSubmoduleAssignmentRepresentor> assignments = this.converter
+				.toAppUserSubmoduleAssignmentSet(this.converter.to((TeamSubmoduleAssignment) this.submoduleAssignmentService.read(id)));
+		this.protocol.removeObjectiveAssignment(id);
+		for (final AppUserSubmoduleAssignmentRepresentor assignment : assignments) {
+			this.overseer.dissociated(assignment.toTextMessage());
+		}
 	}
 
 	@Override
 	public void removeTaskAssignment(Long id) throws AdaptorException {
-		this.protocol.removeTaskAssignment(id);
+		final Set<AppUserTaskAssignmentRepresentor> assignments = this.converter
+				.toAppUserTaskAssignmentSet(this.converter.to((TeamTaskAssignment) this.taskAssignmentService.read(id)));
+		this.protocol.removeObjectiveAssignment(id);
+		for (final AppUserTaskAssignmentRepresentor assignment : assignments) {
+			this.overseer.dissociated(assignment.toTextMessage());
+		}
 	}
-
 }

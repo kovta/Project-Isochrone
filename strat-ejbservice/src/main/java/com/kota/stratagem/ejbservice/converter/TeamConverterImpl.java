@@ -43,13 +43,19 @@ public class TeamConverterImpl extends AbstractMonitoredEntityConverter implemen
 	}
 
 	@Override
-	public TeamRepresentor toSimplified(Team team) {
+	public TeamRepresentor toSubSimplified(Team team) {
 		final TeamRepresentor representor = this.toElementary(team);
 		if (team.getMembers() != null) {
 			for (final AppUser member : team.getMembers()) {
 				representor.addMember(this.appUserConverter.toElementary(member));
 			}
 		}
+		return representor;
+	}
+
+	@Override
+	public TeamRepresentor toSimplified(Team team) {
+		final TeamRepresentor representor = this.toSubSimplified(team);
 		if (team.getObjectives() != null) {
 			for (final TeamObjectiveAssignment objective : team.getObjectives()) {
 				representor.addObjectiveAssignment(this.assignmentConverter.to(objective));

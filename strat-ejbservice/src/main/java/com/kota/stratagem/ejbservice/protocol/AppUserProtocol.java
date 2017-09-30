@@ -20,6 +20,8 @@ public interface AppUserProtocol {
 
 	int getAppUserImageSelector(String username) throws AdaptorException;
 
+	AppUserRepresentor getOperator() throws AdaptorException;
+
 	AppUserRepresentor getAppUser(Long id) throws AdaptorException;
 
 	AppUserRepresentor getAppUser(String username) throws AdaptorException;
@@ -42,7 +44,9 @@ public interface AppUserProtocol {
 
 	void removeAppUser(Long id) throws AdaptorException;
 
-	boolean isOperatorAccount(AppUserRepresentor operator) throws AdaptorException;
+	boolean isOperatorAccount(AppUserRepresentor appUser) throws AdaptorException;
+
+	boolean isSubordinateUser(AppUserRepresentor appUser) throws AdaptorException;
 
 	void equalizeViewedNotifications(AppUserRepresentor operator) throws AdaptorException;
 
