@@ -62,6 +62,11 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
+	public Team readWithMembers(Long id) {
+		return this.entityManager.createNamedQuery(TeamQuery.GET_BY_ID_WITH_MEMBERS, Team.class).setParameter(TeamParameter.ID, id).getSingleResult();
+	}
+
+	@Override
 	public Team readWithLeaderAndMembers(Long id) {
 		return this.entityManager.createNamedQuery(TeamQuery.GET_BY_ID_WITH_LEADER_AND_MEMBERS, Team.class).setParameter(TeamParameter.ID, id)
 				.getSingleResult();

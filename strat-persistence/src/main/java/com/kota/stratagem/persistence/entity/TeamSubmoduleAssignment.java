@@ -23,7 +23,8 @@ import com.kota.stratagem.persistence.query.TeamSubmoduleAssignmentQuery;
 @Entity
 @Table(name = "team_submodule_assignments")
 @NamedQueries(value = { //
-		@NamedQuery(name = TeamSubmoduleAssignmentQuery.GET_BY_ID, query = "SELECT a FROM TeamSubmoduleAssignment a WHERE a.id=:" + AssignmentParameter.ID),
+		@NamedQuery(name = TeamSubmoduleAssignmentQuery.GET_BY_ID, query = "SELECT a FROM TeamSubmoduleAssignment a LEFT JOIN a.recipient.members LEFT JOIN a.recipient.leader WHERE a.id=:"
+				+ AssignmentParameter.ID),
 		@NamedQuery(name = TeamSubmoduleAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM TeamSubmoduleAssignment a WHERE a.id=:" + AssignmentParameter.ID)
 		//
 })

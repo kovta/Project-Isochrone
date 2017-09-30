@@ -94,7 +94,9 @@ public class AppUserServiceImpl implements AppUserService {
 		}
 		user.setEmail(email);
 		user.setRole(role);
-		if (user.getAccountModifier().getId() != operator.getId()) {
+		if (user.getAccountModifier() == null) {
+			user.setAccountModifier(operator);
+		} else if (user.getAccountModifier().getId() != operator.getId()) {
 			user.setAccountModifier(operator);
 		}
 		user.setAccountModificationDate(new Date());
