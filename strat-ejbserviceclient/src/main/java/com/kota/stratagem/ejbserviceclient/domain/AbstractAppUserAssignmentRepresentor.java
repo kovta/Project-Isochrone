@@ -23,4 +23,34 @@ public abstract class AbstractAppUserAssignmentRepresentor extends AbstractAssig
 		return this.recipient;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = (prime * result) + ((this.recipient == null) ? 0 : this.recipient.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		final AbstractAppUserAssignmentRepresentor other = (AbstractAppUserAssignmentRepresentor) obj;
+		if (this.recipient == null) {
+			if (other.recipient != null) {
+				return false;
+			}
+		} else if (!this.recipient.equals(other.recipient)) {
+			return false;
+		}
+		return true;
+	}
+
 }

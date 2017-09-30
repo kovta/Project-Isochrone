@@ -10,19 +10,19 @@ public enum RoleRepresentor {
 	SYSTEM_ADMINISTRATOR("System administrator", "system_administrator");
 
 	static {
-		PRISTINE_USER.subordinates = new RoleRepresentor[] {};
-		GENERAL_USER.subordinates = new RoleRepresentor[] { PRISTINE_USER };
-		GENERAL_MANAGER.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER };
-		DEPARTMENT_MANAGER.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER };
-		CENTRAL_MANAGER.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER, DEPARTMENT_MANAGER };
-		SYSTEM_ADMINISTRATOR.subordinates = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER, DEPARTMENT_MANAGER, CENTRAL_MANAGER };
+		PRISTINE_USER.subordinateRoles = new RoleRepresentor[] {};
+		GENERAL_USER.subordinateRoles = new RoleRepresentor[] { PRISTINE_USER };
+		GENERAL_MANAGER.subordinateRoles = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER };
+		DEPARTMENT_MANAGER.subordinateRoles = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER };
+		CENTRAL_MANAGER.subordinateRoles = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER, DEPARTMENT_MANAGER };
+		SYSTEM_ADMINISTRATOR.subordinateRoles = new RoleRepresentor[] { PRISTINE_USER, GENERAL_USER, GENERAL_MANAGER, DEPARTMENT_MANAGER, CENTRAL_MANAGER };
 	}
 
 	private final String label;
 
 	private final String title;
 
-	private RoleRepresentor[] subordinates;
+	private RoleRepresentor[] subordinateRoles;
 
 	private RoleRepresentor(String label, String title) {
 		this.label = label;
@@ -42,7 +42,7 @@ public enum RoleRepresentor {
 	}
 
 	public RoleRepresentor[] getSubordinateRoles() {
-		return this.subordinates;
+		return this.subordinateRoles;
 	}
 
 }
