@@ -37,33 +37,13 @@ public class TeamAssignmentController extends AbstractRefinerServlet implements 
 					assignedTeams[i] = Long.parseLong(request.getParameterValues(ASSIGNMENTS)[i]);
 				}
 				if (this.notEmpty(request.getParameter(OBJECTIVE))) {
-					final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
-					origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
-					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, objective: " + objective_id + ")");
-						this.protocol.saveObjectiveAssignments(assignedTeams, objective_id);
-					}
+					origin = this.saveAssignments(request, assignedTeams, OBJECTIVE, Page.OBJECTIVE_VIEW.getUrl());
 				} else if (this.notEmpty(request.getParameter(PROJECT))) {
-					final Long project_id = Long.parseLong(request.getParameter(PROJECT));
-					origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
-					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, project: " + project_id + ")");
-						this.protocol.saveProjectAssignments(assignedTeams, project_id);
-					}
+					origin = this.saveAssignments(request, assignedTeams, PROJECT, Page.PROJECT_VIEW.getUrl());
 				} else if (this.notEmpty(request.getParameter(SUBMODULE))) {
-					final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
-					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
-					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, submodule: " + submodule_id + ")");
-						this.protocol.saveSubmoduleAssignments(assignedTeams, submodule_id);
-					}
+					origin = this.saveAssignments(request, assignedTeams, SUBMODULE, Page.SUBMODULE_VIEW.getUrl());
 				} else if (this.notEmpty(request.getParameter(TASK))) {
-					final Long task_id = Long.parseLong(request.getParameter(TASK));
-					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
-					if ((assignedTeams != null) && (assignedTeams.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedTeams.length + " teams, task: " + task_id + ")");
-						this.protocol.saveTaskAssignments(assignedTeams, task_id);
-					}
+					origin = this.saveAssignments(request, assignedTeams, TASK, Page.TASK_VIEW.getUrl());
 				}
 				request.getSession().setAttribute(ATTR_SUCCESS,
 						((assignedTeams != null) && (assignedTeams.length != 0))
@@ -77,6 +57,28 @@ public class TeamAssignmentController extends AbstractRefinerServlet implements 
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String saveAssignments(HttpServletRequest request, Long[] teams, String requestParameter, String url) throws AdaptorException {
+		final Long subject_id = Long.parseLong(request.getParameter(requestParameter));
+		if ((teams != null) && (teams.length != 0)) {
+			LOGGER.info("Create Assignments (" + teams.length + " team(s), " + requestParameter + ": " + subject_id + ")");
+			switch (requestParameter) {
+				case OBJECTIVE:
+					this.protocol.saveObjectiveAssignments(teams, subject_id);
+					break;
+				case PROJECT:
+					this.protocol.saveProjectAssignments(teams, subject_id);
+					break;
+				case SUBMODULE:
+					this.protocol.saveSubmoduleAssignments(teams, subject_id);
+					break;
+				case TASK:
+					this.protocol.saveTaskAssignments(teams, subject_id);
+					break;
+			}
+		}
+		return url + GET_REQUEST_QUERY_APPENDER + subject_id;
 	}
 
 }

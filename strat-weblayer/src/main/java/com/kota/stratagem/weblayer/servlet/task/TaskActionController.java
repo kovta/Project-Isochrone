@@ -51,15 +51,15 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			response.sendRedirect(Page.ERROR.getUrl());
 		} else {
 			final boolean editFlag = TRUE_VALUE.equals(request.getParameter(EDIT_FLAG));
-			TaskRepresentor project = null;
+			TaskRepresentor task = null;
 			boolean errorFlag = false;
 			try {
-				project = this.taskProtocol.getTask(Long.parseLong(id));
+				task = this.taskProtocol.getTask(Long.parseLong(id));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				errorFlag = true;
 			}
-			this.forward(request, response, project, editFlag, null, errorFlag);
+			this.forward(request, response, task, editFlag, null, errorFlag);
 		}
 	}
 

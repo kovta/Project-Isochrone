@@ -76,6 +76,8 @@ public class AppUserActionController extends AbstractRefinerServlet implements A
 		if (!errorFlag) {
 			try {
 				request.setAttribute(ATTR_OPERATOR_ACCOUNT, this.appUserProtocol.isOperatorAccount(user));
+				request.setAttribute(ATTR_SUBORDINATE_USER, this.appUserProtocol.isSubordinateUser(user));
+				request.setAttribute(ATTR_SUBORDINATE_ROLES, this.appUserProtocol.getOperator().getRole().getSubordinateRoles());
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
 				errorFlag = true;

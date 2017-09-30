@@ -62,11 +62,6 @@
 												    	<i class="fa fa-list-alt tile-icon"></i><span class="icon-companion">Define Submodule</span>
 													</button>
 												</td></tr>
-												<tr class="match-row"><td>
-													<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addTask" data-toggle="modal">
-												    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
-													</button>
-												</td></tr>
 												<c:if test="${supervisor}">
 													<tr class="match-row"><td>
 														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">

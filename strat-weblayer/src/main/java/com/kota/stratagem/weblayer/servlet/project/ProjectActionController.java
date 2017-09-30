@@ -119,7 +119,6 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Project : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Project name required");
-				// new attributes must be requested
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null);
 				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
 			} else {

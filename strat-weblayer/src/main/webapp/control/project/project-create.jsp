@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor" %>
 
-<!--Modal: Objective Form-->
+<!--Modal: Project Form-->
 <div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="projcetModal" aria-hidden="true">
     <div class="modal-dialog cascading-modal" role="document">
         <!--Content-->
@@ -82,4 +82,4 @@
         <!--/.Content-->
     </div>
 </div>
-<!--Modal: Objective Form-->
+<!--Modal: Project Form-->

@@ -62,7 +62,7 @@
 	                        </div>
 	                    </div>
 	                    
-	                    <c:if test="${requestScope.operatorAccount}">
+	                    <c:if test="${requestScope.operatorAccount or requestScope.subordinateUser}">
 		       			    <br/><br/><br/>
 		       			    <div class="card">
 	                            <div class="card-block">
@@ -72,13 +72,24 @@
 	                                <div class="md-form">
 	                                	<table class="strat-detail-table">
 		                                	<tbody>
-		                                		<c:if test="${requestScope.operatorAccount}">
-			                                		<tr class="match-row"><td class="text-center">
-								  		   			    <a href="User?id=<c:out value="${user.id}"/>&edit=1" 
-								  		   			    	class="vertical-align-middle text-center full-width">
-									       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Profile
-									       			    </a>
-													</td></tr>
+		                                		<c:if test="${requestScope.subordinateUser}">
+													<tr class="match-row">
+														<td>
+															<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#modifiyRole" data-toggle="modal">
+														    	<i class="fa fa-certificate tile-icon"></i><span class="icon-companion">Role Management</span>
+															</button>
+														</td>
+													</tr>
+												</c:if>
+												<c:if test="${requestScope.operatorAccount}">
+			                                		<tr class="match-row">
+				                                		<td class="text-center">
+									  		   			    <a href="User?id=<c:out value="${user.id}"/>&edit=1" 
+									  		   			    	class="vertical-align-middle text-center full-width">
+										       			    	<i class="fa fa-edit" aria-hidden="true"></i> Edit Profile
+										       			    </a>
+														</td>
+													</tr>
 												</c:if>
 											</tbody>
 	                                	</table>
@@ -311,6 +322,7 @@
         
    			<!-- Modals -->
    			<jsp:include page="user-alert.jsp"></jsp:include>
+   			<jsp:include page="user-role-edit.jsp"></jsp:include>
 			<jsp:include page="../../modal/logout.jsp"></jsp:include>
 			<!-- /Modals -->
             
