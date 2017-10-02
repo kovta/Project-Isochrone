@@ -241,7 +241,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (12, 'Broken sequence generator', 'Our custom generator calculate incorrect keys, possibly because of third party interference', 0, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (13, 'UI response bug', 'Responsive forms of client software not working after component update', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (14, 'Add default sorting to all lists', 'Collection sizes have higher priority', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(15, 'Project level test Task 1', '', 10, 100, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(15, 'Project level test Task 1', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (16, 'Add submodules to database', 'Add definitions and initial data, and extend existing tables', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (17, 'Update persistence layer', 'Add Submodule entity, and expand existing ones with associations', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (18, 'Add submodule representors', 'Domain objects must be updated', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -249,10 +249,10 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (20, 'Add submodule views', 'Controllers and pages must be added alike', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (21, 'Implement crud operations', 'Full range crud operations must work on target associations as well', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (22, 'Repair submodule completion indicator', 'Getter deletion might have interfered', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(23, 'Submodule level test Task 1', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(23, 'Submodule level test Task 1', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (24, 'Redesign objective addition button', 'Button should be centered, possibly on an icon', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (25, 'Create header for specified structure cards', 'Tag should depend on deadline completion or status. This would require completion to be added to higher level structures as well.', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(26, 'Objective level test Task 1', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(26, 'Objective level test Task 1', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (27, 'Add links to profile view from all refrences', 'View must be accessible at all questionable points of delegation and responsibility', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (28, 'Add profile inspection button to navbar', 'Signed in user must have access to own profile information at all times', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (29, 'Add form for profile editing, with possible extension for future avatar selection', 'User data modification must be made possible on email level for now, and later for name', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -273,9 +273,9 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (44, 'Deadline warnings', 'Deadlines that are due in a week have warnings in orange, overdue ones in red', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (45, 'Correctional action generation', 'Investigate possibiblity by which: on navigating to control view on which signed in user is assigned business logic must discern deadline time reserve and remaining unfinished task count ratio. If the number surpasses the threshold (Configurable strategy) then business logic must assess all assignable workforces, and suggest the resolving of impediments', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (46, 'Structure generation in background job', 'Investigation of asynchronous notification creation', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(47, 'Submodule level test Task 2', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(48, 'Submodule level test Task 3', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(49, 'Submodule level test Task 4', '', 10, 10, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(47, 'Submodule level test Task 2', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(48, 'Submodule level test Task 3', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(49, 'Submodule level test Task 4', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (51, 'Calculate remaining work days for submodule completion', 'If even one task completion time is given, be it estimated or not, it will be added to the submodule completion time. Expected duration in case of estimations. This value is the sum of all complete task durations, placed into contrast with the grand sum of all task durations in the cluster', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (52, 'Calculate critical completion time', 'Calculate submodule expected completion time with critical path method. If no dependency configurations are given. The generated start and finish tasks will connect all activities, making the longest task the critical time. Otherwise, dependency tree must bee traversed and processed', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -288,9 +288,24 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (59, 'Investigate testing possibilities', 'The requested scope is Selenium, JUnit, integration and unit testing', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (60, 'Implement service level Team management control functionality', 'Team control services and protocols must be implemented for web layer usage', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (61, 'Implement client views for team management', 'Control views must be added for team creation and member modification', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(62, 'User Role control implementation', 'Higher level managers must be able to assign authorization levels underneath theirs to defines user base', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(62, 'User Role control implementation', 'Higher level managers must be able to assign authorization levels underneath theirs to defines user base', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (63, 'Evaluation view wrap up', 'Task level dependencies must be displayed on project and Objective levels', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(64, 'Evaluate time needed for Submodule level dependency configurations', 'Remaining Tasks retain higher priority, yet generic dependency evaluation would be a powerful documentation tool', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(64, 'Evaluate time needed for Submodule level dependency configurations', 'Remaining Tasks retain higher priority, yet generic dependency evaluation would be a powerful documentation tool', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(65, 'Objective level test Task 2', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(66, 'Objective level test Task 3', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(67, 'Objective level test Task 4', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(68, 'Project level test Task 2', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(69, 'Project level test Task 3', '', 10, 0, NULL, 2, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(70, 'Project level test Task 4', '', 10, 0, NULL, 4, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(71, 'Project level test Task 5', '', 10, 0, NULL, 3, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(72, 'Project level test Task 6', '', 10, 0, NULL, 4, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(73, 'Project level test Task 7', '', 10, 0, NULL, 2, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(74, 'Project level test Task 8', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(75, 'Project level test Task 9', '', 10, 0, NULL, 3, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(76, 'Project level test Task 10', '', 10, 0, NULL, 0, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(77, 'Project level test Task 11', '', 10, 0, NULL, 3, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(78, 'Project level test Task 12', '', 10, 0, NULL, 2, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(79, 'Project level test Task 13', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -302,6 +317,9 @@ INSERT INTO objective_tasks (objective_task_objective_id, objective_task_task_id
 (2, 12),
 (2, 13),
 (7, 26),
+(7, 65),
+(7, 66),
+(7, 67),
 (4, 58);
 
 INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
@@ -316,6 +334,18 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (7, 8),
 (7, 14),
 (8, 15),
+(8, 68),
+(8, 69),
+(8, 70),
+(8, 71),
+(8, 72),
+(8, 73),
+(8, 74),
+(8, 75),
+(8, 76),
+(8, 77),
+(8, 78),
+(8, 79),
 (7, 22),
 (7, 24),
 (7, 25);
@@ -371,7 +401,28 @@ INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUE
 (23, 47),
 (23, 48),
 (47, 49),
-(48, 49);
+(48, 49),
+(15, 68),
+(15, 69),
+(69, 70),
+(15, 68),
+(15, 69),
+(69, 70),
+(69, 71),
+(71, 72),
+(72, 73),
+(72, 74),
+(68, 75),
+(70, 76),
+(73, 76),
+(75, 77),
+(76, 77),
+(77, 78),
+(78, 79),
+(74, 79),
+(26, 65),
+(26, 66),
+(66, 67);
 
 INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimist, estimation_realist, estimation_optimist) VALUES
 (0, 4, '5', '4', '3'),
@@ -379,7 +430,11 @@ INSERT INTO task_estimations (estimation_id, estimation_task, estimation_pessimi
 (2, 23, '7', '3', '2'),
 (3, 47, '5', '4', '3'),
 (4, 48, '6', '3', '1'),
-(5, 49, '3', '2', '1');
+(5, 49, '3', '2', '1'),
+(6, 26, '8', '6', '5'),
+(7, 65, '2', '1', '0'),
+(8, 66, '4', '2', '1'),
+(9, 67, '7', '5', '4');
 SELECT SETVAL('task_estimations_estimation_id_seq', COALESCE(MAX(estimation_id), 0) ) FROM task_estimations;
 
 -- ###########################################################################################
