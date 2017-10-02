@@ -13,17 +13,17 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs tabs-2 mdb-color darken-1" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#panel7" role="tab"><i class="fa fa-long-arrow-down mr-1"></i> Add Dependencies</a>
+                        <a class="nav-link active" data-toggle="tab" href="#panel5" role="tab"><i class="fa fa-long-arrow-down mr-1"></i> Add Dependencies</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#panel8" role="tab"><i class="fa fa-long-arrow-up mr-1"></i> Add Dependants</a>
+                        <a class="nav-link" data-toggle="tab" href="#panel6" role="tab"><i class="fa fa-long-arrow-up mr-1"></i> Add Dependants</a>
                     </li>
                 </ul>
 
                 <!-- Tab panels -->
                 <div class="tab-content">
                     <!--Panel 1-->
-                    <div class="tab-pane fade in show active" id="panel7" role="tabpanel">
+                    <div class="tab-pane fade in show active" id="panel5" role="tabpanel">
                        <form action="TaskDependency" method="post">
 				            <div class="modal-body mb-1">
 			       				<c:choose>
@@ -104,7 +104,7 @@
                     <!--/.Panel 1-->
 
                     <!--Panel 2-->
-                    <div class="tab-pane fade" id="panel8" role="tabpanel">
+                    <div class="tab-pane fade" id="panel6" role="tabpanel">
                         <form action="TaskDependant" method="post">
 				            <div class="modal-body">
 			       				<c:choose>
