@@ -42,7 +42,8 @@ import com.kota.stratagem.persistence.query.ProjectQuery;
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.assignedUsers au LEFT JOIN FETCH p.assignedTeams at WHERE p.id=:"
 				+ ProjectParameter.ID),
-		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t WHERE p.id=:" + ProjectParameter.ID),
+		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.tasks t LEFT JOIN FETCH p.creator WHERE p.id=:"
+				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm WHERE p.id=:"
 				+ ProjectParameter.ID),
 		@NamedQuery(name = ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.submodules sm LEFT JOIN FETCH sm.tasks smt LEFT JOIN FETCH p.tasks t WHERE p.id=:"

@@ -41,7 +41,7 @@ import com.kota.stratagem.persistence.query.ObjectiveQuery;
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.assignedUsers au LEFT JOIN FETCH o.assignedTeams at WHERE o.id=:"
 				+ ObjectiveParameter.ID),
-		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.tasks t WHERE o.id=:"
+		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_TASKS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.tasks t LEFT JOIN FETCH o.creator WHERE o.id=:"
 				+ ObjectiveParameter.ID),
 		@NamedQuery(name = ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, query = "SELECT o FROM Objective o LEFT JOIN FETCH o.projects p WHERE o.id=:"
 				+ ObjectiveParameter.ID),
