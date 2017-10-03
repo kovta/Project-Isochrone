@@ -12,4 +12,8 @@ public interface CPMNodeConverter {
 
 	List<CPMNode> to(List<TaskRepresentor> tasks);
 
+	Double calculateExpectedDuration(Double pessimistic, Double realistic, Double optimistic);
+
+	Double calculateVariance(Double pessimistic, Double realistic, Double optimistic);
+
 }

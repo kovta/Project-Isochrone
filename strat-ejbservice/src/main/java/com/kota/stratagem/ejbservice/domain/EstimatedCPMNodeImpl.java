@@ -4,19 +4,25 @@ import com.kota.stratagem.ejbserviceclient.domain.designation.EstimatedCPMNode;
 
 public class EstimatedCPMNodeImpl extends AbstractCPMNode implements EstimatedCPMNode {
 
+	Double expectedDuration;
 	Double variance;
 
-	Double pessimistic;
-	Double realistic;
-	Double optimisitc;
-
-	public EstimatedCPMNodeImpl(Long id, Double pessimistic, Double realistic, Double optimisitc) {
+	public EstimatedCPMNodeImpl(Long id, Double expectedDuration, Double variance) {
 		super(id);
-		this.pessimistic = pessimistic;
-		this.realistic = realistic;
-		this.optimisitc = optimisitc;
+		this.expectedDuration = expectedDuration;
+		this.variance = variance;
 	}
 
+	@Override
+	public Double getExpectedDuration() {
+		return this.expectedDuration;
+	}
+
+	public void setExpectedDuration(Double expectedDuration) {
+		this.expectedDuration = expectedDuration;
+	}
+
+	@Override
 	public Double getVariance() {
 		return this.variance;
 	}
@@ -26,24 +32,9 @@ public class EstimatedCPMNodeImpl extends AbstractCPMNode implements EstimatedCP
 	}
 
 	@Override
-	public Double getPessimistic() {
-		return this.pessimistic;
-	}
-
-	@Override
-	public Double getRealistic() {
-		return this.realistic;
-	}
-
-	@Override
-	public Double getOptimistic() {
-		return this.optimisitc;
-	}
-
-	@Override
 	public String toString() {
-		return "EstimatedCPMNodeImpl [id=" + this.id + "variance=" + this.variance + ", pessimistic=" + this.pessimistic + ", realistic=" + this.realistic
-				+ ", optimisitc=" + this.optimisitc + ", dependencies=" + this.dependencies + "]";
+		return "EstimatedCPMNodeImpl [variance=" + this.variance + ", expectedDuration=" + this.expectedDuration + ", id=" + this.id + ", criticalDuration="
+				+ this.criticalDuration + ", dependencies=" + this.dependencies + ", dependants=" + this.dependants + "]";
 	}
 
 }

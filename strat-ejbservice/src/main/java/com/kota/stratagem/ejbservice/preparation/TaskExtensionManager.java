@@ -13,6 +13,7 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecip
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
+import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
 import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.TaskService;
@@ -25,6 +26,9 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	@Inject
 	private TaskConverter taskConverter;
+
+	@Inject
+	private CPMNodeConverter cpmNodeConverter;
 
 	TaskRepresentor representor;
 	List<TaskRepresentor> representors;
@@ -46,6 +50,12 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 		this.provideDependencyChain();
 		this.provideDependantCount();
 		this.provideDependencyCount();
+		this.provideEstimationDetails();
+	}
+
+	@Override
+	protected void addParentDependantProperties() {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -151,4 +161,12 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 		}
 		this.representor.setDependencyCount(total);
 	}
+
+	private void provideEstimationDetails() {
+		this.representor.setExpectedDuration(this.cpmNodeConverter.calculateExpectedDuration(this.representor.getPessimistic(), this.representor.getRealistic(),
+				this.representor.getOptimistic()));
+		this.representor.setVariance(
+				this.cpmNodeConverter.calculateVariance(this.representor.getPessimistic(), this.representor.getRealistic(), this.representor.getOptimistic()));
+	}
+
 }

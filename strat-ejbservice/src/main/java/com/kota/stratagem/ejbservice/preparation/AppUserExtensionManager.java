@@ -33,6 +33,11 @@ public class AppUserExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
+	protected void addParentDependantProperties() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	protected void sortSpecializedCollections() {
 
 	}

@@ -17,7 +17,8 @@ public class CPMNodeConverterImpl implements CPMNodeConverter {
 	private CPMNode to(TaskRepresentor task) {
 		CPMNode node;
 		if (task.isEstimated()) {
-			node = new EstimatedCPMNodeImpl(task.getId(), task.getPessimistic(), task.getRealistic(), task.getOptimistic());
+			node = new EstimatedCPMNodeImpl(task.getId(), this.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic()),
+					this.calculateVariance(task.getPessimistic(), task.getRealistic(), task.getOptimistic()));
 		} else {
 			node = new DefinitiveCPMNodeImpl(task.getId(), task.getDuration());
 		}
@@ -62,6 +63,16 @@ public class CPMNodeConverterImpl implements CPMNodeConverter {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Double calculateExpectedDuration(Double pessimistic, Double realistic, Double optimistic) {
+		return (pessimistic + (4 * realistic) + optimistic) / 6;
+	}
+
+	@Override
+	public Double calculateVariance(Double pessimistic, Double realistic, Double optimistic) {
+		return Math.sqrt((pessimistic - optimistic) / 6);
 	}
 
 }

@@ -21,7 +21,7 @@ public class EstimatedDependencyNetworkEvaluatorImpl extends AbstractDependencyN
 	protected double calculateExpectedDuration(CPMNode node) throws InvalidNodeTypeException {
 		if (node instanceof EstimatedCPMNode) {
 			final EstimatedCPMNode element = (EstimatedCPMNode) node;
-			return ((element.getPessimistic() + (4 * element.getRealistic()) + element.getOptimistic()) / 6);
+			return element.getExpectedDuration();
 		} else {
 			throw new InvalidNodeTypeException();
 		}
@@ -31,7 +31,7 @@ public class EstimatedDependencyNetworkEvaluatorImpl extends AbstractDependencyN
 	protected double calculateVariance(CPMNode node) throws InvalidNodeTypeException {
 		if (node instanceof EstimatedCPMNode) {
 			final EstimatedCPMNode element = (EstimatedCPMNode) node;
-			return (Math.sqrt((element.getPessimistic() - element.getOptimistic()) / 6));
+			return element.getVariance();
 		} else {
 			throw new InvalidNodeTypeException();
 		}

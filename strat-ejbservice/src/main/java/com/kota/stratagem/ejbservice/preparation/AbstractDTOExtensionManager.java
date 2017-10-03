@@ -91,10 +91,71 @@ public abstract class AbstractDTOExtensionManager implements DTOExtensionManager
 
 	protected abstract void addRepresentorSpecificProperties();
 
+	protected abstract void addParentDependantProperties();
+
 	protected abstract void sortSpecializedCollections();
 
 	protected abstract void sortBaseCollections();
 
 	protected abstract void sortJointCollection();
+
+	// @Deprecated
+	// public Object prepare(Object representor) {
+	// if (this.valid(representor, this.orientation())) {
+	// this.addRepresentorSpecificProperties();
+	// this.sortSpecializedCollections();
+	// this.sortBaseCollections();
+	// return representor;
+	// } else {
+	// if (LOGGER.isDebugEnabled()) {
+	// LOGGER.debug("Extension management terminated due to invalid Representor type!");
+	// }
+	// return null;
+	// }
+	// }
+	//
+	// @Deprecated
+	// public Object prepareForParent(Object representor) {
+	// if (this.valid(representor, this.orientation())) {
+	// this.addParentDependantProperties();
+	// return representor;
+	// } else {
+	// if (LOGGER.isDebugEnabled()) {
+	// LOGGER.debug("Extension management terminated due to invalid Representor type!");
+	// }
+	// return null;
+	// }
+	// }
+	//
+	// @Deprecated
+	// public List<Object> prepare(List<Object> representors) {
+	// boolean valid = true;
+	// for (final Object element : representors) {
+	// if (!this.valid(element, this.orientation())) {
+	// valid = false;
+	// }
+	// }
+	// if (valid) {
+	// this.sortJointCollection();
+	// return representors;
+	// } else {
+	// if (LOGGER.isDebugEnabled()) {
+	// LOGGER.debug("Extension management terminated due to invalid Representor type!");
+	// }
+	// return null;
+	// }
+	// }
+	//
+	// @Deprecated
+	// protected abstract Class<?> orientation();
+	//
+	// @Deprecated
+	// protected boolean valid(Object representor, Class<?> clazz) {
+	// if (representor.getClass().equals(clazz)) {
+	// return true;
+	// } else {
+	// return false;
+	// }
+	// }
 
 }

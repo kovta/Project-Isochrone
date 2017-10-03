@@ -50,6 +50,11 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
+	protected void addParentDependantProperties() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	protected void sortSpecializedCollections() {
 		Collections.sort(this.representor.getOverdueSubmodules(), new OverdueSubmoduleComparator());
 		Collections.sort(this.representor.getOngoingSubmodules(), new SubmoduleCompletionComparator());
