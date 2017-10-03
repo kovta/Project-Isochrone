@@ -54,12 +54,12 @@
 			<td class="strat-detail-attribute-name">Completion</td>
 			<td class="strat-detail-attribute-value">${submodule.completion} %</td>
 		</tr>
-		<tr class="text-center">
-			<td colspan="2">
-				<hr class="detail-table-top-header"/><strong><span>Progression Evaluation</span></strong><hr class="detail-table-bottom-header"/>
-			</td>
-		</tr>
 		<c:if test="${submodule.durationSum ne 0}">
+			<tr class="text-center">
+				<td colspan="2">
+					<hr class="detail-table-top-header"/><strong><span>Progression Evaluation</span></strong><hr class="detail-table-bottom-header"/>
+				</td>
+			</tr>
 			<tr>
 				<td class="strat-detail-attribute-name">Progression</td>
 				<td class="strat-detail-attribute-value">
