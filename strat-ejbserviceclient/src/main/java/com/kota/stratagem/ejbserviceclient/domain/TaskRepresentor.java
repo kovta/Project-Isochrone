@@ -37,6 +37,8 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private List<List<TaskRepresentor>> dependencyChain;
 	private int dependantCount;
 	private int dependencyCount;
+	private Double expectedDuration;
+	private Double variance;
 
 	public TaskRepresentor() {
 		this(null, "", "", 5, 0, new Date(), null, false);
@@ -180,7 +182,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.duration = duration;
 	}
 
-	@Override
 	public Double getPessimistic() {
 		return this.pessimistic;
 	}
@@ -189,7 +190,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.pessimistic = pessimistic;
 	}
 
-	@Override
 	public Double getRealistic() {
 		return this.realistic;
 	}
@@ -198,7 +198,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.realistic = realistic;
 	}
 
-	@Override
 	public Double getOptimistic() {
 		return this.optimistic;
 	}
@@ -237,6 +236,24 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	public void setDependencyCount(int dependencyCount) {
 		this.dependencyCount = dependencyCount;
+	}
+
+	@Override
+	public Double getExpectedDuration() {
+		return this.expectedDuration;
+	}
+
+	public void setExpectedDuration(Double expectedDuration) {
+		this.expectedDuration = expectedDuration;
+	}
+
+	@Override
+	public Double getVariance() {
+		return this.variance;
+	}
+
+	public void setVariance(Double variance) {
+		this.variance = variance;
 	}
 
 	@Override
