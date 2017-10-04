@@ -23,10 +23,9 @@
             <logger category="com.kota">
                 <level name="DEBUG"/>
             </logger>
-			<logger category=" org.jboss.security">
-				<level name=" TRACE"/>
+			<logger category="org.jboss.security">
+				<level name="INFO"/>
 			</logger>
-
             ...
         </subsystem>
 		...
