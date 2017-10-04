@@ -72,7 +72,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
 			this.equalizeViewedNotifications(representor);
 		}
-		return this.extensionManager.prepare(representor);
+		return (AppUserRepresentor) this.extensionManager.prepare(representor);
 	}
 
 	@Override
@@ -81,12 +81,12 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
 			this.equalizeViewedNotifications(representor);
 		}
-		return this.extensionManager.prepare(representor);
+		return (AppUserRepresentor) this.extensionManager.prepare(representor);
 	}
 
 	@Override
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
-		return this.extensionManager.prepareAppUsers(new ArrayList<AppUserRepresentor>(this.converter.toSubComplete(this.appUserService.readAll())));
+		return (List<AppUserRepresentor>) this.extensionManager.prepareBatch(new ArrayList<AppUserRepresentor>(this.converter.toSubComplete(this.appUserService.readAll())));
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, String operator) throws AdaptorException {
-		return this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.appUserService.exists(id))
+		return (AppUserRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.appUserService.exists(id))
 				? this.appUserService.update(id, name, password != null ? password : null, email, Role.valueOf(role.getName()), operator)
 				: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, Role.valueOf(role.getName()))));
 	}

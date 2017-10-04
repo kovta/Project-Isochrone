@@ -42,7 +42,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 
 	@Override
 	public ProjectRepresentor getProject(Long id) throws AdaptorException {
-		return this.extensionManager.prepare(this.projectConverter.toComplete(this.projectService.readComplete(id)));
+		return (ProjectRepresentor) this.extensionManager.prepare(this.projectConverter.toComplete(this.projectService.readComplete(id)));
 	}
 
 	@Override
@@ -74,13 +74,13 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 				clusters.add(objective);
 			}
 		}
-		return this.extensionManager.prepareProjectClusters(clusters);
+		return (List<ObjectiveRepresentor>) this.extensionManager.prepareBatch(clusters);
 	}
 
 	@Override
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			String operator, Long objective) throws AdaptorException {
-		return this.extensionManager.prepare(this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
+		return (ProjectRepresentor) this.extensionManager.prepare(this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
 				? this.projectService.update(id, name, description, ProjectStatus.valueOf(status.name()), deadline, confidential, operator)
 				: this.projectService.create(name, description, ProjectStatus.valueOf(status.name()), deadline, confidential, operator, objective)));
 	}

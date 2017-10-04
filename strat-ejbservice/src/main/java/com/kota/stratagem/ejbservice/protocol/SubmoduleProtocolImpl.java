@@ -39,7 +39,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 
 	@Override
 	public SubmoduleRepresentor getSubmodule(Long id) throws AdaptorException {
-		return this.extensionManager.prepare(this.submoduleConverter.toComplete(this.submoduleService.readComplete(id)));
+		return (SubmoduleRepresentor) this.extensionManager.prepare(this.submoduleConverter.toComplete(this.submoduleService.readComplete(id)));
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 
 	@Override
 	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
-		return this.extensionManager.prepare(this.submoduleConverter.toComplete(((id != null) && this.submoduleService.exists(id))
+		return (SubmoduleRepresentor) this.extensionManager.prepare(this.submoduleConverter.toComplete(((id != null) && this.submoduleService.exists(id))
 				? this.submoduleService.update(id, name, description, deadline, this.appUserService.readElementary(operator))
 				: this.submoduleService.create(name, description, deadline, this.appUserService.readElementary(operator), project)));
 	}

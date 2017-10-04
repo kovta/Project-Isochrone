@@ -21,6 +21,7 @@ import com.kota.stratagem.ejbservice.domain.CPMResult;
 import com.kota.stratagem.ejbservice.evaluation.DependencyNetworkEvaluator;
 import com.kota.stratagem.ejbservice.exception.CyclicDependencyException;
 import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
+import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.Definitive;
 import com.kota.stratagem.ejbservice.qualifier.Estimated;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
@@ -51,9 +52,22 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	SubmoduleRepresentor representor;
 
 	@Override
-	public SubmoduleRepresentor prepare(SubmoduleRepresentor representor) {
-		this.representor = representor;
+	@Certified(SubmoduleRepresentor.class)
+	public Object prepare(Object representor) {
+		this.representor = (SubmoduleRepresentor) representor;
 		return super.prepare(representor);
+	}
+
+	@Override
+	@Certified(SubmoduleRepresentor.class)
+	public Object prepareForOwner(Object representor) {
+		this.representor = (SubmoduleRepresentor) representor;
+		return super.prepareForOwner(representor);
+	}
+
+	@Override
+	public List<?> prepareBatch(List<?> representors) {
+		return super.prepareBatch(representors);
 	}
 
 	@Override
@@ -68,8 +82,8 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	protected void addParentDependantProperties() {
-		// TODO Auto-generated method stub
+	protected void addOwnerDependantProperties() {
+
 	}
 
 	@Override

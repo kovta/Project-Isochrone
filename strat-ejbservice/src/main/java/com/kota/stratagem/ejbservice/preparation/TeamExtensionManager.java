@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentCreationDateComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamNameComparator;
+import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.TeamOriented;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 
@@ -15,15 +16,24 @@ public class TeamExtensionManager extends AbstractDTOExtensionManager {
 	List<TeamRepresentor> representors;
 
 	@Override
-	public TeamRepresentor prepare(TeamRepresentor representor) {
-		this.representor = representor;
+	@Certified(TeamRepresentor.class)
+	public Object prepare(Object representor) {
+		this.representor = (TeamRepresentor) representor;
 		return super.prepare(representor);
 	}
 
 	@Override
-	public List<TeamRepresentor> prepareTeams(List<TeamRepresentor> representors) {
-		this.representors = representors;
-		return super.prepareTeams(representors);
+	@Certified(TeamRepresentor.class)
+	public Object prepareForOwner(Object representor) {
+		this.representor = (TeamRepresentor) representor;
+		return super.prepareForOwner(representor);
+	}
+
+	@Override
+	@Certified(TeamRepresentor.class)
+	public List<?> prepareBatch(List<?> representors) {
+		this.representors = (List<TeamRepresentor>) representors;
+		return super.prepareBatch(representors);
 	}
 
 	@Override
@@ -32,8 +42,8 @@ public class TeamExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	protected void addParentDependantProperties() {
-		// TODO Auto-generated method stub
+	protected void addOwnerDependantProperties() {
+
 	}
 
 	@Override

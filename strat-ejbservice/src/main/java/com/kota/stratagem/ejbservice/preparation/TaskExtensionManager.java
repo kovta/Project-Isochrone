@@ -14,6 +14,7 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
+import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.TaskService;
@@ -34,15 +35,24 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 	List<TaskRepresentor> representors;
 
 	@Override
-	public TaskRepresentor prepare(TaskRepresentor representor) {
-		this.representor = representor;
+	@Certified(TaskRepresentor.class)
+	public Object prepare(Object representor) {
+		this.representor = (TaskRepresentor) representor;
 		return super.prepare(representor);
 	}
 
 	@Override
-	public List<TaskRepresentor> prepareCompliantTasks(List<TaskRepresentor> representors) {
-		this.representors = representors;
-		return super.prepareCompliantTasks(representors);
+	@Certified(TaskRepresentor.class)
+	public Object prepareForOwner(Object representor) {
+		this.representor = (TaskRepresentor) representor;
+		return super.prepareForOwner(representor);
+	}
+
+	@Override
+	@Certified(TaskRepresentor.class)
+	public List<?> prepareBatch(List<?> representors) {
+		this.representors = (List<TaskRepresentor>) representors;
+		return super.prepareBatch(representors);
 	}
 
 	@Override
@@ -54,8 +64,8 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	protected void addParentDependantProperties() {
-		// TODO Auto-generated method stub
+	protected void addOwnerDependantProperties() {
+
 	}
 
 	@Override

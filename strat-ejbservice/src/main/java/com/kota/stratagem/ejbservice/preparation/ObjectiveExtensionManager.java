@@ -13,6 +13,7 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueProjectComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
+import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.ObjectiveOriented;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
@@ -26,15 +27,24 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	List<ObjectiveRepresentor> representors;
 
 	@Override
-	public ObjectiveRepresentor prepare(ObjectiveRepresentor representor) {
-		this.representor = representor;
+	@Certified(ObjectiveRepresentor.class)
+	public Object prepare(Object representor) {
+		this.representor = (ObjectiveRepresentor) representor;
 		return super.prepare(representor);
 	}
 
 	@Override
-	public List<ObjectiveRepresentor> prepareObjectives(List<ObjectiveRepresentor> representors) {
-		this.representors = representors;
-		return super.prepareObjectives(representors);
+	@Certified(ObjectiveRepresentor.class)
+	public Object prepareForOwner(Object representor) {
+		this.representor = (ObjectiveRepresentor) representor;
+		return super.prepareForOwner(representor);
+	}
+
+	@Override
+	@Certified(ObjectiveRepresentor.class)
+	public List<?> prepareBatch(List<?> representors) {
+		this.representors = (List<ObjectiveRepresentor>) representors;
+		return super.prepareBatch(representors);
 	}
 
 	@Override
@@ -49,8 +59,8 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	protected void addParentDependantProperties() {
-		// TODO Auto-generated method stub
+	protected void addOwnerDependantProperties() {
+
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 
 	@Override
 	public TaskRepresentor getTask(Long id) throws AdaptorException {
-		return this.extensionManager.prepare(this.taskConverter.toComplete(this.taskService.readComplete(id)));
+		return (TaskRepresentor) this.extensionManager.prepare(this.taskConverter.toComplete(this.taskService.readComplete(id)));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 				configurations.remove(dependant);
 			}
 		}
-		return this.extensionManager.prepareCompliantTasks(configurations);
+		return (List<TaskRepresentor>) this.extensionManager.prepareBatch(configurations);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
 			String operator, Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic)
 			throws AdaptorException {
-		return this.extensionManager.prepare(this.taskConverter
+		return (TaskRepresentor) this.extensionManager.prepare(this.taskConverter
 				.toComplete(((id != null) && this.taskService.exists(id)) ? this.taskService.update(id, name, description, priority, completion, deadline,
 						admittance, this.appUserService.readElementary(operator), objective, project, submodule, duration, pessimistic, realistic, optimistic)
 						: this.taskService.create(name, description, priority, completion, deadline, admittance, this.appUserService.readElementary(operator),

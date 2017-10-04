@@ -39,18 +39,18 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@Override
 	public ObjectiveRepresentor getObjective(Long id) throws ServiceException {
-		return this.extensionManager.prepare(this.converter.toComplete(this.objectiveService.readComplete(id)));
+		return (ObjectiveRepresentor) this.extensionManager.prepare(this.converter.toComplete(this.objectiveService.readComplete(id)));
 	}
 
 	@Override
 	public List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException {
-		return this.extensionManager.prepareObjectives(new ArrayList<ObjectiveRepresentor>(this.converter.toSimplified(this.objectiveService.readAll())));
+		return (List<ObjectiveRepresentor>) this.extensionManager.prepareBatch(new ArrayList<ObjectiveRepresentor>(this.converter.toSimplified(this.objectiveService.readAll())));
 	}
 
 	@Override
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
 			Boolean confidentiality, String operator) throws AdaptorException {
-		return this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
+		return (ObjectiveRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
 				? this.objectiveService.update(id, name, description, priority, ObjectiveStatus.valueOf(status.name()), deadline, confidentiality, operator)
 				: this.objectiveService.create(name, description, priority, ObjectiveStatus.valueOf(status.name()), deadline, confidentiality, operator)));
 	}

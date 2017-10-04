@@ -6,6 +6,7 @@ import java.util.List;
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentCreationDateComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.NotificationCreationDateComparator;
+import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.AppUserOriented;
 import com.kota.stratagem.ejbserviceclient.domain.AppUserRepresentor;
 
@@ -16,15 +17,24 @@ public class AppUserExtensionManager extends AbstractDTOExtensionManager {
 	List<AppUserRepresentor> representors;
 
 	@Override
-	public AppUserRepresentor prepare(AppUserRepresentor representor) {
-		this.representor = representor;
+	@Certified(AppUserRepresentor.class)
+	public Object prepare(Object representor) {
+		this.representor = (AppUserRepresentor) representor;
 		return super.prepare(representor);
 	}
 
 	@Override
-	public List<AppUserRepresentor> prepareAppUsers(List<AppUserRepresentor> representors) {
-		this.representors = representors;
-		return super.prepareAppUsers(representors);
+	@Certified(AppUserRepresentor.class)
+	public Object prepareForOwner(Object representor) {
+		this.representor = (AppUserRepresentor) representor;
+		return super.prepareForOwner(representor);
+	}
+
+	@Override
+	@Certified(AppUserRepresentor.class)
+	public List<?> prepareBatch(List<?> representors) {
+		this.representors = (List<AppUserRepresentor>) representors;
+		return super.prepareBatch(representors);
 	}
 
 	@Override
@@ -33,8 +43,8 @@ public class AppUserExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	protected void addParentDependantProperties() {
-		// TODO Auto-generated method stub
+	protected void addOwnerDependantProperties() {
+
 	}
 
 	@Override

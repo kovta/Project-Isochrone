@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamNameComparator;
+import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.TeamConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.interceptor.Regulated;
@@ -28,7 +29,7 @@ import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.TeamService;
 
 @Regulated
-@Stateless
+@Stateless(mappedName = EJBServiceConfiguration.TEAM_PROTOCOL_SIGNATURE)
 public class TeamProtocolImpl implements TeamProtocol {
 
 	@EJB
@@ -49,12 +50,12 @@ public class TeamProtocolImpl implements TeamProtocol {
 
 	@Override
 	public TeamRepresentor getTeam(Long id) throws AdaptorException {
-		return this.extensionManager.prepare(this.converter.toComplete(this.teamService.readComplete(id)));
+		return (TeamRepresentor) this.extensionManager.prepare(this.converter.toComplete(this.teamService.readComplete(id)));
 	}
 
 	@Override
 	public List<TeamRepresentor> getAllTeams() throws AdaptorException {
-		return this.extensionManager.prepareTeams(new ArrayList<TeamRepresentor>(this.converter.toSimplified(this.teamService.readAll())));
+		return (List<TeamRepresentor>) this.extensionManager.prepareBatch(new ArrayList<TeamRepresentor>(this.converter.toSimplified(this.teamService.readAll())));
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class TeamProtocolImpl implements TeamProtocol {
 
 	@Override
 	public TeamRepresentor saveTeam(Long id, String name, String leader) throws AdaptorException {
-		return this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.teamService.exists(id))
+		return (TeamRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.teamService.exists(id))
 				? this.teamService.update(id, name, leader, this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName())
 				: this.teamService.create(name, leader, this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName())));
 	}
