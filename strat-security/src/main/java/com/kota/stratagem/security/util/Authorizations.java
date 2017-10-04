@@ -18,7 +18,7 @@ public class Authorizations {
 
 	public static String[] PopulateSystemAdministratorAuthorizationArray() {
 
-		List<String> authorizations = new ArrayList<>();
+		final List<String> authorizations = new ArrayList<>();
 
 		authorizations.add(Authorizations.SYSTEM_ADMINISTRATOR_AUTHORIZATION_TITLE);
 
@@ -27,7 +27,7 @@ public class Authorizations {
 
 	private static String[] PopulateCentralManagerAuthorizationArray() {
 
-		List<String> authorizations = new ArrayList<>();
+		final List<String> authorizations = new ArrayList<>();
 
 		authorizations.add(Authorizations.CENTRAL_MANAGER_AUTHORIZATION_TITLE);
 
@@ -36,7 +36,7 @@ public class Authorizations {
 
 	private static String[] PopulateDepartmentManagerAuthorizationArray() {
 
-		List<String> authorizations = new ArrayList<>(Arrays.asList(PopulateCentralManagerAuthorizationArray()));
+		final List<String> authorizations = new ArrayList<>(Arrays.asList(PopulateCentralManagerAuthorizationArray()));
 
 		authorizations.add(Authorizations.DEPARTMENT_MANAGER_AUTHORIZATION_TITLE);
 
@@ -45,7 +45,7 @@ public class Authorizations {
 
 	private static String[] PopulateGeneralManagerAuthorizationArray() {
 
-		List<String> authorizations = new ArrayList<>(Arrays.asList(PopulateDepartmentManagerAuthorizationArray()));
+		final List<String> authorizations = new ArrayList<>(Arrays.asList(PopulateDepartmentManagerAuthorizationArray()));
 
 		authorizations.add(Authorizations.GENERAL_MANAGER_AUTHORIZATION_TITLE);
 
@@ -54,7 +54,7 @@ public class Authorizations {
 
 	private static String[] PopulateGeneralUserAuthorizationArray() {
 
-		List<String> authorizations = new ArrayList<>(Arrays.asList(PopulateGeneralManagerAuthorizationArray()));
+		final List<String> authorizations = new ArrayList<>(Arrays.asList(PopulateGeneralManagerAuthorizationArray()));
 
 		authorizations.add(Authorizations.GENERAL_USER_AUTHORIZATION_TITLE);
 
