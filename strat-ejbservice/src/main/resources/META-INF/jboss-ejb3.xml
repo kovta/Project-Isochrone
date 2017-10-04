@@ -6,14 +6,13 @@
         xmlns:s="urn:security:1.1"
         version="3.1" impl-version="2.0">
  
+	<!-- 
     <assembly-descriptor>
         <s:security>
-            <ejb-name>AppUserProtocolImpl</ejb-name>
-            <ejb-name>TeamProtocolImpl</ejb-name>
-            <ejb-name>AppUserAssignmentProtocolImpl</ejb-name>
-            <ejb-name>TeamAssignmentProtocolImpl</ejb-name>
+            <ejb-name>*</ejb-name>
             <s:security-domain>strat-security-db-domain</s:security-domain>
         </s:security>
     </assembly-descriptor>
+     -->
     
 </jboss:ejb-jar>

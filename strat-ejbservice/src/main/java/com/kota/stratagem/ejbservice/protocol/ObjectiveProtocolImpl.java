@@ -44,7 +44,8 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@Override
 	public List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException {
-		return (List<ObjectiveRepresentor>) this.extensionManager.prepareBatch(new ArrayList<ObjectiveRepresentor>(this.converter.toSimplified(this.objectiveService.readAll())));
+		return (List<ObjectiveRepresentor>) this.extensionManager
+				.prepareBatch(new ArrayList<ObjectiveRepresentor>(this.converter.toSimplified(this.objectiveService.readAll())));
 	}
 
 	@Override

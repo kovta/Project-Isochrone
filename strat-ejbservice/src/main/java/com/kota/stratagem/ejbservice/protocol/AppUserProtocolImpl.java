@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,9 +29,7 @@ import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.security.encryption.PasswordGenerationService;
-import com.kota.stratagem.security.util.Authorizations;
 
-@PermitAll
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.APP_USER_PROTOCOL_SIGNATURE)
 public class AppUserProtocolImpl implements AppUserProtocol {
@@ -90,7 +86,8 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
-		return (List<AppUserRepresentor>) this.extensionManager.prepareBatch(new ArrayList<AppUserRepresentor>(this.converter.toSubComplete(this.appUserService.readAll())));
+		return (List<AppUserRepresentor>) this.extensionManager
+				.prepareBatch(new ArrayList<AppUserRepresentor>(this.converter.toSubComplete(this.appUserService.readAll())));
 	}
 
 	@Override
@@ -200,7 +197,6 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, Role.valueOf(role.getName()))));
 	}
 
-	@RolesAllowed({Authorizations.CENTRAL_MANAGER_AUTHORIZATION_TITLE, Authorizations.DEPARTMENT_MANAGER_AUTHORIZATION_TITLE})
 	@Override
 	public void removeAppUser(Long id) throws AdaptorException {
 		try {
