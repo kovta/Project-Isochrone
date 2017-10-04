@@ -1,5 +1,6 @@
 package com.kota.stratagem.ejbservice.protocol;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import com.kota.stratagem.persistence.service.AppUserAssignmentService;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.util.Constants;
 
+@PermitAll
 @Stateless(mappedName = EJBServiceConfiguration.APP_USER_ASSIGNMENT_PROTOCOL_SIGNATURE)
 public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol {
 

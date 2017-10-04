@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceExcept
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.TeamService;
 
+@PermitAll
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.TEAM_PROTOCOL_SIGNATURE)
 public class TeamProtocolImpl implements TeamProtocol {
