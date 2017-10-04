@@ -3,14 +3,14 @@
 	...
 	<management>
         <security-realms>
-            <security-realm name="strat-realm">
+			<security-realm name="strat-realm">
                 <authentication>
                     <jaas name="strat-security-db-domain"/>
                 </authentication>
             </security-realm>
-            <security-realm name="strat-secure-realm">
+            <security-realm name="strat-backup-realm">
                 <authentication>
-                    <jaas name="strat-secure-domain"/>
+                    <jaas name="strat-backup-security-db-domain"/>
                 </authentication>
             </security-realm>
         </security-realms>
@@ -23,6 +23,10 @@
             <logger category="com.kota">
                 <level name="DEBUG"/>
             </logger>
+			<logger category=" org.jboss.security">
+				<level name=" TRACE"/>
+			</logger>
+
             ...
         </subsystem>
 		...
@@ -67,18 +71,18 @@
 		...
         <subsystem xmlns="urn:jboss:domain:security:1.2">
 			<security-domains>
-                <security-domain name="strat-security-db-domain">
+				<security-domain name="strat-security-db-domain">
                     <authentication>
-                        <login-module code="Database" flag="required">
+                        <login-module code="com.kota.stratagem.security.authenticity.LoginModule" flag="required">
                             <module-option name="dsJndiName" value="java:jboss/datasources/stratagemds"/>
                             <module-option name="principalsQuery" value="SELECT user_password_hash FROM app_users WHERE user_name = ?"/>
                             <module-option name="rolesQuery" value="SELECT role_name, 'Roles' FROM roles INNER JOIN app_users ON (role_id = user_role) WHERE user_name = ?"/>
                         </login-module>
                     </authentication>
                 </security-domain>
-                <security-domain name="strat-secure-domain">
+                <security-domain name="strat-backup-security-db-domain">
                     <authentication>
-                        <login-module code="com.kota.stratagem.security.authenticity.LoginModule" flag="required">
+                        <login-module code="Database" flag="required">
                             <module-option name="dsJndiName" value="java:jboss/datasources/stratagemds"/>
                             <module-option name="principalsQuery" value="SELECT user_password_hash FROM app_users WHERE user_name = ?"/>
                             <module-option name="rolesQuery" value="SELECT role_name, 'Roles' FROM roles INNER JOIN app_users ON (role_id = user_role) WHERE user_name = ?"/>
