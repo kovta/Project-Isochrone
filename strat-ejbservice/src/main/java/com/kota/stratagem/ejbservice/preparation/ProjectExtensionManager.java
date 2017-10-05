@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.kota.stratagem.ejbservice.comparison.congregated.ObjectiveClusterComparator;
 import com.kota.stratagem.ejbservice.comparison.congregated.ProjectSummaryComparator;
 import com.kota.stratagem.ejbservice.comparison.congregated.SubmoduleSummaryComparator;
@@ -15,7 +17,10 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipien
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueSubmoduleComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
+import com.kota.stratagem.ejbservice.qualifier.NormalDistributionBased;
 import com.kota.stratagem.ejbservice.qualifier.ProjectOriented;
+import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
+import com.kota.stratagem.ejbservice.statistics.ProbabilityCalculator;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
@@ -24,7 +29,16 @@ import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 @ProjectOriented
 public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
+	@Inject
+	@NormalDistributionBased
+	private ProbabilityCalculator calculator;
+
+	@Inject
+	@SubmoduleOriented
+	private DTOExtensionManager extensionManager;
+
 	ProjectRepresentor representor;
+	List<ProjectRepresentor> components;
 	List<ObjectiveRepresentor> representors;
 
 	@Override
@@ -50,18 +64,15 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
-		this.provideCompletion();
-		this.provideOverdueSubmodules();
-		this.provideOngoingSubmodules();
-		this.provideCompletedSubmodules();
-		this.provideOverdueTasks();
-		this.provideOngoingTasks();
-		this.provideCompletedTasks();
+		this.addOwnerDependantProperties();
+		this.provideCategorizedSubmodules();
+		this.provideCategorizedTasks();
 	}
 
 	@Override
 	protected void addOwnerDependantProperties() {
-
+		this.prepareSubComponents();
+		this.provideProgressionDetials();
 	}
 
 	@Override
@@ -88,83 +99,71 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 		Collections.sort(this.representor.getAssignedTeams(), new TeamAssignmentRecipientNameComparator());
 	}
 
-	private void provideCompletion() {
-		int progressSum = 0, taskCount = 0;
+	private void prepareSubComponents() {
+		List<SubmoduleRepresentor> submodules = new ArrayList<SubmoduleRepresentor>();
+		for(SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
+			submodules.add((SubmoduleRepresentor) this.extensionManager.prepareForOwner(submodule));
+		}
+		this.representor.setSubmodules(submodules);
+	}
+
+	private void provideProgressionDetials() {
+		int progressSum = 0, submoduleTaskCount = 0;
+		double durationSum = 0, completedDurationSum = 0;
 		for (final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
-			taskCount++;
+			if (task.isEstimated()) {
+				double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
+				durationSum += expectedDuration;
+				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
+			} else if (task.isDurationProvided()) {
+				durationSum += task.getDuration();
+				completedDurationSum += task.getDuration() * (task.getCompletion() / 100);
+			}
 		}
 		for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
-			int submoduleProgress = 0, submoduleTaskCount = 0;
-			for (final TaskRepresentor submoduleTask : submodule.getTasks()) {
-				progressSum += submoduleTask.getCompletion();
-				submoduleProgress += submoduleTask.getCompletion();
-				taskCount++;
-				submoduleTaskCount++;
-			}
-			submodule.setCompletion(submoduleTaskCount != 0 ? submoduleProgress / submoduleTaskCount : 0);
+			progressSum += submodule.getCompletion();
+			submoduleTaskCount += submodule.getTasks().size();
+			durationSum += submodule.getDurationSum();
+			completedDurationSum += submodule.getCompletedDurationSum();
 		}
-		this.representor.setCompletion(taskCount != 0 ? progressSum / taskCount : 0);
+		int componentCount = this.representor.getTasks().size() + this.representor.getSubmodules().size();
+		this.representor.setTotalTaskCount(this.representor.getTasks().size() + submoduleTaskCount);
+		this.representor.setCompletion(componentCount != 0 ? progressSum / componentCount : 0);
+		this.representor.setDurationSum(durationSum);
+		this.representor.setCompletedDurationSum(completedDurationSum);
 	}
 
-	private void provideOverdueSubmodules() {
-		final List<SubmoduleRepresentor> submodules = new ArrayList<>();
+	private void provideCategorizedSubmodules() {
+		final List<SubmoduleRepresentor> overdueSubmodules = new ArrayList<>(), ongoingSubmodules = new ArrayList<>(), completedSubmodules = new ArrayList<>();
 		for (final SubmoduleRepresentor representor : this.representor.getSubmodules()) {
 			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
-				submodules.add(representor);
+				overdueSubmodules.add(representor);
+			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+				ongoingSubmodules.add(representor);
+			} else if (representor.isCompleted()) {
+				completedSubmodules.add(representor);
 			}
 		}
-		this.representor.setOverdueSubmodules(submodules);
+		this.representor.setOverdueSubmodules(overdueSubmodules);
+		this.representor.setOngoingSubmodules(ongoingSubmodules);
+		this.representor.setCompletedSubmodules(completedSubmodules);
 	}
 
-	private void provideOngoingSubmodules() {
-		final List<SubmoduleRepresentor> submodules = new ArrayList<>();
-		for (final SubmoduleRepresentor representor : this.representor.getSubmodules()) {
-			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
-				submodules.add(representor);
-			}
-		}
-		this.representor.setOngoingSubmodules(submodules);
-	}
-
-	private void provideCompletedSubmodules() {
-		final List<SubmoduleRepresentor> submodules = new ArrayList<>();
-		for (final SubmoduleRepresentor representor : this.representor.getSubmodules()) {
-			if (representor.isCompleted()) {
-				submodules.add(representor);
-			}
-		}
-		this.representor.setCompletedSubmodules(submodules);
-	}
-
-	private void provideOverdueTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
+	private void provideCategorizedTasks() {
+		final List<TaskRepresentor> overdueTasks = new ArrayList<>(), ongoingTasks = new ArrayList<>(), completedTasks = new ArrayList<>();
 		for (final TaskRepresentor representor : this.representor.getTasks()) {
 			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
-				tasks.add(representor);
+				overdueTasks.add(representor);
+			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+				ongoingTasks.add(representor);
+			} else if (representor.isCompleted()) {
+				completedTasks.add(representor);
 			}
 		}
-		this.representor.setOverdueTasks(tasks);
-	}
-
-	private void provideOngoingTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
-				tasks.add(representor);
-			}
-		}
-		this.representor.setOngoingTasks(tasks);
-	}
-
-	private void provideCompletedTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if (representor.isCompleted()) {
-				tasks.add(representor);
-			}
-		}
-		this.representor.setCompletedTasks(tasks);
+		this.representor.setOverdueTasks(overdueTasks);
+		this.representor.setOngoingTasks(ongoingTasks);
+		this.representor.setCompletedTasks(completedTasks);
 	}
 
 }

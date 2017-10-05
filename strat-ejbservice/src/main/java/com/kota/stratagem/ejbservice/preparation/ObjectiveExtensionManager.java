@@ -34,9 +34,7 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	@Certified(ObjectiveRepresentor.class)
 	public Object prepareForOwner(Object representor) {
-		this.representor = (ObjectiveRepresentor) representor;
 		return super.prepareForOwner(representor);
 	}
 
@@ -50,12 +48,8 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void addRepresentorSpecificProperties() {
 		this.provideCompletion();
-		this.provideOverdueProjects();
-		this.provideOngoingProjects();
-		this.provideCompletedProjects();
-		this.provideOverdueTasks();
-		this.provideOngoingTasks();
-		this.provideCompletedTasks();
+		this.provideCategorizedProjects();
+		this.provideCategorizedTasks();
 	}
 
 	@Override
@@ -111,64 +105,36 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 		this.representor.setCompletion(taskCount != 0 ? progressSum / taskCount : 0);
 	}
 
-	private void provideOverdueProjects() {
-		final List<ProjectRepresentor> projects = new ArrayList<>();
+	private void provideCategorizedProjects() {
+		final List<ProjectRepresentor> overdueProjects = new ArrayList<>(), ongoingProjects = new ArrayList<>(), completedProjects = new ArrayList<>();
 		for (final ProjectRepresentor representor : this.representor.getProjects()) {
 			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
-				projects.add(representor);
+				overdueProjects.add(representor);
+			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+				ongoingProjects.add(representor);
+			} else if (representor.isCompleted()) {
+				completedProjects.add(representor);
 			}
 		}
-		this.representor.setOverdueProjects(projects);
+		this.representor.setOverdueProjects(overdueProjects);
+		this.representor.setOngoingProjects(ongoingProjects);
+		this.representor.setCompletedProjects(completedProjects);
 	}
 
-	private void provideOngoingProjects() {
-		final List<ProjectRepresentor> projects = new ArrayList<>();
-		for (final ProjectRepresentor representor : this.representor.getProjects()) {
-			if ((representor.getUrgencyLevel() != 3) && (representor.getCompletion() != 100)) {
-				projects.add(representor);
-			}
-		}
-		this.representor.setOngoingProjects(projects);
-	}
-
-	private void provideCompletedProjects() {
-		final List<ProjectRepresentor> projects = new ArrayList<>();
-		for (final ProjectRepresentor representor : this.representor.getProjects()) {
-			if (representor.isCompleted()) {
-				projects.add(representor);
-			}
-		}
-		this.representor.setCompletedProjects(projects);
-	}
-
-	private void provideOverdueTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
+	private void provideCategorizedTasks() {
+		final List<TaskRepresentor> overdueTasks = new ArrayList<>(), ongoingTasks = new ArrayList<>(), completedTasks = new ArrayList<>();
 		for (final TaskRepresentor representor : this.representor.getTasks()) {
 			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
-				tasks.add(representor);
+				overdueTasks.add(representor);
+			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+				ongoingTasks.add(representor);
+			} else if (representor.isCompleted()) {
+				completedTasks.add(representor);
 			}
 		}
-		this.representor.setOverdueTasks(tasks);
-	}
-
-	private void provideOngoingTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
-				tasks.add(representor);
-			}
-		}
-		this.representor.setOngoingTasks(tasks);
-	}
-
-	private void provideCompletedTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if (representor.isCompleted()) {
-				tasks.add(representor);
-			}
-		}
-		this.representor.setCompletedTasks(tasks);
+		this.representor.setOverdueTasks(overdueTasks);
+		this.representor.setOngoingTasks(ongoingTasks);
+		this.representor.setCompletedTasks(completedTasks);
 	}
 
 }

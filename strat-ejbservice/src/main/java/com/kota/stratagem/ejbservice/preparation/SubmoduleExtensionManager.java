@@ -24,7 +24,9 @@ import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.Definitive;
 import com.kota.stratagem.ejbservice.qualifier.Estimated;
+import com.kota.stratagem.ejbservice.qualifier.NormalDistributionBased;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
+import com.kota.stratagem.ejbservice.statistics.ProbabilityCalculator;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.TaskService;
@@ -40,6 +42,10 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@Inject
 	private CPMNodeConverter cpmNodeConverter;
+
+	@Inject
+	@NormalDistributionBased
+	private ProbabilityCalculator calculator;
 
 	@Inject
 	@Estimated
@@ -72,18 +78,14 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
-		this.provideCompletion();
-		this.provideDurationSum();
-		this.provideCompletedDurationSum();
+		this.provideProgressionDetials();
 		this.provideEvaluationDetails();
-		this.provideOverdueTasks();
-		this.provideOngoingTasks();
-		this.provideCompletedTasks();
+		this.provideCategorizedTasks();
 	}
 
 	@Override
 	protected void addOwnerDependantProperties() {
-
+		this.provideProgressionDetials();
 	}
 
 	@Override
@@ -104,36 +106,23 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	}
 
-	private void provideCompletion() {
+	private void provideProgressionDetials() {
 		int progressSum = 0;
+		double durationSum = 0, completedDurationSum = 0;
 		for (final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
-		}
-		this.representor.setCompletion(this.representor.getTasks().size() != 0 ? progressSum / this.representor.getTasks().size() : 0);
-	}
-
-	private void provideDurationSum() {
-		Double durationSum = (double) 0;
-		for (final TaskRepresentor task : this.representor.getTasks()) {
 			if (task.isEstimated()) {
-				durationSum += ((task.getPessimistic() + (4 * task.getRealistic()) + task.getOptimistic()) / 6);
+				double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
+				durationSum += expectedDuration;
+				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
 			} else if (task.isDurationProvided()) {
 				durationSum += task.getDuration();
+				completedDurationSum += task.getDuration() * (task.getCompletion() / 100);
 			}
 		}
+		this.representor.setCompletion(this.representor.getTasks().size() != 0 ? progressSum / this.representor.getTasks().size() : 0);
 		this.representor.setDurationSum(durationSum);
-	}
-
-	private void provideCompletedDurationSum() {
-		Double durationSum = (double) 0;
-		for (final TaskRepresentor task : this.representor.getTasks()) {
-			if (task.isEstimated()) {
-				durationSum += ((task.getPessimistic() + (4 * task.getRealistic()) + task.getOptimistic()) / 6) * (task.getCompletion() / 100);
-			} else if (task.isDurationProvided()) {
-				durationSum += task.getDuration() * (task.getCompletion() / 100);
-			}
-		}
-		this.representor.setCompletedDurationSum(durationSum);
+		this.representor.setCompletedDurationSum(completedDurationSum);
 	}
 
 	private void provideEvaluationDetails() {
@@ -179,7 +168,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideEstimations(CPMResult result) {
 		final Calendar calendar = Calendar.getInstance();
-		final double estimatedDuration = ((1.645 * result.getStandardDeviation()) + result.getExpectedDuration());
+		final double estimatedDuration = this.calculator.estimateProbability(result.getExpectedDuration(), result.getStandardDeviation(), (double) 95);
 		calendar.setTime(new Date());
 		calendar.add(Calendar.DATE, (int) estimatedDuration);
 		this.representor.setEstimatedCompletionDate(calendar.getTime());
@@ -189,49 +178,24 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 		if (this.representor.isDeadlineProvided()) {
 			final Long difference = TimeUnit.DAYS.convert(this.representor.getDeadline().getTime() - calendar.getTime().getTime(), TimeUnit.DAYS) / 86400000;
 			this.representor.setTargetDeviation(difference.doubleValue());
-			this.representor.setEarlyFinishEstimation(this.cumulitiveNormalDistribution(difference.doubleValue() / result.getStandardDeviation()));
+			this.representor.setEarlyFinishEstimation(this.calculator.calculateCumulitiveNormalDistribution(difference.doubleValue(), result.getStandardDeviation()));
 		}
 	}
 
-	private double cumulitiveNormalDistribution(double z) {
-		final int neg = (z < 0d) ? 1 : 0;
-		if (neg == 1) {
-			z *= -1d;
-		}
-		final double k = (1d / (1d + (0.2316419 * z)));
-		double y = ((((((((1.330274429 * k) - 1.821255978) * k) + 1.781477937) * k) - 0.356563782) * k) + 0.319381530) * k;
-		y = 1.0 - (0.398942280401 * Math.exp(-0.5 * z * z) * y);
-		return ((1d - neg) * y) + (neg * (1d - y));
-	}
-
-	private void provideOverdueTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
+	private void provideCategorizedTasks() {
+		final List<TaskRepresentor> overdueTasks = new ArrayList<>(), ongoingTasks = new ArrayList<>(), completedTasks = new ArrayList<>();
 		for (final TaskRepresentor representor : this.representor.getTasks()) {
 			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
-				tasks.add(representor);
+				overdueTasks.add(representor);
+			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+				ongoingTasks.add(representor);
+			} else if (representor.isCompleted()) {
+				completedTasks.add(representor);
 			}
 		}
-		this.representor.setOverdueTasks(tasks);
-	}
-
-	private void provideOngoingTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
-				tasks.add(representor);
-			}
-		}
-		this.representor.setOngoingTasks(tasks);
-	}
-
-	private void provideCompletedTasks() {
-		final List<TaskRepresentor> tasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if (representor.isCompleted()) {
-				tasks.add(representor);
-			}
-		}
-		this.representor.setCompletedTasks(tasks);
+		this.representor.setOverdueTasks(overdueTasks);
+		this.representor.setOngoingTasks(ongoingTasks);
+		this.representor.setCompletedTasks(completedTasks);
 	}
 
 }

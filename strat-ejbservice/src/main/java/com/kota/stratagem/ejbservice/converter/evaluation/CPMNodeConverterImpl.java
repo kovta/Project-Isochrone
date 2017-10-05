@@ -4,21 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.domain.AbstractCPMNode;
 import com.kota.stratagem.ejbservice.domain.DefinitiveCPMNodeImpl;
 import com.kota.stratagem.ejbservice.domain.EstimatedCPMNodeImpl;
+import com.kota.stratagem.ejbservice.qualifier.NormalDistributionBased;
+import com.kota.stratagem.ejbservice.statistics.ProbabilityCalculator;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 
 @Stateless
 public class CPMNodeConverterImpl implements CPMNodeConverter {
 
+	@Inject
+	@NormalDistributionBased
+	ProbabilityCalculator calculator;
+
 	private CPMNode to(TaskRepresentor task) {
 		CPMNode node;
 		if (task.isEstimated()) {
-			node = new EstimatedCPMNodeImpl(task.getId(), this.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic()),
-					this.calculateVariance(task.getPessimistic(), task.getRealistic(), task.getOptimistic()));
+			node = new EstimatedCPMNodeImpl(task.getId(), this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic()),
+					this.calculator.calculateVariance(task.getPessimistic(), task.getRealistic(), task.getOptimistic()));
 		} else {
 			node = new DefinitiveCPMNodeImpl(task.getId(), task.getDuration());
 		}
@@ -63,16 +70,6 @@ public class CPMNodeConverterImpl implements CPMNodeConverter {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public Double calculateExpectedDuration(Double pessimistic, Double realistic, Double optimistic) {
-		return (pessimistic + (4 * realistic) + optimistic) / 6;
-	}
-
-	@Override
-	public Double calculateVariance(Double pessimistic, Double realistic, Double optimistic) {
-		return Math.sqrt((pessimistic - optimistic) / 6);
 	}
 
 }

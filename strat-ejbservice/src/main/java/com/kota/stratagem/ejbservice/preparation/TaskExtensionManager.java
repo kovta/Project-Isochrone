@@ -15,7 +15,9 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipien
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
+import com.kota.stratagem.ejbservice.qualifier.NormalDistributionBased;
 import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
+import com.kota.stratagem.ejbservice.statistics.ProbabilityCalculator;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.TaskService;
 
@@ -30,6 +32,10 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	@Inject
 	private CPMNodeConverter cpmNodeConverter;
+
+	@Inject
+	@NormalDistributionBased
+	private ProbabilityCalculator calculator;
 
 	TaskRepresentor representor;
 	List<TaskRepresentor> representors;
@@ -173,10 +179,10 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	private void provideEstimationDetails() {
-		this.representor.setExpectedDuration(this.cpmNodeConverter.calculateExpectedDuration(this.representor.getPessimistic(), this.representor.getRealistic(),
+		this.representor.setExpectedDuration(this.calculator.calculateExpectedDuration(this.representor.getPessimistic(), this.representor.getRealistic(),
 				this.representor.getOptimistic()));
 		this.representor.setVariance(
-				this.cpmNodeConverter.calculateVariance(this.representor.getPessimistic(), this.representor.getRealistic(), this.representor.getOptimistic()));
+				this.calculator.calculateVariance(this.representor.getPessimistic(), this.representor.getRealistic(), this.representor.getOptimistic()));
 	}
 
 }

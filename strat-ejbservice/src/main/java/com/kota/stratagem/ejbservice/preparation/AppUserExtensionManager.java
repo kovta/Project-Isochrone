@@ -24,9 +24,7 @@ public class AppUserExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
-	@Certified(AppUserRepresentor.class)
 	public Object prepareForOwner(Object representor) {
-		this.representor = (AppUserRepresentor) representor;
 		return super.prepareForOwner(representor);
 	}
 
