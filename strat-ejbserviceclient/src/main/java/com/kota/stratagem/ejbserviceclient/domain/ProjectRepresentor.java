@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 
-public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
+public class ProjectRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -2331431817299985578L;
 
@@ -17,20 +17,27 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 	private final ProjectStatusRepresentor status;
 	private final Date deadline;
 	private final Boolean confidential;
-	private final List<SubmoduleRepresentor> submodules;
+	private List<SubmoduleRepresentor> submodules;
 	private final List<TaskRepresentor> tasks;
 	private final List<TeamProjectAssignmentRepresentor> assignedTeams;
 	private final List<AppUserProjectAssignmentRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
 	private final ObjectiveRepresentor objective;
 
-	private double completion;
+	private Double durationSum;
+	private Double completedDurationSum;
+	private Boolean estimated;
+	private Date expectedCompletionDate;
+	private Date estimatedCompletionDate;
+	private Double targetDeviation;
+	private Double earlyFinishEstimation;
 	private List<SubmoduleRepresentor> overdueSubmodules;
 	private List<SubmoduleRepresentor> ongoingSubmodules;
 	private List<SubmoduleRepresentor> completedSubmodules;
 	private List<TaskRepresentor> overdueTasks;
 	private List<TaskRepresentor> ongoingTasks;
 	private List<TaskRepresentor> completedTasks;
+	private int totalTaskCount;
 
 	public ProjectRepresentor() {
 		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null);
@@ -81,6 +88,10 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 	public Date getDeadline() {
 		return this.deadline;
 	}
+	
+	public Boolean isDeadlineProvided() {
+		return this.getDeadline() != null;
+	}
 
 	public Boolean getConfidential() {
 		return this.confidential;
@@ -88,6 +99,10 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 
 	public List<SubmoduleRepresentor> getSubmodules() {
 		return this.submodules;
+	}
+
+	public void setSubmodules(List<SubmoduleRepresentor> submodules) {
+		this.submodules = submodules;
 	}
 
 	public List<TaskRepresentor> getTasks() {
@@ -110,24 +125,60 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 		return this.objective;
 	}
 
-	public Boolean isCompleted() {
-		return this.getCompletion() == 100;
+	public Double getDurationSum() {
+		return this.durationSum;
 	}
 
-	public Boolean isOngoing() {
-		return (this.getCompletion() < 100) && (this.getCompletion() > 0);
+	public void setDurationSum(Double durationSum) {
+		this.durationSum = durationSum;
 	}
 
-	public Boolean isUnstarted() {
-		return this.getCompletion() == 0;
+	public Double getCompletedDurationSum() {
+		return this.completedDurationSum;
 	}
 
-	public double getCompletion() {
-		return this.completion;
+	public void setCompletedDurationSum(Double completedDurationSum) {
+		this.completedDurationSum = completedDurationSum;
 	}
 
-	public void setCompletion(double completion) {
-		this.completion = completion;
+	public Boolean getEstimated() {
+		return this.estimated;
+	}
+
+	public void setEstimated(Boolean estimated) {
+		this.estimated = estimated;
+	}
+
+	public Date getExpectedCompletionDate() {
+		return this.expectedCompletionDate;
+	}
+
+	public void setExpectedCompletionDate(Date expectedCompletionDate) {
+		this.expectedCompletionDate = expectedCompletionDate;
+	}
+
+	public Date getEstimatedCompletionDate() {
+		return this.estimatedCompletionDate;
+	}
+
+	public void setEstimatedCompletionDate(Date estimatedCompletionDate) {
+		this.estimatedCompletionDate = estimatedCompletionDate;
+	}
+
+	public Double getTargetDeviation() {
+		return this.targetDeviation;
+	}
+
+	public void setTargetDeviation(Double targetDeviation) {
+		this.targetDeviation = targetDeviation;
+	}
+
+	public Double getEarlyFinishEstimation() {
+		return this.earlyFinishEstimation;
+	}
+
+	public void setEarlyFinishEstimation(Double earlyFinishEstimation) {
+		this.earlyFinishEstimation = earlyFinishEstimation;
 	}
 
 	public List<SubmoduleRepresentor> getOverdueSubmodules() {
@@ -176,6 +227,14 @@ public class ProjectRepresentor extends AbstractTimeConstraintRepresentor implem
 
 	public void setCompletedTasks(List<TaskRepresentor> completedTasks) {
 		this.completedTasks = completedTasks;
+	}
+
+	public int getTotalTaskCount() {
+		return this.totalTaskCount;
+	}
+
+	public void setTotalTaskCount(int totalTaskCount) {
+		this.totalTaskCount = totalTaskCount;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
+public class SubmoduleRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -7646277745869655229L;
 
@@ -18,7 +18,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
 
-	private double completion;
 	private Double durationSum;
 	private Double completedDurationSum;
 	private Boolean estimated;
@@ -70,6 +69,10 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 		return this.deadline;
 	}
 
+	public Boolean isDeadlineProvided() {
+		return this.getDeadline() != null;
+	}
+
 	public List<TaskRepresentor> getTasks() {
 		return this.tasks;
 	}
@@ -84,30 +87,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public ProjectRepresentor getProject() {
 		return this.project;
-	}
-
-	public Boolean isCompleted() {
-		return this.getCompletion() == 100;
-	}
-
-	public Boolean isOngoing() {
-		return (this.getCompletion() < 100) && (this.getCompletion() > 0);
-	}
-
-	public Boolean isUnstarted() {
-		return this.getCompletion() == 0;
-	}
-
-	public Boolean isDeadlineProvided() {
-		return this.getDeadline() != null;
-	}
-
-	public double getCompletion() {
-		return this.completion;
-	}
-
-	public void setCompletion(double completion) {
-		this.completion = completion;
 	}
 
 	public Double getDurationSum() {

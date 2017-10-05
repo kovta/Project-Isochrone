@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 
-public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor implements Serializable {
+public class ObjectiveRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -4038127838789105749L;
 
@@ -23,7 +23,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 	private List<TeamObjectiveAssignmentRepresentor> assignedTeams;
 	private List<AppUserObjectiveAssignmentRepresentor> assignedUsers;
 
-	private double completion;
 	private List<ProjectRepresentor> overdueProjects;
 	private List<ProjectRepresentor> ongoingProjects;
 	private List<ProjectRepresentor> completedProjects;
@@ -69,6 +68,10 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public Date getDeadline() {
 		return this.deadline;
+	}
+
+	public Boolean isDeadlineProvided() {
+		return this.getDeadline() != null;
 	}
 
 	public Boolean getConfidential() {
@@ -129,14 +132,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstraintRepresentor impl
 
 	public void setAssignedUsers(List<AppUserObjectiveAssignmentRepresentor> assignedUsers) {
 		this.assignedUsers = assignedUsers;
-	}
-
-	public double getCompletion() {
-		return this.completion;
-	}
-
-	public void setCompletion(double completion) {
-		this.completion = completion;
 	}
 
 	public List<ProjectRepresentor> getOverdueProjects() {
