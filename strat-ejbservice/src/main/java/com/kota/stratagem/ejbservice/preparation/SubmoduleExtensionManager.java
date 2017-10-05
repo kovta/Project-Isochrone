@@ -1,11 +1,8 @@
 package com.kota.stratagem.ejbservice.preparation;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -24,9 +21,7 @@ import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.Definitive;
 import com.kota.stratagem.ejbservice.qualifier.Estimated;
-import com.kota.stratagem.ejbservice.qualifier.NormalDistributionBased;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
-import com.kota.stratagem.ejbservice.statistics.ProbabilityCalculator;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.TaskService;
@@ -42,10 +37,6 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@Inject
 	private CPMNodeConverter cpmNodeConverter;
-
-	@Inject
-	@NormalDistributionBased
-	private ProbabilityCalculator calculator;
 
 	@Inject
 	@Estimated
@@ -112,7 +103,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 		for (final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
 			if (task.isEstimated()) {
-				double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
+				final double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
 				durationSum += expectedDuration;
 				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
 			} else if (task.isDurationProvided()) {
@@ -152,7 +143,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 						result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(components));
 					} else {
 						for (final TaskRepresentor component : components) {
-							component.setDuration(component.getDuration() / ((100 - component.getCompletion()) / 100));
+							component.setDuration(component.getDuration() * ((100 - component.getCompletion()) / 100));
 						}
 						result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(components));
 					}
@@ -161,24 +152,8 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 				LOGGER.error(e, e);
 			}
 			if (result != null) {
-				this.provideEstimations(result);
+				this.provider.provideEstimations(result, this.representor);
 			}
-		}
-	}
-
-	private void provideEstimations(CPMResult result) {
-		final Calendar calendar = Calendar.getInstance();
-		final double estimatedDuration = this.calculator.estimateProbability(result.getExpectedDuration(), result.getStandardDeviation(), (double) 95);
-		calendar.setTime(new Date());
-		calendar.add(Calendar.DATE, (int) estimatedDuration);
-		this.representor.setEstimatedCompletionDate(calendar.getTime());
-		calendar.setTime(new Date());
-		calendar.add(Calendar.DATE, result.getExpectedDuration().intValue());
-		this.representor.setExpectedCompletionDate(calendar.getTime());
-		if (this.representor.isDeadlineProvided()) {
-			final Long difference = TimeUnit.DAYS.convert(this.representor.getDeadline().getTime() - calendar.getTime().getTime(), TimeUnit.DAYS) / 86400000;
-			this.representor.setTargetDeviation(difference.doubleValue());
-			this.representor.setEarlyFinishEstimation(this.calculator.calculateCumulitiveNormalDistribution(difference.doubleValue(), result.getStandardDeviation()));
 		}
 	}
 

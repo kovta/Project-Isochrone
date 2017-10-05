@@ -8,6 +8,7 @@ import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
 import com.kota.stratagem.ejbservice.qualifier.Definitive;
 import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 import com.kota.stratagem.ejbserviceclient.domain.designation.DefinitiveCPMNode;
+import com.kota.stratagem.ejbserviceclient.domain.designation.EstimatedCPMNode;
 
 @Definitive
 public class DefinitiveDependencyNetworkEvaluator extends AbstractDependencyNetworkEvaluator implements DependencyNetworkEvaluator {
@@ -22,6 +23,9 @@ public class DefinitiveDependencyNetworkEvaluator extends AbstractDependencyNetw
 		if (node instanceof DefinitiveCPMNode) {
 			final DefinitiveCPMNode element = (DefinitiveCPMNode) node;
 			return element.getDuration();
+		} else if (node instanceof EstimatedCPMNode) {
+			final EstimatedCPMNode element = (EstimatedCPMNode) node;
+			return element.getExpectedDuration();
 		} else {
 			throw new InvalidNodeTypeException();
 		}

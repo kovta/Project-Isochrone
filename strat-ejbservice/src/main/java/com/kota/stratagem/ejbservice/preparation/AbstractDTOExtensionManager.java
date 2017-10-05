@@ -2,11 +2,25 @@ package com.kota.stratagem.ejbservice.preparation;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
+
+import com.kota.stratagem.ejbservice.qualifier.NormalDistributionBased;
+import com.kota.stratagem.ejbservice.qualifier.Shared;
+import com.kota.stratagem.ejbservice.statistics.ProbabilityCalculator;
 
 public abstract class AbstractDTOExtensionManager implements DTOExtensionManager {
 
 	protected static final Logger LOGGER = Logger.getLogger(AbstractDTOExtensionManager.class);
+
+	@Inject
+	@Shared
+	protected ExtensionProvider provider;
+
+	@Inject
+	@NormalDistributionBased
+	protected ProbabilityCalculator calculator;
 
 	@Override
 	public Object prepare(Object representor) {
