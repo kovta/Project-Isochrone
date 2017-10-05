@@ -9,7 +9,7 @@ import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 import com.kota.stratagem.ejbserviceclient.domain.designation.DefinitiveCPMNode;
 import com.kota.stratagem.ejbserviceclient.domain.designation.EstimatedCPMNode;
 
-public class TaskRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable, DefinitiveCPMNode, EstimatedCPMNode {
+public class TaskRepresentor extends AbstractTimeConstraintRepresentor implements Serializable, DefinitiveCPMNode, EstimatedCPMNode {
 
 	private static final long serialVersionUID = -552279169521037564L;
 
@@ -87,28 +87,20 @@ public class TaskRepresentor extends AbstractTimeConstrainedProgressionRepresent
 		return this.priority;
 	}
 
-	@Override
 	public Boolean isCompleted() {
 		return this.completion == 100;
 	}
 
-	@Override
 	public Boolean isOngoing() {
 		return (this.completion < 100) && (this.completion > 0);
 	}
 
-	@Override
 	public Boolean isUnstarted() {
 		return this.completion == 0;
 	}
 
-	@Override
 	public double getCompletion() {
 		return this.completion;
-	}
-
-	public Date getDeadline() {
-		return this.deadline;
 	}
 
 	public Boolean getAdmittance() {

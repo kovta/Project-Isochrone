@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SubmoduleRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable {
+public class SubmoduleRepresentor extends AbstractProgressionRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -7646277745869655229L;
 
@@ -18,13 +18,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstrainedProgressionRepr
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final ProjectRepresentor project;
 
-	private Double durationSum;
-	private Double completedDurationSum;
-	private Boolean estimated;
-	private Date expectedCompletionDate;
-	private Date estimatedCompletionDate;
-	private Double targetDeviation;
-	private Double earlyFinishEstimation;
 	private List<TaskRepresentor> overdueTasks;
 	private List<TaskRepresentor> ongoingTasks;
 	private List<TaskRepresentor> completedTasks;
@@ -65,14 +58,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstrainedProgressionRepr
 		return this.description;
 	}
 
-	public Date getDeadline() {
-		return this.deadline;
-	}
-
-	public Boolean isDeadlineProvided() {
-		return this.getDeadline() != null;
-	}
-
 	public List<TaskRepresentor> getTasks() {
 		return this.tasks;
 	}
@@ -87,62 +72,6 @@ public class SubmoduleRepresentor extends AbstractTimeConstrainedProgressionRepr
 
 	public ProjectRepresentor getProject() {
 		return this.project;
-	}
-
-	public Double getDurationSum() {
-		return this.durationSum;
-	}
-
-	public void setDurationSum(Double durationSum) {
-		this.durationSum = durationSum;
-	}
-
-	public Double getCompletedDurationSum() {
-		return this.completedDurationSum;
-	}
-
-	public void setCompletedDurationSum(Double completedDurationSum) {
-		this.completedDurationSum = completedDurationSum;
-	}
-
-	public Boolean getEstimated() {
-		return this.estimated;
-	}
-
-	public void setEstimated(Boolean estimated) {
-		this.estimated = estimated;
-	}
-
-	public Date getExpectedCompletionDate() {
-		return this.expectedCompletionDate;
-	}
-
-	public void setExpectedCompletionDate(Date expectedCompletionDate) {
-		this.expectedCompletionDate = expectedCompletionDate;
-	}
-
-	public Date getEstimatedCompletionDate() {
-		return this.estimatedCompletionDate;
-	}
-
-	public void setEstimatedCompletionDate(Date estimatedCompletionDate) {
-		this.estimatedCompletionDate = estimatedCompletionDate;
-	}
-
-	public Double getTargetDeviation() {
-		return this.targetDeviation;
-	}
-
-	public void setTargetDeviation(Double targetDeviation) {
-		this.targetDeviation = targetDeviation;
-	}
-
-	public Double getEarlyFinishEstimation() {
-		return this.earlyFinishEstimation;
-	}
-
-	public void setEarlyFinishEstimation(Double earlyFinishEstimation) {
-		this.earlyFinishEstimation = earlyFinishEstimation;
 	}
 
 	public List<TaskRepresentor> getOverdueTasks() {

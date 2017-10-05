@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 
-public class ProjectRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable {
+public class ProjectRepresentor extends AbstractProgressionRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -2331431817299985578L;
 
@@ -24,13 +24,6 @@ public class ProjectRepresentor extends AbstractTimeConstrainedProgressionRepres
 	private final List<ImpedimentRepresentor> impediments;
 	private final ObjectiveRepresentor objective;
 
-	private Double durationSum;
-	private Double completedDurationSum;
-	private Boolean estimated;
-	private Date expectedCompletionDate;
-	private Date estimatedCompletionDate;
-	private Double targetDeviation;
-	private Double earlyFinishEstimation;
 	private List<SubmoduleRepresentor> overdueSubmodules;
 	private List<SubmoduleRepresentor> ongoingSubmodules;
 	private List<SubmoduleRepresentor> completedSubmodules;
@@ -85,14 +78,6 @@ public class ProjectRepresentor extends AbstractTimeConstrainedProgressionRepres
 		return this.status;
 	}
 
-	public Date getDeadline() {
-		return this.deadline;
-	}
-	
-	public Boolean isDeadlineProvided() {
-		return this.getDeadline() != null;
-	}
-
 	public Boolean getConfidential() {
 		return this.confidential;
 	}
@@ -123,62 +108,6 @@ public class ProjectRepresentor extends AbstractTimeConstrainedProgressionRepres
 
 	public ObjectiveRepresentor getObjective() {
 		return this.objective;
-	}
-
-	public Double getDurationSum() {
-		return this.durationSum;
-	}
-
-	public void setDurationSum(Double durationSum) {
-		this.durationSum = durationSum;
-	}
-
-	public Double getCompletedDurationSum() {
-		return this.completedDurationSum;
-	}
-
-	public void setCompletedDurationSum(Double completedDurationSum) {
-		this.completedDurationSum = completedDurationSum;
-	}
-
-	public Boolean getEstimated() {
-		return this.estimated;
-	}
-
-	public void setEstimated(Boolean estimated) {
-		this.estimated = estimated;
-	}
-
-	public Date getExpectedCompletionDate() {
-		return this.expectedCompletionDate;
-	}
-
-	public void setExpectedCompletionDate(Date expectedCompletionDate) {
-		this.expectedCompletionDate = expectedCompletionDate;
-	}
-
-	public Date getEstimatedCompletionDate() {
-		return this.estimatedCompletionDate;
-	}
-
-	public void setEstimatedCompletionDate(Date estimatedCompletionDate) {
-		this.estimatedCompletionDate = estimatedCompletionDate;
-	}
-
-	public Double getTargetDeviation() {
-		return this.targetDeviation;
-	}
-
-	public void setTargetDeviation(Double targetDeviation) {
-		this.targetDeviation = targetDeviation;
-	}
-
-	public Double getEarlyFinishEstimation() {
-		return this.earlyFinishEstimation;
-	}
-
-	public void setEarlyFinishEstimation(Double earlyFinishEstimation) {
-		this.earlyFinishEstimation = earlyFinishEstimation;
 	}
 
 	public List<SubmoduleRepresentor> getOverdueSubmodules() {

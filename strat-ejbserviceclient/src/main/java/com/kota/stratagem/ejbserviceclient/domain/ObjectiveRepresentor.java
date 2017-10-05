@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
 
-public class ObjectiveRepresentor extends AbstractTimeConstrainedProgressionRepresentor implements Serializable {
+public class ObjectiveRepresentor extends AbstractProgressionRepresentor implements Serializable {
 
 	private static final long serialVersionUID = -4038127838789105749L;
 
@@ -64,14 +64,6 @@ public class ObjectiveRepresentor extends AbstractTimeConstrainedProgressionRepr
 
 	public String getName() {
 		return this.name;
-	}
-
-	public Date getDeadline() {
-		return this.deadline;
-	}
-
-	public Boolean isDeadlineProvided() {
-		return this.getDeadline() != null;
 	}
 
 	public Boolean getConfidential() {
