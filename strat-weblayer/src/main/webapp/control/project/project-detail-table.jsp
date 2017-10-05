@@ -73,7 +73,7 @@
 					<hr class="detail-table-top-header"/><strong><span>Progression Evaluation</span></strong><hr class="detail-table-bottom-header"/>
 				</td>
 			</tr>
-			<tr>
+		<tr>
 				<td class="strat-detail-attribute-name">Progression</td>
 				<td class="strat-detail-attribute-value">
 					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${(project.completedDurationSum / project.durationSum) * 100}" />
@@ -81,28 +81,31 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="strat-detail-attribute-name">Total duration</td>
-				<td class="strat-detail-attribute-value">
-					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${project.durationSum}" />
-					<c:out value="${project.durationSum eq 1 ? ' day' : ' days'}" />
-				</td>
-			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name">Finished work</td>
+				<td class="strat-detail-attribute-name"></td>
 				<td class="strat-detail-attribute-value">
 					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${project.completedDurationSum}" />
 					<c:out value="${project.completedDurationSum eq 1 ? ' day' : ' days'}" />
+					<c:out value=" finished" />
 				</td>
 			</tr>
-			<!-- 
+			<tr>
+				<td class="strat-detail-attribute-name"></td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${project.durationSum}" />
+					<c:out value="${project.completedDurationSum eq 1 ? ' day' : ' days'}" />
+					<c:out value=" in total" />
+				</td>
+			</tr>
 			<tr>
 				<td class="strat-detail-attribute-name">Expected Completion Date</td>
 				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${project.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
 			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name">Estimated Completion Date</td>
-				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${project.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
-			</tr>
+			<c:if test="${project.expectedCompletionDate ne project.estimatedCompletionDate}">
+				<tr>
+					<td class="strat-detail-attribute-name">Estimated Completion Date</td>
+					<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${project.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+				</tr>
+			</c:if>
 			<c:if test="${project.isDeadlineProvided()}">
 				<tr>
 					<td class="strat-detail-attribute-name">Deviation from Deadline</td>
@@ -131,7 +134,6 @@
 					</td>
 				</tr>
 			</c:if>
-			-->
 		</c:if>
 		<tr class="text-center">
 			<td colspan="2">

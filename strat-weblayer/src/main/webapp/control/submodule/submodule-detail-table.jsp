@@ -87,10 +87,12 @@
 				<td class="strat-detail-attribute-name">Expected Completion Date</td>
 				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
 			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name">Estimated Completion Date</td>
-				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
-			</tr>
+			<c:if test="${submodule.expectedCompletionDate ne submodule.estimatedCompletionDate}">
+				<tr>
+					<td class="strat-detail-attribute-name">Estimated Completion Date</td>
+					<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+				</tr>
+			</c:if>
 			<c:if test="${submodule.isDeadlineProvided()}">
 				<tr>
 					<td class="strat-detail-attribute-name">Deviation from Deadline</td>
