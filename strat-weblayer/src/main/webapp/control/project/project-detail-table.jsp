@@ -4,7 +4,11 @@
 
 <table class="strat-detail-table">
 	<tbody>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Primary Information</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
+		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Parent Objective</td>
 			<td class="strat-detail-attribute-value">
@@ -62,6 +66,77 @@
 		<tr>
 			<td class="strat-detail-attribute-name">Completion</td>
 			<td class="strat-detail-attribute-value">${project.completion} %</td>
+		</tr>
+		<c:if test="${project.durationSum ne 0}">
+			<tr class="text-center">
+				<td colspan="2">
+					<hr class="detail-table-top-header"/><strong><span>Progression Evaluation</span></strong><hr class="detail-table-bottom-header"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Progression</td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${(project.completedDurationSum / project.durationSum) * 100}" />
+					<c:out value=" %" />
+				</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Total duration</td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${project.durationSum}" />
+					<c:out value="${project.durationSum eq 1 ? ' day' : ' days'}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Finished work</td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${project.completedDurationSum}" />
+					<c:out value="${project.completedDurationSum eq 1 ? ' day' : ' days'}" />
+				</td>
+			</tr>
+			<!-- 
+			<tr>
+				<td class="strat-detail-attribute-name">Expected Completion Date</td>
+				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${project.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Estimated Completion Date</td>
+				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${project.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+			</tr>
+			<c:if test="${project.isDeadlineProvided()}">
+				<tr>
+					<td class="strat-detail-attribute-name">Deviation from Deadline</td>
+					<td class="strat-detail-attribute-value">
+						<c:choose>
+							<c:when test="${project.targetDeviation eq 0}"><span class="success-text">Right on schedule</span></c:when>
+							<c:when test="${project.targetDeviation gt 0}">
+								<span class="success-text">
+									${project.targetDeviation lt 0 ? -project.targetDeviation : project.targetDeviation}
+									<c:out value="${project.targetDeviation eq 1 ? ' day' : ' days'} ahead of schedule" />
+								</span>
+							</c:when>
+							<c:otherwise>
+								<span class="danger-text">
+									${project.targetDeviation lt 0 ? -project.targetDeviation : project.targetDeviation}
+									<c:out value="${project.targetDeviation eq 1 ? ' day' : ' days'} behind schedule" />
+								</span>
+							</c:otherwise>
+						</c:choose>
+					</td>
+				</tr>
+				<tr>
+					<td class="strat-detail-attribute-name">Early finish probability</td>
+					<td class="strat-detail-attribute-value">
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "2" value = "${project.earlyFinishEstimation * 100}" /> %
+					</td>
+				</tr>
+			</c:if>
+			-->
+		</c:if>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Technical properties</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
 		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>

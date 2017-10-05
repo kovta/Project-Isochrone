@@ -4,7 +4,11 @@
 
 <table class="strat-detail-table">
 	<tbody>
-    	<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+    	<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Primary Information</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
+		</tr>
 		<tr>
 			<c:choose>
 				<c:when test="${not empty task.objective}">
@@ -20,10 +24,10 @@
 					</td>
 				</c:when>
 				<c:otherwise>
-				<td class="strat-detail-attribute-name">Parent Submodule</td>
-		    	<td class="strat-detail-attribute-value">
-		    		<a href="Submodule?id=<c:out value="${task.submodule.id}" />">${task.submodule.name}</a>
-				</td>
+					<td class="strat-detail-attribute-name">Parent Submodule</td>
+			    	<td class="strat-detail-attribute-value">
+			    		<a href="Submodule?id=<c:out value="${task.submodule.id}" />">${task.submodule.name}</a>
+					</td>
 				</c:otherwise>
 			</c:choose>
 		</tr>
@@ -102,6 +106,11 @@
 					<c:when test="${requestScope.task.admittance}">Open</c:when>
 					<c:otherwise>Closed</c:otherwise>
 				</c:choose>
+			</td>
+		</tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Technical properties</span></strong><hr class="detail-table-bottom-header"/>
 			</td>
 		</tr>
 		<tr>

@@ -4,7 +4,11 @@
 
 <table class="strat-detail-table">
 	<tbody>
-		<tr><td colspan="2"><hr class="extra-margins"></td></tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Primary Information</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
+		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Status</td>
 			<td class="strat-detail-attribute-value">${objective.status.label}</td>
@@ -60,6 +64,11 @@
 		<tr>
 			<td class="strat-detail-attribute-name">Completion</td>
 			<td class="strat-detail-attribute-value">${objective.completion} %</td>
+		</tr>
+		<tr class="text-center">
+			<td colspan="2">
+				<hr class="detail-table-top-header"/><strong><span>Technical properties</span></strong><hr class="detail-table-bottom-header"/>
+			</td>
 		</tr>
 		<tr>
 			<td class="strat-detail-attribute-name">Created by</td>

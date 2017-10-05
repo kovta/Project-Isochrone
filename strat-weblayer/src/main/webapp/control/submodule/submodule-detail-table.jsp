@@ -68,17 +68,19 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="strat-detail-attribute-name">Total duration</td>
-				<td class="strat-detail-attribute-value">
-					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" />
-					<c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" />
-				</td>
-			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name">Finished work</td>
+				<td class="strat-detail-attribute-name"></td>
 				<td class="strat-detail-attribute-value">
 					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.completedDurationSum}" />
 					<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
+					<c:out value=" finished" />
+				</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name"></td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" />
+					<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
+					<c:out value=" in total" />
 				</td>
 			</tr>
 			<tr>
