@@ -43,9 +43,27 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 		return this.inculdeMonitoringFields(this.toElementary(submodule), submodule);
 	}
 
+
+
+	@Override
+	public SubmoduleRepresentor toDependencyExtended(Submodule submodule) {
+		final SubmoduleRepresentor representor = this.toElementary(submodule);
+		if (submodule.getDependantSubmodules() != null) {
+			for (final Submodule dependant : submodule.getDependantSubmodules()) {
+				representor.addDependant(this.toElementary(dependant));
+			}
+		}
+		if (submodule.getSubmoduleDependencies() != null) {
+			for (final Submodule dependency : submodule.getSubmoduleDependencies()) {
+				representor.addDependency(this.toElementary(dependency));
+			}
+		}
+		return representor;
+	}
+
 	@Override
 	public SubmoduleRepresentor toSimplified(Submodule submodule) {
-		final SubmoduleRepresentor representor = this.toElementary(submodule);
+		final SubmoduleRepresentor representor = this.toDependencyExtended(submodule);
 		if (submodule.getTasks() != null) {
 			for (final Task task : submodule.getTasks()) {
 				representor.addTask(this.taskConverter.toElementary(task));
@@ -75,6 +93,15 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 		final Set<SubmoduleRepresentor> representors = new HashSet<SubmoduleRepresentor>();
 		for (final Submodule submodule : submodules) {
 			representors.add(this.toElementary(submodule));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<SubmoduleRepresentor> toDispatchable(Set<Submodule> submodules) {
+		final Set<SubmoduleRepresentor> representors = new HashSet<SubmoduleRepresentor>();
+		for (final Submodule submodule : submodules) {
+			representors.add(this.toDispatchable(submodule));
 		}
 		return representors;
 	}

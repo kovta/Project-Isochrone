@@ -20,6 +20,8 @@ public interface TaskConverter {
 
 	Set<TaskRepresentor> toElementary(Set<Task> tasks);
 
+	Set<TaskRepresentor> toDispatchable(Set<Task> tasks);
+
 	Set<TaskRepresentor> toSimplified(Set<Task> tasks);
 
 	Set<TaskRepresentor> toComplete(Set<Task> tasks);

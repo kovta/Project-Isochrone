@@ -106,6 +106,15 @@ public class TaskConverterImpl extends AbstractMonitoredEntityConverter implemen
 	}
 
 	@Override
+	public Set<TaskRepresentor> toDispatchable(Set<Task> tasks) {
+		final Set<TaskRepresentor> representors = new HashSet<>();
+		for (final Task task : tasks) {
+			representors.add(this.toDispatchable(task));
+		}
+		return representors;
+	}
+
+	@Override
 	public Set<TaskRepresentor> toSimplified(Set<Task> tasks) {
 		final Set<TaskRepresentor> representors = new HashSet<>();
 		for (final Task task : tasks) {

@@ -12,13 +12,17 @@ public interface SubmoduleConverter {
 
 	SubmoduleRepresentor toElementary(Submodule submodule);
 
-	SubmoduleRepresentor toSimplified(Submodule submodule);
-
 	SubmoduleRepresentor toDispatchable(Submodule submodule);
+
+	SubmoduleRepresentor toDependencyExtended(Submodule submodule);
+
+	SubmoduleRepresentor toSimplified(Submodule submodule);
 
 	SubmoduleRepresentor toComplete(Submodule submodule);
 
 	Set<SubmoduleRepresentor> toElementary(Set<Submodule> submodules);
+
+	Set<SubmoduleRepresentor> toDispatchable(Set<Submodule> submodules);
 
 	Set<SubmoduleRepresentor> toSimplified(Set<Submodule> submodules);
 

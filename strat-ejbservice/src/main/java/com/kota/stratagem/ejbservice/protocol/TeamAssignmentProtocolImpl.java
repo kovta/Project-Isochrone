@@ -1,6 +1,5 @@
 package com.kota.stratagem.ejbservice.protocol;
 
-import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,7 +24,6 @@ import com.kota.stratagem.persistence.qualifier.TaskFocused;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.delegation.group.TeamAssingmentService;
 
-@PermitAll
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.TEAM_ASSIGNMENT_PROTOCOL_SIGNATURE)
 public class TeamAssignmentProtocolImpl implements TeamAssignmentProtocol {

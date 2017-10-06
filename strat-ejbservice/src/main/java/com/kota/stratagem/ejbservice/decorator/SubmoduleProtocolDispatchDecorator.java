@@ -55,4 +55,29 @@ public abstract class SubmoduleProtocolDispatchDecorator implements SubmodulePro
 		this.overseer.deleted(message);
 	}
 
+	@Override
+	public void saveSubmoduleDependencies(Long source, Long[] dependencies) throws AdaptorException {
+		this.protocol.saveSubmoduleDependencies(source, dependencies);
+		for (final Long dependency : dependencies) {
+			this.overseer.configured(this.converter.toDispatchable(this.submoduleService.readWithMonitoring(source)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.converter.toDispatchable(this.submoduleService.readWithMonitoring(dependency)).toTextMessage());
+		}
+	}
+
+	@Override
+	public void saveSubmoduleDependants(Long source, Long[] dependants) throws AdaptorException {
+		this.protocol.saveSubmoduleDependants(source, dependants);
+		for (final Long dependency : dependants) {
+			this.overseer.configured(this.converter.toDispatchable(this.submoduleService.readWithMonitoring(source)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+					+ this.converter.toDispatchable(this.submoduleService.readWithMonitoring(dependency)).toTextMessage());
+		}
+	}
+
+	@Override
+	public void removeSubmoduleDependency(Long dependency, Long dependant) throws AdaptorException {
+		this.protocol.removeSubmoduleDependency(dependency, dependant);
+		this.overseer.deconfigured(this.converter.toDispatchable(this.submoduleService.readWithMonitoring(dependant)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
+				+ this.converter.toDispatchable(this.submoduleService.readWithMonitoring(dependency)).toTextMessage());
+	}
+
 }

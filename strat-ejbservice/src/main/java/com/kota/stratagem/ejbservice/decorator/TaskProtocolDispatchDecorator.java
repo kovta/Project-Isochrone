@@ -81,7 +81,6 @@ public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
 		this.protocol.removeTaskDependency(dependency, dependant);
 		this.overseer.deconfigured(this.converter.toDispatchable(this.taskService.readWithMonitoring(dependant)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
 				+ this.converter.toDispatchable(this.taskService.readWithMonitoring(dependency)).toTextMessage());
-
 	}
 
 }

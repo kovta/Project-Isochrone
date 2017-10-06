@@ -2,7 +2,9 @@ package com.kota.stratagem.ejbservice.preparation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -12,6 +14,7 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskCompletionComparat
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
+import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
 import com.kota.stratagem.ejbservice.domain.CPMResult;
@@ -24,13 +27,20 @@ import com.kota.stratagem.ejbservice.qualifier.Estimated;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
 
 @SubmoduleOriented
 public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@EJB
+	private SubmoduleService submoduleService;
+
+	@EJB
 	private TaskService taskService;
+
+	@Inject
+	private SubmoduleConverter submoduleConverter;
 
 	@Inject
 	private TaskConverter taskConverter;
@@ -72,6 +82,9 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 		this.provideProgressionDetials();
 		this.provideEvaluationDetails();
 		this.provideCategorizedTasks();
+		this.provideDependencyChain();
+		this.provideDependantCount();
+		this.provideDependencyCount();
 	}
 
 	@Override
@@ -171,6 +184,88 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 		this.representor.setOverdueTasks(overdueTasks);
 		this.representor.setOngoingTasks(ongoingTasks);
 		this.representor.setCompletedTasks(completedTasks);
+	}
+
+	public void provideDependencyChain() {
+		final List<Long> identifiers = new ArrayList<>();
+		if (!this.representor.getDependantSubmodules().isEmpty()) {
+			final List<List<SubmoduleRepresentor>> dependantChain = new ArrayList<>();
+			final Queue<SubmoduleRepresentor> queue = new LinkedList<SubmoduleRepresentor>();
+			queue.add(this.representor);
+			SubmoduleRepresentor current;
+			while ((current = queue.poll()) != null) {
+				this.traverseDependants(current, queue, dependantChain, identifiers);
+			}
+			this.representor.setDependantChain(dependantChain);
+		}
+		if (!this.representor.getSubmoduleDependencies().isEmpty()) {
+			final List<List<SubmoduleRepresentor>> dependencyChain = new ArrayList<>();
+			final Queue<SubmoduleRepresentor> queue = new LinkedList<SubmoduleRepresentor>();
+			queue.add(this.representor);
+			SubmoduleRepresentor current;
+			while ((current = queue.poll()) != null) {
+				this.traverseDependencies(current, queue, dependencyChain, identifiers);
+			}
+			this.representor.setDependencyChain(dependencyChain);
+		}
+	}
+
+	private void traverseDependants(SubmoduleRepresentor node, Queue<SubmoduleRepresentor> queue, List<List<SubmoduleRepresentor>> dependantChain, List<Long> identifiers) {
+		if (!node.getDependantSubmodules().isEmpty()) {
+			final List<SubmoduleRepresentor> nodes = new ArrayList<SubmoduleRepresentor>(node.getDependantSubmodules());
+			for (final SubmoduleRepresentor dependant : node.getDependantSubmodules()) {
+				if (identifiers.contains(dependant.getId())) {
+					nodes.remove(dependant);
+				} else {
+					identifiers.add(dependant.getId());
+				}
+			}
+			if (!nodes.isEmpty()) {
+				dependantChain.add(nodes);
+			}
+			for (int i = 0; i < node.getDependantSubmodules().size(); i++) {
+				final SubmoduleRepresentor dependantNode = this.submoduleConverter
+						.toDependencyExtended(this.submoduleService.readWithDirectDependencies(node.getDependantSubmodules().get(i).getId()));
+				queue.add(dependantNode);
+			}
+		}
+	}
+
+	private void traverseDependencies(SubmoduleRepresentor node, Queue<SubmoduleRepresentor> queue, List<List<SubmoduleRepresentor>> dependencyChain, List<Long> identifiers) {
+		if (!node.getSubmoduleDependencies().isEmpty()) {
+			final List<SubmoduleRepresentor> nodes = new ArrayList<SubmoduleRepresentor>(node.getSubmoduleDependencies());
+			for (final SubmoduleRepresentor dependency : node.getSubmoduleDependencies()) {
+				if (identifiers.contains(dependency.getId())) {
+					nodes.remove(dependency);
+				} else {
+					identifiers.add(dependency.getId());
+				}
+			}
+			if (!nodes.isEmpty()) {
+				dependencyChain.add(nodes);
+			}
+			for (int i = 0; i < node.getSubmoduleDependencies().size(); i++) {
+				final SubmoduleRepresentor dependencyNode = this.submoduleConverter
+						.toDependencyExtended(this.submoduleService.readWithDirectDependencies(node.getSubmoduleDependencies().get(i).getId()));
+				queue.add(dependencyNode);
+			}
+		}
+	}
+
+	public void provideDependantCount() {
+		int total = 0;
+		for (final List<SubmoduleRepresentor> dependantLevel : this.representor.getDependantChain()) {
+			total += dependantLevel.size();
+		}
+		this.representor.setDependantCount(total);
+	}
+
+	public void provideDependencyCount() {
+		int total = 0;
+		for (final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
+			total += dependencyLevel.size();
+		}
+		this.representor.setDependencyCount(total);
 	}
 
 }

@@ -13,10 +13,18 @@ public interface SubmoduleProtocol {
 
 	SubmoduleRepresentor getSubmodule(Long id) throws AdaptorException;
 
+	List<SubmoduleRepresentor> getCompliantDependencyConfigurations(SubmoduleRepresentor submodule) throws AdaptorException;
+
 	List<SubmoduleRepresentor> getAllSubmodules() throws AdaptorException;
 
 	SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException;
 
 	void removeSubmodule(Long id) throws AdaptorException;
+
+	void saveSubmoduleDependencies(Long source, Long[] dependencies) throws AdaptorException;
+
+	void saveSubmoduleDependants(Long source, Long[] dependants) throws AdaptorException;
+
+	void removeSubmoduleDependency(Long dependency, Long dependant) throws AdaptorException;
 
 }
