@@ -20,6 +20,12 @@ public interface SubmoduleService {
 
 	Submodule readWithAssignments(Long id);
 
+	Submodule readWithDependencies(Long id);
+
+	Submodule readWithDependants(Long id);
+
+	Submodule readWithDirectDependencies(Long id);
+
 	Submodule readWithTasks(Long id);
 
 	Submodule readComplete(Long id);
@@ -31,5 +37,9 @@ public interface SubmoduleService {
 	void delete(Long id) throws CoherentPersistenceServiceException;
 
 	boolean exists(Long id);
+
+	void createDependency(Long dependency, Long dependant, Long operator);
+
+	void deleteDependency(Long dependency, Long dependant, Long operator);
 
 }

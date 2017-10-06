@@ -18,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -44,7 +45,13 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.creator WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
-		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at LEFT JOIN FETCH sm.creator LEFT JOIN FETCH sm.modifier WHERE sm.id=:"
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at LEFT JOIN FETCH sm.creator LEFT JOIN FETCH sm.modifier WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_ALL_SUBMODULES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t ORDER BY sm.name"),
 		@NamedQuery(name = SubmoduleQuery.REMOVE_BY_ID, query = "DELETE FROM Submodule sm WHERE sm.id=:" + SubmoduleParameter.ID)
@@ -89,6 +96,14 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AppUserSubmoduleAssignment.class, mappedBy = "submodule")
 	private Set<AppUserSubmoduleAssignment> assignedUsers;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Submodule.class)
+	@JoinTable(name = "submodule_dependencies", joinColumns = @JoinColumn(name = "dependency_satiator", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false))
+	private Set<Submodule> dependantSubmodules;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Submodule.class)
+	@JoinTable(name = "submodule_dependencies", joinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_satiator", nullable = false))
+	private Set<Submodule> submoduleDependencies;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_project", nullable = false))
@@ -176,6 +191,22 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 
 	public void setAssignedUsers(Set<AppUserSubmoduleAssignment> assignedUsers) {
 		this.assignedUsers = assignedUsers;
+	}
+
+	public Set<Submodule> getDependantSubmodules() {
+		return this.dependantSubmodules;
+	}
+
+	public void setDependantSubmodules(Set<Submodule> dependantSubmodules) {
+		this.dependantSubmodules = dependantSubmodules;
+	}
+
+	public Set<Submodule> getSubmoduleDependencies() {
+		return this.submoduleDependencies;
+	}
+
+	public void setSubmoduleDependencies(Set<Submodule> submoduleDependencies) {
+		this.submoduleDependencies = submoduleDependencies;
 	}
 
 	public Project getProject() {

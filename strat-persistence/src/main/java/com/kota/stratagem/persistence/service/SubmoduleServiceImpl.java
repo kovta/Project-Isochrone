@@ -74,6 +74,22 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	}
 
 	@Override
+	public Submodule readWithDependencies(Long id) {
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Submodule readWithDependants(Long id) {
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
+	}
+
+	@Override
+	public Submodule readWithDirectDependencies(Long id) {
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id)
+				.getSingleResult();
+	}
+
+	@Override
 	public Submodule readWithTasks(Long id) {
 		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
 				.getSingleResult();
@@ -123,6 +139,43 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean exists(Long id) {
 		return this.entityManager.createNamedQuery(SubmoduleQuery.COUNT_BY_ID, Long.class).setParameter(SubmoduleParameter.ID, id).getSingleResult() > 0;
+	}
+
+	@Override
+	public void createDependency(Long dependency, Long dependant, Long operator) {
+		final Submodule maintainer = this.readWithDependencies(dependant);
+		final Submodule satiator = this.readWithDependencies(dependency);
+		final Set<Submodule> dependencies = this.manageOperators(satiator, maintainer, operator);
+		dependencies.add(this.readElementary(dependency));
+		maintainer.setSubmoduleDependencies(dependencies);
+		this.entityManager.merge(maintainer);
+	}
+
+	@Override
+	public void deleteDependency(Long dependency, Long dependant, Long operator) {
+		final Submodule maintainer = this.readWithDependencies(dependant);
+		final Submodule satiator = this.readWithDependencies(dependency);
+		final Set<Submodule> dependencies = this.manageOperators(satiator, maintainer, operator);
+		dependencies.remove(this.readElementary(dependency));
+		maintainer.setSubmoduleDependencies(dependencies);
+		this.entityManager.merge(maintainer);
+	}
+
+	private Set<Submodule> manageOperators(Submodule satiator, Submodule maintainer, Long operator) {
+		if (maintainer.getCreator().getId() == operator) {
+			maintainer.setModifier(maintainer.getCreator());
+		} else if (maintainer.getModifier().getId() != operator) {
+			maintainer.setModifier(this.appUserService.readElementary(operator));
+		}
+		maintainer.setModificationDate(new Date());
+		if (satiator.getCreator().getId() == operator) {
+			satiator.setModifier(satiator.getCreator());
+		} else if (satiator.getModifier().getId() != operator) {
+			satiator.setModifier(this.appUserService.readElementary(operator));
+		}
+		this.entityManager.merge(satiator);
+		satiator.setModificationDate(new Date());
+		return maintainer.getSubmoduleDependencies();
 	}
 
 }
