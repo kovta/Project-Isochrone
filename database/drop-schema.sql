@@ -28,6 +28,7 @@ DROP TABLE objective_tasks;
 DROP TABLE task_alterations;
 DROP TABLE tasks;
 
+DROP TABLE submodule_dependencies;
 DROP TABLE project_submodules;
 DROP TABLE submodules;
 

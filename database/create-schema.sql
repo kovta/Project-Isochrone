@@ -252,6 +252,16 @@ CREATE TABLE project_submodules (
 	CONSTRAINT FK_PROJECT_SUBMODULE_SUBMODULE FOREIGN KEY (project_submodule_submodule)
 	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+CREATE TABLE submodule_dependencies (
+	dependency_id SERIAL NOT NULL,
+	dependency_satiator INTEGER NOT NULL,
+	dependency_maintainer INTEGER NOT NULL,
+	CONSTRAINT PK_SUBMODULE_DEPENDENCY_ID PRIMARY KEY (dependency_id),
+	CONSTRAINT FK_SUBMODULE_DEPENDENCY_SATIATOR FOREIGN KEY (dependency_satiator)
+	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_SUBMODULE_DEPENDENCY_MAINTAINER FOREIGN KEY (dependency_maintainer)
+	  REFERENCES submodules (submodule_id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+);
 
 -- ###########################################################################################
 
@@ -596,6 +606,7 @@ ALTER TABLE project_status_alterations OWNER TO postgres;
 ALTER TABLE objective_projects OWNER TO postgres;
 ALTER TABLE submodules OWNER TO postgres;
 ALTER TABLE project_submodules OWNER TO postgres;
+ALTER TABLE submodule_dependencies OWNER TO postgres;
 ALTER TABLE tasks OWNER TO postgres;
 ALTER TABLE task_alterations OWNER TO postgres;
 ALTER TABLE objective_tasks OWNER TO postgres;

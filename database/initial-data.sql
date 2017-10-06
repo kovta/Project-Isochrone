@@ -193,7 +193,7 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (3, 'Estimation, and analysis for Task dependency chain', 'Critical time, slack, and overall statistic calculus for Submodule level Task dependency configurations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (4, 'Task dependency chain implementation', 'Dependency configurations must be added for proper critical point method calculations', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Deadline based alerting system', 'Upcoming deadlines must trigger warinings in the system, or possibly correctional advice', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(6, 'Test Submodule', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(6, 'Test Submodule 1', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'User profile view implementation', 'Seperate view must be added to view user level responsibiliies', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (8, 'Team management implementation', 'Control must be made for team creation, modification, member and leader selection', '2017/12/01 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Stratagem service implementation wrap-up', 'Remaining functionality must be implemented', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -202,7 +202,11 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (12, 'Native Android platform implementation', 'Creation of Android specific client app', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (13, 'Native iOS platform implementation', 'Creation of iOS specific client app', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (14, 'Client testing', 'Developing testing scenarios for the mobile client', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(15, 'Service testing', 'Developing testing scenarios for the back-end service', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(15, 'Service testing', 'Developing testing scenarios for the back-end service', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'), 	
+(16, 'Test Submodule 2', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(17, 'Test Submodule 3', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(18, 'Test Submodule 4', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(19, 'Test Submodule 5', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -221,7 +225,17 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (9, 12),
 (9, 13),
 (9, 14),
-(7, 15);
+(7, 15),
+(8, 16),
+(8, 17),
+(8, 18),
+(8, 19);
+
+INSERT INTO submodule_dependencies (dependency_satiator, dependency_maintainer) VALUES
+(6, 16),
+(6, 17),
+(16, 18),
+(16, 19);
 
 -- ###########################################################################################
 
@@ -395,7 +409,6 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (9, 62),
 (9, 63),
 (9, 64);
-
 
 INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (23, 47),
