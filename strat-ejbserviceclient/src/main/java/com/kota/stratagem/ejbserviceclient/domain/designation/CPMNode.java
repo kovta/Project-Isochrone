@@ -8,8 +8,8 @@ public interface CPMNode {
 
 	List<CPMNode> getDependants();
 
-	void addDependency(CPMNode node);
+	void addDependency(CPMNode dependency);
 
-	void addDependant(CPMNode node);
+	void addDependant(CPMNode dependant);
 
 }
