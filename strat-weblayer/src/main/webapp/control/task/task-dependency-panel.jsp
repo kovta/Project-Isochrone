@@ -33,7 +33,7 @@
 		                            <c:set var="task" value="${dependant}" scope="request" />
 		                            <jsp:include page="task-card-content.jsp"></jsp:include>
 		                            <c:set var="task" value="${target}" scope="request" />
-		                            <c:if test="${supervisor and level eq 1}">
+		                            <c:if test="${requestScope.supervisor and level eq 1}">
 		                            	<hr/>
 										<div class="full-width text-center">
 											<a href="TaskDependencyDelete?dependency=<c:out value="${task.id}" />
@@ -73,7 +73,7 @@
 		                            <c:set var="task" value="${dependency}" scope="request" />
 		                            <jsp:include page="task-card-content.jsp"></jsp:include>
 		                            <c:set var="task" value="${target}" scope="request" />
-		                            <c:if test="${supervisor and levelIndicator eq 1}">
+		                            <c:if test="${requestScope.supervisor and levelIndicator eq 1}">
 		                            	<hr/>
 										<div class="full-width text-center">
 											<a href="TaskDependencyDelete?dependency=<c:out value="${dependency.id}" />

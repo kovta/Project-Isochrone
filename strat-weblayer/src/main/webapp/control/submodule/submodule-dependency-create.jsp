@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<!--Modal: Task Dependency Form-->
+<!--Modal: Submodule Dependency Form-->
 <div class="modal fade" id="addDependencies" tabindex="-1" role="dialog" aria-labelledby="dependencyLabel" aria-hidden="true">
     <div class="modal-dialog cascading-modal" role="document">
         <!--Content-->
@@ -13,18 +13,18 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs tabs-2 mdb-color darken-1" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#panel5" role="tab"><i class="fa fa-long-arrow-down mr-1"></i> Add Dependencies</a>
+                        <a class="nav-link active" data-toggle="tab" href="#panel3" role="tab"><i class="fa fa-long-arrow-down mr-1"></i> Add Dependencies</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#panel6" role="tab"><i class="fa fa-long-arrow-up mr-1"></i> Add Dependants</a>
+                        <a class="nav-link" data-toggle="tab" href="#panel4" role="tab"><i class="fa fa-long-arrow-up mr-1"></i> Add Dependants</a>
                     </li>
                 </ul>
 
                 <!-- Tab panels -->
                 <div class="tab-content">
                     <!--Panel 1-->
-                    <div class="tab-pane fade in show active" id="panel5" role="tabpanel">
-                       <form action="TaskDependency" method="post">
+                    <div class="tab-pane fade in show active" id="panel3" role="tabpanel">
+                       <form action="SubmoduleDependency" method="post">
 				            <div class="modal-body mb-1">
 			       				<c:choose>
 									<c:when test="${requestScope.configurableDependencies.size() == 0}">
@@ -34,25 +34,23 @@
 					               		</div>
 					      			</c:when>
 									<c:otherwise>
-						            	<input type="hidden" name="taskId" value="${task.id}" />
+						            	<input type="hidden" name="submoduleId" value="${submodule.id}" />
 					          			<div class="md-form form-sm">
-					              			<label class="full-width text-center">Select which Tasks to add as direct dependencies</label>
+					              			<label class="full-width text-center">Select which Submodules to add as direct dependencies</label>
 					              			<br/>
 					               		</div>
 						           		<div class="form-sm" id="objform35">
 											<table>
 												<colgroup>
 													<col span="1" style="width: 15%;">
-													<col span="1" style="width: 40%;">
-													<col span="1" style="width: 10%;">
-													<col span="1" style="width: 25%;">
+													<col span="1" style="width: 45%;">
+													<col span="1" style="width: 30%;">
 													<col span="1" style="width: 10%;">
 											    </colgroup>
 											    <thead>
 											        <tr class="dependency-table-header">
 												        <th></th>
 												        <th>Name</th>
-												        <th class="text-center">Priority</th>
 												        <th class="text-center">Deadline</th>
 												        <th class="text-center">Creator</th>
 											        </tr>
@@ -69,7 +67,6 @@
 											                    </div>
 										                    </td>
 										                    <td>${dependency.name}</td>
-										                    <td class="text-center">${dependency.priority}</td>
 										                    <td class="text-center"><fmt:formatDate type="date" value="${dependency.deadline}" pattern="yyyy-MM-dd" /></td>
 										                    <td class="text-center">${dependency.creator.name}</td>
 										                </tr>
@@ -104,8 +101,8 @@
                     <!--/.Panel 1-->
 
                     <!--Panel 2-->
-                    <div class="tab-pane fade" id="panel6" role="tabpanel">
-                        <form action="TaskDependant" method="post">
+                    <div class="tab-pane fade" id="panel4" role="tabpanel">
+                        <form action="SubmoduleDependant" method="post">
 				            <div class="modal-body">
 			       				<c:choose>
 									<c:when test="${requestScope.configurableDependencies.size() == 0}">
@@ -115,25 +112,23 @@
 					               		</div>
 					      			</c:when>
 									<c:otherwise>
-						            	<input type="hidden" name="taskId" value="${task.id}" />
+						            	<input type="hidden" name="submoduleId" value="${submodule.id}" />
 					          			<div class="md-form form-sm">
-					              			<label class="full-width text-center">Select which Tasks to add as direct dependants</label>
+					              			<label class="full-width text-center">Select which Submodules to add as direct dependants</label>
 					              			<br/>
 					               		</div>
 						           		<div class="form-sm" id="objform35">
 											<table>
 												<colgroup>
 													<col span="1" style="width: 15%;">
-													<col span="1" style="width: 40%;">
-													<col span="1" style="width: 10%;">
-													<col span="1" style="width: 25%;">
+													<col span="1" style="width: 45%;">
+													<col span="1" style="width: 30%;">
 													<col span="1" style="width: 10%;">
 											    </colgroup>
 											    <thead>
 											        <tr class="dependency-table-header">
 												        <th></th>
 												        <th>Name</th>
-												        <th class="text-center">Priority</th>
 												        <th class="text-center">Deadline</th>
 												        <th class="text-center">Creator</th>
 											        </tr>
@@ -150,7 +145,6 @@
 											                    </div>
 										                    </td>
 										                    <td>${dependant.name}</td>
-										                    <td class="text-center">${dependant.priority}</td>
 										                    <td class="text-center"><fmt:formatDate type="date" value="${dependant.deadline}" pattern="yyyy-MM-dd" /></td>
 										                    <td class="text-center">${dependant.creator.name}</td>
 										                </tr>
@@ -190,4 +184,4 @@
         <!--/.Content-->
     </div>
 </div>
-<!--Modal: Task Dependency Form-->
+<!--Modal: Submodule Dependency Form-->

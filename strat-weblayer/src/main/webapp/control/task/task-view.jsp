@@ -31,11 +31,11 @@
                                 </div>
 	                        </div>
 	                    </div>
-						<c:set var="supervisor" value="false"/>
+						<c:set var="supervisor" value="false" scope="request"/>
 						<c:if test="${operator eq task.creator.name or operator eq task.objective.creator.name 
 							or operator eq task.project.creator.name or operator eq task.submodule.creator.name 
 							or operator eq task.submodule.project.creator.name or operator eq task.submodule.project.objective.creator.name}">
-							<c:set var="supervisor" value="true"/>
+							<c:set var="supervisor" value="true" scope="request"/>
 						</c:if>
 						<c:set var="assigned" value="false" />
 						<c:forEach items="${requestScope.task.assignedUsers}" var="assignment">
@@ -125,7 +125,7 @@
 	                         <!-- Tab panels -->
 	                         <div class="tab-content">
 								 <!--Panel 1-->
-								 <jsp:include page="task-dependency-pane.jsp"></jsp:include>
+								 <jsp:include page="task-dependency-panel.jsp"></jsp:include>
 								 <!--Panel 2-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>

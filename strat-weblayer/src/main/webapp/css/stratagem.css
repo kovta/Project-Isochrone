@@ -100,6 +100,9 @@ footer.page-footer {
 .margin-left {
 	margin-left: 45%;
 }
+tight-paragraph {
+	margin-bottom: 2px !important;
+}
 .full-width {
 	width: 100%;
 }

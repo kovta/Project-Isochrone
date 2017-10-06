@@ -11,7 +11,7 @@
 	<div class="card-block">
 		<jsp:include page="task-card-content.jsp"></jsp:include>
 	</div>
-<!--/.Card content-->
+	<!--/.Card content-->
 </div>
 <br/>
 <!--/.Card-->

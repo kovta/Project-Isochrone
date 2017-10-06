@@ -100,6 +100,11 @@
 	                                    </a>
 	                                 </li>
 	                                 <li class="nav-item tab-listener">
+	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#dependencyPanel" role="tab" aria-expanded="false">
+		                                    <span>Submodule Dependency chain (<c:out value="${submodule.dependantCount}" />|<c:out value="${submodule.dependencyCount}" />)</span>
+	                                    </a>
+	                                 </li>
+	                                 <li class="nav-item tab-listener">
 	                                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#userPanel" role="tab" aria-expanded="false">
 		                                    <span>Assigned Users (<c:out value="${submodule.assignedUsers.size()}" />)</span>
 	                                    </a>
@@ -116,6 +121,8 @@
 	                         <div class="tab-content">
 	                             <!--Panel 1-->
 	                             <jsp:include page="submodule-task-panel.jsp"></jsp:include>
+	                             <!--Panel 2-->
+	                             <jsp:include page="submodule-dependency-panel.jsp"></jsp:include>
 								 <!--Panel 3-->
 	                             <div class="tab-pane fade" id="userPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -154,7 +161,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 3-->
 	                             <!--Panel 4-->
 	                             <div class="tab-pane fade" id="teamPanel" role="tabpanel" aria-expanded="false">
 								     <c:choose>
@@ -192,7 +198,6 @@
 										</c:otherwise>
 									</c:choose>
 	                             </div>
-	                             <!--/.Panel 4-->
 	                         </div>
 	                         <!-- /.Tabs -->
 	                    </div>
