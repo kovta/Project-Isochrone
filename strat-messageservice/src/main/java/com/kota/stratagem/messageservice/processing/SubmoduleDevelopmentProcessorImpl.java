@@ -16,7 +16,7 @@ import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.util.Constants;
 
 @SubmoduleOriented
-public class SubmoduleDevelopmentProcessorImpl extends AbstractDevelopmentProcessor implements DevelopmentProcessor {
+public class SubmoduleDevelopmentProcessorImpl extends AbstractDevelopmentProcessor implements DependencyExtendedDevelopmentProcessor {
 
 	@EJB
 	protected ProjectService projectService;
@@ -72,6 +72,36 @@ public class SubmoduleDevelopmentProcessorImpl extends AbstractDevelopmentProces
 		recipients.add(this.appUserService.readElementary(Long.parseLong(attributes.get(Constants.CREATOR_ID_DATA_LABEL))));
 		recipients.remove(this.appUserService.readElementary(operator));
 		this.handleDeletionProperties(attributes, Constants.SUBMODULE_DATA_LABEL, operator, recipients);
+	}
+
+	@Override
+	public void processConfiguration(String dependant, String dependency) throws PersistenceServiceException {
+		final Map<String, String> origin_attributes = this.processMessageContent(dependant, Constants.UPDATE_SELECTOR);
+		final Map<String, String> result_attributes = this.processMessageContent(dependency, Constants.UPDATE_SELECTOR);
+		final Set<AppUser> recipients = new HashSet<>();
+		for (final AppUserSubmoduleAssignment assignment : this.submoduleService.readWithAssignments(Long.parseLong(result_attributes.get(Constants.ID_DATA_LABEL)))
+				.getAssignedUsers()) {
+			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+		}
+		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_LABEL).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_LABEL))) {
+			recipients.add(this.appUserService.readElementary(Long.parseLong(origin_attributes.get(Constants.CREATOR_ID_DATA_LABEL))));
+		}
+		this.handleDependencyConfigurationProperties(origin_attributes, result_attributes, Constants.SUBMODULE_DATA_LABEL, recipients);
+	}
+
+	@Override
+	public void processDeconfiguration(String dependant, String dependency) throws PersistenceServiceException {
+		final Map<String, String> origin_attributes = this.processMessageContent(dependant, Constants.UPDATE_SELECTOR);
+		final Map<String, String> result_attributes = this.processMessageContent(dependency, Constants.UPDATE_SELECTOR);
+		final Set<AppUser> recipients = new HashSet<>();
+		for (final AppUserSubmoduleAssignment assignment : this.submoduleService.readWithAssignments(Long.parseLong(result_attributes.get(Constants.ID_DATA_LABEL)))
+				.getAssignedUsers()) {
+			recipients.add(this.appUserService.readElementary(assignment.getRecipient().getId()));
+		}
+		if (!origin_attributes.get(Constants.CREATOR_ID_DATA_LABEL).equals(result_attributes.get(Constants.MODIFIER_ID_DATA_LABEL))) {
+			recipients.add(this.appUserService.readElementary(Long.parseLong(origin_attributes.get(Constants.CREATOR_ID_DATA_LABEL))));
+		}
+		this.handleDependencyDeconfigurationProperties(origin_attributes, result_attributes, Constants.SUBMODULE_DATA_LABEL, recipients);
 	}
 
 }

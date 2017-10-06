@@ -12,6 +12,7 @@ import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 
+import com.kota.stratagem.messageservice.exception.InvalidStructureTypeException;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.util.Constants;
 
@@ -42,12 +43,14 @@ public class StructureDeconfigurationListener extends AbstractDevelopmentMessage
 					case Constants.TASK_REPRESENTOR_DATA_LABEL:
 						this.taskProcessor.processConfiguration(partitions[1], partitions[3]);
 						break;
-					default:
-						LOGGER.info("Invalid Structure type received in queue");
+					case Constants.SUBMODULE_REPRESENTOR_DATA_LABEL:
+						this.taskProcessor.processConfiguration(partitions[1], partitions[3]);
 						break;
+					default:
+						throw new InvalidStructureTypeException();
 				}
 			}
-		} catch (final JMSException | PersistenceServiceException | NumberFormatException e) {
+		} catch (final JMSException | PersistenceServiceException | NumberFormatException | InvalidStructureTypeException e) {
 			LOGGER.error(e, e);
 		}
 	}
