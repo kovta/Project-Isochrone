@@ -18,7 +18,7 @@
 	            <div class="modal-body">
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${objective.name}" required>
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${newObjective.name}" required>
 	                </div>
             	
             		<div class="row">
@@ -30,9 +30,9 @@
 		                  	</div>
 		               		<div class="md-form form-sm">
 		               			<c:choose>
-			      			      	<c:when test = "${objective != null}">
+			      			      	<c:when test = "${newObjective != null}">
 				         				<input type="number" id="objform32" class="form-control" name="priority" 
-					                    	min="0" max="100" value="${objective.priority}" required>
+					                    	min="0" max="100" value="10" required>
 					                </c:when>
 					                <c:otherwise>
 					                	<input type="number" id="objform32" class="form-control" name="priority" 
@@ -65,7 +65,7 @@
 		               			<br/>
 	                  		</div>
 		            		<div class="md-form form-sm" id="sandbox-container">
-								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${objective.deadline}"/>
+								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${newObjective.deadline}"/>
 			                </div>
 		                </div>
             			<div class="col-md-6">
@@ -89,7 +89,7 @@
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 
-	                    name="description" placeholder="Description" value="${objective.description}"></textarea>
+	                    name="description" placeholder="Description" value="${newObjective.description}"></textarea>
 	                </div>
 	            </div>
 	            <!--Footer-->

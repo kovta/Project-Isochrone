@@ -17,7 +17,7 @@
 	            	<input type="hidden" name="objectiveId" value="${objective.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${project.name}" required>
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${newProject.name}" required>
 	                </div>
             	
 					<div class="md-form form-sm">
@@ -41,7 +41,7 @@
 		               			<br/>
 	                  		</div>
 		            		<div class="md-form form-sm" id="sandbox-container">
-								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${project.deadline}"/>
+								<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${newProject.deadline}"/>
 			                </div>
 		                </div>
             			<div class="col-md-6">
@@ -65,7 +65,7 @@
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 
-	                    name="description" placeholder="Description" value="${project.description}"></textarea>
+	                    name="description" placeholder="Description" value="${newProject.description}"></textarea>
 	                </div>
 	            </div>
 	            <!--Footer-->

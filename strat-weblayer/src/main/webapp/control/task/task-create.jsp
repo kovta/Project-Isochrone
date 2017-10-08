@@ -18,7 +18,7 @@
 	            	<input type="hidden" name="submoduleId" value="${submodule.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${task.name}" required>
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${newTask.name}" required>
 	                </div>
 
             		<div class="row">
@@ -32,7 +32,7 @@
 		               			<c:choose>
 			      			      	<c:when test = "${task != null}">
 				         				<input type="number" id="objform32" class="form-control" name="priority" 
-					                    	min="0" max="100" value="${task.priority}" required>
+					                    	min="0" max="100" value="10" required>
 					                </c:when>
 					                <c:otherwise>
 					                	<input type="number" id="objform32" class="form-control" name="priority" 
@@ -65,13 +65,16 @@
                			<br/>
                  	</div>
             		<div class="md-form form-sm" id="sandbox-container">
-						<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${submodule.deadline}"/>
+						<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${newTask.deadline}"/>
 	                </div>
 	                
 	                <div class="md-form form-sm">
 						<i class="fa fa-hourglass-end prefix"></i>
                			<label>Set Expected Duration</label>
-               			<div class="input-group margin-left">
+               			<br/>
+               		</div>
+               		<div class="md-form form-sm">
+               			<div class="input-group">
 		    				<div id="radioBtn-dur" class="btn-group">
 		    					<a class="btn-sm active" data-toggle="durationType" data-title="0">Set Duration</a>
 		    					<a class="btn-sm notActive" data-toggle="durationType" data-title="1">Estimations</a>
@@ -105,15 +108,15 @@
                			<br/>
                   	</div>
 					<div class="md-form form-sm">
-						<input class="full-width slider-horizontal" id="compslider" type="text" name="completion" value="${task.completion}"
+						<input class="full-width slider-horizontal" id="compslider" type="text" name="completion" value="${newTask.completion}"
 						data-slider-ticks="[0, 25, 50, 75, 100]" data-slider-ticks-snap-bounds="7" 
-						data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]' data-value="${task.completion}"/>
+						data-slider-ticks-labels='["0%", "25%", "50%", "75%", "100%"]' data-value="${newTask.completion}"/>
 	                </div>
             		
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 
-	                    name="description" placeholder="Description" value="${task.description}"></textarea>
+	                    name="description" placeholder="Description" value="${newTask.description}"></textarea>
 	                </div>
 	            </div>
 	            <!--Footer-->

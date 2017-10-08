@@ -69,6 +69,8 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 		boolean assignmentError = false;
 		if (!errorFlag) {
 			try {
+				request.setAttribute(ATTR_PROJECT, project);
+				request.setAttribute(ATTR_NEW_PROJECT, new ProjectRepresentor());
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(project));
 				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(project));
 			} catch (final AdaptorException e) {
@@ -76,7 +78,6 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				assignmentError = true;
 			}
 		}
-		request.setAttribute(ATTR_PROJECT, project);
 		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
@@ -112,7 +113,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				LOGGER.info("Failed attempt to modify Project : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, null, false, null);
-				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, project, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
@@ -120,7 +121,7 @@ public class ProjectActionController extends AbstractRefinerServlet implements P
 				LOGGER.info("Failed attempt to modify Project : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Project name required");
 				final ProjectRepresentor project = new ProjectRepresentor(name, description, status, deadline, confidentiality, null);
-				this.forward(request, response, project, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, project, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			} else {
 				ProjectRepresentor project = null;
 				try {

@@ -70,6 +70,8 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 		boolean assignmentError = false;
 		if (!errorFlag) {
 			try {
+				request.setAttribute(ATTR_OBJECTIVE, objective);
+				request.setAttribute(ATTR_NEW_OBJECTIVE, new ObjectiveRepresentor());
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(objective));
 				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(objective));
 			} catch (final AdaptorException e) {
@@ -77,7 +79,6 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				assignmentError = true;
 			}
 		}
-		request.setAttribute(ATTR_OBJECTIVE, objective);
 		if (errorFlag || assignmentError) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
@@ -115,7 +116,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, null, false);
-				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, objective, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			}
 			final Date deadline = deadlineTemp;
 			final Boolean confidentiality = request.getParameter(CONFIDENTIALITY).equals("1") ? true : false;
@@ -123,7 +124,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 				LOGGER.info("Failed attempt to modify Objective : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Objective name required");
 				final ObjectiveRepresentor objective = new ObjectiveRepresentor(name, description, priority, status, deadline, confidentiality);
-				this.forward(request, response, objective, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, objective, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			} else {
 				ObjectiveRepresentor objective = null;
 				try {

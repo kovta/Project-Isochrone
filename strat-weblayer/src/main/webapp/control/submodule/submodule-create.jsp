@@ -16,7 +16,7 @@
 	            	<input type="hidden" name="projectId" value="${project.id}" />
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-font prefix"></i>
-	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${submodule.name}" required>
+	                    <input type="text" id="objform31" class="form-control" name="name" placeholder="Name" value="${newSubmodule.name}" required>
 	                </div>
 
            			<div class="md-form form-sm">
@@ -25,13 +25,13 @@
                			<br/>
                  		</div>
             		<div class="md-form form-sm" id="sandbox-container">
-						<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${submodule.deadline}"/>
+						<input placeholder="MM/dd/yyyy" type='text' class="form-control" name="deadline" value="${newSubmodule.deadline}"/>
 	                </div>
             		
 	                <div class="md-form form-sm">
 	                    <i class="fa fa-file-text prefix"></i>
 	                    <textarea type="text" id="objform34" class="md-textarea" class="form-control" 
-	                    name="description" placeholder="Description" value="${submodule.description}"></textarea>
+	                    name="description" placeholder="Description" value="${newSubmodule.description}"></textarea>
 	                </div>
 	            </div>
 	            <!--Footer-->

@@ -67,6 +67,8 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
 		if (!errorFlag) {
 			try {
+				request.setAttribute(ATTR_TASK, task);
+				request.setAttribute(ATTR_NEW_TASK, new TaskRepresentor());
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(task));
 				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(task));
 				request.setAttribute(ATTR_CONFIGURABLE_DEPENDENCIES, this.taskProtocol.getCompliantDependencyConfigurations(task));
@@ -75,7 +77,6 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				errorFlag = true;
 			}
 		}
-		request.setAttribute(ATTR_TASK, task);
 		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
@@ -126,7 +127,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				LOGGER.info("Failed attempt to modify Task : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final TaskRepresentor Task = new TaskRepresentor(name, description, priority, completion, null, null, false);
-				this.forward(request, response, Task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, Task, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			}
 			Double duration = null, pessimistic = null, realistic = null, optimistic = null;
 			if (request.getParameter(DURATION_TYPE).equals("1")) {
@@ -140,7 +141,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 					LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 					request.getSession().setAttribute(ATTR_ERROR, "Partial estimations not allowed");
 					final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, false);
-					this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+					this.forward(request, response, task, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 				}
 			} else {
 				if (this.notEmpty(request.getParameter(DURATION))) {
@@ -152,7 +153,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				LOGGER.info("Failed attempt to modify Task : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Task name required");
 				final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, duration, admittance);
-				this.forward(request, response, task, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, task, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			} else {
 				TaskRepresentor task = null;
 				try {

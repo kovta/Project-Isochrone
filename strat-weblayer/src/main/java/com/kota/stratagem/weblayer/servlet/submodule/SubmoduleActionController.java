@@ -65,18 +65,19 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 
 	private void forward(final HttpServletRequest request, final HttpServletResponse response, final SubmoduleRepresentor submodule, final boolean editFlag,
 			String returnPoint, boolean errorFlag) throws ServletException, IOException {
-		boolean assignmentError = false;
 		if (!errorFlag) {
 			try {
+				request.setAttribute(ATTR_SUBMODULE, submodule);
+				request.setAttribute(ATTR_NEW_SUBMODULE, new SubmoduleRepresentor());
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(submodule));
 				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(submodule));
+				request.setAttribute(ATTR_CONFIGURABLE_DEPENDENCIES, this.submoduleProtocol.getCompliantDependencyConfigurations(submodule));
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);
-				assignmentError = true;
+				errorFlag = true;
 			}
 		}
-		request.setAttribute(ATTR_SUBMODULE, submodule);
-		if (errorFlag || assignmentError) {
+		if (errorFlag) {
 			final RequestDispatcher view = request.getRequestDispatcher(Page.ERROR.getJspName());
 			view.forward(request, response);
 		} else if (returnPoint != null) {
@@ -111,14 +112,14 @@ public class SubmoduleActionController extends AbstractRefinerServlet implements
 				LOGGER.info("Failed attempt to modify Submodule : (" + name + ") because of unusable date format");
 				request.getSession().setAttribute(ATTR_ERROR, "Incorrect date format");
 				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, null, null);
-				this.forward(request, response, submodule, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, submodule, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			}
 			final Date deadline = deadlineTemp;
 			if ((name == null) || "".equals(name)) {
 				LOGGER.info("Failed attempt to modify Submodule : (" + name + ")");
 				request.getSession().setAttribute(ATTR_ERROR, "Submodule name required");
 				final SubmoduleRepresentor submodule = new SubmoduleRepresentor(name, description, deadline, null);
-				this.forward(request, response, submodule, false, returnPoint + GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE, false);
+				this.forward(request, response, submodule, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
 			} else {
 				SubmoduleRepresentor submodule = null;
 				try {

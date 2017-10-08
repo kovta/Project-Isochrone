@@ -61,6 +61,11 @@
 												    	<i class="fa fa-tasks tile-icon"></i><span class="icon-companion">Register Task</span>
 													</button>
 												</td></tr>
+												<tr class="match-row"><td>
+													<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addDependencies" data-toggle="modal">
+												    	<i class="fa fa-share-alt tile-icon"></i><span class="icon-companion">Configure Dependencies</span>
+													</button>
+												</td></tr>
 												<c:if test="${supervisor}">
 													<tr class="match-row"><td>
 														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addAssignments" data-toggle="modal">
@@ -210,6 +215,7 @@
    			<!-- Modals -->
 			<jsp:include page="../task/task-create.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
+			<jsp:include page="submodule-dependency-create.jsp"></jsp:include>
 			<jsp:include page="submodule-delete.jsp"></jsp:include>
 			<jsp:include page="submodule-alert.jsp"></jsp:include>
 			<jsp:include page="../task/task-alert.jsp"></jsp:include>

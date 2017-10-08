@@ -46,7 +46,7 @@
 	</c:if>
 	<c:if test="${task.isDurationProvided()}">
 		<p class="card-text">
-			Duration: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.pessimistic}" /><c:out value="${task.duration eq 1 ? ' day' : ' days'}" />
+			Duration: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.duration}" /><c:out value="${task.duration eq 1 ? ' day' : ' days'}" />
 		</p>
 	</c:if>
 	<c:if test="${task.isEstimated()}">
