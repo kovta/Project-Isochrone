@@ -6,14 +6,14 @@ import com.kota.stratagem.ejbserviceclient.domain.designation.Dispatchable;
 
 public abstract class AbstractTimeConstraintRepresentor extends AbstractMonitoredRepresentor implements Dispatchable {
 
-	private final Date deadline;
+	protected final Date deadline;
 	private final int urgencyLevel;
 
-	public AbstractTimeConstraintRepresentor(Date deadline, Long id) {
-		super(id);
+	public AbstractTimeConstraintRepresentor(Date deadline) {
 		this.deadline = deadline;
+		final Date target = deadline != null ? deadline : new Date();
 		final Date now = new Date();
-		final long diff = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+		final long diff = (target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
 		if (diff < 0) {
 			this.urgencyLevel = 3;
 		} else if (diff < 1) {

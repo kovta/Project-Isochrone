@@ -7,14 +7,15 @@ public abstract class AbstractProgressionRepresentor extends AbstractTimeConstra
 	private double completion;
 	private Double durationSum;
 	private Double completedDurationSum;
-	private Boolean estimated;
+	private Double expectedDuration;
+	private Double variance;
 	private Date expectedCompletionDate;
 	private Date estimatedCompletionDate;
 	private Double targetDeviation;
 	private Double earlyFinishEstimation;
 
-	public AbstractProgressionRepresentor(Date deadline, Long id) {
-		super(deadline, id);
+	public AbstractProgressionRepresentor(Date deadline) {
+		super(deadline);
 	}
 
 	public double getCompletion() {
@@ -53,12 +54,20 @@ public abstract class AbstractProgressionRepresentor extends AbstractTimeConstra
 		this.completedDurationSum = completedDurationSum;
 	}
 
-	public Boolean getEstimated() {
-		return this.estimated;
+	public Double getExpectedDuration() {
+		return this.expectedDuration;
 	}
 
-	public void setEstimated(Boolean estimated) {
-		this.estimated = estimated;
+	public void setExpectedDuration(Double expectedDuration) {
+		this.expectedDuration = expectedDuration;
+	}
+
+	public Double getVariance() {
+		return this.variance;
+	}
+
+	public void setVariance(Double variance) {
+		this.variance = variance;
 	}
 
 	public Date getExpectedCompletionDate() {

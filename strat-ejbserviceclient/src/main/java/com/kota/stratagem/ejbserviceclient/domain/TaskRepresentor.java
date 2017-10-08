@@ -18,7 +18,6 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	private final String description;
 	private final int priority;
 	private final double completion;
-	private final Date deadline;
 	private Double duration;
 	private Double pessimistic;
 	private Double realistic;
@@ -50,12 +49,11 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	}
 
 	public TaskRepresentor(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance) {
-		super(deadline != null ? deadline : new Date(), null);
+		super(deadline);
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.completion = completion;
-		this.deadline = deadline;
 		this.duration = duration;
 		this.admittance = admittance;
 		this.assignedTeams = new ArrayList<>();

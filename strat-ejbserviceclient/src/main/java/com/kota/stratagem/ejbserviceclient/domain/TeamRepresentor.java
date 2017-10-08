@@ -28,7 +28,6 @@ public class TeamRepresentor extends AbstractMonitoredRepresentor implements Ser
 	}
 
 	public TeamRepresentor(String name, AppUserRepresentor leader) {
-		super(null);
 		this.name = name;
 		this.leader = leader;
 		this.members = new ArrayList<>();

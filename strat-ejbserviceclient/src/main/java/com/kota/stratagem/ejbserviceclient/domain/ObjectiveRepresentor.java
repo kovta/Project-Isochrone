@@ -16,7 +16,6 @@ public class ObjectiveRepresentor extends AbstractProgressionRepresentor impleme
 	private String description;
 	private int priority;
 	private ObjectiveStatusRepresentor status;
-	private final Date deadline;
 	private final Boolean confidential;
 	private List<ProjectRepresentor> projects;
 	private List<TaskRepresentor> tasks;
@@ -41,12 +40,11 @@ public class ObjectiveRepresentor extends AbstractProgressionRepresentor impleme
 	}
 
 	public ObjectiveRepresentor(String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidential) {
-		super(deadline != null ? deadline : new Date(), null);
+		super(deadline);
 		this.name = name;
 		this.description = description;
 		this.priority = priority;
 		this.status = status;
-		this.deadline = deadline;
 		this.confidential = confidential;
 		this.projects = new ArrayList<>();
 		this.tasks = new ArrayList<>();

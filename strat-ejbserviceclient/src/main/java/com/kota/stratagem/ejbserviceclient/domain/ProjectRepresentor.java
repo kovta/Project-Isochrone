@@ -15,7 +15,6 @@ public class ProjectRepresentor extends AbstractProgressionRepresentor implement
 	private final String name;
 	private final String description;
 	private final ProjectStatusRepresentor status;
-	private final Date deadline;
 	private final Boolean confidential;
 	private List<SubmoduleRepresentor> submodules;
 	private final List<TaskRepresentor> tasks;
@@ -44,11 +43,10 @@ public class ProjectRepresentor extends AbstractProgressionRepresentor implement
 
 	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			ObjectiveRepresentor objective) {
-		super(deadline != null ? deadline : new Date(), null);
+		super(deadline);
 		this.name = name;
 		this.description = description;
 		this.status = status;
-		this.deadline = deadline;
 		this.confidential = confidential;
 		this.submodules = new ArrayList<>();
 		this.tasks = new ArrayList<>();

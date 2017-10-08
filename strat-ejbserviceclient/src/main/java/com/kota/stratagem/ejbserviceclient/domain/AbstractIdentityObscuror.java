@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
+@Deprecated
 public abstract class AbstractIdentityObscuror {
 
 	protected String obscuredId;

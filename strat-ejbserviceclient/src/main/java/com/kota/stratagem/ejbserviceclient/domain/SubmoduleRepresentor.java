@@ -16,7 +16,6 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 	private Long id;
 	private final String name;
 	private final String description;
-	private final Date deadline;
 	private final List<TaskRepresentor> tasks;
 	private final List<TeamSubmoduleAssignmentRepresentor> assignedTeams;
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
@@ -31,8 +30,6 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 	private List<List<SubmoduleRepresentor>> dependencyChain;
 	private int dependantCount;
 	private int dependencyCount;
-	private Double expectedDuration;
-	private Double variance;
 
 	public SubmoduleRepresentor() {
 		this(null, "", "", new Date(), null);
@@ -44,10 +41,9 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 	}
 
 	public SubmoduleRepresentor(String name, String description, Date deadline, ProjectRepresentor project) {
-		super(deadline != null ? deadline : new Date(), null);
+		super(deadline);
 		this.name = name;
 		this.description = description;
-		this.deadline = deadline;
 		this.tasks = new ArrayList<>();
 		this.assignedTeams = new ArrayList<>();
 		this.assignedUsers = new ArrayList<>();
@@ -134,7 +130,7 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 
 	@Override
 	public Double getDuration() {
-		return this.expectedDuration;
+		return this.getExpectedDuration();
 	}
 
 	public List<List<SubmoduleRepresentor>> getDependantChain() {
@@ -171,20 +167,12 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 
 	@Override
 	public Double getExpectedDuration() {
-		return this.expectedDuration;
-	}
-
-	public void setExpectedDuration(Double expectedDuration) {
-		this.expectedDuration = expectedDuration;
+		return super.getExpectedDuration();
 	}
 
 	@Override
 	public Double getVariance() {
-		return this.variance;
-	}
-
-	public void setVariance(Double variance) {
-		this.variance = variance;
+		return super.getVariance();
 	}
 
 	@Override
@@ -222,6 +210,36 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 
 	public void addUser(AppUserSubmoduleAssignmentRepresentor user) {
 		this.assignedUsers.add(user);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
+			return false;
+		}
+		if(this.getClass() != obj.getClass()) {
+			return false;
+		}
+		SubmoduleRepresentor other = (SubmoduleRepresentor) obj;
+		if(this.id == null) {
+			if(other.id != null) {
+				return false;
+			}
+		} else if(!this.id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }

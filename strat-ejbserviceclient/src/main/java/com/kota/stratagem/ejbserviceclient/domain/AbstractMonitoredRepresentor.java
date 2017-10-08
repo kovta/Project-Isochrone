@@ -2,16 +2,12 @@ package com.kota.stratagem.ejbserviceclient.domain;
 
 import java.util.Date;
 
-public abstract class AbstractMonitoredRepresentor extends AbstractIdentityObscuror {
+public abstract class AbstractMonitoredRepresentor {
 
 	protected AppUserRepresentor creator;
 	protected Date creationDate;
 	protected AppUserRepresentor modifier;
 	protected Date modificationDate;
-
-	public AbstractMonitoredRepresentor(Long id) {
-		super(id);
-	}
 
 	public AppUserRepresentor getCreator() {
 		return this.creator;
