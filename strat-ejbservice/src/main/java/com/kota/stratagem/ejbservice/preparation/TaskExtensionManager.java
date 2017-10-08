@@ -70,7 +70,7 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 		for (final List<TaskRepresentor> dependantLevel : this.representor.getDependantChain()) {
 			Collections.sort(dependantLevel, new TaskNameComparator());
 		}
-		for (final List<TaskRepresentor> dependencyLevel : this.representor.getDependantChain()) {
+		for (final List<TaskRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
 			Collections.sort(dependencyLevel, new TaskNameComparator());
 		}
 	}
@@ -169,11 +169,7 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	private void provideEstimationDetails() {
-		this.representor.setExpectedDuration(
-				this.representor.isEstimated() ? this.calculator.calculateExpectedDuration(this.representor.getPessimistic(), this.representor.getRealistic(),
-						this.representor.getOptimistic()) : this.representor.isDurationProvided() ? this.representor.getDuration() : null);
-		this.representor.setVariance(this.representor.isEstimated()
-				? this.calculator.calculateVariance(this.representor.getPessimistic(), this.representor.getRealistic(), this.representor.getOptimistic()) : 0);
+		this.provider.provideBaseEstimationDetails(this.representor);
 	}
 
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.ejb.EJB;
+import javax.inject.Inject;
+
 import com.kota.stratagem.ejbservice.comparison.congregated.ObjectiveSummaryComparator;
 import com.kota.stratagem.ejbservice.comparison.congregated.ProjectSummaryComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecipientNameComparator;
@@ -13,15 +16,40 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueProjectComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
+import com.kota.stratagem.ejbservice.converter.ProjectConverter;
+import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
+import com.kota.stratagem.ejbservice.domain.CPMResult;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.ObjectiveOriented;
+import com.kota.stratagem.ejbservice.qualifier.ProjectOriented;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
-import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
+import com.kota.stratagem.persistence.qualifier.SubmoduleFocused;
+import com.kota.stratagem.persistence.qualifier.TaskFocused;
+import com.kota.stratagem.persistence.service.ProjectService;
 
 @ObjectiveOriented
 public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
+
+	@EJB
+	private ProjectService projectService;
+
+	@Inject
+	private ProjectConverter projectConverter;
+
+	@Inject
+	@SubmoduleFocused
+	private CPMNodeConverter submoduleBasedCPMNodeConverter;
+
+	@Inject
+	@TaskFocused
+	private CPMNodeConverter taskBasedCPMNodeConverter;
+
+	@Inject
+	@ProjectOriented
+	private DTOExtensionManager extensionManager;
 
 	ObjectiveRepresentor representor;
 	List<ObjectiveRepresentor> representors;
@@ -47,7 +75,9 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
+		this.prepareSubComponents();
 		this.provideCompletion();
+		this.provideEvaluationDetails();
 		this.provideCategorizedProjects();
 		this.provideCategorizedTasks();
 	}
@@ -78,31 +108,71 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 		Collections.sort(this.representor.getAssignedTeams(), new TeamAssignmentRecipientNameComparator());
 	}
 
+	private void prepareSubComponents() {
+		final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>();
+		for (final ProjectRepresentor project : this.representor.getProjects()) {
+			projects.add((ProjectRepresentor) this.extensionManager.prepareForOwner(project));
+		}
+		this.representor.setProjects(projects);
+	}
+
 	private void provideCompletion() {
-		int progressSum = 0, taskCount = 0;
+		int progressSum = 0;
+		double durationSum = 0, completedDurationSum = 0;
 		for (final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
-			taskCount++;
+			if (task.isEstimated()) {
+				final double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
+				durationSum += expectedDuration;
+				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
+			} else if (task.isDurationProvided()) {
+				durationSum += task.getDuration();
+				completedDurationSum += task.getDuration() * (task.getCompletion() / 100);
+			}
 		}
 		for (final ProjectRepresentor project : this.representor.getProjects()) {
-			int projectProgress = 0, projectTaskCount = 0;
-			for (final TaskRepresentor projectTask : project.getTasks()) {
-				progressSum += projectTask.getCompletion();
-				projectProgress += projectTask.getCompletion();
-				taskCount++;
-				projectTaskCount++;
-			}
-			for (final SubmoduleRepresentor projectSubmodule : project.getSubmodules()) {
-				for (final TaskRepresentor submoduleTask : projectSubmodule.getTasks()) {
-					progressSum += submoduleTask.getCompletion();
-					projectProgress += submoduleTask.getCompletion();
-					taskCount++;
-					projectTaskCount++;
+			progressSum += project.getCompletion();
+			durationSum += project.getDurationSum();
+			completedDurationSum += project.getCompletedDurationSum();
+		}
+		final int componentCount = this.representor.getTasks().size() + this.representor.getProjects().size();
+		this.representor.setCompletion(componentCount != 0 ? progressSum / componentCount : 0);
+		this.representor.setDurationSum(durationSum);
+		this.representor.setCompletedDurationSum(completedDurationSum);
+	}
+
+	private void provideEvaluationDetails() {
+		if (!this.representor.isCompleted()) {
+			Boolean estimated = false, configured = false;
+			final List<CPMNode> taskComponents = new ArrayList<>(), network = new ArrayList<>();
+			for (final TaskRepresentor task : this.representor.getTasks()) {
+				if (task.isEstimated() && !task.isCompleted()) {
+					estimated = true;
+					configured = true;
+					this.provider.addCompletionAdaptedComponent(taskComponents, task);
+				} else if (task.isDurationProvided() && !task.isCompleted()) {
+					configured = true;
+					this.provider.addCompletionAdaptedComponent(taskComponents, task);
 				}
 			}
-			project.setCompletion(projectTaskCount != 0 ? projectProgress / projectTaskCount : 0);
+			Double expectedDurationSummary = (double) 0, varianceSummary = (double) 0;
+			for (final ProjectRepresentor project : this.representor.getProjects()) {
+				if (!project.isCompleted()) {
+					configured = true;
+					ProjectRepresentor projectComponent = ((ProjectRepresentor) (this.extensionManager.prepareForOwner(this.projectConverter.toSimplified(
+							this.projectService.readWithSubmodulesAndTasks(project.getId())))));
+					expectedDurationSummary += projectComponent.getExpectedDuration();
+					varianceSummary += projectComponent.getVariance();
+				}
+			}
+			if (configured) {
+				network.addAll(this.taskBasedCPMNodeConverter.to(taskComponents));
+				CPMResult result = this.provider.evaluateDependencyNetwork(network, estimated);
+				CPMResult finalResult = new CPMResult(expectedDurationSummary + result.getExpectedDuration(),
+						Math.sqrt(varianceSummary + Math.pow(result.getStandardDeviation(), 2)));
+				this.provider.provideEstimations(finalResult, this.representor);
+			}
 		}
-		this.representor.setCompletion(taskCount != 0 ? progressSum / taskCount : 0);
 	}
 
 	private void provideCategorizedProjects() {

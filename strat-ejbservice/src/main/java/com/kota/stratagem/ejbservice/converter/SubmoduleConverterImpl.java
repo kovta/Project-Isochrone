@@ -43,8 +43,6 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 		return this.inculdeMonitoringFields(this.toElementary(submodule), submodule);
 	}
 
-
-
 	@Override
 	public SubmoduleRepresentor toDependencyExtended(Submodule submodule) {
 		final SubmoduleRepresentor representor = this.toElementary(submodule);
@@ -63,7 +61,7 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 
 	@Override
 	public SubmoduleRepresentor toSimplified(Submodule submodule) {
-		final SubmoduleRepresentor representor = this.toDependencyExtended(submodule);
+		final SubmoduleRepresentor representor = this.toElementary(submodule);
 		if (submodule.getTasks() != null) {
 			for (final Task task : submodule.getTasks()) {
 				representor.addTask(this.taskConverter.toElementary(task));

@@ -6,7 +6,7 @@ public class DefinitiveCPMNodeImpl extends AbstractCPMNode implements Definitive
 
 	Double duration;
 
-	public DefinitiveCPMNodeImpl(Long id, Double duration) {
+	public DefinitiveCPMNodeImpl(String id, Double duration) {
 		super(id);
 		this.duration = duration;
 	}

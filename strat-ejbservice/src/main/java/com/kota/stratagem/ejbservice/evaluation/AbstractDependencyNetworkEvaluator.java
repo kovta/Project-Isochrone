@@ -13,11 +13,14 @@ import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 
 public abstract class AbstractDependencyNetworkEvaluator implements DependencyNetworkEvaluator {
 
+	protected static final String START_NODE_ID = "START_NODE";
+	protected static final String END_NODE_ID = "END_NODE";
+
 	@Override
 	public CPMResult evaluate(List<CPMNode> network) throws InvalidNodeTypeException, CyclicDependencyException {
 		final List<EstimatedCPMNodeImpl> nodes = new ArrayList<>();
-		final EstimatedCPMNodeImpl start = new EstimatedCPMNodeImpl(-2L, (double) 0, (double) 0);
-		final EstimatedCPMNodeImpl end = new EstimatedCPMNodeImpl(-1L, (double) 0, (double) 0);
+		final EstimatedCPMNodeImpl start = new EstimatedCPMNodeImpl(START_NODE_ID, (double) 0, (double) 0);
+		final EstimatedCPMNodeImpl end = new EstimatedCPMNodeImpl(END_NODE_ID, (double) 0, (double) 0);
 		for (final CPMNode node : network) {
 			if (node.getDependencies().isEmpty()) {
 				start.addDependant(node);

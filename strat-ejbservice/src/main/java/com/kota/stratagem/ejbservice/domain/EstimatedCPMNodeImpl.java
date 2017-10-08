@@ -7,7 +7,7 @@ public class EstimatedCPMNodeImpl extends AbstractCPMNode implements EstimatedCP
 	Double expectedDuration;
 	Double variance;
 
-	public EstimatedCPMNodeImpl(Long id, Double expectedDuration, Double variance) {
+	public EstimatedCPMNodeImpl(String id, Double expectedDuration, Double variance) {
 		super(id);
 		this.expectedDuration = expectedDuration;
 		this.variance = variance;

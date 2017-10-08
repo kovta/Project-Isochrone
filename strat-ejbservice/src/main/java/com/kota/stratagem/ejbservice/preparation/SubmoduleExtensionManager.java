@@ -10,25 +10,20 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecipientNameComparator;
+import com.kota.stratagem.ejbservice.comparison.dualistic.SubmoduleNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskCompletionComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
 import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
-import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
-import com.kota.stratagem.ejbservice.domain.CPMResult;
-import com.kota.stratagem.ejbservice.evaluation.DependencyNetworkEvaluator;
-import com.kota.stratagem.ejbservice.exception.CyclicDependencyException;
-import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
-import com.kota.stratagem.ejbservice.qualifier.Definitive;
-import com.kota.stratagem.ejbservice.qualifier.Estimated;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
+import com.kota.stratagem.persistence.qualifier.TaskFocused;
 import com.kota.stratagem.persistence.service.SubmoduleService;
-import com.kota.stratagem.persistence.service.TaskService;
 
 @SubmoduleOriented
 public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
@@ -36,27 +31,15 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	@EJB
 	private SubmoduleService submoduleService;
 
-	@EJB
-	private TaskService taskService;
-
 	@Inject
 	private SubmoduleConverter submoduleConverter;
 
 	@Inject
-	private TaskConverter taskConverter;
-
-	@Inject
+	@TaskFocused
 	private CPMNodeConverter cpmNodeConverter;
 
-	@Inject
-	@Estimated
-	private DependencyNetworkEvaluator estimatedEvaluator;
-
-	@Inject
-	@Definitive
-	private DependencyNetworkEvaluator definitiveEvaluator;
-
 	SubmoduleRepresentor representor;
+	List<SubmoduleRepresentor> representors;
 
 	@Override
 	@Certified(SubmoduleRepresentor.class)
@@ -73,14 +56,15 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	@Override
+	@Certified(SubmoduleRepresentor.class)
 	public List<?> prepareBatch(List<?> representors) {
+		this.representors = (List<SubmoduleRepresentor>) representors;
 		return super.prepareBatch(representors);
 	}
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
-		this.provideProgressionDetials();
-		this.provideEvaluationDetails();
+		this.addOwnerDependantProperties();
 		this.provideCategorizedTasks();
 		this.provideDependencyChain();
 		this.provideDependantCount();
@@ -90,6 +74,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void addOwnerDependantProperties() {
 		this.provideProgressionDetials();
+		this.provideEvaluationDetails();
 	}
 
 	@Override
@@ -107,7 +92,13 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void sortJointCollection() {
-
+		Collections.reverse(this.representor.getDependantChain());
+		for (final List<SubmoduleRepresentor> dependantLevel : this.representor.getDependantChain()) {
+			Collections.sort(dependantLevel, new SubmoduleNameComparator());
+		}
+		for (final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
+			Collections.sort(dependencyLevel, new SubmoduleNameComparator());
+		}
 	}
 
 	private void provideProgressionDetials() {
@@ -132,40 +123,20 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	private void provideEvaluationDetails() {
 		if (!this.representor.isCompleted()) {
 			Boolean estimated = false, configured = false;
-			final List<TaskRepresentor> components = new ArrayList<>();
+			final List<CPMNode> components = new ArrayList<>(), network = new ArrayList<>();
 			for (final TaskRepresentor task : this.representor.getTasks()) {
 				if (task.isEstimated() && !task.isCompleted()) {
 					estimated = true;
 					configured = true;
-					components.add(this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(task.getId())));
+					this.provider.addCompletionAdaptedComponent(components, task);
 				} else if (task.isDurationProvided() && !task.isCompleted()) {
 					configured = true;
-					components.add(this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(task.getId())));
+					this.provider.addCompletionAdaptedComponent(components, task);
 				}
 			}
-			CPMResult result = null;
-			try {
-				if (configured) {
-					if (estimated) {
-						for (final TaskRepresentor component : components) {
-							final double completionRatio = ((100 - component.getCompletion()) / 100);
-							component.setPessimistic(component.getPessimistic() * completionRatio);
-							component.setRealistic(component.getRealistic() * completionRatio);
-							component.setOptimistic(component.getOptimistic() * completionRatio);
-						}
-						result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(components));
-					} else {
-						for (final TaskRepresentor component : components) {
-							component.setDuration(component.getDuration() * ((100 - component.getCompletion()) / 100));
-						}
-						result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(components));
-					}
-				}
-			} catch (InvalidNodeTypeException | CyclicDependencyException e) {
-				LOGGER.error(e, e);
-			}
-			if (result != null) {
-				this.provider.provideEstimations(result, this.representor);
+			if (configured) {
+				network.addAll(this.cpmNodeConverter.to(components));
+				this.provider.provideEstimations(this.provider.evaluateDependencyNetwork(network, estimated), this.representor);
 			}
 		}
 	}

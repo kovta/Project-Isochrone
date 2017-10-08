@@ -17,42 +17,36 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueSubmoduleComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
-import com.kota.stratagem.ejbservice.converter.TaskConverter;
+import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
-import com.kota.stratagem.ejbservice.domain.CPMResult;
-import com.kota.stratagem.ejbservice.evaluation.DependencyNetworkEvaluator;
-import com.kota.stratagem.ejbservice.exception.CyclicDependencyException;
-import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
-import com.kota.stratagem.ejbservice.qualifier.Definitive;
-import com.kota.stratagem.ejbservice.qualifier.Estimated;
 import com.kota.stratagem.ejbservice.qualifier.ProjectOriented;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
-import com.kota.stratagem.persistence.service.TaskService;
+import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
+import com.kota.stratagem.persistence.qualifier.SubmoduleFocused;
+import com.kota.stratagem.persistence.qualifier.TaskFocused;
+import com.kota.stratagem.persistence.service.SubmoduleService;
 
 @ProjectOriented
 public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	@EJB
-	private TaskService taskService;
+	private SubmoduleService submoduleService;
 
 	@Inject
-	private TaskConverter taskConverter;
+	private SubmoduleConverter submoduleConverter;
 
 	@Inject
-	private CPMNodeConverter cpmNodeConverter;
+	@SubmoduleFocused
+	private CPMNodeConverter submoduleBasedCPMNodeConverter;
 
 	@Inject
-	@Estimated
-	private DependencyNetworkEvaluator estimatedEvaluator;
-
-	@Inject
-	@Definitive
-	private DependencyNetworkEvaluator definitiveEvaluator;
+	@TaskFocused
+	private CPMNodeConverter taskBasedCPMNodeConverter;
 
 	@Inject
 	@SubmoduleOriented
@@ -86,7 +80,6 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void addRepresentorSpecificProperties() {
 		this.addOwnerDependantProperties();
-		this.provideEvaluationDetails();
 		this.provideCategorizedSubmodules();
 		this.provideCategorizedTasks();
 	}
@@ -95,6 +88,7 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	protected void addOwnerDependantProperties() {
 		this.prepareSubComponents();
 		this.provideProgressionDetials();
+		this.provideEvaluationDetails();
 	}
 
 	@Override
@@ -159,40 +153,28 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	private void provideEvaluationDetails() {
 		if (!this.representor.isCompleted()) {
 			Boolean estimated = false, configured = false;
-			final List<TaskRepresentor> components = new ArrayList<>();
+			final List<CPMNode> taskComponents = new ArrayList<>(), submoduleComponents = new ArrayList<>(), network = new ArrayList<>();
 			for (final TaskRepresentor task : this.representor.getTasks()) {
 				if (task.isEstimated() && !task.isCompleted()) {
 					estimated = true;
 					configured = true;
-					components.add(this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(task.getId())));
+					this.provider.addCompletionAdaptedComponent(taskComponents, task);
 				} else if (task.isDurationProvided() && !task.isCompleted()) {
 					configured = true;
-					components.add(this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(task.getId())));
+					this.provider.addCompletionAdaptedComponent(taskComponents, task);
 				}
 			}
-			CPMResult result = null;
-			try {
-				if (configured) {
-					if (estimated) {
-						for (final TaskRepresentor component : components) {
-							final double completionRatio = ((100 - component.getCompletion()) / 100);
-							component.setPessimistic(component.getPessimistic() * completionRatio);
-							component.setRealistic(component.getRealistic() * completionRatio);
-							component.setOptimistic(component.getOptimistic() * completionRatio);
-						}
-						result = this.estimatedEvaluator.evaluate(this.cpmNodeConverter.to(components));
-					} else {
-						for (final TaskRepresentor component : components) {
-							component.setDuration(component.getDuration() / ((100 - component.getCompletion()) / 100));
-						}
-						result = this.definitiveEvaluator.evaluate(this.cpmNodeConverter.to(components));
-					}
+			for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
+				if (!submodule.isCompleted()) {
+					configured = true;
+					submoduleComponents.add((SubmoduleRepresentor) (this.extensionManager.prepareForOwner(this.submoduleConverter.toDependencyExtended(
+							this.submoduleService.readWithDirectDependencies(submodule.getId())))));
 				}
-			} catch (InvalidNodeTypeException | CyclicDependencyException e) {
-				LOGGER.error(e, e);
 			}
-			if (result != null) {
-				this.provider.provideEstimations(result, this.representor);
+			if (configured) {
+				network.addAll(this.taskBasedCPMNodeConverter.to(taskComponents));
+				network.addAll(this.submoduleBasedCPMNodeConverter.to(submoduleComponents));
+				this.provider.provideEstimations(this.provider.evaluateDependencyNetwork(network, estimated), this.representor);
 			}
 		}
 	}
