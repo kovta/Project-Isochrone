@@ -16,7 +16,7 @@
 <h4 class="card-title"><c:out value="${submodule.name}" /></h4>
 <hr/>
 <!--Text-->
-<c:if test="${not empty submodule.deadline or not empty submodule.durationSum}">
+<c:if test="${not empty submodule.deadline or not empty submodule.durationSum or submodule.durationSum ne 0}">
 	<c:if test="${not empty submodule.deadline}">
 		<p class="card-text">
 			Deadline:
@@ -49,7 +49,7 @@
 			</c:choose>
 		</p>
 	</c:if>
-	<c:if test="${not empty submodule.durationSum}">
+	<c:if test="${not empty submodule.durationSum or submodule.durationSum ne 0}">
 		<p class="card-text">Duration: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" /><c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" /></p>
 	</c:if>
 	<hr/>
