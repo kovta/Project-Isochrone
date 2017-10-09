@@ -15,7 +15,7 @@
 		</c:when>
 		<c:otherwise>
 			<c:set var="level" value="${requestScope.submodule.dependantChain.size()}" scope="page" />
-			<c:forEach items="${requestScope.task.dependantChain}" var="dependantLevel">
+			<c:forEach items="${requestScope.submodule.dependantChain}" var="dependantLevel">
 	            <div class="row wow fadeIn" data-wow-delay="0.2s">
 	    			<div class="col-lg-12">
 	                	<div class="divider-new">
@@ -31,7 +31,9 @@
 								<div class="card-block">
 		            				<c:set var="target" value="${requestScope.submodule}" scope="request" />
 		                            <c:set var="submodule" value="${dependant}" scope="request" />
+		                            <c:set var="dependencyDriven" value="true" scope="request" />
 		                            <jsp:include page="submodule-card-content.jsp"></jsp:include>
+		                            <c:set var="dependencyDriven" value="false" scope="request" />
 		                            <c:set var="submodule" value="${target}" scope="request" />
 		                            <c:if test="${requestScope.supervisor and level eq 1}">
 		                            	<hr/>
@@ -71,12 +73,14 @@
 								<div class="card-block">
 									<c:set var="target" value="${requestScope.submodule}" scope="request" />
 		                            <c:set var="submodule" value="${dependency}" scope="request" />
+		                            <c:set var="dependencyDriven" value="true" scope="request" />
 		                            <jsp:include page="submodule-card-content.jsp"></jsp:include>
-		                            <c:set var="task" value="${target}" scope="request" />
+		                            <c:set var="dependencyDriven" value="false" scope="request" />
+		                            <c:set var="submodule" value="${target}" scope="request" />
 		                            <c:if test="${requestScope.supervisor and levelIndicator eq 1}">
 		                            	<hr/>
 										<div class="full-width text-center">
-											<a href="TaskDependencyDelete?dependency=<c:out value="${dependency.id}" />
+											<a href="SubmoduleDependencyDelete?dependency=<c:out value="${dependency.id}" />
 												&dependant=<c:out value="${submodule.id}" />
 												&submoduleId=<c:out value="${submodule.id}" />">Remove Dependency</a>
 								    	</div>

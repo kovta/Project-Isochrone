@@ -48,7 +48,7 @@ public class SubmoduleDependencyController extends AbstractRefinerServlet implem
 				LOGGER.error(e, e);
 				request.getSession().setAttribute(ATTR_ERROR, "Operation failed");
 			}
-			response.sendRedirect(Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + request.getParameter(SUBMODULE));
+			response.sendRedirect(Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + request.getParameter(SUBMODULE));
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}

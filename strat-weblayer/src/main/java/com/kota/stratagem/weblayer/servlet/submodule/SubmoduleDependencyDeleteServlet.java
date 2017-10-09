@@ -37,7 +37,7 @@ public class SubmoduleDependencyDeleteServlet extends AbstractRefinerServlet imp
 			try {
 				if (this.isNumeric(request.getParameter(SUBMODULE))) {
 					final Long task_id = Long.parseLong(request.getParameter(SUBMODULE));
-					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
+					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
 					LOGGER.info("Remove Submodule dependency (dependency: " + dependency + ", dependant: " + task_id + ")");
 					this.protocol.removeSubmoduleDependency(Long.parseLong(dependency), Long.parseLong(dependant));
 				} else {

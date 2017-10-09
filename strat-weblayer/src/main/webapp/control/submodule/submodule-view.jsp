@@ -31,9 +31,9 @@
                                 </div>
 	                        </div>
 	                    </div>
-						<c:set var="supervisor" value="false" />
+						<c:set var="supervisor" value="false" scope="request"/>
 						<c:if test="${operator eq submodule.creator.name or operator eq submodule.project.creator.name or operator eq submodule.project.objective.creator.name}">
-							<c:set var="supervisor" value="true" />
+							<c:set var="supervisor" value="true" scope="request"/>
 						</c:if>
 						<c:set var="assigned" value="false" />
 						<c:forEach items="${requestScope.submodule.assignedUsers}" var="assignment">

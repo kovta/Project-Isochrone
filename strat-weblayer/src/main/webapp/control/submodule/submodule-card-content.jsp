@@ -16,11 +16,16 @@
 <h4 class="card-title"><c:out value="${submodule.name}" /></h4>
 <hr/>
 <!--Text-->
-<c:if test="${not empty submodule.deadline or submodule.durationSum ne 0}">
+<c:if test="${not empty submodule.deadline or not empty submodule.durationSum}">
 	<c:if test="${not empty submodule.deadline}">
 		<p class="card-text">
 			Deadline:
 			<c:choose>
+				<c:when test="${dependencyDriven}">
+					<span>
+						<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
+					</span>
+				</c:when>
 				<c:when test="${submodule.urgencyLevel eq 3 and submodule.completion ne 100}">
 					<span class="danger-text">
 						<fmt:formatDate type="date" value="${submodule.deadline}" pattern="yyyy-MM-dd" />
@@ -44,12 +49,13 @@
 			</c:choose>
 		</p>
 	</c:if>
-	<c:if test="${submodule.durationSum ne 0}">
+	<c:if test="${not empty submodule.durationSum}">
 		<p class="card-text">Duration: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" /><c:out value="${submodule.durationSum eq 1 ? ' day' : ' days'}" /></p>
 	</c:if>
 	<hr/>
 </c:if>
 <c:choose>
+	<c:when test="${dependencyDriven}"></c:when>
 	<c:when test="${submodule.tasks.size() eq 0}"><p class="card-text"><c:out value="No Tasks registered" /></p></c:when>
 	<c:when test="${submodule.tasks.size() eq 1}"><p class="card-text"><c:out value="${submodule.tasks.size()} Task" /></p></c:when>
 	<c:otherwise><p class="card-text"><c:out value="${submodule.tasks.size()} Tasks" /></p></c:otherwise>
