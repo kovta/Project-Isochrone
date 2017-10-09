@@ -24,7 +24,9 @@ import com.kota.stratagem.persistence.query.AppUserProjectAssignmentQuery;
 @Table(name = "user_project_assignments")
 @NamedQueries(value = { //
 		@NamedQuery(name = AppUserProjectAssignmentQuery.GET_BY_ID, query = "SELECT a FROM AppUserProjectAssignment a WHERE a.id=:" + AssignmentParameter.ID),
-		@NamedQuery(name = AppUserProjectAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserProjectAssignment a WHERE a.id=:" + AssignmentParameter.ID)
+		@NamedQuery(name = AppUserProjectAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserProjectAssignment a WHERE a.id=:" + AssignmentParameter.ID),
+		@NamedQuery(name = AppUserProjectAssignmentQuery.REMOVE_BY_PROJECT_ID, query = "DELETE FROM AppUserProjectAssignment pa WHERE pa.project.id=:"
+				+ AssignmentParameter.ID)
 		//
 })
 @SequenceGenerator(name = "userProjectAssignmentGenerator", sequenceName = "user_project_assignments_assignment_id_seq", allocationSize = 1)

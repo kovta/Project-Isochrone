@@ -26,6 +26,8 @@ import com.kota.stratagem.persistence.query.AppUserObjectiveAssignmentQuery;
 		@NamedQuery(name = AppUserObjectiveAssignmentQuery.GET_BY_ID, query = "SELECT a FROM AppUserObjectiveAssignment a WHERE a.id=:"
 				+ AssignmentParameter.ID),
 		@NamedQuery(name = AppUserObjectiveAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM AppUserObjectiveAssignment a WHERE a.id=:"
+				+ AssignmentParameter.ID),
+		@NamedQuery(name = AppUserObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID, query = "DELETE FROM AppUserObjectiveAssignment oa WHERE oa.objective.id=:"
 				+ AssignmentParameter.ID)
 		//
 })

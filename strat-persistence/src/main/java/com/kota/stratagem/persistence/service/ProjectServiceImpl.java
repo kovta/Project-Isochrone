@@ -17,11 +17,15 @@ import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
 import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Submodule;
+import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.interceptor.Contained;
 import com.kota.stratagem.persistence.parameter.ProjectParameter;
+import com.kota.stratagem.persistence.query.AppUserProjectAssignmentQuery;
 import com.kota.stratagem.persistence.query.ProjectQuery;
+import com.kota.stratagem.persistence.query.TeamProjectAssignmentQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
@@ -38,6 +42,12 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@EJB
 	private ObjectiveService objectiveService;
+
+	@EJB
+	private SubmoduleService submoduleService;
+
+	@EJB
+	private TaskService taskService;
 
 	@Override
 	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String creator, Long objective) {
@@ -122,11 +132,16 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
 		if (this.exists(id)) {
-			if (this.readWithTasks(id).getTasks().size() == 0) {
-				this.entityManager.createNamedQuery(ProjectQuery.REMOVE_BY_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
-			} else {
-				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "Project has undeleted dependency(s)", id.toString());
+			this.entityManager.createNamedQuery(TeamProjectAssignmentQuery.REMOVE_BY_PROJECT_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
+			this.entityManager.createNamedQuery(AppUserProjectAssignmentQuery.REMOVE_BY_PROJECT_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
+			final Project project = this.readWithSubmodulesAndTasks(id);
+			for (final Submodule submodule : project.getSubmodules()) {
+				this.submoduleService.delete(submodule.getId());
 			}
+			for (final Task task : project.getTasks()) {
+				this.taskService.delete(task.getId());
+			}
+			this.entityManager.createNamedQuery(ProjectQuery.REMOVE_BY_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
 		} else {
 			throw new CoherentPersistenceServiceException(PersistenceApplicationError.NON_EXISTANT, "Project doesn't exist", id.toString());
 		}

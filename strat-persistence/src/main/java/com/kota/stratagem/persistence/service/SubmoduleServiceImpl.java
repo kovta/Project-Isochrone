@@ -17,10 +17,13 @@ import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Submodule;
+import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.interceptor.Contained;
 import com.kota.stratagem.persistence.parameter.SubmoduleParameter;
+import com.kota.stratagem.persistence.query.AppUserSubmoduleAssignmentQuery;
 import com.kota.stratagem.persistence.query.SubmoduleQuery;
+import com.kota.stratagem.persistence.query.TeamSubmoduleAssignmentQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
@@ -37,6 +40,9 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 
 	@EJB
 	private ProjectService projectService;
+
+	@EJB
+	private TaskService taskService;
 
 	@Override
 	public Submodule create(String name, String description, Date deadline, AppUser creator, Long project) {
@@ -74,12 +80,14 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 
 	@Override
 	public Submodule readWithDependencies(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id)
+				.getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithDependants(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
+				.getSingleResult();
 	}
 
 	@Override
@@ -90,8 +98,8 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 
 	@Override
 	public Submodule readWithTasksAndDirectDependencies(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, Submodule.class)
+				.setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
@@ -124,11 +132,13 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
 		if (this.exists(id)) {
-			if (this.readWithTasks(id).getTasks().size() == 0) {
-				this.entityManager.createNamedQuery(SubmoduleQuery.REMOVE_BY_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
-			} else {
-				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "Project has undeleted dependency(s)", id.toString());
+			this.entityManager.createNamedQuery(TeamSubmoduleAssignmentQuery.REMOVE_BY_SUBMODULE_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
+			this.entityManager.createNamedQuery(AppUserSubmoduleAssignmentQuery.REMOVE_BY_SUBMODULE_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
+			final Submodule submodule = this.readWithTasks(id);
+			for (final Task task : submodule.getTasks()) {
+				this.taskService.delete(task.getId());
 			}
+			this.entityManager.createNamedQuery(SubmoduleQuery.REMOVE_BY_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 		} else {
 			throw new CoherentPersistenceServiceException(PersistenceApplicationError.NON_EXISTANT, "Project doesn't exist", id.toString());
 		}

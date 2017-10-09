@@ -20,10 +20,14 @@ import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.Submodule;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.TaskEstimation;
+import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.interceptor.Contained;
 import com.kota.stratagem.persistence.parameter.TaskParameter;
+import com.kota.stratagem.persistence.query.AppUserTaskAssignmentQuery;
 import com.kota.stratagem.persistence.query.TaskEstimationQuery;
 import com.kota.stratagem.persistence.query.TaskQuery;
+import com.kota.stratagem.persistence.query.TeamTaskAssignmentQuery;
+import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
 @Stateless(mappedName = PersistenceServiceConfiguration.TASK_SERVICE_SIGNATURE)
@@ -151,9 +155,15 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void delete(Long id) {
-		this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
-		this.entityManager.createNamedQuery(TaskQuery.REMOVE_BY_ID).setParameter(TaskParameter.ID, id).executeUpdate();
+	public void delete(Long id) throws CoherentPersistenceServiceException {
+		if (this.exists(id)) {
+			this.entityManager.createNamedQuery(TeamTaskAssignmentQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
+			this.entityManager.createNamedQuery(AppUserTaskAssignmentQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
+			this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
+			this.entityManager.createNamedQuery(TaskQuery.REMOVE_BY_ID).setParameter(TaskParameter.ID, id).executeUpdate();
+		} else {
+			throw new CoherentPersistenceServiceException(PersistenceApplicationError.NON_EXISTANT, "Task doesn't exist", id.toString());
+		}
 	}
 
 	@Override

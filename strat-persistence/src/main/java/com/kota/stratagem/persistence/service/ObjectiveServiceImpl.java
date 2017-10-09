@@ -16,11 +16,15 @@ import javax.persistence.EntityManager;
 import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Objective;
+import com.kota.stratagem.persistence.entity.Project;
+import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.interceptor.Contained;
 import com.kota.stratagem.persistence.parameter.ObjectiveParameter;
+import com.kota.stratagem.persistence.query.AppUserObjectiveAssignmentQuery;
 import com.kota.stratagem.persistence.query.ObjectiveQuery;
+import com.kota.stratagem.persistence.query.TeamObjectiveAssignmentQuery;
 import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 
 @Contained
@@ -34,6 +38,12 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 
 	@EJB
 	private AppUserService appUserService;
+
+	@EJB
+	private ProjectService projectService;
+
+	@EJB
+	private TaskService taskService;
 
 	@Override
 	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, String creator) {
@@ -115,13 +125,16 @@ public class ObjectiveServiceImpl implements ObjectiveService {
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
 		if (this.exists(id)) {
+			this.entityManager.createNamedQuery(TeamObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
+			this.entityManager.createNamedQuery(AppUserObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 			final Objective objective = this.readWithProjectsAndTasks(id);
-			if ((objective.getTasks().size() == 0) && (objective.getProjects().size() == 0)) {
-				this.entityManager.createNamedQuery(ObjectiveQuery.REMOVE_BY_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
-			} else {
-				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "Objective has undeleted dependency(s)",
-						id.toString());
+			for (final Project project : objective.getProjects()) {
+				this.projectService.delete(project.getId());
 			}
+			for (final Task task : objective.getTasks()) {
+				this.taskService.delete(task.getId());
+			}
+			this.entityManager.createNamedQuery(ObjectiveQuery.REMOVE_BY_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 		} else {
 			throw new CoherentPersistenceServiceException(PersistenceApplicationError.NON_EXISTANT, "Objective doesn't exist", id.toString());
 		}

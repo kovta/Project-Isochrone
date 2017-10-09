@@ -25,7 +25,9 @@ import com.kota.stratagem.persistence.query.TeamProjectAssignmentQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = TeamProjectAssignmentQuery.GET_BY_ID, query = "SELECT a FROM TeamProjectAssignment a LEFT JOIN a.recipient.members LEFT JOIN a.recipient.leader WHERE a.id=:"
 				+ AssignmentParameter.ID),
-		@NamedQuery(name = TeamProjectAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM TeamProjectAssignment a WHERE a.id=:" + AssignmentParameter.ID)
+		@NamedQuery(name = TeamProjectAssignmentQuery.REMOVE_BY_ID, query = "DELETE FROM TeamProjectAssignment a WHERE a.id=:" + AssignmentParameter.ID),
+		@NamedQuery(name = TeamProjectAssignmentQuery.REMOVE_BY_PROJECT_ID, query = "DELETE FROM TeamProjectAssignment pa WHERE pa.project.id=:"
+				+ AssignmentParameter.ID)
 		//
 })
 @SequenceGenerator(name = "teamProjectAssignmentGenerator", sequenceName = "team_project_assignments_assignment_id_seq", allocationSize = 1)
