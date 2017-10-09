@@ -112,6 +112,4 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
 	}
 
-
-
 }

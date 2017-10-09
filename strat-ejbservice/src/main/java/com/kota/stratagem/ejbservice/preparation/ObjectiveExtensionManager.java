@@ -111,7 +111,8 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	private void prepareSubComponents() {
 		final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>();
 		for (final ProjectRepresentor project : this.representor.getProjects()) {
-			projects.add((ProjectRepresentor) this.extensionManager.prepareForOwner(project));
+			projects.add((ProjectRepresentor) this.extensionManager
+					.prepareForOwner(this.projectConverter.toSimplified(this.projectService.readWithSubmodulesAndTasks(project.getId()))));
 		}
 		this.representor.setProjects(projects);
 	}
@@ -159,18 +160,18 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 			for (final ProjectRepresentor project : this.representor.getProjects()) {
 				if (!project.isCompleted()) {
 					configured = true;
-					ProjectRepresentor projectComponent = ((ProjectRepresentor) (this.extensionManager.prepareForOwner(this.projectConverter.toSimplified(
-							this.projectService.readWithSubmodulesAndTasks(project.getId())))));
-					expectedDurationSummary += projectComponent.getExpectedDuration();
-					varianceSummary += projectComponent.getVariance();
+					expectedDurationSummary += project.getExpectedDuration();
+					varianceSummary += project.getVariance();
 				}
 			}
 			if (configured) {
 				network.addAll(this.taskBasedCPMNodeConverter.to(taskComponents));
-				CPMResult result = this.provider.evaluateDependencyNetwork(network, estimated);
-				CPMResult finalResult = new CPMResult(expectedDurationSummary + result.getExpectedDuration(),
+				final CPMResult result = this.provider.evaluateDependencyNetwork(network, estimated);
+				final CPMResult finalResult = new CPMResult(expectedDurationSummary + result.getExpectedDuration(),
 						Math.sqrt(varianceSummary + Math.pow(result.getStandardDeviation(), 2)));
 				this.provider.provideEstimations(finalResult, this.representor);
+			} else {
+				this.provider.provideBlankEstimations(this.representor);
 			}
 		}
 	}

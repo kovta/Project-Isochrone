@@ -15,7 +15,9 @@ import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.interceptor.Regulated;
 import com.kota.stratagem.ejbservice.preparation.DTOExtensionManager;
 import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
+import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
@@ -98,7 +100,12 @@ public class TaskProtocolImpl implements TaskProtocol {
 
 	@Override
 	public void removeTask(Long id) throws AdaptorException {
-		this.taskService.delete(id);
+		try {
+			this.taskService.delete(id);
+		} catch (final CoherentPersistenceServiceException e) {
+			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
+			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());
+		}
 	}
 
 	@Override
