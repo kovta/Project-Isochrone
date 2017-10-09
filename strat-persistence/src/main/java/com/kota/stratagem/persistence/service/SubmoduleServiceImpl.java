@@ -42,15 +42,8 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	public Submodule create(String name, String description, Date deadline, AppUser creator, Long project) {
 		final Project parentProject = this.projectService.readElementary(project);
 		final Submodule submodule = new Submodule(name, description, deadline, new Date(), new Date(), parentProject);
-		AppUser operatorTemp;
-		if (parentProject.getCreator().getId() == creator.getId()) {
-			operatorTemp = parentProject.getCreator();
-		} else {
-			operatorTemp = this.appUserService.readElementary(creator.getId());
-		}
-		final AppUser operator = operatorTemp;
-		submodule.setCreator(operator);
-		submodule.setModifier(operator);
+		submodule.setCreator(creator);
+		submodule.setModifier(creator);
 		this.entityManager.merge(submodule);
 		this.entityManager.flush();
 		return submodule;
@@ -74,6 +67,12 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	}
 
 	@Override
+	public Submodule readWithTasks(Long id) {
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
+				.getSingleResult();
+	}
+
+	@Override
 	public Submodule readWithDependencies(Long id) {
 		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
@@ -90,8 +89,8 @@ public class SubmoduleServiceImpl implements SubmoduleService {
 	}
 
 	@Override
-	public Submodule readWithTasks(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
+	public Submodule readWithTasksAndDirectDependencies(Long id) {
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id)
 				.getSingleResult();
 	}
 

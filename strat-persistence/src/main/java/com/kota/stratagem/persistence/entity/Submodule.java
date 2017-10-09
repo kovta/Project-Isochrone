@@ -51,6 +51,8 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm LEFT JOIN FETCH sm.creator WHERE sm.id=:"
+				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_COMPLETE, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at LEFT JOIN FETCH sm.creator LEFT JOIN FETCH sm.modifier WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_ALL_SUBMODULES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t ORDER BY sm.name"),

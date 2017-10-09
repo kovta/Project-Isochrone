@@ -20,13 +20,15 @@ public interface SubmoduleService {
 
 	Submodule readWithAssignments(Long id);
 
+	Submodule readWithTasks(Long id);
+
 	Submodule readWithDependencies(Long id);
 
 	Submodule readWithDependants(Long id);
 
 	Submodule readWithDirectDependencies(Long id);
 
-	Submodule readWithTasks(Long id);
+	Submodule readWithTasksAndDirectDependencies(Long id);
 
 	Submodule readComplete(Long id);
 
