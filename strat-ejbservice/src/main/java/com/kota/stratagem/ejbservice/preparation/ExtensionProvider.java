@@ -19,4 +19,6 @@ public interface ExtensionProvider {
 
 	void provideEstimations(CPMResult result, AbstractProgressionRepresentor representor);
 
+	void provideBlankEstimations(AbstractProgressionRepresentor representor);
+
 }

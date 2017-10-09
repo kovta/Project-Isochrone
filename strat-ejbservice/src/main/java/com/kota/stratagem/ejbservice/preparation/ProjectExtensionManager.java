@@ -118,7 +118,8 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	private void prepareSubComponents() {
 		final List<SubmoduleRepresentor> submodules = new ArrayList<SubmoduleRepresentor>();
 		for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
-			submodules.add((SubmoduleRepresentor) this.extensionManager.prepareForOwner(submodule));
+			submodules.add((SubmoduleRepresentor) this.extensionManager.prepareForOwner(this.submoduleConverter.toSubComplete(
+					this.submoduleService.readWithTasksAndDirectDependencies(submodule.getId()))));
 		}
 		this.representor.setSubmodules(submodules);
 	}
@@ -167,8 +168,7 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 			for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
 				if (!submodule.isCompleted()) {
 					configured = true;
-					submoduleComponents.add((SubmoduleRepresentor) (this.extensionManager.prepareForOwner(this.submoduleConverter.toDependencyExtended(
-							this.submoduleService.readWithDirectDependencies(submodule.getId())))));
+					submoduleComponents.add(submodule);
 				}
 			}
 			if (configured) {

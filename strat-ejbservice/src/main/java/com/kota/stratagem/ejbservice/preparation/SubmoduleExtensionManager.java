@@ -137,6 +137,8 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 			if (configured) {
 				network.addAll(this.cpmNodeConverter.to(components));
 				this.provider.provideEstimations(this.provider.evaluateDependencyNetwork(network, estimated), this.representor);
+			} else {
+				this.provider.provideBlankEstimations(this.representor);
 			}
 		}
 	}

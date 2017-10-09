@@ -46,17 +46,7 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 	@Override
 	public SubmoduleRepresentor toDependencyExtended(Submodule submodule) {
 		final SubmoduleRepresentor representor = this.toElementary(submodule);
-		if (submodule.getDependantSubmodules() != null) {
-			for (final Submodule dependant : submodule.getDependantSubmodules()) {
-				representor.addDependant(this.toElementary(dependant));
-			}
-		}
-		if (submodule.getSubmoduleDependencies() != null) {
-			for (final Submodule dependency : submodule.getSubmoduleDependencies()) {
-				representor.addDependency(this.toElementary(dependency));
-			}
-		}
-		return representor;
+		return this.includeDependencies(representor, submodule);
 	}
 
 	@Override
@@ -71,8 +61,14 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 	}
 
 	@Override
-	public SubmoduleRepresentor toComplete(Submodule submodule) {
+	public SubmoduleRepresentor toSubComplete(Submodule submodule) {
 		final SubmoduleRepresentor representor = this.toSimplified(submodule);
+		return this.includeDependencies(representor, submodule);
+	}
+
+	@Override
+	public SubmoduleRepresentor toComplete(Submodule submodule) {
+		final SubmoduleRepresentor representor = this.toSubComplete(submodule);
 		if (submodule.getAssignedTeams() != null) {
 			for (final TeamSubmoduleAssignment team : submodule.getAssignedTeams()) {
 				representor.addTeam(this.assignmentConverter.to(team));
@@ -84,6 +80,20 @@ public class SubmoduleConverterImpl extends AbstractMonitoredEntityConverter imp
 			}
 		}
 		return this.inculdeMonitoringFields(representor, submodule);
+	}
+
+	private SubmoduleRepresentor includeDependencies(SubmoduleRepresentor representor, Submodule submodule) {
+		if (submodule.getDependantSubmodules() != null) {
+			for (final Submodule dependant : submodule.getDependantSubmodules()) {
+				representor.addDependant(this.toElementary(dependant));
+			}
+		}
+		if (submodule.getSubmoduleDependencies() != null) {
+			for (final Submodule dependency : submodule.getSubmoduleDependencies()) {
+				representor.addDependency(this.toElementary(dependency));
+			}
+		}
+		return representor;
 	}
 
 	@Override

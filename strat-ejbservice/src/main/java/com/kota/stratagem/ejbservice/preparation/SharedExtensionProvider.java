@@ -111,4 +111,10 @@ public class SharedExtensionProvider implements ExtensionProvider {
 		}
 	}
 
+	@Override
+	public void provideBlankEstimations(AbstractProgressionRepresentor representor) {
+		representor.setExpectedDuration((double) 0);
+		representor.setVariance((double) 0);
+	}
+
 }

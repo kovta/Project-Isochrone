@@ -18,6 +18,8 @@ public interface SubmoduleConverter {
 
 	SubmoduleRepresentor toSimplified(Submodule submodule);
 
+	SubmoduleRepresentor toSubComplete(Submodule submodule);
+
 	SubmoduleRepresentor toComplete(Submodule submodule);
 
 	Set<SubmoduleRepresentor> toElementary(Set<Submodule> submodules);
