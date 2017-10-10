@@ -22,7 +22,7 @@ public class ObjectiveRestServiceBean implements ObjectiveRestService {
 
 	@Override
 	public ObjectiveRepresentor getObjective(Long id) throws ServiceException {
-		LOGGER.info("Get objective by id: (" + id + ")");
+		LOGGER.info("Get Objective by id: (" + id + ")");
 		return this.protocol.getObjective(id);
 	}
 
