@@ -15,6 +15,7 @@
 	            	<input type="hidden" name="id" value="${task.id}" />
 	      			<div class="md-form form-sm full-width text-center">
 	           			<h3>Are you sure you want to delete this Task?</h3>
+	           			<h5>The operation will irreversibly remove the Task with all its Assignments and Dependencies</h5>
 	           		</div>
 	            </div>
 	            <!--Footer-->

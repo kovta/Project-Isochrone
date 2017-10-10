@@ -15,6 +15,7 @@
 	            	<input type="hidden" name="id" value="${submodule.id}" />
 	      			<div class="md-form form-sm full-width text-center">
 	           			<h3>Are you sure you want to delete this Submodule?</h3>
+	           			<h5>The operation will irreversibly remove the Submodule with all its Tasks, Assignments and Dependencies</h5>
 	           		</div>
 	            </div>
 	            <!--Footer-->

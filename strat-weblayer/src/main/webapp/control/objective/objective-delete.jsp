@@ -15,6 +15,7 @@
 	            	<input type="hidden" name="id" value="${objective.id}" />
 	      			<div class="md-form form-sm full-width text-center">
 	           			<h3>Are you sure you want to delete this Objective?</h3>
+	           			<h5>The operation will irreversibly remove the Objective with all its Projects, Tasks and Assignments</h5>
 	           		</div>
 	            </div>
 	            <!--Footer-->
