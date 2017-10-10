@@ -33,13 +33,13 @@ public class AuthorizedInterceptor implements Serializable {
 		Object result = null;
 		RestrictionLevel restriction = null, methodAnnotationParameter = null, classAnnotationParameter = null;
 		for(Annotation annotation : context.getMethod().getAnnotations()) {
-			if(annotation.getClass().equals(Authorized.class)) {
+			if(annotation.annotationType().equals(Authorized.class)) {
 				methodAnnotationParameter = context.getMethod().getAnnotation(Authorized.class).value();
 			}
 		}
-		for(Annotation annotation : context.getClass().getAnnotations()) {
-			if(annotation.getClass().equals(Authorized.class)) {
-				classAnnotationParameter = context.getMethod().getAnnotation(Authorized.class).value();
+		for(Annotation annotation : context.getMethod().getDeclaringClass().getAnnotations()) {
+			if(annotation.annotationType().equals(Authorized.class)) {
+				classAnnotationParameter = context.getMethod().getDeclaringClass().getAnnotation(Authorized.class).value();
 			}
 		}
 		if(classAnnotationParameter != null) {
