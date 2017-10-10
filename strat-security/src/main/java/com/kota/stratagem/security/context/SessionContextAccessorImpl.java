@@ -1,4 +1,4 @@
-package com.kota.stratagem.ejbservice.access;
+package com.kota.stratagem.security.context;
 
 import java.io.Serializable;
 
