@@ -6,6 +6,7 @@ public enum ApplicationError {
 
 	UNEXPECTED(10, 500, "Unexpected error"), // Internal Server Error
 	NON_EXISTANT(40, 400, "Resource not found"), // Bad Request
+	UNAUTHORIZED(30, 401, "Unauthorized"), // Precondition Failed
 	HAS_DEPENDENCY(50, 412, "Has dependency"); // Precondition Failed
 
 	private final int code;
