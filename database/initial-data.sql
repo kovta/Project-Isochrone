@@ -247,7 +247,7 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (4, 'Incident wrap up', 'Closing all end-to-end test incidents', 1, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Stable build', 'Create maintainable build on CI server for ease of rollback', 1, 100, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Tab-like modal navigation', 'Investigate possibility to navigate between login and registration forms, in a tab-like manner. This might be a possible solution to the noticed UI bug.', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'REST', 'Create REST API module', 2, 20, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(7, 'REST', 'Create REST API module', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (8, 'RMI', 'Create Remote EJB module', 2, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Cross service navigator malfunction', 'Certain inputs return us to null zone', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (10, 'Olingo error', 'Default implementation in client system not sufficient', 2, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
