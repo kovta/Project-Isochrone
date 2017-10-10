@@ -22,6 +22,8 @@ import com.kota.stratagem.ejbserviceclient.protocol.ObjectiveProtocolRemote;
 import com.kota.stratagem.persistence.entity.trunk.ObjectiveStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.ObjectiveService;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.OBJECTIVE_PROTOCOL_SIGNATURE)
@@ -49,6 +51,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.CENTRAL_MANAGER_LEVEL)
 	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
 			Boolean confidentiality, String operator) throws AdaptorException {
 		return (ObjectiveRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
@@ -57,6 +60,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.CENTRAL_MANAGER_LEVEL)
 	public void removeObjective(Long id) throws AdaptorException {
 		try {
 			this.objectiveService.delete(id);

@@ -9,10 +9,10 @@ import javax.interceptor.InvocationContext;
 
 import org.apache.log4j.Logger;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbserviceclient.domain.designation.Dispatchable;
 import com.kota.stratagem.persistence.util.Constants;
+import com.kota.stratagem.security.context.SessionContextAccessor;
 
 @Deprecated
 @Overseen

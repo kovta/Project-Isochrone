@@ -6,6 +6,7 @@
 	<interceptors>
 		<class>com.kota.stratagem.ejbservice.interceptor.RegulatedInterceptor</class>
 		<class>com.kota.stratagem.ejbservice.interceptor.CertifiedInterceptor</class>
+		<class>com.kota.stratagem.security.interceptor.AuthorizedInterceptor</class>
 	</interceptors>
 	<decorators>
 		<class>com.kota.stratagem.ejbservice.decorator.ObjectiveProtocolDispatchDecorator</class>

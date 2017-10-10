@@ -4,7 +4,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -23,8 +22,12 @@ import com.kota.stratagem.persistence.qualifier.SubmoduleFocused;
 import com.kota.stratagem.persistence.qualifier.TaskFocused;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.delegation.group.TeamAssingmentService;
+import com.kota.stratagem.security.context.SessionContextAccessor;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
+@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 @Stateless(mappedName = EJBServiceConfiguration.TEAM_ASSIGNMENT_PROTOCOL_SIGNATURE)
 public class TeamAssignmentProtocolImpl implements TeamAssignmentProtocol {
 

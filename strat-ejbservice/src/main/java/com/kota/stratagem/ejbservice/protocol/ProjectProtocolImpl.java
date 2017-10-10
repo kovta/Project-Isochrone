@@ -25,6 +25,8 @@ import com.kota.stratagem.persistence.entity.Project;
 import com.kota.stratagem.persistence.entity.trunk.ProjectStatus;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.ProjectService;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.PROJECT_PROTOCOL_SIGNATURE)
@@ -78,6 +80,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_MANAGER_LEVEL)
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			String operator, Long objective) throws AdaptorException {
 		return (ProjectRepresentor) this.extensionManager.prepare(this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
@@ -86,6 +89,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_MANAGER_LEVEL)
 	public void removeProject(Long id) throws AdaptorException {
 		try {
 			this.projectService.delete(id);

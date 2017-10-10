@@ -8,7 +8,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserNameComparator;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.AppUserConverter;
@@ -28,7 +27,10 @@ import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
+import com.kota.stratagem.security.context.SessionContextAccessor;
+import com.kota.stratagem.security.domain.RestrictionLevel;
 import com.kota.stratagem.security.encryption.PasswordGenerationService;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.APP_USER_PROTOCOL_SIGNATURE)
@@ -198,6 +200,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_MANAGER_LEVEL)
 	public void removeAppUser(Long id) throws AdaptorException {
 		try {
 			this.appUserService.delete(id);

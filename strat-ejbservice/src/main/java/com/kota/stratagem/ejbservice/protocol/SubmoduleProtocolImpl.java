@@ -8,7 +8,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -21,6 +20,9 @@ import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceExcept
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
+import com.kota.stratagem.security.context.SessionContextAccessor;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.SUBMODULE_PROTOCOL_SIGNATURE)
@@ -74,6 +76,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
 		return (SubmoduleRepresentor) this.extensionManager.prepare(this.submoduleConverter.toComplete(((id != null) && this.submoduleService.exists(id))
 				? this.submoduleService.update(id, name, description, deadline, this.appUserService.readElementary(operator))
@@ -81,6 +84,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void removeSubmodule(Long id) throws AdaptorException {
 		try {
 			this.submoduleService.delete(id);
@@ -91,6 +95,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void saveSubmoduleDependencies(Long source, Long[] dependencies) throws AdaptorException {
 		for (final Long dependency : dependencies) {
 			this.submoduleService.createDependency(dependency, source,
@@ -99,6 +104,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void saveSubmoduleDependants(Long source, Long[] dependants) throws AdaptorException {
 		for (final Long dependant : dependants) {
 			this.submoduleService.createDependency(source, dependant,
@@ -107,6 +113,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void removeSubmoduleDependency(Long dependency, Long dependant) throws AdaptorException {
 		this.submoduleService.deleteDependency(dependency, dependant,
 				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());

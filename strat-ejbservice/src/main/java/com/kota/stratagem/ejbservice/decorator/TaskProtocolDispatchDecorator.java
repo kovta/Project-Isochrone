@@ -7,7 +7,6 @@ import javax.decorator.Delegate;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -15,6 +14,7 @@ import com.kota.stratagem.ejbservice.protocol.TaskProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.persistence.service.TaskService;
 import com.kota.stratagem.persistence.util.Constants;
+import com.kota.stratagem.security.context.SessionContextAccessor;
 
 @Decorator
 public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
@@ -32,7 +32,7 @@ public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
 	@Inject
 	private LifecycleOverseer overseer;
 
-	@Inject
+	@EJB
 	private SessionContextAccessor sessionContextAccessor;
 
 	@Override

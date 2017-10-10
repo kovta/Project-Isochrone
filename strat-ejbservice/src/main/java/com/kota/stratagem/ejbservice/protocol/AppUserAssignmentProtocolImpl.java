@@ -6,17 +6,22 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.delegation.AssignmentConverter;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
+import com.kota.stratagem.ejbservice.interceptor.Regulated;
 import com.kota.stratagem.ejbservice.util.ApplicationError;
 import com.kota.stratagem.persistence.exception.PersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserAssignmentService;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.util.Constants;
+import com.kota.stratagem.security.context.SessionContextAccessor;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
+@Regulated
+@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 @Stateless(mappedName = EJBServiceConfiguration.APP_USER_ASSIGNMENT_PROTOCOL_SIGNATURE)
 public class AppUserAssignmentProtocolImpl implements AppUserAssignmentProtocol {
 

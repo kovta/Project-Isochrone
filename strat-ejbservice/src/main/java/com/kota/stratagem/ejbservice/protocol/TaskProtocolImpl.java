@@ -8,7 +8,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -23,6 +22,9 @@ import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
+import com.kota.stratagem.security.context.SessionContextAccessor;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.TASK_PROTOCOL_SIGNATURE)
@@ -88,6 +90,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
 			String operator, Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic)
 			throws AdaptorException {
@@ -99,6 +102,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void removeTask(Long id) throws AdaptorException {
 		try {
 			this.taskService.delete(id);
@@ -109,6 +113,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void saveTaskDependencies(Long source, Long[] dependencies) throws AdaptorException {
 		for (final Long dependency : dependencies) {
 			this.taskService.createDependency(dependency, source,
@@ -117,6 +122,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void saveTaskDependants(Long source, Long[] dependants) throws AdaptorException {
 		for (final Long dependant : dependants) {
 			this.taskService.createDependency(source, dependant,
@@ -125,6 +131,7 @@ public class TaskProtocolImpl implements TaskProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void removeTaskDependency(Long dependency, Long dependant) throws AdaptorException {
 		this.taskService.deleteDependency(dependency, dependant,
 				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());

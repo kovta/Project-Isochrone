@@ -7,7 +7,6 @@ import javax.decorator.Delegate;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.converter.ProjectConverter;
 import com.kota.stratagem.ejbservice.dispatch.LifecycleOverseer;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
@@ -16,6 +15,7 @@ import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ProjectStatusRepresentor;
 import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.util.Constants;
+import com.kota.stratagem.security.context.SessionContextAccessor;
 
 @Decorator
 public abstract class ProjectProtocolDispatchDecorator implements ProjectProtocol {

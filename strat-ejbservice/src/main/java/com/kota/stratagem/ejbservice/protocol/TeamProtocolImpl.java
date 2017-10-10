@@ -8,7 +8,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.kota.stratagem.ejbservice.access.SessionContextAccessor;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamNameComparator;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.TeamConverter;
@@ -27,6 +26,9 @@ import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.TeamService;
+import com.kota.stratagem.security.context.SessionContextAccessor;
+import com.kota.stratagem.security.domain.RestrictionLevel;
+import com.kota.stratagem.security.interceptor.Authorized;
 
 @Regulated
 @Stateless(mappedName = EJBServiceConfiguration.TEAM_PROTOCOL_SIGNATURE)
@@ -113,6 +115,7 @@ public class TeamProtocolImpl implements TeamProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public TeamRepresentor saveTeam(Long id, String name, String leader) throws AdaptorException {
 		return (TeamRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.teamService.exists(id))
 				? this.teamService.update(id, name, leader, this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName())
@@ -120,6 +123,7 @@ public class TeamProtocolImpl implements TeamProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_MANAGER_LEVEL)
 	public void removeTeam(Long id) throws AdaptorException {
 		try {
 			this.teamService.delete(id);
@@ -130,6 +134,7 @@ public class TeamProtocolImpl implements TeamProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void saveTeamMemberships(Long id, String[] members) throws AdaptorException {
 		for (final String member : members) {
 			this.teamService.createMembership(id, member,
@@ -138,6 +143,7 @@ public class TeamProtocolImpl implements TeamProtocol {
 	}
 
 	@Override
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void removeTeamMembership(Long id, String member) throws AdaptorException {
 		this.teamService.deleteMembership(id, member,
 				this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()).getId());
