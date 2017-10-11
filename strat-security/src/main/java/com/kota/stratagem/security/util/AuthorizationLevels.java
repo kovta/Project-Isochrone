@@ -11,7 +11,7 @@ public class AuthorizationLevels {
 
 	private static Map<RestrictionLevel, String[]> PopulateAuthorityRestrictions() {
 
-		Map<RestrictionLevel, String[]> restrictions = new HashMap();
+		final Map<RestrictionLevel, String[]> restrictions = new HashMap<RestrictionLevel, String[]>();
 
 		restrictions.put(RestrictionLevel.SYSTEM_ADMINISTRATOR_LEVEL, Authorizations.SYSTEM_ADMINISTRATOR_LEVEL);
 

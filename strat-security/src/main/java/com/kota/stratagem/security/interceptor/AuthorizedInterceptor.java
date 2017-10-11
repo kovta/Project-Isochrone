@@ -32,23 +32,23 @@ public class AuthorizedInterceptor implements Serializable {
 		boolean authorized = true;
 		Object result = null;
 		RestrictionLevel restriction = null, methodAnnotationParameter = null, classAnnotationParameter = null;
-		for(Annotation annotation : context.getMethod().getAnnotations()) {
-			if(annotation.annotationType().equals(Authorized.class)) {
+		for (final Annotation annotation : context.getMethod().getAnnotations()) {
+			if (annotation.annotationType().equals(Authorized.class)) {
 				methodAnnotationParameter = context.getMethod().getAnnotation(Authorized.class).value();
 			}
 		}
-		for(Annotation annotation : context.getMethod().getDeclaringClass().getAnnotations()) {
-			if(annotation.annotationType().equals(Authorized.class)) {
+		for (final Annotation annotation : context.getMethod().getDeclaringClass().getAnnotations()) {
+			if (annotation.annotationType().equals(Authorized.class)) {
 				classAnnotationParameter = context.getMethod().getDeclaringClass().getAnnotation(Authorized.class).value();
 			}
 		}
-		if(classAnnotationParameter != null) {
+		if (classAnnotationParameter != null) {
 			restriction = classAnnotationParameter;
 		}
-		if(methodAnnotationParameter != null) {
+		if (methodAnnotationParameter != null) {
 			restriction = methodAnnotationParameter;
 		}
-		if((methodAnnotationParameter == null) && (classAnnotationParameter == null)) {
+		if ((methodAnnotationParameter == null) && (classAnnotationParameter == null)) {
 			throw new InvalidRestrictionLevelException();
 		}
 		if (!this.authorize(restriction)) {
@@ -67,8 +67,8 @@ public class AuthorizedInterceptor implements Serializable {
 
 	private boolean authorize(RestrictionLevel restriction) {
 		boolean authorized = false;
-		for(String role : AuthorizationLevels.getAuthorityRestrictions().get(restriction)) {
-			if(this.sessionContextAccessor.getSessionContext().isCallerInRole(role)) {
+		for (final String role : AuthorizationLevels.getAuthorityRestrictions().get(restriction)) {
+			if (this.sessionContextAccessor.getSessionContext().isCallerInRole(role)) {
 				authorized = true;
 			}
 		}
