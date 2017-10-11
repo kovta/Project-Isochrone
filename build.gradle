@@ -6,15 +6,17 @@ ear {
 }
 
 ext {
-	log4jVersion = '1.2.17'
 	jeeVersion = '6.0'
 	jbossjee6Version = '3.0.3.Final'
-	servletapiVersion = '3.0.1'
+	log4jVersion = '1.2.17'
+	postgresqlVersion = '9.4+'
 	hibernateVersion = '4.3.10.Final'
+	servletapiVersion = '3.0.1'
 	jstlVersion = '1.2'
 	jaxrsVersion = '2.0.1'
 	resteasyVersion = '2.3.7.Final'
 	jbossjmsclientVersion = '7.2.0.Final'
+	testngVersion = '6.9.+'
 	
 	webapplicationName = 'strat-weblayer.war'
 	webapplicationContextPath = 'stratagem'
@@ -37,7 +39,6 @@ allprojects {
 		runtime group: 'org.mindrot', name: 'jbcrypt', version: '0.3m', ext: 'jar'
         compile group: 'org.picketbox', name: 'picketbox', version: '4.1.5.Final'
 		compile group: 'log4j', name: 'log4j', version: log4jVersion
-		compile group: 'javax', name: 'javaee-api', version: jeeVersion
 		compile group: 'org.apache.activemq', name: 'activemq-jaas', version: '5.14.4'
 	}
 }
@@ -47,6 +48,12 @@ ear {
     	webModule( webapplicationName, webapplicationContextPath ) 
     	webModule( webserviceArchiveName, webserviceContextPath )
     }
+}
+
+configure(subprojects.findAll {it.name != 'strat-persistence'}) {
+	dependencies {	
+		compile group: 'javax', name: 'javaee-api', version: jeeVersion
+	}
 }
 
 dependencies {
