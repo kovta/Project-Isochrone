@@ -58,11 +58,11 @@ public abstract class AbstractDevelopmentProcessor {
 
 	private String divergenceSummarizer(Map<String, String> origin_attributes, Map<String, String> result_attributes) {
 		String modificationItems = "";
-		if ((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL) == null) && !this.empty(result_attributes.get(Constants.DESCRIPTION_DATA_LABEL).trim())) {
+		if ((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL) == null) && !this.empty(result_attributes.get(Constants.DESCRIPTION_DATA_LABEL))) {
 			modificationItems += MessageAssembler.buildAddedAttributeMessage(Constants.DESCRIPTION_DATA_LABEL,
 					result_attributes.get(Constants.DESCRIPTION_DATA_LABEL));
 		} else if ((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL) != null) && (result_attributes.get(Constants.DESCRIPTION_DATA_LABEL) == null)
-				&& !"".equals((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL).trim()))) {
+				&& !"".equals((origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL)))) {
 			if (!origin_attributes.get(Constants.DESCRIPTION_DATA_LABEL).equals(result_attributes.get(Constants.DESCRIPTION_DATA_LABEL))) {
 				modificationItems += MessageAssembler.buildRemovedAttributeMessage(Constants.DESCRIPTION_DATA_LABEL);
 			}
