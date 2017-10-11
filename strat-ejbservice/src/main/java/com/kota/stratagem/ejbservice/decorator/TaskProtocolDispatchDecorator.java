@@ -32,7 +32,7 @@ public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
 	@Inject
 	private LifecycleOverseer overseer;
 
-	@EJB
+	@Inject
 	private SessionContextAccessor sessionContextAccessor;
 
 	@Override

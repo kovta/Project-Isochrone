@@ -80,7 +80,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	}
 
 	@Override
-	@Authorized(RestrictionLevel.GENERAL_MANAGER_LEVEL)
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public ProjectRepresentor saveProject(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
 			String operator, Long objective) throws AdaptorException {
 		return (ProjectRepresentor) this.extensionManager.prepare(this.projectConverter.toComplete((id != null) && this.projectService.exists(id)
@@ -89,7 +89,7 @@ public class ProjectProtocolImpl implements ProjectProtocol {
 	}
 
 	@Override
-	@Authorized(RestrictionLevel.GENERAL_MANAGER_LEVEL)
+	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public void removeProject(Long id) throws AdaptorException {
 		try {
 			this.projectService.delete(id);
