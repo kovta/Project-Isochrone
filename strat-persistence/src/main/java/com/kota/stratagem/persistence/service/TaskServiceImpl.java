@@ -10,8 +10,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
@@ -33,10 +31,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.TASK_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class TaskServiceImpl implements TaskService {
-
-	@Inject
-	private EntityManager entityManager;
+public class TaskServiceImpl extends IntegratedPersistenceService implements TaskService {
 
 	@EJB
 	private AppUserService appUserService;
@@ -51,9 +46,10 @@ public class TaskServiceImpl implements TaskService {
 	private SubmoduleService submoduleService;
 
 	@Override
-	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser creator, Long objective,
+	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective,
 			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) {
 		final Task task = new Task(name, description, priority, completion, deadline, duration, admittance, new Date(), new Date());
+		final AppUser operator = this.appUserService.readElementary(creator);
 		if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
 			task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
 		}
@@ -70,8 +66,8 @@ public class TaskServiceImpl implements TaskService {
 			parentSubmodule = this.submoduleService.readElementary(submodule);
 			task.setSubmodule(parentSubmodule);
 		}
-		task.setCreator(creator);
-		task.setModifier(creator);
+		task.setCreator(operator);
+		task.setModifier(operator);
 		this.entityManager.merge(task);
 		this.entityManager.flush();
 		return task;
@@ -119,10 +115,10 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser modifier,
+	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String modifier,
 			Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) {
 		final Task task = this.readComplete(id);
-		final AppUser operator = this.appUserService.readElementary(modifier.getId());
+		final AppUser operator = this.appUserService.readElementary(modifier);
 		task.setName(name);
 		task.setDescription(description);
 		task.setPriority(priority);

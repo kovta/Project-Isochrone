@@ -10,8 +10,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
@@ -30,10 +28,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.SUBMODULE_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class SubmoduleServiceImpl implements SubmoduleService {
-
-	@Inject
-	private EntityManager entityManager;
+public class SubmoduleServiceImpl extends IntegratedPersistenceService implements SubmoduleService {
 
 	@EJB
 	private AppUserService appUserService;

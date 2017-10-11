@@ -5,14 +5,13 @@ import java.util.Set;
 
 import javax.ejb.Local;
 
-import com.kota.stratagem.persistence.entity.AppUser;
 import com.kota.stratagem.persistence.entity.Task;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 
 @Local
 public interface TaskService {
 
-	Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser creator, Long objective,
+	Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective,
 			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic);
 
 	Task readElementary(Long id);
@@ -31,7 +30,7 @@ public interface TaskService {
 
 	Set<Task> readAll();
 
-	Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, AppUser modifier, Long objective,
+	Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String modifier, Long objective,
 			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic);
 
 	void delete(Long id) throws CoherentPersistenceServiceException;

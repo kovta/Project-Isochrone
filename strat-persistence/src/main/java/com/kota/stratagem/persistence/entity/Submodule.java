@@ -28,9 +28,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import com.kota.stratagem.persistence.parameter.SubmoduleParameter;
 import com.kota.stratagem.persistence.query.SubmoduleQuery;
 
@@ -109,7 +106,6 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_project", nullable = false))
-	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
 
 	public Submodule() {
