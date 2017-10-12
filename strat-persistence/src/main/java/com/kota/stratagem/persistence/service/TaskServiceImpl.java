@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -31,19 +30,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.TASK_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class TaskServiceImpl extends IntegratedPersistenceService implements TaskService {
-
-	@EJB
-	private AppUserService appUserService;
-
-	@EJB
-	private ObjectiveService objectiveService;
-
-	@EJB
-	private ProjectService projectService;
-
-	@EJB
-	private SubmoduleService submoduleService;
+public class TaskServiceImpl extends IntegratedDependencyContainer implements TaskService {
 
 	@Override
 	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective,

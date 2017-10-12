@@ -28,9 +28,12 @@ public class ServiceImplIntegrationTest {
 
 	private static final String PERSISTENCE_UNIT = "strat-persistence-test-unit";
 
+	private static final Long PRISTINE_OBJECTIVE_IDENTIFIER = 10L;
 	private static final Long PRISTINE_PROJECT_IDENTIFIER = 8L;
+	private static final Long PRISTINE_SUBMODULE_IDENTIFIER = 20L;
 	private static final Long PRISTINE_TASK_IDENTIFIER = 15L;
 
+	private AppUserServiceImpl appUserService;
 	private ObjectiveServiceImpl objectiveService;
 	private ProjectServiceImpl projectService;
 	private SubmoduleServiceImpl submoduleService;
@@ -51,49 +54,113 @@ public class ServiceImplIntegrationTest {
 		final EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
 		final EntityManager entityManager = factory.createEntityManager();
 
+		this.appUserService = new AppUserServiceImpl();
+		this.appUserService.setEntityManager(entityManager);
+
 		this.objectiveService = new ObjectiveServiceImpl();
 		this.objectiveService.setEntityManager(entityManager);
+		this.resolveServiceDependencies(this.objectiveService);
 
 		this.projectService = new ProjectServiceImpl();
 		this.projectService.setEntityManager(entityManager);
+		this.resolveServiceDependencies(this.projectService);
 
 		this.submoduleService = new SubmoduleServiceImpl();
 		this.submoduleService.setEntityManager(entityManager);
+		this.resolveServiceDependencies(this.submoduleService);
 
 		this.taskService = new TaskServiceImpl();
 		this.taskService.setEntityManager(entityManager);
+		this.resolveServiceDependencies(this.taskService);
+	}
+
+	private <T extends IntegratedDependencyContainer> void resolveServiceDependencies(T serviceInstance) {
+		if (serviceInstance.getAppUserService() == null) {
+			serviceInstance.setAppUserService(new AppUserServiceImpl());
+		}
+		if (serviceInstance.getObjectiveService() == null) {
+			serviceInstance.setObjectiveService(new ObjectiveServiceImpl());
+		}
+		if (serviceInstance.getProjectService() == null) {
+			serviceInstance.setProjectService(new ProjectServiceImpl());
+		}
+		if (serviceInstance.getSubmoduleService() == null) {
+			serviceInstance.setSubmoduleService(new SubmoduleServiceImpl());
+		}
+		if (serviceInstance.getTaskService() == null) {
+			serviceInstance.setTaskService(new TaskServiceImpl());
+		}
+	}
+
+	@Test(groups = "integration")
+	private void createObjective() throws PersistenceServiceException {
+		this.objectiveService.setAppUserService(this.appUserService);
+		if (this.objectiveService.exists(PRISTINE_OBJECTIVE_IDENTIFIER)) {
+			this.objectiveService.getEntityManager().getTransaction().begin();
+			this.objectiveService.delete(PRISTINE_OBJECTIVE_IDENTIFIER);
+			this.objectiveService.getEntityManager().getTransaction().commit();
+		}
+
+		this.objectiveService.getEntityManager().getTransaction().begin();
+		final Objective objective = this.objectiveService.create("Test Objective 2", "", 10, ObjectiveStatus.PLANNED, null, true, "adam");
+		this.projectService.getEntityManager().getTransaction().commit();
+		Assert.assertNotNull(objective);
 	}
 
 	@Test(groups = "integration")
 	private void createProject() throws PersistenceServiceException {
-		if (this.projectService.exists(PRISTINE_TASK_IDENTIFIER)) {
+		this.taskService.setAppUserService(this.appUserService);
+		this.submoduleService.setTaskService(this.taskService);
+		this.projectService.setAppUserService(this.appUserService);
+		this.projectService.setObjectiveService(this.objectiveService);
+		this.projectService.setSubmoduleService(this.submoduleService);
+		this.projectService.setTaskService(this.taskService);
+		if (this.projectService.exists(PRISTINE_PROJECT_IDENTIFIER)) {
 			this.projectService.getEntityManager().getTransaction().begin();
-			this.projectService.delete(PRISTINE_TASK_IDENTIFIER);
+			this.projectService.delete(PRISTINE_PROJECT_IDENTIFIER);
 			this.projectService.getEntityManager().getTransaction().commit();
 		}
 
 		this.projectService.getEntityManager().getTransaction().begin();
-		this.projectService.create("Test Project", "", ProjectStatus.TESTING, null, true, "adam", 7L);
+		final Project project = this.projectService.create("Test Project", "", ProjectStatus.TESTING, null, true, "adam", 7L);
 		this.projectService.getEntityManager().getTransaction().commit();
+		Assert.assertNotNull(project);
+	}
 
-		final Project project = this.projectService.readElementary(PRISTINE_TASK_IDENTIFIER);
-		Assert.assertEquals(project.getName(), "Test Project");
+	@Test(groups = "integration")
+	private void createSubmodule() throws PersistenceServiceException {
+		this.submoduleService.setAppUserService(this.appUserService);
+		this.submoduleService.setProjectService(this.projectService);
+		this.submoduleService.setTaskService(this.taskService);
+		if (this.submoduleService.exists(PRISTINE_SUBMODULE_IDENTIFIER)) {
+			this.submoduleService.getEntityManager().getTransaction().begin();
+			this.submoduleService.delete(PRISTINE_SUBMODULE_IDENTIFIER);
+			this.submoduleService.getEntityManager().getTransaction().commit();
+		}
+
+		this.submoduleService.getEntityManager().getTransaction().begin();
+		final Submodule submodule = this.submoduleService.create("Test Submodule 6", "", null, "adam", 10L);
+		this.submoduleService.getEntityManager().getTransaction().commit();
+		Assert.assertNotNull(submodule);
 	}
 
 	@Test(groups = "integration")
 	private void createTask() throws PersistenceServiceException {
+		this.projectService.setAppUserService(this.appUserService);
+		this.taskService.setObjectiveService(this.objectiveService);
+		this.taskService.setProjectService(this.projectService);
+		this.taskService.setSubmoduleService(this.submoduleService);
 		if (this.taskService.exists(PRISTINE_TASK_IDENTIFIER)) {
-			this.taskService.getEntityManager().getTransaction().begin();
+			// this.taskService.getEntityManager().getTransaction().begin();
 			this.taskService.delete(PRISTINE_TASK_IDENTIFIER);
 			this.taskService.getEntityManager().getTransaction().commit();
 		}
 
-		this.taskService.getEntityManager().getTransaction().begin();
-		this.taskService.create("Project Level Test Task 1", "", 10, 0, null, false, "adam", null, 8L, null, null, null, null, null);
-		this.taskService.getEntityManager().getTransaction().commit();
-
-		final Task task = this.taskService.readElementary(PRISTINE_TASK_IDENTIFIER);
-		Assert.assertEquals(task.getName(), "Project Level Test Task 1");
+		// this.taskService.getEntityManager().getTransaction().begin();
+		// final Task task = this.taskService.create("Project Level Test Task 1", "", 10, 0, null, false, "adam", null,
+		// 10L, null, null, null, null, null);
+		// this.taskService.getEntityManager().getTransaction().commit();
+		// Assert.assertNotNull(task);
 	}
 
 	@Test(groups = "integration")
@@ -112,8 +179,8 @@ public class ServiceImplIntegrationTest {
 
 	@Test(groups = "integration")
 	private void readSampleProject() throws PersistenceServiceException {
-		final Project project = this.projectService.readElementary(8L);
-		this.assertProject(project, 8L, "Test Project", "", ProjectStatus.PROPOSED, true, 7L);
+		final Project project = this.projectService.readElementary(10L);
+		this.assertProject(project, 10L, "Test Project 2", "", ProjectStatus.PROPOSED, true, 7L);
 	}
 
 	private void assertProject(final Project project, Long id, String name, String description, ProjectStatus status, Boolean confidential, Long objective) {
@@ -127,8 +194,8 @@ public class ServiceImplIntegrationTest {
 
 	@Test(groups = "integration")
 	private void readSampleSubmodule() throws PersistenceServiceException {
-		final Submodule submodule = this.submoduleService.readElementary(6L);
-		Assert.assertEquals(submodule.getId(), (Long) 6L);
+		final Submodule submodule = this.submoduleService.readElementary(21L);
+		Assert.assertEquals(submodule.getId(), (Long) 21L);
 	}
 
 	@Test(groups = "integration")

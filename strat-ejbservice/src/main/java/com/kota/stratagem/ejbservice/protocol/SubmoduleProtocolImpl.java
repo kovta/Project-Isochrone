@@ -78,9 +78,9 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@Override
 	@Authorized(RestrictionLevel.GENERAL_USER_LEVEL)
 	public SubmoduleRepresentor saveSubmodule(Long id, String name, String description, Date deadline, String operator, Long project) throws AdaptorException {
-		return (SubmoduleRepresentor) this.extensionManager.prepare(this.submoduleConverter.toComplete(((id != null) && this.submoduleService.exists(id))
-				? this.submoduleService.update(id, name, description, deadline, this.appUserService.readElementary(operator))
-				: this.submoduleService.create(name, description, deadline, this.appUserService.readElementary(operator), project)));
+		return (SubmoduleRepresentor) this.extensionManager.prepare(this.submoduleConverter
+				.toComplete(((id != null) && this.submoduleService.exists(id)) ? this.submoduleService.update(id, name, description, deadline, operator)
+						: this.submoduleService.create(name, description, deadline, operator, project)));
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -28,23 +27,15 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.SUBMODULE_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class SubmoduleServiceImpl extends IntegratedPersistenceService implements SubmoduleService {
-
-	@EJB
-	private AppUserService appUserService;
-
-	@EJB
-	private ProjectService projectService;
-
-	@EJB
-	private TaskService taskService;
+public class SubmoduleServiceImpl extends IntegratedDependencyContainer implements SubmoduleService {
 
 	@Override
-	public Submodule create(String name, String description, Date deadline, AppUser creator, Long project) {
+	public Submodule create(String name, String description, Date deadline, String creator, Long project) {
 		final Project parentProject = this.projectService.readElementary(project);
+		final AppUser operator = this.appUserService.readElementary(creator);
 		final Submodule submodule = new Submodule(name, description, deadline, new Date(), new Date(), parentProject);
-		submodule.setCreator(creator);
-		submodule.setModifier(creator);
+		submodule.setCreator(operator);
+		submodule.setModifier(operator);
 		this.entityManager.merge(submodule);
 		this.entityManager.flush();
 		return submodule;
@@ -109,9 +100,9 @@ public class SubmoduleServiceImpl extends IntegratedPersistenceService implement
 	}
 
 	@Override
-	public Submodule update(Long id, String name, String description, Date deadline, AppUser modifier) {
+	public Submodule update(Long id, String name, String description, Date deadline, String modifier) {
 		final Submodule submodule = this.readComplete(id);
-		final AppUser operator = this.appUserService.readElementary(modifier.getId());
+		final AppUser operator = this.appUserService.readElementary(modifier);
 		submodule.setName(name);
 		submodule.setDescription(description);
 		submodule.setDeadline(deadline);

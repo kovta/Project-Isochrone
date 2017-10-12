@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -30,19 +29,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.PROJECT_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class ProjectServiceImpl extends IntegratedPersistenceService implements ProjectService {
-
-	@EJB
-	private AppUserService appUserService;
-
-	@EJB
-	private ObjectiveService objectiveService;
-
-	@EJB
-	private SubmoduleService submoduleService;
-
-	@EJB
-	private TaskService taskService;
+public class ProjectServiceImpl extends IntegratedDependencyContainer implements ProjectService {
 
 	@Override
 	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String creator, Long objective) {

@@ -9,8 +9,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import com.kota.stratagem.persistence.context.PersistenceServiceConfiguration;
 import com.kota.stratagem.persistence.entity.AppUser;
@@ -26,10 +24,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.APP_USER_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class AppUserServiceImpl implements AppUserService {
-
-	@Inject
-	private EntityManager entityManager;
+public class AppUserServiceImpl extends IntegratedDependencyContainer implements AppUserService {
 
 	@Override
 	public AppUser create(String name, String passwordHash, String email, Role role) {
