@@ -88,7 +88,8 @@ INSERT INTO objectives (objective_id, objective_name, objective_description, obj
 (4, 'Develop cross-platfrom worflow management system', 'Due to competitors lack in flexibility and structure handling the creation of revisioned management system could give us a leading edge on the market', 1, 1, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (5, 'Clone specific customer architectures into a more flexible microservice-based solution', 'Efforts to follow new trends', 4, 3, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Recreating designated legacy control systems into the cloud', 'Software preconditions and multiple high end requests have led to the descision to move solutions to a cloud platfrom', 6, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(7, 'Test Objective', '', 10, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(7, 'Test Objective', '', 10, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(8, 'Test Objective 2', '', 10, 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('objectives_objective_id_seq', COALESCE(MAX(objective_id), 0) ) FROM objectives;
 
 INSERT INTO objective_missions (mission_id, mission_name, mission_description, mission_objective, mission_stage_id) VALUES
@@ -136,8 +137,9 @@ INSERT INTO projects (project_id, project_name, project_description, project_sta
 (5, 'Resolving of Very High level tickets due to schema migration', 'Our last service migration caused problems in push sub-module. The problem is more complex than just a quick refactor', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (6, 'Back-end training', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(8, 'Test Project', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(8, 'Test Project 1', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(10, 'Test Project 2', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('projects_project_id_seq', COALESCE(MAX(project_id), 0) ) FROM projects;
 
 INSERT INTO project_missions (mission_id, mission_name, mission_description, mission_project, mission_stage_id) VALUES
@@ -182,7 +184,8 @@ INSERT INTO objective_projects (objective_project_objective, objective_project_p
 (3, 6),
 (4, 7),
 (4, 9),
-(7, 8);
+(7, 8),
+(7, 10);
 
 -- ###########################################################################################
 
@@ -206,7 +209,9 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (16, 'Test Submodule 2', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (17, 'Test Submodule 3', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (18, 'Test Submodule 4', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(19, 'Test Submodule 5', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(19, 'Test Submodule 5', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(20, 'Test Submodule 6', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(21, 'Test Submodule 7', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -229,7 +234,9 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (8, 16),
 (8, 17),
 (8, 18),
-(8, 19);
+(8, 19),
+(10, 20),
+(10, 21);
 
 INSERT INTO submodule_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (6, 16),
