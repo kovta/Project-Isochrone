@@ -67,10 +67,10 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void sortSpecializedCollections() {
 		Collections.reverse(this.representor.getDependantChain());
-		for (final List<TaskRepresentor> dependantLevel : this.representor.getDependantChain()) {
+		for(final List<TaskRepresentor> dependantLevel : this.representor.getDependantChain()) {
 			Collections.sort(dependantLevel, new TaskNameComparator());
 		}
-		for (final List<TaskRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
+		for(final List<TaskRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
 			Collections.sort(dependencyLevel, new TaskNameComparator());
 		}
 	}
@@ -88,65 +88,91 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	public void provideDependencyChain() {
 		final List<Long> identifiers = new ArrayList<>();
-		if (!this.representor.getDependantTasks().isEmpty()) {
+		if(!this.representor.getDependantTasks().isEmpty()) {
 			final List<List<TaskRepresentor>> dependantChain = new ArrayList<>();
+			final List<TaskRepresentor> dependencyLayer = new ArrayList<>();
 			final Queue<TaskRepresentor> queue = new LinkedList<TaskRepresentor>();
+			int dependencyLevel = -1;
+			representor.setDependencyLevel(0);
 			queue.add(this.representor);
-			TaskRepresentor current;
-			while ((current = queue.poll()) != null) {
-				this.traverseDependants(current, queue, dependantChain, identifiers);
+			TaskRepresentor currentNode;
+			while((currentNode = queue.poll()) != null) {
+				if(!currentNode.getDependantTasks().isEmpty()) {
+					final List<TaskRepresentor> nodes = new ArrayList<TaskRepresentor>(currentNode.getDependantTasks());
+					for(final TaskRepresentor dependant : currentNode.getDependantTasks()) {
+						if(identifiers.contains(dependant.getId())) {
+							nodes.remove(dependant);
+						} else {
+							identifiers.add(dependant.getId());
+						}
+					}
+					if(!nodes.isEmpty()) {
+						dependencyLayer.addAll(nodes);
+					}
+					if(currentNode.getDependencyLevel() > dependencyLevel) {
+						if(!dependencyLayer.isEmpty()) {
+							dependantChain.add(new ArrayList<>(dependencyLayer));
+						}
+						dependencyLayer.clear();
+						dependencyLevel = currentNode.getDependencyLevel();
+					}
+					for(int i = 0; i < currentNode.getDependantTasks().size(); i++) {
+						final TaskRepresentor dependantNode = this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(currentNode.getDependantTasks().get(i).getId()));
+						dependantNode.setDependencyLevel(currentNode.getDependencyLevel() + 1);
+						queue.add(dependantNode);
+					}
+				}
 			}
 			this.representor.setDependantChain(dependantChain);
 		}
-		if (!this.representor.getTaskDependencies().isEmpty()) {
+		if(!this.representor.getTaskDependencies().isEmpty()) {
 			final List<List<TaskRepresentor>> dependencyChain = new ArrayList<>();
 			final Queue<TaskRepresentor> queue = new LinkedList<TaskRepresentor>();
 			queue.add(this.representor);
 			TaskRepresentor current;
-			while ((current = queue.poll()) != null) {
+			while((current = queue.poll()) != null) {
 				this.traverseDependencies(current, queue, dependencyChain, identifiers);
 			}
 			this.representor.setDependencyChain(dependencyChain);
 		}
 	}
 
-	private void traverseDependants(TaskRepresentor node, Queue<TaskRepresentor> queue, List<List<TaskRepresentor>> dependantChain, List<Long> identifiers) {
-		if (!node.getDependantTasks().isEmpty()) {
+	private void traverseDependants(TaskRepresentor node, Queue<TaskRepresentor> queue, List<List<TaskRepresentor>> dependantChain, List<Long> identifiers, List<TaskRepresentor> dependencyLayer,
+			int currentDependencyLevel) {
+		if(!node.getDependantTasks().isEmpty()) {
 			final List<TaskRepresentor> nodes = new ArrayList<TaskRepresentor>(node.getDependantTasks());
-			for (final TaskRepresentor dependant : node.getDependantTasks()) {
-				if (identifiers.contains(dependant.getId())) {
+			for(final TaskRepresentor dependant : node.getDependantTasks()) {
+				if(identifiers.contains(dependant.getId())) {
 					nodes.remove(dependant);
 				} else {
 					identifiers.add(dependant.getId());
 				}
 			}
-			if (!nodes.isEmpty()) {
+			if(!nodes.isEmpty()) {
 				dependantChain.add(nodes);
 			}
-			for (int i = 0; i < node.getDependantTasks().size(); i++) {
-				final TaskRepresentor dependantNode = this.taskConverter
-						.toSimplified(this.taskService.readWithDirectDependencies(node.getDependantTasks().get(i).getId()));
+			for(int i = 0; i < node.getDependantTasks().size(); i++) {
+				final TaskRepresentor dependantNode = this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(node.getDependantTasks().get(i).getId()));
 				queue.add(dependantNode);
 			}
 		}
 	}
 
 	private void traverseDependencies(TaskRepresentor node, Queue<TaskRepresentor> queue, List<List<TaskRepresentor>> dependencyChain, List<Long> identifiers) {
-		if (!node.getTaskDependencies().isEmpty()) {
+		if(!node.getTaskDependencies().isEmpty()) {
 			final List<TaskRepresentor> nodes = new ArrayList<TaskRepresentor>(node.getTaskDependencies());
-			for (final TaskRepresentor dependency : node.getTaskDependencies()) {
-				if (identifiers.contains(dependency.getId())) {
+			for(final TaskRepresentor dependency : node.getTaskDependencies()) {
+				if(identifiers.contains(dependency.getId())) {
 					nodes.remove(dependency);
 				} else {
 					identifiers.add(dependency.getId());
 				}
 			}
-			if (!nodes.isEmpty()) {
+			if(!nodes.isEmpty()) {
 				dependencyChain.add(nodes);
 			}
-			for (int i = 0; i < node.getTaskDependencies().size(); i++) {
-				final TaskRepresentor dependencyNode = this.taskConverter
-						.toSimplified(this.taskService.readWithDirectDependencies(node.getTaskDependencies().get(i).getId()));
+			for(int i = 0; i < node.getTaskDependencies().size(); i++) {
+				final TaskRepresentor dependencyNode = this.taskConverter.toSimplified(this.taskService.readWithDirectDependencies(node.getTaskDependencies().get(i).getId()));
 				queue.add(dependencyNode);
 			}
 		}
@@ -154,7 +180,7 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	public void provideDependantCount() {
 		int total = 0;
-		for (final List<TaskRepresentor> dependantLevel : this.representor.getDependantChain()) {
+		for(final List<TaskRepresentor> dependantLevel : this.representor.getDependantChain()) {
 			total += dependantLevel.size();
 		}
 		this.representor.setDependantCount(total);
@@ -162,7 +188,7 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	public void provideDependencyCount() {
 		int total = 0;
-		for (final List<TaskRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
+		for(final List<TaskRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
 			total += dependencyLevel.size();
 		}
 		this.representor.setDependencyCount(total);

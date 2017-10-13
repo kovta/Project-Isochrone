@@ -124,7 +124,7 @@ public abstract class TeamAssignmentProtocolDispatchDecorator implements TeamAss
 	public void removeProjectAssignment(Long id) throws AdaptorException {
 		final Set<AppUserProjectAssignmentRepresentor> assignments = this.converter
 				.toAppUserProjectAssignmentSet(this.converter.to((TeamProjectAssignment) this.projectAssignmentService.read(id)));
-		this.protocol.removeObjectiveAssignment(id);
+		this.protocol.removeProjectAssignment(id);
 		for (final AppUserProjectAssignmentRepresentor assignment : assignments) {
 			this.overseer.dissociated(assignment.toTextMessage());
 		}
@@ -134,7 +134,7 @@ public abstract class TeamAssignmentProtocolDispatchDecorator implements TeamAss
 	public void removeSubmoduleAssignment(Long id) throws AdaptorException {
 		final Set<AppUserSubmoduleAssignmentRepresentor> assignments = this.converter
 				.toAppUserSubmoduleAssignmentSet(this.converter.to((TeamSubmoduleAssignment) this.submoduleAssignmentService.read(id)));
-		this.protocol.removeObjectiveAssignment(id);
+		this.protocol.removeSubmoduleAssignment(id);
 		for (final AppUserSubmoduleAssignmentRepresentor assignment : assignments) {
 			this.overseer.dissociated(assignment.toTextMessage());
 		}
@@ -144,7 +144,7 @@ public abstract class TeamAssignmentProtocolDispatchDecorator implements TeamAss
 	public void removeTaskAssignment(Long id) throws AdaptorException {
 		final Set<AppUserTaskAssignmentRepresentor> assignments = this.converter
 				.toAppUserTaskAssignmentSet(this.converter.to((TeamTaskAssignment) this.taskAssignmentService.read(id)));
-		this.protocol.removeObjectiveAssignment(id);
+		this.protocol.removeTaskAssignment(id);
 		for (final AppUserTaskAssignmentRepresentor assignment : assignments) {
 			this.overseer.dissociated(assignment.toTextMessage());
 		}
