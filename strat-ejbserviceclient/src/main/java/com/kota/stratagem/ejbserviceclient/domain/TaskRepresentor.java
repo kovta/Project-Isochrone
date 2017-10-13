@@ -34,6 +34,7 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	private List<List<TaskRepresentor>> dependantChain;
 	private List<List<TaskRepresentor>> dependencyChain;
+	private int dependencyLevel;
 	private int dependantCount;
 	private int dependencyCount;
 	private Double expectedDuration;
@@ -160,11 +161,11 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 	}
 
 	public Boolean isDurationProvided() {
-		return (this.duration != null);
+		return(this.duration != null);
 	}
 
 	public Boolean isEstimated() {
-		return ((this.pessimistic != null) && (this.realistic != null) && (this.optimistic != null));
+		return((this.pessimistic != null) && (this.realistic != null) && (this.optimistic != null));
 	}
 
 	@Override
@@ -216,6 +217,14 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 		this.dependencyChain = dependencyChain;
 	}
 
+	public int getDependencyLevel() {
+		return dependencyLevel;
+	}
+
+	public void setDependencyLevel(int dependencyLevel) {
+		this.dependencyLevel = dependencyLevel;
+	}
+
 	public int getDependantCount() {
 		return this.dependantCount;
 	}
@@ -252,25 +261,22 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	@Override
 	public String toString() {
-		return "TaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", estimated=" + this.isEstimated() + ", duration=" + this.duration + ", pessimistic="
-				+ this.pessimistic + ", realistic=" + this.realistic + ", optimistic=" + this.optimistic + ", admittance=" + this.admittance + ", creator="
-				+ this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate
-				+ ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks="
-				+ this.dependantTasks + ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project
-				+ ", submodule=" + this.submodule + ", dependantChain=" + this.dependantChain + ", dependencyChain=" + this.dependencyChain
-				+ ", dependantCount=" + this.dependantCount + ", dependencyCount=" + this.dependencyCount + "]";
+		return "TaskRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion=" + this.completion + ", deadline="
+				+ this.deadline + ", estimated=" + this.isEstimated() + ", duration=" + this.duration + ", pessimistic=" + this.pessimistic + ", realistic=" + this.realistic + ", optimistic="
+				+ this.optimistic + ", admittance=" + this.admittance + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate="
+				+ this.modificationDate + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", dependantTasks="
+				+ this.dependantTasks + ", taskDependencies=" + this.taskDependencies + ", objective=" + this.objective + ", project=" + this.project + ", submodule=" + this.submodule
+				+ ", dependantChain=" + this.dependantChain + ", dependencyChain=" + this.dependencyChain + ", dependantCount=" + this.dependantCount + ", dependencyCount=" + this.dependencyCount
+				+ "]";
 	}
 
 	@Override
 	public String toTextMessage() {
-		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
-				+ ", completion=" + this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", creator_id=" + this.creator.getId()
-				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id="
-				+ (this.objective != null ? this.objective.getId().toString() : "null") + ", project_id="
-				+ (this.project != null ? this.project.getId().toString() : "null") + ", submodule_id="
-				+ (this.submodule != null ? this.submodule.getId().toString() : "null") + ", duration=" + this.duration + ", pessimistic=" + this.pessimistic
-				+ ", realistic=" + this.realistic + ", optimistic=" + this.optimistic + "]";
+		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion=" + this.completion + ", deadline="
+				+ this.deadline + ", admittance=" + this.admittance + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId()
+				+ ", objective_id=" + (this.objective != null ? this.objective.getId().toString() : "null") + ", project_id=" + (this.project != null ? this.project.getId().toString() : "null")
+				+ ", submodule_id=" + (this.submodule != null ? this.submodule.getId().toString() : "null") + ", duration=" + this.duration + ", pessimistic=" + this.pessimistic + ", realistic="
+				+ this.realistic + ", optimistic=" + this.optimistic + "]";
 	}
 
 	@Override
@@ -301,21 +307,21 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if(this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if(obj == null) {
 			return false;
 		}
-		if (this.getClass() != obj.getClass()) {
+		if(this.getClass() != obj.getClass()) {
 			return false;
 		}
 		final TaskRepresentor other = (TaskRepresentor) obj;
-		if (this.id == null) {
-			if (other.id != null) {
+		if(this.id == null) {
+			if(other.id != null) {
 				return false;
 			}
-		} else if (!this.id.equals(other.id)) {
+		} else if(!this.id.equals(other.id)) {
 			return false;
 		}
 		return true;

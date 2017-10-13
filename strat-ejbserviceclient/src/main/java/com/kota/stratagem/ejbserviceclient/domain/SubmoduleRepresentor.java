@@ -28,6 +28,7 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 	private List<TaskRepresentor> completedTasks;
 	private List<List<SubmoduleRepresentor>> dependantChain;
 	private List<List<SubmoduleRepresentor>> dependencyChain;
+	private int dependencyLevel;
 	private int dependantCount;
 	private int dependencyCount;
 
@@ -149,6 +150,14 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 		this.dependencyChain = dependencyChain;
 	}
 
+	public int getDependencyLevel() {
+		return dependencyLevel;
+	}
+
+	public void setDependencyLevel(int dependencyLevel) {
+		this.dependencyLevel = dependencyLevel;
+	}
+
 	public int getDependantCount() {
 		return this.dependantCount;
 	}
@@ -177,17 +186,15 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 
 	@Override
 	public String toString() {
-		return "\nSubmoduleRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline
-				+ ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate="
-				+ this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers
-				+ ", project=" + this.project + "]";
+		return "\nSubmoduleRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate="
+				+ this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
+				+ ", assignedUsers=" + this.assignedUsers + ", project=" + this.project + "]";
 	}
 
 	@Override
 	public String toTextMessage() {
-		return "SubmoduleRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline
-				+ ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", project_id="
-				+ this.project.getId() + "]";
+		return "SubmoduleRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline + ", creator_id=" + this.creator.getId()
+				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", project_id=" + this.project.getId() + "]";
 	}
 
 	@Override
