@@ -139,7 +139,8 @@ INSERT INTO projects (project_id, project_name, project_description, project_sta
 (7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (8, 'Test Project 1', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(10, 'Test Project 2', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(10, 'Test Project 2', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(11, 'Test Project 3', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('projects_project_id_seq', COALESCE(MAX(project_id), 0) ) FROM projects;
 
 INSERT INTO project_missions (mission_id, mission_name, mission_description, mission_project, mission_stage_id) VALUES
@@ -185,7 +186,8 @@ INSERT INTO objective_projects (objective_project_objective, objective_project_p
 (4, 7),
 (4, 9),
 (7, 8),
-(7, 10);
+(7, 10),
+(7, 11);
 
 -- ###########################################################################################
 
@@ -326,7 +328,8 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (76, 'Project level test Task 10', '', 10, 0, NULL, 0, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (77, 'Project level test Task 11', '', 10, 0, NULL, 3, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (78, 'Project level test Task 12', '', 10, 0, NULL, 2, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(79, 'Project level test Task 13', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(79, 'Project level test Task 13', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(80, 'Project level test Task 14', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -369,7 +372,8 @@ INSERT INTO project_tasks (project_task_project_id, project_task_task_id) VALUES
 (8, 79),
 (7, 22),
 (7, 24),
-(7, 25);
+(7, 25),
+(10, 80);
 
 INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id) VALUES
 (0, 16),
