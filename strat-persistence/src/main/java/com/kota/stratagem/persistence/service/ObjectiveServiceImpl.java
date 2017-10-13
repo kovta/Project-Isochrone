@@ -28,7 +28,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.OBJECTIVE_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class ObjectiveServiceImpl extends IntegratedDependencyContainer implements ObjectiveService {
+public class ObjectiveServiceImpl extends IntegrationDependencyContainer implements ObjectiveService {
 
 	@Override
 	public Objective create(String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, String creator) {
@@ -48,38 +48,32 @@ public class ObjectiveServiceImpl extends IntegratedDependencyContainer implemen
 
 	@Override
 	public Objective readWithMonitoring(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_MONITORING, Objective.class).setParameter(ObjectiveParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_MONITORING, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Objective readWithAssignments(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_ASSIGNMENTS, Objective.class).setParameter(ObjectiveParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_ASSIGNMENTS, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Objective readWithTasks(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_TASKS, Objective.class).setParameter(ObjectiveParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_TASKS, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Objective readWithProjects(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, Objective.class).setParameter(ObjectiveParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Objective readWithProjectsAndTasks(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, Objective.class).setParameter(ObjectiveParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_WITH_PROJECTS_AND_TASKS, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Objective readComplete(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_COMPLETE, Objective.class).setParameter(ObjectiveParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ObjectiveQuery.GET_BY_ID_COMPLETE, Objective.class).setParameter(ObjectiveParameter.ID, id).getSingleResult();
 	}
 
 	@Override
@@ -88,8 +82,7 @@ public class ObjectiveServiceImpl extends IntegratedDependencyContainer implemen
 	}
 
 	@Override
-	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality,
-			String modifier) {
+	public Objective update(Long id, String name, String description, int priority, ObjectiveStatus status, Date deadline, Boolean confidentiality, String modifier) {
 		final Objective objective = this.readComplete(id);
 		final AppUser operator = this.appUserService.readElementary(modifier);
 		objective.setName(name);
@@ -98,9 +91,9 @@ public class ObjectiveServiceImpl extends IntegratedDependencyContainer implemen
 		objective.setStatus(status);
 		objective.setDeadline(deadline);
 		objective.setConfidential(confidentiality);
-		if (objective.getCreator().getId() == operator.getId()) {
+		if(objective.getCreator().getId() == operator.getId()) {
 			objective.setModifier(objective.getCreator());
-		} else if (objective.getModifier().getId() != operator.getId()) {
+		} else if(objective.getModifier().getId() != operator.getId()) {
 			objective.setModifier(operator);
 		}
 		objective.setModificationDate(new Date());
@@ -109,14 +102,14 @@ public class ObjectiveServiceImpl extends IntegratedDependencyContainer implemen
 
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
-		if (this.exists(id)) {
+		if(this.exists(id)) {
 			this.entityManager.createNamedQuery(TeamObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 			final Objective objective = this.readWithProjectsAndTasks(id);
-			for (final Project project : objective.getProjects()) {
+			for(final Project project : objective.getProjects()) {
 				this.projectService.delete(project.getId());
 			}
-			for (final Task task : objective.getTasks()) {
+			for(final Task task : objective.getTasks()) {
 				this.taskService.delete(task.getId());
 			}
 			this.entityManager.createNamedQuery(ObjectiveQuery.REMOVE_BY_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();

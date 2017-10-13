@@ -27,7 +27,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.SUBMODULE_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class SubmoduleServiceImpl extends IntegratedDependencyContainer implements SubmoduleService {
+public class SubmoduleServiceImpl extends IntegrationDependencyContainer implements SubmoduleService {
 
 	@Override
 	public Submodule create(String name, String description, Date deadline, String creator, Long project) {
@@ -48,50 +48,42 @@ public class SubmoduleServiceImpl extends IntegratedDependencyContainer implemen
 
 	@Override
 	public Submodule readWithMonitoring(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_MONITORING, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_MONITORING, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithAssignments(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithTasks(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithDependencies(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithDependants(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithDirectDependencies(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readWithTasksAndDirectDependencies(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, Submodule.class)
-				.setParameter(SubmoduleParameter.ID, id).getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Submodule readComplete(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_COMPLETE, Submodule.class).setParameter(SubmoduleParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(SubmoduleQuery.GET_BY_ID_COMPLETE, Submodule.class).setParameter(SubmoduleParameter.ID, id).getSingleResult();
 	}
 
 	@Override
@@ -106,9 +98,9 @@ public class SubmoduleServiceImpl extends IntegratedDependencyContainer implemen
 		submodule.setName(name);
 		submodule.setDescription(description);
 		submodule.setDeadline(deadline);
-		if (submodule.getCreator().getId() == operator.getId()) {
+		if(submodule.getCreator().getId() == operator.getId()) {
 			submodule.setModifier(submodule.getCreator());
-		} else if (submodule.getModifier().getId() != operator.getId()) {
+		} else if(submodule.getModifier().getId() != operator.getId()) {
 			submodule.setModifier(operator);
 		}
 		submodule.setModificationDate(new Date());
@@ -117,11 +109,11 @@ public class SubmoduleServiceImpl extends IntegratedDependencyContainer implemen
 
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
-		if (this.exists(id)) {
+		if(this.exists(id)) {
 			this.entityManager.createNamedQuery(TeamSubmoduleAssignmentQuery.REMOVE_BY_SUBMODULE_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserSubmoduleAssignmentQuery.REMOVE_BY_SUBMODULE_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 			final Submodule submodule = this.readWithTasks(id);
-			for (final Task task : submodule.getTasks()) {
+			for(final Task task : submodule.getTasks()) {
 				this.taskService.delete(task.getId());
 			}
 			this.entityManager.createNamedQuery(SubmoduleQuery.REMOVE_BY_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
@@ -157,15 +149,15 @@ public class SubmoduleServiceImpl extends IntegratedDependencyContainer implemen
 	}
 
 	private Set<Submodule> manageOperators(Submodule satiator, Submodule maintainer, Long operator) {
-		if (maintainer.getCreator().getId() == operator) {
+		if(maintainer.getCreator().getId() == operator) {
 			maintainer.setModifier(maintainer.getCreator());
-		} else if (maintainer.getModifier().getId() != operator) {
+		} else if(maintainer.getModifier().getId() != operator) {
 			maintainer.setModifier(this.appUserService.readElementary(operator));
 		}
 		maintainer.setModificationDate(new Date());
-		if (satiator.getCreator().getId() == operator) {
+		if(satiator.getCreator().getId() == operator) {
 			satiator.setModifier(satiator.getCreator());
-		} else if (satiator.getModifier().getId() != operator) {
+		} else if(satiator.getModifier().getId() != operator) {
 			satiator.setModifier(this.appUserService.readElementary(operator));
 		}
 		this.entityManager.merge(satiator);

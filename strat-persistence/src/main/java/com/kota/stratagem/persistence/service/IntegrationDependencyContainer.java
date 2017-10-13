@@ -4,7 +4,7 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-public class IntegratedDependencyContainer {
+public class IntegrationDependencyContainer {
 
 	@Inject
 	protected EntityManager entityManager;

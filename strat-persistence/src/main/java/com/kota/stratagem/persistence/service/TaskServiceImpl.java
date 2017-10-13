@@ -30,26 +30,26 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.TASK_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class TaskServiceImpl extends IntegratedDependencyContainer implements TaskService {
+public class TaskServiceImpl extends IntegrationDependencyContainer implements TaskService {
 
 	@Override
-	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective,
-			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) {
+	public Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective, Long project, Long submodule,
+			Double duration, Double pessimistic, Double realistic, Double optimistic) {
 		final Task task = new Task(name, description, priority, completion, deadline, duration, admittance, new Date(), new Date());
 		final AppUser operator = this.appUserService.readElementary(creator);
-		if ((pessimistic != null) && (realistic != null) && (optimistic != null)) {
+		if((pessimistic != null) && (realistic != null) && (optimistic != null)) {
 			task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
 		}
 		Objective parentObjective = null;
 		Project parentProject = null;
 		Submodule parentSubmodule = null;
-		if (objective != null) {
+		if(objective != null) {
 			parentObjective = this.objectiveService.readElementary(objective);
 			task.setObjective(parentObjective);
-		} else if (project != null) {
+		} else if(project != null) {
 			parentProject = this.projectService.readElementary(project);
 			task.setProject(parentProject);
-		} else if (submodule != null) {
+		} else if(submodule != null) {
 			parentSubmodule = this.submoduleService.readElementary(submodule);
 			task.setSubmodule(parentSubmodule);
 		}
@@ -87,8 +87,7 @@ public class TaskServiceImpl extends IntegratedDependencyContainer implements Ta
 
 	@Override
 	public Task readWithDirectDependencies(Long id) {
-		return this.entityManager.createNamedQuery(TaskQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, Task.class).setParameter(TaskParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(TaskQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, Task.class).setParameter(TaskParameter.ID, id).getSingleResult();
 	}
 
 	@Override
@@ -102,8 +101,8 @@ public class TaskServiceImpl extends IntegratedDependencyContainer implements Ta
 	}
 
 	@Override
-	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String modifier,
-			Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) {
+	public Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String modifier, Long objective, Long project, Long submodule,
+			Double duration, Double pessimistic, Double realistic, Double optimistic) {
 		final Task task = this.readComplete(id);
 		final AppUser operator = this.appUserService.readElementary(modifier);
 		task.setName(name);
@@ -112,25 +111,25 @@ public class TaskServiceImpl extends IntegratedDependencyContainer implements Ta
 		task.setCompletion(completion);
 		task.setDeadline(deadline);
 		task.setAdmittance(admittance);
-		if (task.getCreator().getId() == operator.getId()) {
+		if(task.getCreator().getId() == operator.getId()) {
 			task.setModifier(task.getCreator());
-		} else if (task.getModifier().getId() != operator.getId()) {
+		} else if(task.getModifier().getId() != operator.getId()) {
 			task.setModifier(operator);
 		}
 		task.setModificationDate(new Date());
-		if (objective != null) {
+		if(objective != null) {
 			task.setObjective(this.objectiveService.readWithTasks(objective));
-		} else if (project != null) {
+		} else if(project != null) {
 			task.setProject(this.projectService.readWithTasks(project));
-		} else if (submodule != null) {
+		} else if(submodule != null) {
 			task.setSubmodule(this.submoduleService.readWithTasks(submodule));
 		}
-		if ((pessimistic != null) || (realistic != null) || (optimistic != null)) {
+		if((pessimistic != null) || (realistic != null) || (optimistic != null)) {
 			task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
 			task.setDuration(null);
-		} else if (duration != null) {
+		} else if(duration != null) {
 			task.setDuration(duration);
-			if (task.getEstimation() != null) {
+			if(task.getEstimation() != null) {
 				this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 			}
 		}
@@ -139,7 +138,7 @@ public class TaskServiceImpl extends IntegratedDependencyContainer implements Ta
 
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
-		if (this.exists(id)) {
+		if(this.exists(id)) {
 			this.entityManager.createNamedQuery(TeamTaskAssignmentQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserTaskAssignmentQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
@@ -176,15 +175,15 @@ public class TaskServiceImpl extends IntegratedDependencyContainer implements Ta
 	}
 
 	private Set<Task> manageOperators(Task satiator, Task maintainer, Long operator) {
-		if (maintainer.getCreator().getId() == operator) {
+		if(maintainer.getCreator().getId() == operator) {
 			maintainer.setModifier(maintainer.getCreator());
-		} else if (maintainer.getModifier().getId() != operator) {
+		} else if(maintainer.getModifier().getId() != operator) {
 			maintainer.setModifier(this.appUserService.readElementary(operator));
 		}
 		maintainer.setModificationDate(new Date());
-		if (satiator.getCreator().getId() == operator) {
+		if(satiator.getCreator().getId() == operator) {
 			satiator.setModifier(satiator.getCreator());
-		} else if (satiator.getModifier().getId() != operator) {
+		} else if(satiator.getModifier().getId() != operator) {
 			satiator.setModifier(this.appUserService.readElementary(operator));
 		}
 		this.entityManager.merge(satiator);

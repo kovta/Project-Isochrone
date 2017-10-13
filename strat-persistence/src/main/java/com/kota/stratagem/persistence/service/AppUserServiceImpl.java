@@ -24,7 +24,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.APP_USER_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class AppUserServiceImpl extends IntegratedDependencyContainer implements AppUserService {
+public class AppUserServiceImpl extends IntegrationDependencyContainer implements AppUserService {
 
 	@Override
 	public AppUser create(String name, String passwordHash, String email, Role role) {
@@ -41,20 +41,17 @@ public class AppUserServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public AppUser readElementary(String username) {
-		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME, AppUser.class).setParameter(AppUserParameter.USERNAME, username).getSingleResult();
 	}
 
 	@Override
 	public AppUser readWithNotifications(Long id) {
-		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, AppUser.class).setParameter(AppUserParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, AppUser.class).setParameter(AppUserParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public AppUser readWithNotifications(String username) {
-		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_WITH_NOTIFICATIONS, AppUser.class)
-				.setParameter(AppUserParameter.USERNAME, username).getSingleResult();
+		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_WITH_NOTIFICATIONS, AppUser.class).setParameter(AppUserParameter.USERNAME, username).getSingleResult();
 	}
 
 	@Override
@@ -64,14 +61,12 @@ public class AppUserServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public AppUser readComplete(String username) {
-		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_COMPLETE, AppUser.class).setParameter(AppUserParameter.USERNAME, username)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(AppUserQuery.GET_BY_USERNAME_COMPLETE, AppUser.class).setParameter(AppUserParameter.USERNAME, username).getSingleResult();
 	}
 
 	@Override
 	public Set<AppUser> readByRole(Role role) {
-		return new HashSet<AppUser>(
-				this.entityManager.createNamedQuery(AppUserQuery.GET_ALL_BY_ROLE, AppUser.class).setParameter(AppUserParameter.ROLE, role).getResultList());
+		return new HashSet<AppUser>(this.entityManager.createNamedQuery(AppUserQuery.GET_ALL_BY_ROLE, AppUser.class).setParameter(AppUserParameter.ROLE, role).getResultList());
 	}
 
 	@Override
@@ -84,14 +79,14 @@ public class AppUserServiceImpl extends IntegratedDependencyContainer implements
 		final AppUser user = this.readComplete(id);
 		final AppUser operator = this.readElementary(modifier);
 		user.setName(name);
-		if (passwordHash != null) {
+		if(passwordHash != null) {
 			user.setPasswordHash(passwordHash);
 		}
 		user.setEmail(email);
 		user.setRole(role);
-		if (user.getAccountModifier() == null) {
+		if(user.getAccountModifier() == null) {
 			user.setAccountModifier(operator);
-		} else if (user.getAccountModifier().getId() != operator.getId()) {
+		} else if(user.getAccountModifier().getId() != operator.getId()) {
 			user.setAccountModifier(operator);
 		}
 		user.setAccountModificationDate(new Date());
@@ -114,8 +109,8 @@ public class AppUserServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
-		if (this.exists(id)) {
-			if (this.readComplete(id).getProjects().size() == 0) {
+		if(this.exists(id)) {
+			if(this.readComplete(id).getProjects().size() == 0) {
 				this.entityManager.createNamedQuery(AppUserQuery.REMOVE_BY_ID).setParameter(AppUserParameter.ID, id).executeUpdate();
 			} else {
 				throw new CoherentPersistenceServiceException(PersistenceApplicationError.HAS_DEPENDENCY, "AppUser has undeleted dependency(s)", id.toString());
@@ -133,8 +128,7 @@ public class AppUserServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public void addNotification(Long id, Notification notification) {
-		final AppUser recipient = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, AppUser.class)
-				.setParameter(AppUserParameter.ID, id).getSingleResult();
+		final AppUser recipient = this.entityManager.createNamedQuery(AppUserQuery.GET_BY_ID_WITH_NOTIFICATIONS, AppUser.class).setParameter(AppUserParameter.ID, id).getSingleResult();
 		recipient.addNotification(notification);
 		this.entityManager.merge(recipient);
 	}

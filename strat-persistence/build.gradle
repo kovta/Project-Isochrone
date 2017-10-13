@@ -5,6 +5,8 @@ jar {
 dependencies {
 	compileOnly group: 'javax', name: 'javaee-api', version: jeeVersion
 
+	compile group: 'org.hibernate', name: 'hibernate-core', version: hibernateVersion
+
     testCompile group: 'org.testng', name: 'testng', version: testngVersion	
 	testCompile group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
 	testCompile group: 'org.hibernate', name: 'hibernate-core', version: hibernateVersion

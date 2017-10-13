@@ -29,7 +29,7 @@ import com.kota.stratagem.persistence.util.PersistenceApplicationError;
 @Stateless(mappedName = PersistenceServiceConfiguration.PROJECT_SERVICE_SIGNATURE)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class ProjectServiceImpl extends IntegratedDependencyContainer implements ProjectService {
+public class ProjectServiceImpl extends IntegrationDependencyContainer implements ProjectService {
 
 	@Override
 	public Project create(String name, String description, ProjectStatus status, Date deadline, Boolean confidentiality, String creator, Long objective) {
@@ -50,14 +50,12 @@ public class ProjectServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public Project readWithMonitoring(Long id) {
-		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_MONITORING, Project.class).setParameter(ProjectParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_MONITORING, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Project readWithAssignments(Long id) {
-		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_ASSIGNMENTS, Project.class).setParameter(ProjectParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_ASSIGNMENTS, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
 	}
 
 	@Override
@@ -67,14 +65,12 @@ public class ProjectServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public Project readWithSubmodules(Long id) {
-		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES, Project.class).setParameter(ProjectParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
 	}
 
 	@Override
 	public Project readWithSubmodulesAndTasks(Long id) {
-		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, Project.class).setParameter(ProjectParameter.ID, id)
-				.getSingleResult();
+		return this.entityManager.createNamedQuery(ProjectQuery.GET_BY_ID_WITH_SUBMODULES_AND_TASKS, Project.class).setParameter(ProjectParameter.ID, id).getSingleResult();
 	}
 
 	@Override
@@ -84,8 +80,7 @@ public class ProjectServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public Set<Project> readByStatus(ProjectStatus status) {
-		return new HashSet<Project>(this.entityManager.createNamedQuery(ProjectQuery.GET_ALL_BY_STATUS, Project.class)
-				.setParameter(ProjectParameter.STATUS, status).getResultList());
+		return new HashSet<Project>(this.entityManager.createNamedQuery(ProjectQuery.GET_ALL_BY_STATUS, Project.class).setParameter(ProjectParameter.STATUS, status).getResultList());
 	}
 
 	@Override
@@ -102,9 +97,9 @@ public class ProjectServiceImpl extends IntegratedDependencyContainer implements
 		project.setStatus(status);
 		project.setDeadline(deadline);
 		project.setConfidential(confidentiality);
-		if (project.getCreator().getId() == operator.getId()) {
+		if(project.getCreator().getId() == operator.getId()) {
 			project.setModifier(project.getCreator());
-		} else if (project.getModifier().getId() != operator.getId()) {
+		} else if(project.getModifier().getId() != operator.getId()) {
 			project.setModifier(operator);
 		}
 		project.setModificationDate(new Date());
@@ -113,14 +108,14 @@ public class ProjectServiceImpl extends IntegratedDependencyContainer implements
 
 	@Override
 	public void delete(Long id) throws CoherentPersistenceServiceException {
-		if (this.exists(id)) {
+		if(this.exists(id)) {
 			this.entityManager.createNamedQuery(TeamProjectAssignmentQuery.REMOVE_BY_PROJECT_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserProjectAssignmentQuery.REMOVE_BY_PROJECT_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
 			final Project project = this.readWithSubmodulesAndTasks(id);
-			for (final Submodule submodule : project.getSubmodules()) {
+			for(final Submodule submodule : project.getSubmodules()) {
 				this.submoduleService.delete(submodule.getId());
 			}
-			for (final Task task : project.getTasks()) {
+			for(final Task task : project.getTasks()) {
 				this.taskService.delete(task.getId());
 			}
 			this.entityManager.createNamedQuery(ProjectQuery.REMOVE_BY_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
