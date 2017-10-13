@@ -217,7 +217,7 @@ tight-paragraph {
     position: fixed;
     top: 10%;
     right: 2%;
-    width: 23%;
+    width: 315px;
     background: #CC0000;
 }
 #inner-message {
@@ -228,7 +228,7 @@ tight-paragraph {
 	position: fixed;
     top: 10%;
     right: 2%;
-    width: 23%;
+    width: 315px;
     background: #00d555;
 }
 #inner-message {

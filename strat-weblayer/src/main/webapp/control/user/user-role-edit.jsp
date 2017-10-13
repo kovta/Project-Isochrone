@@ -8,14 +8,14 @@
         <div class="modal-content">
             <!--Header-->
             <div class="modal-header mdb-color darken-1 white-text">
-				<h4 class="title"><i class="fa fa-list-alt"></i>Role Management</h4>
+				<h4 class="title"><i class="fa fa-certificate"></i>Role Management</h4>
             </div>
             <!--Body-->
             <form action="UserRole" method="post">
 	            <div class="modal-body">
 	            	<input type="hidden" name="id" value="${requestScope.user.id}" />
 					<div class="md-form form-sm">
-						<i class="fa fa-lightbulb-o prefix"></i>
+						<i class="fa fa-vcard prefix"></i>
                			<label>Set User Role</label>
                			<br/>
                   	</div>
