@@ -53,6 +53,9 @@ public class StructureDissociationListener extends AbstractDevelopmentMessageRou
 						this.taskProcessor.processDissociation(partitions[1]);
 						break;
 					default:
+						if(LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Invalid structureType: " + structureSelector + "!");
+						}
 						throw new InvalidStructureTypeException();
 				}
 			}

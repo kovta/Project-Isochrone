@@ -47,6 +47,9 @@ public class StructureConfigurationListener extends AbstractDevelopmentMessageRo
 						this.taskProcessor.processConfiguration(partitions[1], partitions[3]);
 						break;
 					default:
+						if(LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Invalid structureType: " + structureSelector + "!");
+						}
 						throw new InvalidStructureTypeException();
 				}
 			}

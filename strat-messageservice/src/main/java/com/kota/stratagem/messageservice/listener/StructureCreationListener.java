@@ -53,6 +53,9 @@ public class StructureCreationListener extends AbstractDevelopmentMessageRouter 
 						this.taskProcessor.processCreation(partitions[1]);
 						break;
 					default:
+						if(LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Invalid structureType: " + structureSelector + "!");
+						}
 						throw new InvalidStructureTypeException();
 				}
 			}

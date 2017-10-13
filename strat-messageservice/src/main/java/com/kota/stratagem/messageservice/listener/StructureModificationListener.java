@@ -53,6 +53,9 @@ public class StructureModificationListener extends AbstractDevelopmentMessageRou
 						this.taskProcessor.processModification(partitions[1], partitions[3]);
 						break;
 					default:
+						if(LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Invalid structureType: " + structureSelector + "!");
+						}
 						throw new InvalidStructureTypeException();
 				}
 			}

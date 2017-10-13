@@ -53,6 +53,9 @@ public class StructureAssignmentListener extends AbstractDevelopmentMessageRoute
 						this.taskProcessor.processAssignment(partitions[1]);
 						break;
 					default:
+						if(LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Invalid structureType: " + structureSelector + "!");
+						}
 						throw new InvalidStructureTypeException();
 				}
 			}
