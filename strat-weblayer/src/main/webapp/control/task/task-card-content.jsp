@@ -19,7 +19,7 @@
 <c:if test="${not empty task.deadline or task.isEstimated() or task.isDurationProvided()}">
 	<c:if test="${not empty task.deadline}">
 		<p class="card-text">
-			Deadline:
+			<span>Deadline: </span>
 			<c:choose>
 				<c:when test="${task.urgencyLevel eq 3 and task.completion ne 100}">
 					<span class="danger-text">
@@ -52,13 +52,19 @@
 	<c:if test="${task.isEstimated()}">
 		<p class="card-text ">Duration: Estimated</p>
 		<p class="card-text" style="margin-bottom: 2px;">
-			Pessimistic: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.pessimistic}" /><c:out value="${task.pessimistic eq 1 ? ' day' : ' days'}" />
+			<span>Pessimistic: </span> 
+			<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.pessimistic}" />
+			<c:out value="${task.pessimistic eq 1 ? ' day' : ' days'}" />
 		</p>
 		<p class="card-text" style="margin-bottom: 2px;">
-			Realistic: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.realistic}" /><c:out value="${task.realistic eq 1 ? ' day' : ' days'}" />
+			<span>Realistic: </span>
+			<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.realistic}" />
+			<c:out value="${task.realistic eq 1 ? ' day' : ' days'}" />
 		</p>
 		<p class="card-text" style="margin-bottom: 2px;">
-			Optimistic: <fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.optimistic}" /><c:out value="${task.optimistic eq 1 ? ' day' : ' days'}" />
+			<span>Optimistic: </span>
+			<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${task.optimistic}" />
+			<c:out value="${task.optimistic eq 1 ? ' day' : ' days'}" />
 		</p>
 	</c:if>
 	<hr/>

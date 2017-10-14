@@ -21,7 +21,7 @@
 			<td class="strat-detail-attribute-name">Deadline</td>
 			<td class="strat-detail-attribute-value">
 			    <c:choose>
-					<c:when test="${empty project.deadline}">Not specified</c:when>
+					<c:when test="${empty objective.deadline}">Not specified</c:when>
 					<c:when test="${objective.urgencyLevel eq 3 and objective.completion ne 100}">
 						<span class="danger-text">
 							<fmt:formatDate type="date" value="${objective.deadline}" pattern="yyyy-MM-dd" />
@@ -65,6 +65,86 @@
 			<td class="strat-detail-attribute-name">Completion</td>
 			<td class="strat-detail-attribute-value">${objective.completion} %</td>
 		</tr>
+				<c:if test="${objective.durationSum ne 0}">
+			<tr class="text-center">
+				<td colspan="2">
+					<hr class="detail-table-top-header"/><strong><span>Progression Evaluation</span></strong><hr class="detail-table-bottom-header"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="strat-detail-attribute-name">Progression</td>
+				<td class="strat-detail-attribute-value">
+					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${(objective.completedDurationSum / objective.durationSum) * 100}" />
+					<c:out value=" %" />
+				</td>
+			</tr>
+			<c:if test="${objective.completedDurationSum eq objective.durationSum}">
+				<tr>
+					<td class="strat-detail-attribute-name"></td>
+					<td class="strat-detail-attribute-value">
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${objective.durationSum}" />
+						<c:out value="${objective.completedDurationSum eq 1 ? ' day' : ' days'}" />
+						<c:out value=" in total" />
+					</td>
+				</tr>			
+			</c:if>
+			<c:if test="${objective.completedDurationSum ne objective.durationSum}">
+				<tr>
+					<td class="strat-detail-attribute-name"></td>
+					<td class="strat-detail-attribute-value">
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${objective.completedDurationSum}" />
+						<c:out value="${objective.completedDurationSum eq 1 ? ' day' : ' days'}" />
+						<c:out value=" finished" />
+					</td>
+				</tr>
+				<tr>
+					<td class="strat-detail-attribute-name"></td>
+					<td class="strat-detail-attribute-value">
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${objective.durationSum}" />
+						<c:out value="${objective.completedDurationSum eq 1 ? ' day' : ' days'}" />
+						<c:out value=" in total" />
+					</td>
+				</tr>
+				<tr>
+					<td class="strat-detail-attribute-name">Expected Completion Date</td>
+					<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${objective.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+				</tr>
+				<c:if test="${objective.expectedCompletionDate ne objective.estimatedCompletionDate}">
+					<tr>
+						<td class="strat-detail-attribute-name">Estimated Completion Date</td>
+						<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${objective.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+					</tr>
+				</c:if>
+				<c:if test="${objective.isDeadlineProvided()}">
+					<tr>
+						<td class="strat-detail-attribute-name">Deviation from Deadline</td>
+						<td class="strat-detail-attribute-value">
+							<c:choose>
+								<c:when test="${objective.targetDeviation eq 0}"><span class="success-text">Right on schedule</span></c:when>
+								<c:when test="${objective.targetDeviation gt 0}">
+									<span class="success-text">
+										${objective.targetDeviation lt 0 ? -objective.targetDeviation : objective.targetDeviation}
+										<c:out value="${objective.targetDeviation eq 1 ? ' day' : ' days'} ahead of schedule" />
+									</span>
+								</c:when>
+								<c:otherwise>
+									<span class="danger-text">
+										${objective.targetDeviation lt 0 ? -objective.targetDeviation : objective.targetDeviation}
+										<c:out value="${objective.targetDeviation eq 1 ? ' day' : ' days'} behind schedule" />
+									</span>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td class="strat-detail-attribute-name">Early finish probability</td>
+						<td class="strat-detail-attribute-value">
+							<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "2" value = "${objective.earlyFinishEstimation * 100}" /> %
+						</td>
+					</tr>
+				</c:if>
+			</c:if>
+		</c:if>
 		<tr class="text-center">
 			<td colspan="2">
 				<hr class="detail-table-top-header"/><strong><span>Technical properties</span></strong><hr class="detail-table-bottom-header"/>

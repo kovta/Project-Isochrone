@@ -67,59 +67,71 @@
 					<c:out value=" %" />
 				</td>
 			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name"></td>
-				<td class="strat-detail-attribute-value">
-					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.completedDurationSum}" />
-					<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
-					<c:out value=" finished" />
-				</td>
-			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name"></td>
-				<td class="strat-detail-attribute-value">
-					<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" />
-					<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
-					<c:out value=" in total" />
-				</td>
-			</tr>
-			<tr>
-				<td class="strat-detail-attribute-name">Expected Completion Date</td>
-				<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
-			</tr>
-			<c:if test="${submodule.expectedCompletionDate ne submodule.estimatedCompletionDate}">
+			<c:if test="${submodule.completedDurationSum eq submodule.durationSum}">
 				<tr>
-					<td class="strat-detail-attribute-name">Estimated Completion Date</td>
-					<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
-				</tr>
+					<td class="strat-detail-attribute-name"></td>
+					<td class="strat-detail-attribute-value">
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" />
+						<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
+						<c:out value=" in total" />
+					</td>
+				</tr>			
 			</c:if>
-			<c:if test="${submodule.isDeadlineProvided()}">
+			<c:if test="${submodule.completedDurationSum ne submodule.durationSum}">
 				<tr>
-					<td class="strat-detail-attribute-name">Deviation from Deadline</td>
+					<td class="strat-detail-attribute-name"></td>
 					<td class="strat-detail-attribute-value">
-						<c:choose>
-							<c:when test="${submodule.targetDeviation eq 0}"><span class="success-text">Right on schedule</span></c:when>
-							<c:when test="${submodule.targetDeviation gt 0}">
-								<span class="success-text">
-									${submodule.targetDeviation lt 0 ? -submodule.targetDeviation : submodule.targetDeviation}
-									<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'} ahead of schedule" />
-								</span>
-							</c:when>
-							<c:otherwise>
-								<span class="danger-text">
-									${submodule.targetDeviation lt 0 ? -submodule.targetDeviation : submodule.targetDeviation}
-									<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'} behind schedule" />
-								</span>
-							</c:otherwise>
-						</c:choose>
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.completedDurationSum}" />
+						<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
+						<c:out value=" finished" />
 					</td>
 				</tr>
 				<tr>
-					<td class="strat-detail-attribute-name">Early finish probability</td>
+					<td class="strat-detail-attribute-name"></td>
 					<td class="strat-detail-attribute-value">
-						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "2" value = "${submodule.earlyFinishEstimation * 100}" /> %
+						<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "1" value = "${submodule.durationSum}" />
+						<c:out value="${submodule.completedDurationSum eq 1 ? ' day' : ' days'}" />
+						<c:out value=" in total" />
 					</td>
 				</tr>
+				<tr>
+					<td class="strat-detail-attribute-name">Expected Completion Date</td>
+					<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.expectedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+				</tr>
+				<c:if test="${submodule.expectedCompletionDate ne submodule.estimatedCompletionDate}">
+					<tr>
+						<td class="strat-detail-attribute-name">Estimated Completion Date</td>
+						<td class="strat-detail-attribute-value"><fmt:formatDate type="date" value="${submodule.estimatedCompletionDate}" pattern="yyyy-MM-dd" /></td>
+					</tr>
+				</c:if>
+				<c:if test="${submodule.isDeadlineProvided()}">
+					<tr>
+						<td class="strat-detail-attribute-name">Deviation from Deadline</td>
+						<td class="strat-detail-attribute-value">
+							<c:choose>
+								<c:when test="${submodule.targetDeviation eq 0}"><span class="success-text">Right on schedule</span></c:when>
+								<c:when test="${submodule.targetDeviation gt 0}">
+									<span class="success-text">
+										${submodule.targetDeviation lt 0 ? -submodule.targetDeviation : submodule.targetDeviation}
+										<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'} ahead of schedule" />
+									</span>
+								</c:when>
+								<c:otherwise>
+									<span class="danger-text">
+										${submodule.targetDeviation lt 0 ? -submodule.targetDeviation : submodule.targetDeviation}
+										<c:out value="${submodule.targetDeviation eq 1 ? ' day' : ' days'} behind schedule" />
+									</span>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<tr>
+						<td class="strat-detail-attribute-name">Early finish probability</td>
+						<td class="strat-detail-attribute-value">
+							<fmt:formatNumber type = "number" maxIntegerDigits = "3" maxFractionDigits = "2" value = "${submodule.earlyFinishEstimation * 100}" /> %
+						</td>
+					</tr>
+				</c:if>
 			</c:if>
 		</c:if>
 		<tr class="text-center">
