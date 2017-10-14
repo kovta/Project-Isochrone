@@ -33,6 +33,10 @@ public class ServiceImplIntegrationTest {
 	private static final Long PRISTINE_SUBMODULE_IDENTIFIER = 20L;
 	private static final Long PRISTINE_TASK_IDENTIFIER = 80L;
 
+	private static final String PRISTINE_OBJECTIVE_TITLE = "[TEST OBJECTIVE]";
+	private static final String PRISTINE_PROJECT_TITLE = "[TEST PROJECT]";
+	private static final String PRISTINE_SUBMODULE_TITLE = "[TEST SUBMODULE]";
+
 	private AppUserServiceImpl appUserService;
 	private ObjectiveServiceImpl objectiveService;
 	private ProjectServiceImpl projectService;
@@ -102,9 +106,16 @@ public class ServiceImplIntegrationTest {
 		}
 
 		this.objectiveService.getEntityManager().getTransaction().begin();
-		final Objective objective = this.objectiveService.create("Test Objective 2", "", 10, ObjectiveStatus.PLANNED, null, true, "adam");
+		final Objective objective = this.objectiveService.create(PRISTINE_OBJECTIVE_TITLE, "", 10, ObjectiveStatus.PLANNED, null, true, "adam");
 		this.objectiveService.getEntityManager().getTransaction().commit();
 		Assert.assertNotNull(objective);
+		for(Objective obj : this.objectiveService.readAll()) {
+			if(obj.getName().equals(PRISTINE_OBJECTIVE_TITLE)) {
+				this.objectiveService.getEntityManager().getTransaction().begin();
+				this.objectiveService.delete(obj.getId());
+				this.objectiveService.getEntityManager().getTransaction().commit();
+			}
+		}
 	}
 
 	@Test(groups = "integration")
@@ -122,9 +133,16 @@ public class ServiceImplIntegrationTest {
 		}
 
 		this.projectService.getEntityManager().getTransaction().begin();
-		final Project project = this.projectService.create("Test Project 3", "", ProjectStatus.TESTING, null, true, "adam", 7L);
+		final Project project = this.projectService.create(PRISTINE_PROJECT_TITLE, "", ProjectStatus.TESTING, null, true, "adam", 7L);
 		this.projectService.getEntityManager().getTransaction().commit();
 		Assert.assertNotNull(project);
+		for(Project prj : this.projectService.readAll()) {
+			if(prj.getName().equals(PRISTINE_PROJECT_TITLE)) {
+				this.projectService.getEntityManager().getTransaction().begin();
+				this.projectService.delete(prj.getId());
+				this.projectService.getEntityManager().getTransaction().commit();
+			}
+		}
 	}
 
 	@Test(groups = "integration")
@@ -139,8 +157,15 @@ public class ServiceImplIntegrationTest {
 		}
 
 		this.submoduleService.getEntityManager().getTransaction().begin();
-		final Submodule submodule = this.submoduleService.create("Test Submodule 6", "", null, "adam", 10L);
+		final Submodule submodule = this.submoduleService.create(PRISTINE_SUBMODULE_TITLE, "", null, "adam", 10L);
 		this.submoduleService.getEntityManager().getTransaction().commit();
+		for(Submodule smd : this.submoduleService.readAll()) {
+			if(smd.getName().equals(PRISTINE_SUBMODULE_TITLE)) {
+				this.submoduleService.getEntityManager().getTransaction().begin();
+				this.submoduleService.delete(smd.getId());
+				this.submoduleService.getEntityManager().getTransaction().commit();
+			}
+		}
 		Assert.assertNotNull(submodule);
 	}
 
@@ -156,10 +181,10 @@ public class ServiceImplIntegrationTest {
 			this.taskService.getEntityManager().getTransaction().commit();
 		}
 
-		//		this.taskService.getEntityManager().getTransaction().begin();
-		//		final Task task = this.taskService.create("Project Level Test Task 1", "", 10, 0, null, false, "adam", null, 10L, null, null, null, null, null);
-		//		this.taskService.getEntityManager().getTransaction().commit();
-		//		Assert.assertNotNull(task);
+		//	this.taskService.getEntityManager().getTransaction().begin();
+		//	final Task task = this.taskService.create("Project Level Test Task 1", "", 10, 0, null, false, "adam", null, 10L, null, null, null, null, null);
+		//	this.taskService.getEntityManager().getTransaction().commit();
+		//	Assert.assertNotNull(task);
 	}
 
 	@Test(groups = "integration")
