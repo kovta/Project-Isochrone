@@ -113,8 +113,10 @@ public class SubmoduleServiceImpl extends IntegrationDependencyContainer impleme
 			this.entityManager.createNamedQuery(TeamSubmoduleAssignmentQuery.REMOVE_BY_SUBMODULE_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserSubmoduleAssignmentQuery.REMOVE_BY_SUBMODULE_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 			final Submodule submodule = this.readWithTasks(id);
-			for(final Task task : submodule.getTasks()) {
-				this.taskService.delete(task.getId());
+			if(submodule.getTasks() != null) {
+				for(final Task task : submodule.getTasks()) {
+					this.taskService.delete(task.getId());
+				}
 			}
 			this.entityManager.createNamedQuery(SubmoduleQuery.REMOVE_BY_ID).setParameter(SubmoduleParameter.ID, id).executeUpdate();
 		} else {

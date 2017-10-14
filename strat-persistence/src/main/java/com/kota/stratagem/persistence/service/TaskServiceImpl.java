@@ -125,8 +125,11 @@ public class TaskServiceImpl extends IntegrationDependencyContainer implements T
 			task.setSubmodule(this.submoduleService.readWithTasks(submodule));
 		}
 		if((pessimistic != null) || (realistic != null) || (optimistic != null)) {
+			this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 			task.setEstimation(new TaskEstimation(pessimistic, realistic, optimistic, task));
-			task.setDuration(null);
+			if(duration != null) {
+				task.setDuration(null);
+			}
 		} else if(duration != null) {
 			task.setDuration(duration);
 			if(task.getEstimation() != null) {

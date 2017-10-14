@@ -106,11 +106,15 @@ public class ObjectiveServiceImpl extends IntegrationDependencyContainer impleme
 			this.entityManager.createNamedQuery(TeamObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserObjectiveAssignmentQuery.REMOVE_BY_OBJECTIVE_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 			final Objective objective = this.readWithProjectsAndTasks(id);
-			for(final Project project : objective.getProjects()) {
-				this.projectService.delete(project.getId());
+			if(objective.getProjects() != null) {
+				for(final Project project : objective.getProjects()) {
+					this.projectService.delete(project.getId());
+				}
 			}
-			for(final Task task : objective.getTasks()) {
-				this.taskService.delete(task.getId());
+			if(objective.getTasks() != null) {
+				for(final Task task : objective.getTasks()) {
+					this.taskService.delete(task.getId());
+				}
 			}
 			this.entityManager.createNamedQuery(ObjectiveQuery.REMOVE_BY_ID).setParameter(ObjectiveParameter.ID, id).executeUpdate();
 		} else {

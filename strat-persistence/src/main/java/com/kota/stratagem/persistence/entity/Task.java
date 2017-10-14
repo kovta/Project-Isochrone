@@ -40,14 +40,10 @@ import com.kota.stratagem.persistence.query.TaskQuery;
 @NamedQueries(value = { //
 		@NamedQuery(name = TaskQuery.COUNT_BY_ID, query = "SELECT COUNT(t) FROM Task t WHERE t.id=:" + TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID, query = "SELECT t FROM Task t WHERE t.id=:" + TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_MONITORING, query = "SELECT t FROM Task t LEFT JOIN FETCH t.creator crt LEFT JOIN FETCH t.modifier mod WHERE t.id=:"
-				+ TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:"
-				+ TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td WHERE t.id=:"
-				+ TaskParameter.ID),
-		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks dt WHERE t.id=:"
-				+ TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_MONITORING, query = "SELECT t FROM Task t LEFT JOIN FETCH t.creator crt LEFT JOIN FETCH t.modifier mod WHERE t.id=:" + TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at WHERE t.id=:" + TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td WHERE t.id=:" + TaskParameter.ID),
+		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT t FROM Task t LEFT JOIN FETCH t.dependantTasks dt WHERE t.id=:" + TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt WHERE t.id=:"
 				+ TaskParameter.ID),
 		@NamedQuery(name = TaskQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Task t LEFT JOIN FETCH t.taskDependencies td LEFT JOIN FETCH t.dependantTasks dt LEFT JOIN FETCH t.assignedUsers au LEFT JOIN FETCH t.assignedTeams at LEFT JOIN FETCH t.creator LEFT JOIN FETCH t.modifier WHERE t.id=:"
@@ -132,6 +128,7 @@ public class Task extends AbstractMonitoredEntity implements Serializable {
 	private Submodule submodule;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = TaskEstimation.class, mappedBy = "task")
+	@NotFound(action = NotFoundAction.IGNORE)
 	private TaskEstimation estimation;
 
 	public Task() {
@@ -142,8 +139,7 @@ public class Task extends AbstractMonitoredEntity implements Serializable {
 		this.taskDependencies = new HashSet<>();
 	}
 
-	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance,
-			Date creationDate, Date modificationDate) {
+	public Task(Long id, String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance, Date creationDate, Date modificationDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -157,8 +153,7 @@ public class Task extends AbstractMonitoredEntity implements Serializable {
 		this.modificationDate = modificationDate;
 	}
 
-	public Task(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance, Date creationDate,
-			Date modificationDate) {
+	public Task(String name, String description, int priority, double completion, Date deadline, Double duration, Boolean admittance, Date creationDate, Date modificationDate) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -309,9 +304,8 @@ public class Task extends AbstractMonitoredEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion="
-				+ this.completion + ", deadline=" + this.deadline + ", duration=" + this.duration + ", admittance=" + this.admittance + ", estimation="
-				+ this.estimation + "]";
+		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion=" + this.completion + ", deadline=" + this.deadline
+				+ ", duration=" + this.duration + ", admittance=" + this.admittance + ", estimation=" + this.estimation + "]";
 	}
 
 }

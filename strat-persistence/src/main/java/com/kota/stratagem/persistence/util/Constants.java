@@ -41,6 +41,7 @@ public class Constants {
 	public static final String DEPENDENCY_DECONFIGURATION_SELECTOR = "dependency deconfiguration";
 
 	// Separator
+	public static final String EMPTY_DATA_LABEL = "";
 	public static final String PAYLOAD_SEPARATOR = " | ";
 	public static final String DATA_SEPARATOR = "_";
 	public static final String CONCERN_ASSOCIATOR = "/";

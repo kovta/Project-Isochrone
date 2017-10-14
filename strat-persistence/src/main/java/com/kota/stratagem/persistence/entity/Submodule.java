@@ -43,12 +43,9 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
-		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.creator WHERE sm.id=:"
-				+ SubmoduleParameter.ID),
-		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd WHERE sm.id=:"
-				+ SubmoduleParameter.ID),
-		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:"
-				+ SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.creator WHERE sm.id=:" + SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd WHERE sm.id=:" + SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS_AND_DIRECT_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm LEFT JOIN FETCH sm.creator WHERE sm.id=:"
@@ -107,7 +104,7 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 	@JoinTable(name = "submodule_dependencies", joinColumns = @JoinColumn(name = "dependency_maintainer", nullable = false), inverseJoinColumns = @JoinColumn(name = "dependency_satiator", nullable = false))
 	private Set<Submodule> submoduleDependencies;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, targetEntity = Project.class)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Project.class)
 	@JoinTable(name = "project_submodules", joinColumns = @JoinColumn(name = "project_submodule_submodule", nullable = false), inverseJoinColumns = @JoinColumn(name = "project_submodule_project", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
@@ -221,10 +218,9 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Submodule [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline + ", creator="
-				+ this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate
-				+ ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", project=" + this.project
-				+ "]";
+		return "Submodule [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline + ", creator=" + this.creator + ", creationDate="
+				+ this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams
+				+ ", assignedUsers=" + this.assignedUsers + ", project=" + this.project + "]";
 	}
 
 	public void addTask(Task task) {

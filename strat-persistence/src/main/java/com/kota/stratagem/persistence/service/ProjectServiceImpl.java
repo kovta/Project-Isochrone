@@ -112,11 +112,15 @@ public class ProjectServiceImpl extends IntegrationDependencyContainer implement
 			this.entityManager.createNamedQuery(TeamProjectAssignmentQuery.REMOVE_BY_PROJECT_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
 			this.entityManager.createNamedQuery(AppUserProjectAssignmentQuery.REMOVE_BY_PROJECT_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
 			final Project project = this.readWithSubmodulesAndTasks(id);
-			for(final Submodule submodule : project.getSubmodules()) {
-				this.submoduleService.delete(submodule.getId());
+			if(project.getSubmodules() != null) {
+				for(final Submodule submodule : project.getSubmodules()) {
+					this.submoduleService.delete(submodule.getId());
+				}
 			}
-			for(final Task task : project.getTasks()) {
-				this.taskService.delete(task.getId());
+			if(project.getTasks() != null) {
+				for(final Task task : project.getTasks()) {
+					this.taskService.delete(task.getId());
+				}
 			}
 			this.entityManager.createNamedQuery(ProjectQuery.REMOVE_BY_ID).setParameter(ProjectParameter.ID, id).executeUpdate();
 		} else {
