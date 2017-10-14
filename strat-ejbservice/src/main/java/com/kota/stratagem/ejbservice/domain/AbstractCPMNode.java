@@ -42,7 +42,7 @@ public class AbstractCPMNode implements CPMNode {
 
 	@Override
 	public List<CPMNode> getDependants() {
-		return new ArrayList<>(this.dependencies);
+		return new ArrayList<>(this.dependants);
 	}
 
 	@Override

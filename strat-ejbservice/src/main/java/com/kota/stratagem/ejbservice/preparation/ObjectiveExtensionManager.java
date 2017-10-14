@@ -76,7 +76,7 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void addRepresentorSpecificProperties() {
 		this.prepareSubComponents();
-		this.provideCompletion();
+		this.provideProgressionDetials();
 		this.provideEvaluationDetails();
 		this.provideCategorizedProjects();
 		this.provideCategorizedTasks();
@@ -110,28 +110,27 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 
 	private void prepareSubComponents() {
 		final List<ProjectRepresentor> projects = new ArrayList<ProjectRepresentor>();
-		for (final ProjectRepresentor project : this.representor.getProjects()) {
-			projects.add((ProjectRepresentor) this.extensionManager
-					.prepareForOwner(this.projectConverter.toSimplified(this.projectService.readWithSubmodulesAndTasks(project.getId()))));
+		for(final ProjectRepresentor project : this.representor.getProjects()) {
+			projects.add((ProjectRepresentor) this.extensionManager.prepareForOwner(this.projectConverter.toSimplified(this.projectService.readWithSubmodulesAndTasks(project.getId()))));
 		}
 		this.representor.setProjects(projects);
 	}
 
-	private void provideCompletion() {
+	private void provideProgressionDetials() {
 		int progressSum = 0;
 		double durationSum = 0, completedDurationSum = 0;
-		for (final TaskRepresentor task : this.representor.getTasks()) {
+		for(final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
-			if (task.isEstimated()) {
+			if(task.isEstimated()) {
 				final double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
 				durationSum += expectedDuration;
 				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
-			} else if (task.isDurationProvided()) {
+			} else if(task.isDurationProvided()) {
 				durationSum += task.getDuration();
 				completedDurationSum += task.getDuration() * (task.getCompletion() / 100);
 			}
 		}
-		for (final ProjectRepresentor project : this.representor.getProjects()) {
+		for(final ProjectRepresentor project : this.representor.getProjects()) {
 			progressSum += project.getCompletion();
 			durationSum += project.getDurationSum();
 			completedDurationSum += project.getCompletedDurationSum();
@@ -143,32 +142,31 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	private void provideEvaluationDetails() {
-		if (!this.representor.isCompleted()) {
+		if(!this.representor.isCompleted()) {
 			Boolean estimated = false, configured = false;
 			final List<CPMNode> taskComponents = new ArrayList<>(), network = new ArrayList<>();
-			for (final TaskRepresentor task : this.representor.getTasks()) {
-				if (task.isEstimated() && !task.isCompleted()) {
+			for(final TaskRepresentor task : this.representor.getTasks()) {
+				if(task.isEstimated() && !task.isCompleted()) {
 					estimated = true;
 					configured = true;
 					this.provider.addCompletionAdaptedComponent(taskComponents, task);
-				} else if (task.isDurationProvided() && !task.isCompleted()) {
+				} else if(task.isDurationProvided() && !task.isCompleted()) {
 					configured = true;
 					this.provider.addCompletionAdaptedComponent(taskComponents, task);
 				}
 			}
 			Double expectedDurationSummary = (double) 0, varianceSummary = (double) 0;
-			for (final ProjectRepresentor project : this.representor.getProjects()) {
-				if (!project.isCompleted()) {
+			for(final ProjectRepresentor project : this.representor.getProjects()) {
+				if(!project.isCompleted()) {
 					configured = true;
 					expectedDurationSummary += project.getExpectedDuration();
 					varianceSummary += project.getVariance();
 				}
 			}
-			if (configured) {
+			if(configured) {
 				network.addAll(this.taskBasedCPMNodeConverter.to(taskComponents));
 				final CPMResult result = this.provider.evaluateDependencyNetwork(network, estimated);
-				final CPMResult finalResult = new CPMResult(expectedDurationSummary + result.getExpectedDuration(),
-						Math.sqrt(varianceSummary + Math.pow(result.getStandardDeviation(), 2)));
+				final CPMResult finalResult = new CPMResult(expectedDurationSummary + result.getExpectedDuration(), Math.sqrt(varianceSummary + Math.pow(result.getStandardDeviation(), 2)));
 				this.provider.provideEstimations(finalResult, this.representor);
 			} else {
 				this.provider.provideBlankEstimations(this.representor);
@@ -178,12 +176,12 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideCategorizedProjects() {
 		final List<ProjectRepresentor> overdueProjects = new ArrayList<>(), ongoingProjects = new ArrayList<>(), completedProjects = new ArrayList<>();
-		for (final ProjectRepresentor representor : this.representor.getProjects()) {
-			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
+		for(final ProjectRepresentor representor : this.representor.getProjects()) {
+			if((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
 				overdueProjects.add(representor);
-			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+			} else if((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
 				ongoingProjects.add(representor);
-			} else if (representor.isCompleted()) {
+			} else if(representor.isCompleted()) {
 				completedProjects.add(representor);
 			}
 		}
@@ -194,12 +192,12 @@ public class ObjectiveExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideCategorizedTasks() {
 		final List<TaskRepresentor> overdueTasks = new ArrayList<>(), ongoingTasks = new ArrayList<>(), completedTasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
+		for(final TaskRepresentor representor : this.representor.getTasks()) {
+			if((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
 				overdueTasks.add(representor);
-			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+			} else if((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
 				ongoingTasks.add(representor);
-			} else if (representor.isCompleted()) {
+			} else if(representor.isCompleted()) {
 				completedTasks.add(representor);
 			}
 		}

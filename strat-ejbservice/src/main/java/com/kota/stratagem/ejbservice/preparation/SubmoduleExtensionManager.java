@@ -17,6 +17,7 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipien
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
 import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
+import com.kota.stratagem.ejbservice.domain.SubmoduleDependencyLayer;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
@@ -93,10 +94,10 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void sortJointCollection() {
 		Collections.reverse(this.representor.getDependantChain());
-		for (final List<SubmoduleRepresentor> dependantLevel : this.representor.getDependantChain()) {
+		for(final List<SubmoduleRepresentor> dependantLevel : this.representor.getDependantChain()) {
 			Collections.sort(dependantLevel, new SubmoduleNameComparator());
 		}
-		for (final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
+		for(final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
 			Collections.sort(dependencyLevel, new SubmoduleNameComparator());
 		}
 	}
@@ -104,13 +105,13 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	private void provideProgressionDetials() {
 		int progressSum = 0;
 		double durationSum = 0, completedDurationSum = 0;
-		for (final TaskRepresentor task : this.representor.getTasks()) {
+		for(final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
-			if (task.isEstimated()) {
+			if(task.isEstimated()) {
 				final double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
 				durationSum += expectedDuration;
 				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
-			} else if (task.isDurationProvided()) {
+			} else if(task.isDurationProvided()) {
 				durationSum += task.getDuration();
 				completedDurationSum += task.getDuration() * (task.getCompletion() / 100);
 			}
@@ -121,20 +122,20 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	private void provideEvaluationDetails() {
-		if (!this.representor.isCompleted()) {
+		if(!this.representor.isCompleted()) {
 			Boolean estimated = false, configured = false;
 			final List<CPMNode> components = new ArrayList<>(), network = new ArrayList<>();
-			for (final TaskRepresentor task : this.representor.getTasks()) {
-				if (task.isEstimated() && !task.isCompleted()) {
+			for(final TaskRepresentor task : this.representor.getTasks()) {
+				if(task.isEstimated() && !task.isCompleted()) {
 					estimated = true;
 					configured = true;
 					this.provider.addCompletionAdaptedComponent(components, task);
-				} else if (task.isDurationProvided() && !task.isCompleted()) {
+				} else if(task.isDurationProvided() && !task.isCompleted()) {
 					configured = true;
 					this.provider.addCompletionAdaptedComponent(components, task);
 				}
 			}
-			if (configured) {
+			if(configured) {
 				network.addAll(this.cpmNodeConverter.to(components));
 				this.provider.provideEstimations(this.provider.evaluateDependencyNetwork(network, estimated), this.representor);
 			} else {
@@ -145,12 +146,12 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideCategorizedTasks() {
 		final List<TaskRepresentor> overdueTasks = new ArrayList<>(), ongoingTasks = new ArrayList<>(), completedTasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
+		for(final TaskRepresentor representor : this.representor.getTasks()) {
+			if((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
 				overdueTasks.add(representor);
-			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+			} else if((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
 				ongoingTasks.add(representor);
-			} else if (representor.isCompleted()) {
+			} else if(representor.isCompleted()) {
 				completedTasks.add(representor);
 			}
 		}
@@ -160,74 +161,94 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	public void provideDependencyChain() {
-		final List<Long> identifiers = new ArrayList<>();
-		if (!this.representor.getDependantSubmodules().isEmpty()) {
-			final List<List<SubmoduleRepresentor>> dependantChain = new ArrayList<>();
+		if(!this.representor.getDependantSubmodules().isEmpty() || !this.representor.getSubmoduleDependencies().isEmpty()) {
 			final Queue<SubmoduleRepresentor> queue = new LinkedList<SubmoduleRepresentor>();
-			queue.add(this.representor);
-			SubmoduleRepresentor current;
-			while ((current = queue.poll()) != null) {
-				this.traverseDependants(current, queue, dependantChain, identifiers);
+			final List<Long> identifiers = new ArrayList<>();
+			representor.setDependencyLevel(0);
+			SubmoduleRepresentor currentNode;
+			if(!this.representor.getDependantSubmodules().isEmpty()) {
+				final List<List<SubmoduleRepresentor>> dependantChain = new ArrayList<>();
+				final List<SubmoduleDependencyLayer> dependencyLayers = new ArrayList<>();
+				queue.add(this.representor);
+				while((currentNode = queue.poll()) != null) {
+					this.traverseDependants(currentNode, queue, identifiers, dependencyLayers);
+				}
+				this.representor.setDependantChain(this.populateDependencyChain(dependantChain, dependencyLayers));
 			}
-			this.representor.setDependantChain(dependantChain);
-		}
-		if (!this.representor.getSubmoduleDependencies().isEmpty()) {
-			final List<List<SubmoduleRepresentor>> dependencyChain = new ArrayList<>();
-			final Queue<SubmoduleRepresentor> queue = new LinkedList<SubmoduleRepresentor>();
-			queue.add(this.representor);
-			SubmoduleRepresentor current;
-			while ((current = queue.poll()) != null) {
-				this.traverseDependencies(current, queue, dependencyChain, identifiers);
+			if(!this.representor.getSubmoduleDependencies().isEmpty()) {
+				final List<List<SubmoduleRepresentor>> dependencyChain = new ArrayList<>();
+				final List<SubmoduleDependencyLayer> dependencyLayers = new ArrayList<>();
+				queue.add(this.representor);
+				while((currentNode = queue.poll()) != null) {
+					this.traverseDependencies(currentNode, queue, identifiers, dependencyLayers);
+				}
+				this.representor.setDependencyChain(this.populateDependencyChain(dependencyChain, dependencyLayers));
 			}
-			this.representor.setDependencyChain(dependencyChain);
 		}
 	}
 
-	private void traverseDependants(SubmoduleRepresentor node, Queue<SubmoduleRepresentor> queue, List<List<SubmoduleRepresentor>> dependantChain, List<Long> identifiers) {
-		if (!node.getDependantSubmodules().isEmpty()) {
-			final List<SubmoduleRepresentor> nodes = new ArrayList<SubmoduleRepresentor>(node.getDependantSubmodules());
-			for (final SubmoduleRepresentor dependant : node.getDependantSubmodules()) {
-				if (identifiers.contains(dependant.getId())) {
-					nodes.remove(dependant);
-				} else {
-					identifiers.add(dependant.getId());
-				}
+	private void traverseDependants(SubmoduleRepresentor currentNode, Queue<SubmoduleRepresentor> queue, List<Long> identifiers, List<SubmoduleDependencyLayer> dependencyLayers) {
+		if(!currentNode.getDependantSubmodules().isEmpty()) {
+			final List<SubmoduleRepresentor> nodes = new ArrayList<SubmoduleRepresentor>(currentNode.getDependantSubmodules());
+			for(final SubmoduleRepresentor dependant : currentNode.getDependantSubmodules()) {
+				this.mergeIntoIdentifiers(identifiers, dependant, nodes);
 			}
-			if (!nodes.isEmpty()) {
-				dependantChain.add(nodes);
-			}
-			for (int i = 0; i < node.getDependantSubmodules().size(); i++) {
+			this.mergeIntoDependencyLayer(dependencyLayers, nodes, currentNode.getDependencyLevel() + 1);
+			for(int i = 0; i < currentNode.getDependantSubmodules().size(); i++) {
 				final SubmoduleRepresentor dependantNode = this.submoduleConverter
-						.toDependencyExtended(this.submoduleService.readWithDirectDependencies(node.getDependantSubmodules().get(i).getId()));
+						.toDependencyExtended(this.submoduleService.readWithDirectDependencies(currentNode.getDependantSubmodules().get(i).getId()));
+				dependantNode.setDependencyLevel(currentNode.getDependencyLevel() + 1);
 				queue.add(dependantNode);
 			}
 		}
 	}
 
-	private void traverseDependencies(SubmoduleRepresentor node, Queue<SubmoduleRepresentor> queue, List<List<SubmoduleRepresentor>> dependencyChain, List<Long> identifiers) {
-		if (!node.getSubmoduleDependencies().isEmpty()) {
-			final List<SubmoduleRepresentor> nodes = new ArrayList<SubmoduleRepresentor>(node.getSubmoduleDependencies());
-			for (final SubmoduleRepresentor dependency : node.getSubmoduleDependencies()) {
-				if (identifiers.contains(dependency.getId())) {
-					nodes.remove(dependency);
-				} else {
-					identifiers.add(dependency.getId());
-				}
+	private void traverseDependencies(SubmoduleRepresentor currentNode, Queue<SubmoduleRepresentor> queue, List<Long> identifiers, List<SubmoduleDependencyLayer> dependencyLayers) {
+		if(!currentNode.getSubmoduleDependencies().isEmpty()) {
+			final List<SubmoduleRepresentor> nodes = new ArrayList<SubmoduleRepresentor>(currentNode.getSubmoduleDependencies());
+			for(final SubmoduleRepresentor dependency : currentNode.getSubmoduleDependencies()) {
+				this.mergeIntoIdentifiers(identifiers, dependency, nodes);
 			}
-			if (!nodes.isEmpty()) {
-				dependencyChain.add(nodes);
-			}
-			for (int i = 0; i < node.getSubmoduleDependencies().size(); i++) {
+			this.mergeIntoDependencyLayer(dependencyLayers, nodes, currentNode.getDependencyLevel() + 1);
+			for(int i = 0; i < currentNode.getSubmoduleDependencies().size(); i++) {
 				final SubmoduleRepresentor dependencyNode = this.submoduleConverter
-						.toDependencyExtended(this.submoduleService.readWithDirectDependencies(node.getSubmoduleDependencies().get(i).getId()));
+						.toDependencyExtended(this.submoduleService.readWithDirectDependencies(currentNode.getSubmoduleDependencies().get(i).getId()));
+				dependencyNode.setDependencyLevel(currentNode.getDependencyLevel() + 1);
 				queue.add(dependencyNode);
 			}
 		}
 	}
 
+	private void mergeIntoIdentifiers(List<Long> identifiers, SubmoduleRepresentor node, List<SubmoduleRepresentor> nodes) {
+		if(identifiers.contains(node.getId())) {
+			nodes.remove(node);
+		} else {
+			identifiers.add(node.getId());
+		}
+	}
+
+	private void mergeIntoDependencyLayer(List<SubmoduleDependencyLayer> layers, List<SubmoduleRepresentor> nodes, int dependencyLevel) {
+		SubmoduleDependencyLayer index = new SubmoduleDependencyLayer(dependencyLevel, null);
+		if(layers.contains(index)) {
+			layers.get(layers.indexOf(index)).addDependencies(nodes);
+		} else {
+			layers.add(new SubmoduleDependencyLayer(dependencyLevel, nodes));
+		}
+	}
+
+	private List<List<SubmoduleRepresentor>> populateDependencyChain(List<List<SubmoduleRepresentor>> dependencyChain, List<SubmoduleDependencyLayer> dependencyLayers) {
+		for(SubmoduleDependencyLayer layer : dependencyLayers) {
+			if(!layer.getDependencies().isEmpty()) {
+				Collections.sort(layer.getDependencies(), new SubmoduleNameComparator());
+				dependencyChain.add(layer.getDependencies());
+			}
+		}
+		return dependencyChain;
+	}
+
 	public void provideDependantCount() {
 		int total = 0;
-		for (final List<SubmoduleRepresentor> dependantLevel : this.representor.getDependantChain()) {
+		for(final List<SubmoduleRepresentor> dependantLevel : this.representor.getDependantChain()) {
 			total += dependantLevel.size();
 		}
 		this.representor.setDependantCount(total);
@@ -235,7 +256,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	public void provideDependencyCount() {
 		int total = 0;
-		for (final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
+		for(final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
 			total += dependencyLevel.size();
 		}
 		this.representor.setDependencyCount(total);

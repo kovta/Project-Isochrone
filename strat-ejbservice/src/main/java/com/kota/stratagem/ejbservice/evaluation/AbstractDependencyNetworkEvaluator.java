@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.kota.stratagem.ejbservice.domain.CPMResult;
-import com.kota.stratagem.ejbservice.domain.DefinitiveCPMNodeImpl;
 import com.kota.stratagem.ejbservice.domain.EstimatedCPMNodeImpl;
 import com.kota.stratagem.ejbservice.exception.CyclicDependencyException;
 import com.kota.stratagem.ejbservice.exception.InvalidNodeTypeException;
@@ -21,20 +20,17 @@ public abstract class AbstractDependencyNetworkEvaluator implements DependencyNe
 		final List<EstimatedCPMNodeImpl> nodes = new ArrayList<>();
 		final EstimatedCPMNodeImpl start = new EstimatedCPMNodeImpl(START_NODE_ID, (double) 0, (double) 0);
 		final EstimatedCPMNodeImpl end = new EstimatedCPMNodeImpl(END_NODE_ID, (double) 0, (double) 0);
-		for (final CPMNode node : network) {
-			if (node.getDependencies().isEmpty()) {
+		for(final CPMNode node : network) {
+			if(node.getDependencies().isEmpty()) {
 				start.addDependant(node);
 				node.addDependency(start);
 			}
-			if (node.getDependants().isEmpty()) {
+			if(node.getDependants().isEmpty()) {
 				end.addDependency(node);
 				node.addDependant(end);
 			}
-			if (node instanceof EstimatedCPMNodeImpl) {
+			if(node instanceof EstimatedCPMNodeImpl) {
 				nodes.add((EstimatedCPMNodeImpl) node);
-			} else if (node instanceof DefinitiveCPMNodeImpl) {
-				final DefinitiveCPMNodeImpl element = (DefinitiveCPMNodeImpl) node;
-				nodes.add(new EstimatedCPMNodeImpl(element.getId(), element.getDuration(), (double) 0));
 			} else {
 				throw new InvalidNodeTypeException();
 			}
@@ -43,15 +39,15 @@ public abstract class AbstractDependencyNetworkEvaluator implements DependencyNe
 		nodes.add(end);
 		final List<EstimatedCPMNodeImpl> inspected = new ArrayList<EstimatedCPMNodeImpl>();
 		final List<EstimatedCPMNodeImpl> remaining = new ArrayList<EstimatedCPMNodeImpl>(nodes);
-		while (!remaining.isEmpty()) {
+		while(!remaining.isEmpty()) {
 			boolean progress = false;
-			for (final Iterator<EstimatedCPMNodeImpl> it = remaining.iterator(); it.hasNext();) {
+			for(final Iterator<EstimatedCPMNodeImpl> it = remaining.iterator(); it.hasNext();) {
 				final EstimatedCPMNodeImpl node = it.next();
-				if (inspected.containsAll(node.getDependencies())) {
+				if(inspected.containsAll(node.getDependencies())) {
 					double critical = 0, variance = 0;
-					for (final CPMNode n : node.getDependencies()) {
+					for(final CPMNode n : node.getDependencies()) {
 						final EstimatedCPMNodeImpl dependency = (EstimatedCPMNodeImpl) n;
-						if (dependency.getCriticalDuration() > critical) {
+						if(dependency.getCriticalDuration() > critical) {
 							critical = dependency.getCriticalDuration();
 							variance = dependency.getVariance() != null ? dependency.getVariance() : 0;
 						}
@@ -63,13 +59,13 @@ public abstract class AbstractDependencyNetworkEvaluator implements DependencyNe
 					progress = true;
 				}
 			}
-			if (!progress) {
+			if(!progress) {
 				throw new CyclicDependencyException();
 			}
 		}
 		double expectedDuration = 0, variance = 0;
-		for (final EstimatedCPMNodeImpl element : inspected) {
-			if (element.getCriticalDuration() > expectedDuration) {
+		for(final EstimatedCPMNodeImpl element : inspected) {
+			if(element.getCriticalDuration() > expectedDuration) {
 				expectedDuration = element.getCriticalDuration();
 				variance = element.getVariance();
 			}

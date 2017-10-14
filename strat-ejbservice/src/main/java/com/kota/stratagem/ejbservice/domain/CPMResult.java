@@ -6,16 +6,17 @@ public class CPMResult {
 	private final Double standardDeviation;
 
 	public CPMResult(Double expectedDuration, Double standardDeviation) {
+		super();
 		this.expectedDuration = expectedDuration;
 		this.standardDeviation = standardDeviation;
 	}
 
 	public Double getExpectedDuration() {
-		return this.expectedDuration;
+		return expectedDuration;
 	}
 
 	public Double getStandardDeviation() {
-		return this.standardDeviation;
+		return standardDeviation;
 	}
 
 }
