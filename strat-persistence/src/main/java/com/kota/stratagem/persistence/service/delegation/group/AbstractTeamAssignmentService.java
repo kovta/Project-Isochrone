@@ -1,6 +1,10 @@
 package com.kota.stratagem.persistence.service.delegation.group;
 
 import javax.ejb.EJB;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -12,6 +16,8 @@ import com.kota.stratagem.persistence.parameter.AssignmentParameter;
 import com.kota.stratagem.persistence.service.AppUserService;
 import com.kota.stratagem.persistence.service.TeamService;
 
+@TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public abstract class AbstractTeamAssignmentService implements TeamAssingmentService {
 
 	@Inject
@@ -24,17 +30,16 @@ public abstract class AbstractTeamAssignmentService implements TeamAssingmentSer
 	private AppUserService appUserService;
 
 	private <T extends AbstractMonitoredEntity> AppUser mergeOperators(Long subject, T object) {
-		if (object.getCreator().getId() == subject) {
+		if(object.getCreator().getId() == subject) {
 			return object.getCreator();
-		} else if (object.getModifier().getId() == subject) {
+		} else if(object.getModifier().getId() == subject) {
 			return object.getModifier();
 		} else {
 			return this.appUserService.readElementary(subject);
 		}
 	}
 
-	protected <T extends AbstractMonitoredEntity, E extends AbstractTeamAssignment> void persistAssignment(E subject, T object, Long entrustor,
-			Long recipient) {
+	protected <T extends AbstractMonitoredEntity, E extends AbstractTeamAssignment> void persistAssignment(E subject, T object, Long entrustor, Long recipient) {
 		subject.setEntrustor(this.mergeOperators(entrustor, object));
 		final Team assignedTeam = this.teamService.readElementary(recipient);
 		subject.setRecipient(assignedTeam);
