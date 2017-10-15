@@ -51,14 +51,6 @@
 	                                <div class="md-form">
 	                                	<table class="strat-detail-table">
 		                                	<tbody>
-												<c:if test="${task.admittance and not assigned}">
-													<c:set var="task" value="${requestScope.task}" scope="request" />
-													<tr class="match-row"><td>
-														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#participateTask" data-toggle="modal">
-													    	<i class="fa fa-ticket tile-icon"></i><span class="icon-companion">Join Collaboration</span>
-														</button>
-													</td></tr>
-												</c:if>
 		                                		<c:if test="${supervisor or assigned}">
 			                                		<tr class="match-row"><td class="text-center">
 								  		   			    <a href="Task?id=<c:out value="${task.id}"/>&edit=1" class="vertical-align-middle text-center full-width">
@@ -68,6 +60,14 @@
 													<tr class="match-row"><td>
 														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#addDependencies" data-toggle="modal">
 													    	<i class="fa fa-share-alt tile-icon"></i><span class="icon-companion">Configure Dependencies</span>
+														</button>
+													</td></tr>
+												</c:if>
+												<c:if test="${task.admittance and not assigned}">
+													<c:set var="task" value="${requestScope.task}" scope="request" />
+													<tr class="match-row"><td>
+														<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#participateTask" data-toggle="modal">
+													    	<i class="fa fa-ticket tile-icon"></i><span class="icon-companion">Join Collaboration</span>
 														</button>
 													</td></tr>
 												</c:if>

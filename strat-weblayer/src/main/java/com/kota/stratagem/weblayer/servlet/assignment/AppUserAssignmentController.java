@@ -37,28 +37,28 @@ public class AppUserAssignmentController extends AbstractRefinerServlet implemen
 					final Long objective_id = Long.parseLong(request.getParameter(OBJECTIVE));
 					origin = Page.OBJECTIVE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + objective_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, objective: " + objective_id + ")");
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " user(s), objective: " + objective_id + ")");
 						this.protocol.saveObjectiveAssignments(assignedUsers, objective_id);
 					}
 				} else if (this.notEmpty(request.getParameter(PROJECT))) {
 					final Long project_id = Long.parseLong(request.getParameter(PROJECT));
 					origin = Page.PROJECT_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + project_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, project: " + project_id + ")");
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " user(s), project: " + project_id + ")");
 						this.protocol.saveProjectAssignments(assignedUsers, project_id);
 					}
 				} else if (this.notEmpty(request.getParameter(SUBMODULE))) {
 					final Long submodule_id = Long.parseLong(request.getParameter(SUBMODULE));
 					origin = Page.SUBMODULE_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + submodule_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, submodule: " + submodule_id + ")");
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " user(s), submodule: " + submodule_id + ")");
 						this.protocol.saveSubmoduleAssignments(assignedUsers, submodule_id);
 					}
 				} else if (this.notEmpty(request.getParameter(TASK))) {
 					final Long task_id = Long.parseLong(request.getParameter(TASK));
 					origin = Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + task_id;
 					if ((assignedUsers != null) && (assignedUsers.length != 0)) {
-						LOGGER.info("Create Assignments (" + assignedUsers.length + " users, task: " + task_id + ")");
+						LOGGER.info("Create Assignments (" + assignedUsers.length + " user(s), task: " + task_id + ")");
 						this.protocol.saveTaskAssignments(assignedUsers, task_id);
 					}
 				}
