@@ -156,7 +156,11 @@ public class TaskServiceImpl extends IntegrationDependencyContainer implements T
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean exists(Long id) {
-		return this.entityManager.createNamedQuery(TaskQuery.COUNT_BY_ID, Long.class).setParameter(TaskParameter.ID, id).getSingleResult() == 1;
+		if(id == null) {
+			return false;
+		} else {
+			return this.entityManager.createNamedQuery(TaskQuery.COUNT_BY_ID, Long.class).setParameter(TaskParameter.ID, id).getSingleResult() == 1;
+		}
 	}
 
 	@Override

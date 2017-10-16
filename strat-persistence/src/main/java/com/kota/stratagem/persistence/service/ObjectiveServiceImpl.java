@@ -125,7 +125,11 @@ public class ObjectiveServiceImpl extends IntegrationDependencyContainer impleme
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean exists(Long id) {
-		return this.entityManager.createNamedQuery(ObjectiveQuery.COUNT_BY_ID, Long.class).setParameter(ObjectiveParameter.ID, id).getSingleResult() == 1;
+		if(id == null) {
+			return false;
+		} else {
+			return this.entityManager.createNamedQuery(ObjectiveQuery.COUNT_BY_ID, Long.class).setParameter(ObjectiveParameter.ID, id).getSingleResult() == 1;
+		}
 	}
 
 }

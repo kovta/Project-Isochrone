@@ -127,7 +127,11 @@ public class SubmoduleServiceImpl extends IntegrationDependencyContainer impleme
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean exists(Long id) {
-		return this.entityManager.createNamedQuery(SubmoduleQuery.COUNT_BY_ID, Long.class).setParameter(SubmoduleParameter.ID, id).getSingleResult() > 0;
+		if(id == null) {
+			return false;
+		} else {
+			return this.entityManager.createNamedQuery(SubmoduleQuery.COUNT_BY_ID, Long.class).setParameter(SubmoduleParameter.ID, id).getSingleResult() > 0;
+		}
 	}
 
 	@Override

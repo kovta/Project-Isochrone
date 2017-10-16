@@ -131,7 +131,11 @@ public class ProjectServiceImpl extends IntegrationDependencyContainer implement
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean exists(Long id) {
-		return this.entityManager.createNamedQuery(ProjectQuery.COUNT_BY_ID, Long.class).setParameter(ProjectParameter.ID, id).getSingleResult() > 0;
+		if(id == null) {
+			return false;
+		} else {
+			return this.entityManager.createNamedQuery(ProjectQuery.COUNT_BY_ID, Long.class).setParameter(ProjectParameter.ID, id).getSingleResult() > 0;
+		}
 	}
 
 }

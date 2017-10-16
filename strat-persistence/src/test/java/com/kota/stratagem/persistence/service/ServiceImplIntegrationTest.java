@@ -33,9 +33,9 @@ public class ServiceImplIntegrationTest {
 	private static final Long PRISTINE_SUBMODULE_IDENTIFIER = 20L;
 	private static final Long PRISTINE_TASK_IDENTIFIER = 80L;
 
-	private static final String PRISTINE_OBJECTIVE_TITLE = "[TEST OBJECTIVE]";
-	private static final String PRISTINE_PROJECT_TITLE = "[TEST PROJECT]";
-	private static final String PRISTINE_SUBMODULE_TITLE = "[TEST SUBMODULE]";
+	private static final String PRISTINE_OBJECTIVE_TITLE = "[TEST_OBJECTIVE]";
+	private static final String PRISTINE_PROJECT_TITLE = "[TEST_PROJECT]";
+	private static final String PRISTINE_SUBMODULE_TITLE = "[TEST_SUBMODULE]";
 
 	private AppUserServiceImpl appUserService;
 	private ObjectiveServiceImpl objectiveService;
