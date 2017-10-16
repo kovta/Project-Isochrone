@@ -46,14 +46,13 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 
 	@Override
 	public List<ObjectiveRepresentor> getAllObjectives() throws AdaptorException {
-		return (List<ObjectiveRepresentor>) this.extensionManager
-				.prepareBatch(new ArrayList<ObjectiveRepresentor>(this.converter.toSimplified(this.objectiveService.readAll())));
+		return (List<ObjectiveRepresentor>) this.extensionManager.prepareBatch(new ArrayList<ObjectiveRepresentor>(this.converter.toSimplified(this.objectiveService.readAll())));
 	}
 
 	@Override
 	@Authorized(RestrictionLevel.CENTRAL_MANAGER_LEVEL)
-	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline,
-			Boolean confidentiality, String operator) throws AdaptorException {
+	public ObjectiveRepresentor saveObjective(Long id, String name, String description, int priority, ObjectiveStatusRepresentor status, Date deadline, Boolean confidentiality, String operator)
+			throws AdaptorException {
 		return (ObjectiveRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.objectiveService.exists(id))
 				? this.objectiveService.update(id, name, description, priority, ObjectiveStatus.valueOf(status.name()), deadline, confidentiality, operator)
 				: this.objectiveService.create(name, description, priority, ObjectiveStatus.valueOf(status.name()), deadline, confidentiality, operator)));
@@ -64,7 +63,7 @@ public class ObjectiveProtocolImpl implements ObjectiveProtocol, ObjectiveProtoc
 	public void removeObjective(Long id) throws AdaptorException {
 		try {
 			this.objectiveService.delete(id);
-		} catch (final CoherentPersistenceServiceException e) {
+		} catch(final CoherentPersistenceServiceException e) {
 			final ApplicationError error = ApplicationError.valueOf(e.getError().name());
 			throw new AdaptorException(error, e.getLocalizedMessage(), e.getField());
 		}

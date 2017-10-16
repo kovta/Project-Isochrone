@@ -6,3 +6,9 @@ dependencies {
 	compile project(':strat-persistence')
 	compile project(':strat-security')
 }
+
+test {
+	useTestNG {
+		suites 'src/test/resources/testng-unit.xml'
+	}
+}	
