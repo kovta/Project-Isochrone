@@ -37,14 +37,14 @@
 	            During the lifecycle of any organization, the policy by which they choose to orchestrate their corporate
 	            measures will ultimately determine the success of the company as a whole. 
 	            Managing these operations becomes all the more challenging with uncertain deadlines, loosely coupled productive engagements,
-	            and ever rising demands for absolute perfection. Without the correct tools to aid leaders in team-wise and strategic 
+	            and ever rising demands for absolute perfection. Without the correct tools to aid leaders in team focused strategic 
 	            coordination, these goals would most certainly remain mere aspirations. By integrating Stratagem into key business processes
 	            companies are now able to have a leading edge on reaching their designated objectives.
             </p>
             <p>
-	            Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-	            Velit explicabo assumenda eligendi ex exercitationem harum deleniti quaerat beatae ducimus dolor voluptates magnam, 
-	            reiciendis pariatur culpa tempore quibusdam quidem, saepe eius.
+	            With complex workflows spanning across numerous project teams keeping track of progress throughout multiple tracking systems. 
+	            Stratagem aims to unify the monitoring of current work status, the evaluation of progression in different areas of effect
+	            and overarching alerting system to keep all affected parties up-to-date with their key elements of interest.
             </p>
         </section>
         <!--Section: About-->
@@ -61,7 +61,7 @@
                         </div>
                         <div class="card-block text-center">
                             <h4 class="card-title">Workflow optimization</h4><hr>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident fuga animi architecto dolores dicta cum quo velit.</p>
+                            <p class="card-text">Create accurate models of your current state of work according to your incorporated methodologies, be it agile or traditional.</p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                         </div>
                         <div class="card-block text-center">
                             <h4 class="card-title">Team management</h4><hr>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident fuga animi architecto dolores dicta cum quo velit.</p>
+                            <p class="card-text">Delegate responsibility to qualified participants or to teams on any desired scope, breaking up the given mission into maintainable actions.</p>
                         </div>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                         </div>
                         <div class="card-block text-center">
                             <h4 class="card-title">Platform independence</h4><hr>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident fuga animi architecto dolores dicta cum quo velit.</p>
+                            <p class="card-text">Stratagems' responsive web client allows users to easily collaborate using any work station, or smart device.</p>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                         </div>
                         <div class="card-block text-center">
                             <h4 class="card-title">24/7 Support</h4><hr>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident fuga animi architecto dolores dicta cum quo velit.</p>
+                            <p class="card-text">General assistance, Feedback and change requests are handled on a daily basis. Feel free to contact us concerning project modeling, or any form of technical help.</p>
                         </div>
                     </div>
                 </div>
