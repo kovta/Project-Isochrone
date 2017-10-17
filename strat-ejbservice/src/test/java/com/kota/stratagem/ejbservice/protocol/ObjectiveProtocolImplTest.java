@@ -99,7 +99,7 @@ public class ObjectiveProtocolImplTest extends AbstractMockTest {
 		final Long updateId = 32L;
 		Mockito.when(objectiveService.exists(createId)).thenReturn(false);
 		Mockito.when(objectiveService.exists(updateId)).thenReturn(true);
-		final Long managedId = 21L;
+		final Long managedId = 33L;
 		final String managedName = OBJECTIVE_TITLE + "2";
 		final String managedDescription = "Test 2";
 		final int managedPriority = 10;
