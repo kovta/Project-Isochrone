@@ -30,19 +30,19 @@ public class SubmoduleDependantController extends AbstractRefinerServlet impleme
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		try {
-			final String[] dependencies = request.getParameterValues(DEPENDENCIES);
+			final String[] dependants = request.getParameterValues(DEPENDANTS);
 			try {
-				if ((dependencies != null) && (dependencies.length != 0)) {
-					LOGGER.info("Save Submodule Dependants (" + dependencies.length + " dependecies, submodule: " + request.getParameter(SUBMODULE) + ")");
-					final Long[] dependencyIdentifiers = new Long[dependencies.length];
-					for (int i = 0; i < dependencies.length; i++) {
-						dependencyIdentifiers[i] = Long.parseLong(dependencies[i]);
+				if ((dependants != null) && (dependants.length != 0)) {
+					LOGGER.info("Save Submodule Dependants (" + dependants.length + " dependants, submodule: " + request.getParameter(SUBMODULE) + ")");
+					final Long[] dependencyIdentifiers = new Long[dependants.length];
+					for (int i = 0; i < dependants.length; i++) {
+						dependencyIdentifiers[i] = Long.parseLong(dependants[i]);
 					}
 					this.protocol.saveSubmoduleDependants(Long.parseLong(request.getParameter(SUBMODULE)), dependencyIdentifiers);
 				}
 				request.getSession().setAttribute(ATTR_SUCCESS,
-						((dependencies != null) && (dependencies.length != 0))
-								? dependencies.length != 1 ? dependencies.length + " Dependencies added succesfully!" : "1 Dependency added succesfully!"
+						((dependants != null) && (dependants.length != 0))
+								? dependants.length != 1 ? dependants.length + " Dependants added succesfully!" : "1 Dependant added succesfully!"
 								: "No selections were made");
 			} catch (final AdaptorException e) {
 				LOGGER.error(e, e);

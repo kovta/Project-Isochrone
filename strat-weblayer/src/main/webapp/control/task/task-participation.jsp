@@ -17,7 +17,7 @@
 	            	<input type="hidden" name="assignments" value="${operator}">
 	      			<div class="md-form form-sm full-width text-center">
 	           			<h4>Are you sure you want to join this Task?</h4><br/>
-	           			<h5>By doing so you will effectively be assigned to the task: <c:out value="${requestScope.task.name}" />.</h5>
+	           			<h5>By doing so you will effectively be assigned to the Task: <c:out value="${requestScope.task.name}" />.</h5>
 	           		</div>
 	            </div>
 	            <!--Footer-->

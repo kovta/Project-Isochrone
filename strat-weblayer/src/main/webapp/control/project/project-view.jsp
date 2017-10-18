@@ -40,6 +40,9 @@
 						<c:forEach items="${requestScope.project.assignedUsers}" var="assignment">
 	                    	<c:if test="${operator eq assignment.recipient.name}"><c:set var="assigned" value="true" /></c:if>
 						</c:forEach>
+						<c:forEach items="${requestScope.submodule.assignedTeams}" var="assignment">
+	                    	<c:if test="${operator eq assignment.recipient.leader.name}"><c:set var="assigned" value="true" /></c:if>
+						</c:forEach>
 						<c:if test="${supervisor or assigned}">
 		       			    <br/><br/><br/>
 		       			    <div class="card">

@@ -50,7 +50,9 @@
 	                                		</tr>
 	                                		<tr>
 	                                			<td class="strat-detail-attribute-name">Account Modifier</td>
-	                                			<td class="strat-detail-attribute-value">${user.accountModifier.name}</td>
+	                                			<td class="strat-detail-attribute-value">
+	                                				<a href="User?id=<c:out value="${user.accountModifier.id}" />">${user.accountModifier.name}</a>
+	                                			</td>
 	                                		</tr>
 	                                		<tr>
 	                                			<td class="strat-detail-attribute-name">Account modification date</td>

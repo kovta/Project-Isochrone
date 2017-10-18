@@ -22,7 +22,6 @@ import com.kota.stratagem.ejbservice.protocol.ObjectiveProtocol;
 import com.kota.stratagem.ejbservice.protocol.TeamProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.ObjectiveRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.ObjectiveStatusRepresentor;
-import com.kota.stratagem.ejbserviceclient.exception.ServiceException;
 import com.kota.stratagem.weblayer.common.Page;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveAttribute;
 import com.kota.stratagem.weblayer.common.objective.ObjectiveParameter;
@@ -57,7 +56,7 @@ public class ObjectiveActionController extends AbstractRefinerServlet implements
 			boolean errorFlag = false;
 			try {
 				objective = this.objectiveProtocol.getObjective(Long.parseLong(id));
-			} catch (final ServiceException e) {
+			} catch (final Exception e) {
 				LOGGER.error(e, e);
 				errorFlag = true;
 			}
