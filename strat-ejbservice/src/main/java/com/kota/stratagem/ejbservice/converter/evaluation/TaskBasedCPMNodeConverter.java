@@ -24,12 +24,12 @@ public class TaskBasedCPMNodeConverter extends AbstractCPMNodeConverter implemen
 
 	private CPMNode to(TaskRepresentor task) {
 		CPMNode node;
-		if(task.isEstimated()) {
+		if (task.isEstimated()) {
 			node = new EstimatedCPMNodeImpl(this.buildNodeId(task.getId(), Constants.TASK_REPRESENTOR_DATA_LABEL),
 					this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic()),
 					this.calculator.calculateVariance(task.getPessimistic(), task.getRealistic(), task.getOptimistic()));
 		} else {
-			node = new EstimatedCPMNodeImpl(this.buildNodeId(task.getId(), Constants.TASK_REPRESENTOR_DATA_LABEL), task.getDuration(), (double) 0);
+			node = new EstimatedCPMNodeImpl(this.buildNodeId(task.getId(), Constants.TASK_REPRESENTOR_DATA_LABEL), task.getDuration(), 0.0);
 		}
 		return node;
 	}
@@ -39,20 +39,20 @@ public class TaskBasedCPMNodeConverter extends AbstractCPMNodeConverter implemen
 	public List<CPMNode> to(List<?> components) {
 		final List<CPMNode> nodes = new ArrayList<>();
 		final List<TaskRepresentor> tasks = (List<TaskRepresentor>) components;
-		for(final TaskRepresentor task : tasks) {
+		for (final TaskRepresentor task : tasks) {
 			nodes.add(this.to(task));
 		}
-		for(final TaskRepresentor task : tasks) {
+		for (final TaskRepresentor task : tasks) {
 			final CPMNode correspondingNode = this.findCorrespondingNode(task, nodes);
-			for(final CPMNode dependency : task.getDependencies()) {
-				CPMNode node = this.findCorrespondingNode((TaskRepresentor) dependency, nodes);
-				if(node != null) {
+			for (final CPMNode dependency : task.getDependencies()) {
+				final CPMNode node = this.findCorrespondingNode((TaskRepresentor) dependency, nodes);
+				if (node != null) {
 					correspondingNode.addDependency(node);
 				}
 			}
-			for(final CPMNode dependant : task.getDependants()) {
-				CPMNode node = this.findCorrespondingNode((TaskRepresentor) dependant, nodes);
-				if(node != null) {
+			for (final CPMNode dependant : task.getDependants()) {
+				final CPMNode node = this.findCorrespondingNode((TaskRepresentor) dependant, nodes);
+				if (node != null) {
 					correspondingNode.addDependant(node);
 				}
 			}
@@ -61,9 +61,9 @@ public class TaskBasedCPMNodeConverter extends AbstractCPMNodeConverter implemen
 	}
 
 	private CPMNode findCorrespondingNode(TaskRepresentor task, List<CPMNode> nodes) {
-		for(final CPMNode node : nodes) {
+		for (final CPMNode node : nodes) {
 			final AbstractCPMNode element = (AbstractCPMNode) node;
-			if(isCorresponding(task.getId(), element.getId(), Constants.TASK_REPRESENTOR_DATA_LABEL)) {
+			if (this.isCorresponding(task.getId(), element.getId(), Constants.TASK_REPRESENTOR_DATA_LABEL)) {
 				return node;
 			}
 		}

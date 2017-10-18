@@ -44,12 +44,12 @@ public class ObjectiveProtocolImplTest extends AbstractMockTest {
 	@Test
 	public void createObjectiveRepresentorFromObjectiveId() throws ServiceException {
 		final Objective objective = Mockito.mock(Objective.class);
-		Mockito.when(objectiveService.readComplete(OBJECTIVE_ID)).thenReturn(objective);
+		Mockito.when(this.objectiveService.readComplete(OBJECTIVE_ID)).thenReturn(objective);
 		Mockito.when(objective.getId()).thenReturn(OBJECTIVE_ID);
 		final ObjectiveRepresentor convertedRepresentor = Mockito.mock(ObjectiveRepresentor.class);
-		Mockito.when(objectiveConverter.toComplete(objective)).thenReturn(convertedRepresentor);
+		Mockito.when(this.objectiveConverter.toComplete(objective)).thenReturn(convertedRepresentor);
 		final ObjectiveRepresentor managedRepresentor = Mockito.mock(ObjectiveRepresentor.class);
-		Mockito.when(extensionManager.prepare(convertedRepresentor)).thenReturn(managedRepresentor);
+		Mockito.when(this.extensionManager.prepare(convertedRepresentor)).thenReturn(managedRepresentor);
 
 		final ObjectiveRepresentor objectiveRepresentor = this.protocol.getObjective(OBJECTIVE_ID);
 
@@ -62,11 +62,11 @@ public class ObjectiveProtocolImplTest extends AbstractMockTest {
 		final Set<Objective> results = new HashSet<>();
 		results.add(new Objective(20L, OBJECTIVE_TITLE + "1", "Test 1", 10, ObjectiveStatus.PLANNED, null, true, new Date(), new Date()));
 		results.add(new Objective(21L, OBJECTIVE_TITLE + "2", "Test 2", 10, ObjectiveStatus.PLANNED, null, true, new Date(), new Date()));
-		Mockito.when(objectiveService.readAll()).thenReturn(results);
+		Mockito.when(this.objectiveService.readAll()).thenReturn(results);
 		final Set<ObjectiveRepresentor> convertedObjectives = new HashSet<>();
 		convertedObjectives.add(Mockito.mock(ObjectiveRepresentor.class));
 		convertedObjectives.add(Mockito.mock(ObjectiveRepresentor.class));
-		Mockito.when(objectiveConverter.toSimplified(results)).thenReturn(convertedObjectives);
+		Mockito.when(this.objectiveConverter.toSimplified(results)).thenReturn(convertedObjectives);
 		final List<ObjectiveRepresentor> managedRepresentors = new ArrayList<>();
 		final ObjectiveRepresentor firstManagedRepresentor = Mockito.mock(ObjectiveRepresentor.class);
 		managedRepresentors.add(firstManagedRepresentor);
@@ -77,8 +77,10 @@ public class ObjectiveProtocolImplTest extends AbstractMockTest {
 		final ObjectiveStatusRepresentor managedStatus = ObjectiveStatusRepresentor.PLANNED;
 		final Date managedDeadline = new Date();
 		final Boolean managedConfidentiality = false;
-		managedRepresentors.add(new ObjectiveRepresentor(managedId, managedName, managedDescription, managedPriority, managedStatus, managedDeadline, managedConfidentiality));
-		Mockito.when(extensionManager.prepareBatch(new ArrayList<ObjectiveRepresentor>(convertedObjectives))).thenReturn(new ArrayList(managedRepresentors));
+		managedRepresentors.add(
+				new ObjectiveRepresentor(managedId, managedName, managedDescription, managedPriority, managedStatus, managedDeadline, managedConfidentiality));
+		Mockito.when(this.extensionManager.prepareBatch(new ArrayList<ObjectiveRepresentor>(convertedObjectives)))
+				.thenReturn(new ArrayList(managedRepresentors));
 
 		final List<ObjectiveRepresentor> objectiveRepresentors = this.protocol.getAllObjectives();
 
@@ -97,8 +99,8 @@ public class ObjectiveProtocolImplTest extends AbstractMockTest {
 	public void createOrUpdateObjectiveFromProperties() throws AdaptorException {
 		final Long createId = null;
 		final Long updateId = 32L;
-		Mockito.when(objectiveService.exists(createId)).thenReturn(false);
-		Mockito.when(objectiveService.exists(updateId)).thenReturn(true);
+		Mockito.when(this.objectiveService.exists(createId)).thenReturn(false);
+		Mockito.when(this.objectiveService.exists(updateId)).thenReturn(true);
 		final Long managedId = 33L;
 		final String managedName = OBJECTIVE_TITLE + "2";
 		final String managedDescription = "Test 2";
@@ -106,27 +108,28 @@ public class ObjectiveProtocolImplTest extends AbstractMockTest {
 		final ObjectiveStatus managedStatus = ObjectiveStatus.PLANNED;
 		final Date managedDeadline = new Date();
 		final Boolean managedConfidentiality = false;
-		Objective createdObjective = Mockito.mock(Objective.class);
-		Objective updatedObjective = Mockito.mock(Objective.class);
-		Mockito.when(objectiveService.create(managedName, managedDescription, managedPriority, managedStatus, managedDeadline, managedConfidentiality, TECHNICAL_USER)).thenReturn(createdObjective);
-		Mockito.when(objectiveService.update(updateId, managedName, managedDescription, managedPriority, managedStatus, managedDeadline, managedConfidentiality, TECHNICAL_USER))
-				.thenReturn(updatedObjective);
-		ObjectiveRepresentor convertedCreatedObjective = Mockito.mock(ObjectiveRepresentor.class);
-		ObjectiveRepresentor convertedUpdatedObjective = Mockito.mock(ObjectiveRepresentor.class);
-		Mockito.when(objectiveConverter.toComplete(createdObjective)).thenReturn(convertedCreatedObjective);
-		Mockito.when(objectiveConverter.toComplete(updatedObjective)).thenReturn(convertedUpdatedObjective);
-		ObjectiveStatusRepresentor managedStatusRepresentor = ObjectiveStatusRepresentor.PLANNED;
-		ObjectiveRepresentor managedCreatedObjective = new ObjectiveRepresentor(managedId, managedName, managedDescription, managedPriority, managedStatusRepresentor, managedDeadline,
-				managedConfidentiality);
-		ObjectiveRepresentor managedUpdatedObjective = new ObjectiveRepresentor(updateId, managedName, managedDescription, managedPriority, managedStatusRepresentor, managedDeadline,
-				managedConfidentiality);
-		Mockito.when(extensionManager.prepare(convertedCreatedObjective)).thenReturn(managedCreatedObjective);
-		Mockito.when(extensionManager.prepare(convertedUpdatedObjective)).thenReturn(managedUpdatedObjective);
+		final Objective createdObjective = Mockito.mock(Objective.class);
+		final Objective updatedObjective = Mockito.mock(Objective.class);
+		Mockito.when(this.objectiveService.create(managedName, managedDescription, managedPriority, managedStatus, managedDeadline, managedConfidentiality,
+				TECHNICAL_USER)).thenReturn(createdObjective);
+		Mockito.when(this.objectiveService.update(updateId, managedName, managedDescription, managedPriority, managedStatus, managedDeadline,
+				managedConfidentiality, TECHNICAL_USER)).thenReturn(updatedObjective);
+		final ObjectiveRepresentor convertedCreatedObjective = Mockito.mock(ObjectiveRepresentor.class);
+		final ObjectiveRepresentor convertedUpdatedObjective = Mockito.mock(ObjectiveRepresentor.class);
+		Mockito.when(this.objectiveConverter.toComplete(createdObjective)).thenReturn(convertedCreatedObjective);
+		Mockito.when(this.objectiveConverter.toComplete(updatedObjective)).thenReturn(convertedUpdatedObjective);
+		final ObjectiveStatusRepresentor managedStatusRepresentor = ObjectiveStatusRepresentor.PLANNED;
+		final ObjectiveRepresentor managedCreatedObjective = new ObjectiveRepresentor(managedId, managedName, managedDescription, managedPriority,
+				managedStatusRepresentor, managedDeadline, managedConfidentiality);
+		final ObjectiveRepresentor managedUpdatedObjective = new ObjectiveRepresentor(updateId, managedName, managedDescription, managedPriority,
+				managedStatusRepresentor, managedDeadline, managedConfidentiality);
+		Mockito.when(this.extensionManager.prepare(convertedCreatedObjective)).thenReturn(managedCreatedObjective);
+		Mockito.when(this.extensionManager.prepare(convertedUpdatedObjective)).thenReturn(managedUpdatedObjective);
 
-		final ObjectiveRepresentor createdObjectiveRepresentor = this.protocol.saveObjective(createId, managedName, managedDescription, managedPriority, managedStatusRepresentor, managedDeadline,
-				managedConfidentiality, TECHNICAL_USER);
-		final ObjectiveRepresentor updatedObjectiveRepresentor = this.protocol.saveObjective(updateId, managedName, managedDescription, managedPriority, managedStatusRepresentor, managedDeadline,
-				managedConfidentiality, TECHNICAL_USER);
+		final ObjectiveRepresentor createdObjectiveRepresentor = this.protocol.saveObjective(createId, managedName, managedDescription, managedPriority,
+				managedStatusRepresentor, managedDeadline, managedConfidentiality, TECHNICAL_USER);
+		final ObjectiveRepresentor updatedObjectiveRepresentor = this.protocol.saveObjective(updateId, managedName, managedDescription, managedPriority,
+				managedStatusRepresentor, managedDeadline, managedConfidentiality, TECHNICAL_USER);
 
 		Assert.assertEquals(createdObjectiveRepresentor.getName(), managedCreatedObjective.getName());
 		Assert.assertEquals(createdObjectiveRepresentor.getDescription(), managedCreatedObjective.getDescription());

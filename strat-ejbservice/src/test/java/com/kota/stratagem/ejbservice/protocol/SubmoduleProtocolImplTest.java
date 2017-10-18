@@ -49,12 +49,12 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 	@Test
 	public void createSubmoduleRepresentorFromSubmoduleId() throws AdaptorException {
 		final Submodule submodule = Mockito.mock(Submodule.class);
-		Mockito.when(submoduleService.readComplete(SUBMODULE_ID)).thenReturn(submodule);
+		Mockito.when(this.submoduleService.readComplete(SUBMODULE_ID)).thenReturn(submodule);
 		Mockito.when(submodule.getId()).thenReturn(SUBMODULE_ID);
 		final SubmoduleRepresentor convertedRepresentor = Mockito.mock(SubmoduleRepresentor.class);
-		Mockito.when(submoduleConverter.toComplete(submodule)).thenReturn(convertedRepresentor);
+		Mockito.when(this.submoduleConverter.toComplete(submodule)).thenReturn(convertedRepresentor);
 		final SubmoduleRepresentor managedRepresentor = Mockito.mock(SubmoduleRepresentor.class);
-		Mockito.when(extensionManager.prepare(convertedRepresentor)).thenReturn(managedRepresentor);
+		Mockito.when(this.extensionManager.prepare(convertedRepresentor)).thenReturn(managedRepresentor);
 
 		final SubmoduleRepresentor submoduleRepresentor = this.protocol.getSubmodule(SUBMODULE_ID);
 
@@ -64,7 +64,7 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 
 	@Test
 	public void createConfigurableSubmoduleRepresentorList() throws AdaptorException {
-		ProjectRepresentor parentProjectRepresentor = Mockito.mock(ProjectRepresentor.class);
+		final ProjectRepresentor parentProjectRepresentor = Mockito.mock(ProjectRepresentor.class);
 		final Long managedIdA = 21L;
 		final Long managedIdB = 22L;
 		final Long managedIdC = 23L;
@@ -72,41 +72,45 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 		final String managedName = SUBMODULE_TITLE + "2";
 		final String managedDescription = "Test 2";
 		final Date managedDeadline = new Date();
-		final SubmoduleRepresentor submoduleParameter = new SubmoduleRepresentor(managedIdA, managedName, managedDescription, managedDeadline, parentProjectRepresentor);
+		final SubmoduleRepresentor submoduleParameter = new SubmoduleRepresentor(managedIdA, managedName, managedDescription, managedDeadline,
+				parentProjectRepresentor);
 		Mockito.when(parentProjectRepresentor.getId()).thenReturn(SUBMODULE_PARENT_PROJECT_ID);
-		Project parentProject = Mockito.mock(Project.class);
-		Mockito.when(projectService.readWithSubmodules(SUBMODULE_PARENT_PROJECT_ID)).thenReturn(parentProject);
+		final Project parentProject = Mockito.mock(Project.class);
+		Mockito.when(this.projectService.readWithSubmodules(SUBMODULE_PARENT_PROJECT_ID)).thenReturn(parentProject);
 		final Set<Submodule> projectSubmodules = new HashSet<>();
 		projectSubmodules.add(Mockito.mock(Submodule.class));
 		projectSubmodules.add(Mockito.mock(Submodule.class));
 		projectSubmodules.add(Mockito.mock(Submodule.class));
 		projectSubmodules.add(Mockito.mock(Submodule.class));
 		Mockito.when(parentProject.getSubmodules()).thenReturn(projectSubmodules);
-		SubmoduleRepresentor projectLevelSubmoduleRepresentorB = new SubmoduleRepresentor(managedIdB, SUBMODULE_TITLE + 3, managedDescription, managedDeadline, parentProjectRepresentor);
-		SubmoduleRepresentor projectLevelSubmoduleRepresentorC = new SubmoduleRepresentor(managedIdC, SUBMODULE_TITLE + 4, managedDescription, managedDeadline, parentProjectRepresentor);
-		SubmoduleRepresentor projectLevelSubmoduleRepresentorD = new SubmoduleRepresentor(managedIdD, SUBMODULE_TITLE + 5, managedDescription, managedDeadline, parentProjectRepresentor);
+		final SubmoduleRepresentor projectLevelSubmoduleRepresentorB = new SubmoduleRepresentor(managedIdB, SUBMODULE_TITLE + 3, managedDescription,
+				managedDeadline, parentProjectRepresentor);
+		final SubmoduleRepresentor projectLevelSubmoduleRepresentorC = new SubmoduleRepresentor(managedIdC, SUBMODULE_TITLE + 4, managedDescription,
+				managedDeadline, parentProjectRepresentor);
+		final SubmoduleRepresentor projectLevelSubmoduleRepresentorD = new SubmoduleRepresentor(managedIdD, SUBMODULE_TITLE + 5, managedDescription,
+				managedDeadline, parentProjectRepresentor);
 		final Set<SubmoduleRepresentor> convertedSubmodules = new HashSet<>();
 		convertedSubmodules.add(submoduleParameter);
 		convertedSubmodules.add(projectLevelSubmoduleRepresentorB);
 		convertedSubmodules.add(projectLevelSubmoduleRepresentorC);
 		convertedSubmodules.add(projectLevelSubmoduleRepresentorD);
-		Mockito.when(submoduleConverter.toDispatchable(projectSubmodules)).thenReturn(convertedSubmodules);
+		Mockito.when(this.submoduleConverter.toDispatchable(projectSubmodules)).thenReturn(convertedSubmodules);
 		final List<SubmoduleRepresentor> dependencyConfigurations = new ArrayList<>();
 		dependencyConfigurations.addAll(convertedSubmodules);
 		dependencyConfigurations.remove(submoduleParameter);
 		final List<List<SubmoduleRepresentor>> parameterDependencies = new ArrayList<>();
-		List<SubmoduleRepresentor> dependencyLevel = new ArrayList<>();
+		final List<SubmoduleRepresentor> dependencyLevel = new ArrayList<>();
 		dependencyLevel.add(projectLevelSubmoduleRepresentorB);
 		parameterDependencies.add(dependencyLevel);
 		final List<List<SubmoduleRepresentor>> parameterDependants = new ArrayList<>();
-		List<SubmoduleRepresentor> dependantLevel = new ArrayList<>();
+		final List<SubmoduleRepresentor> dependantLevel = new ArrayList<>();
 		dependencyLevel.add(projectLevelSubmoduleRepresentorC);
 		parameterDependencies.add(dependantLevel);
 		submoduleParameter.setDependantChain(parameterDependencies);
 		submoduleParameter.setDependantChain(parameterDependants);
 		final List<SubmoduleRepresentor> compliantConfigurations = new ArrayList<>();
 		compliantConfigurations.add(projectLevelSubmoduleRepresentorD);
-		Mockito.when(extensionManager.prepareBatch(dependencyConfigurations)).thenReturn(new ArrayList(compliantConfigurations));
+		Mockito.when(this.extensionManager.prepareBatch(dependencyConfigurations)).thenReturn(new ArrayList(compliantConfigurations));
 
 		final List<SubmoduleRepresentor> submoduleRepresentors = this.protocol.getCompliantDependencyConfigurations(submoduleParameter);
 
@@ -118,29 +122,34 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 	public void createOrUpdateSubmoduleFromProperties() throws AdaptorException {
 		final Long createId = null;
 		final Long updateId = 32L;
-		Mockito.when(submoduleService.exists(createId)).thenReturn(false);
-		Mockito.when(submoduleService.exists(updateId)).thenReturn(true);
+		Mockito.when(this.submoduleService.exists(createId)).thenReturn(false);
+		Mockito.when(this.submoduleService.exists(updateId)).thenReturn(true);
 		final Long managedId = 33L;
 		final String managedName = SUBMODULE_TITLE + "3";
 		final String managedDescription = "Test 3";
 		final Date managedDeadline = new Date();
-		Long parentProjectId = 34L;
-		Submodule createdSubmodule = Mockito.mock(Submodule.class);
-		Submodule updatedSubmodule = Mockito.mock(Submodule.class);
-		Mockito.when(submoduleService.create(managedName, managedDescription, managedDeadline, TECHNICAL_USER, parentProjectId)).thenReturn(createdSubmodule);
-		Mockito.when(submoduleService.update(updateId, managedName, managedDescription, managedDeadline, TECHNICAL_USER)).thenReturn(updatedSubmodule);
-		SubmoduleRepresentor convertedCreatedSubmodule = Mockito.mock(SubmoduleRepresentor.class);
-		SubmoduleRepresentor convertedUpdatedSubmodule = Mockito.mock(SubmoduleRepresentor.class);
-		Mockito.when(submoduleConverter.toComplete(createdSubmodule)).thenReturn(convertedCreatedSubmodule);
-		Mockito.when(submoduleConverter.toComplete(updatedSubmodule)).thenReturn(convertedUpdatedSubmodule);
-		ProjectRepresentor parentProjectRepresentor = Mockito.mock(ProjectRepresentor.class);
-		SubmoduleRepresentor managedCreatedProject = new SubmoduleRepresentor(managedId, managedName, managedDescription, managedDeadline, parentProjectRepresentor);
-		SubmoduleRepresentor managedUpdatedProject = new SubmoduleRepresentor(updateId, managedName, managedDescription, managedDeadline, parentProjectRepresentor);
-		Mockito.when(extensionManager.prepare(convertedCreatedSubmodule)).thenReturn(managedCreatedProject);
-		Mockito.when(extensionManager.prepare(convertedUpdatedSubmodule)).thenReturn(managedUpdatedProject);
+		final Long parentProjectId = 34L;
+		final Submodule createdSubmodule = Mockito.mock(Submodule.class);
+		final Submodule updatedSubmodule = Mockito.mock(Submodule.class);
+		Mockito.when(this.submoduleService.create(managedName, managedDescription, managedDeadline, TECHNICAL_USER, parentProjectId))
+				.thenReturn(createdSubmodule);
+		Mockito.when(this.submoduleService.update(updateId, managedName, managedDescription, managedDeadline, TECHNICAL_USER)).thenReturn(updatedSubmodule);
+		final SubmoduleRepresentor convertedCreatedSubmodule = Mockito.mock(SubmoduleRepresentor.class);
+		final SubmoduleRepresentor convertedUpdatedSubmodule = Mockito.mock(SubmoduleRepresentor.class);
+		Mockito.when(this.submoduleConverter.toComplete(createdSubmodule)).thenReturn(convertedCreatedSubmodule);
+		Mockito.when(this.submoduleConverter.toComplete(updatedSubmodule)).thenReturn(convertedUpdatedSubmodule);
+		final ProjectRepresentor parentProjectRepresentor = Mockito.mock(ProjectRepresentor.class);
+		final SubmoduleRepresentor managedCreatedProject = new SubmoduleRepresentor(managedId, managedName, managedDescription, managedDeadline,
+				parentProjectRepresentor);
+		final SubmoduleRepresentor managedUpdatedProject = new SubmoduleRepresentor(updateId, managedName, managedDescription, managedDeadline,
+				parentProjectRepresentor);
+		Mockito.when(this.extensionManager.prepare(convertedCreatedSubmodule)).thenReturn(managedCreatedProject);
+		Mockito.when(this.extensionManager.prepare(convertedUpdatedSubmodule)).thenReturn(managedUpdatedProject);
 
-		final SubmoduleRepresentor createdProjectRepresentor = this.protocol.saveSubmodule(createId, managedName, managedDescription, managedDeadline, TECHNICAL_USER, parentProjectId);
-		final SubmoduleRepresentor updatedProjectRepresentor = this.protocol.saveSubmodule(updateId, managedName, managedDescription, managedDeadline, TECHNICAL_USER, parentProjectId);
+		final SubmoduleRepresentor createdProjectRepresentor = this.protocol.saveSubmodule(createId, managedName, managedDescription, managedDeadline,
+				TECHNICAL_USER, parentProjectId);
+		final SubmoduleRepresentor updatedProjectRepresentor = this.protocol.saveSubmodule(updateId, managedName, managedDescription, managedDeadline,
+				TECHNICAL_USER, parentProjectId);
 
 		Assert.assertEquals(createdProjectRepresentor.getName(), managedCreatedProject.getName());
 		Assert.assertEquals(createdProjectRepresentor.getDescription(), managedCreatedProject.getDescription());

@@ -3,6 +3,7 @@
 	<test name="protocol">
 		<packages>
 			<package name="com.kota.stratagem.ejbservice.protocol.*" />
+			<package name="com.kota.stratagem.ejbservice.evaluation.*" />
 		</packages>
 	</test>
 </suite>

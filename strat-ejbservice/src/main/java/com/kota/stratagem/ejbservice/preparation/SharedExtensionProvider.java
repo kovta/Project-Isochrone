@@ -56,9 +56,9 @@ public class SharedExtensionProvider implements ExtensionProvider {
 
 	@Override
 	public void provideBaseEstimationDetails(TaskRepresentor baseComponent) {
-		baseComponent.setExpectedDuration(
-				baseComponent.isEstimated() ? this.calculator.calculateExpectedDuration(baseComponent.getPessimistic(), baseComponent.getRealistic(),
-						baseComponent.getOptimistic()) : baseComponent.isDurationProvided() ? baseComponent.getDuration() : null);
+		baseComponent.setExpectedDuration(baseComponent.isEstimated()
+				? this.calculator.calculateExpectedDuration(baseComponent.getPessimistic(), baseComponent.getRealistic(), baseComponent.getOptimistic())
+				: baseComponent.isDurationProvided() ? baseComponent.getDuration() : null);
 		baseComponent.setVariance(baseComponent.isEstimated()
 				? this.calculator.calculateVariance(baseComponent.getPessimistic(), baseComponent.getRealistic(), baseComponent.getOptimistic()) : 0);
 	}
@@ -71,7 +71,7 @@ public class SharedExtensionProvider implements ExtensionProvider {
 	@Override
 	public TaskRepresentor adaptEstimationsToCompletion(TaskRepresentor baseComponent) {
 		final double completionRatio = ((100 - baseComponent.getCompletion()) / 100);
-		if(baseComponent.isEstimated()) {
+		if (baseComponent.isEstimated()) {
 			baseComponent.setPessimistic(baseComponent.getPessimistic() * completionRatio);
 			baseComponent.setRealistic(baseComponent.getRealistic() * completionRatio);
 			baseComponent.setOptimistic(baseComponent.getOptimistic() * completionRatio);
@@ -96,7 +96,7 @@ public class SharedExtensionProvider implements ExtensionProvider {
 		representor.setExpectedDuration(result.getExpectedDuration());
 		representor.setVariance(Math.pow(result.getStandardDeviation(), 2));
 		final Calendar calendar = Calendar.getInstance();
-		final double estimatedDuration = this.calculator.estimateProbability(result.getExpectedDuration(), result.getStandardDeviation(), (double) 95);
+		final double estimatedDuration = this.calculator.estimateProbability(result.getExpectedDuration(), result.getStandardDeviation(), 95.0);
 		calendar.setTime(new Date());
 		calendar.add(Calendar.DATE, (int) estimatedDuration);
 		representor.setEstimatedCompletionDate(calendar.getTime());
@@ -113,8 +113,8 @@ public class SharedExtensionProvider implements ExtensionProvider {
 
 	@Override
 	public void provideBlankEstimations(AbstractProgressionRepresentor representor) {
-		representor.setExpectedDuration((double) 0);
-		representor.setVariance((double) 0);
+		representor.setExpectedDuration(0.0);
+		representor.setVariance(0.0);
 	}
 
 }
