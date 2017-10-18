@@ -29,7 +29,7 @@ INSERT INTO app_users (user_id, user_name, user_password_hash, user_role, user_r
 (3, 'dennis', '$2a$10$g5DOPhsfuQLqzB6yd1g.2eYswE00Zh8q77fPSc5dKjwWXV/pWMGS6', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 5),
 (4, 'ellie', '$2a$10$MHLMnRaQkoybGpdvMY.F0e7jIN8IYj6hozDc12EZPOFTfoTypLZnu', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 6),
 (5, 'frank', '$2a$10$7m8VIy8YWdu2p6MkXjhrfOTPzHZ0NiNBjACkqCVWjH8D8D4YaJ8DO', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 3),
-(6, 'gabrille', '$2a$10$ARgEy3y3fYOzoupqwWRqzeASy5KllWKLixDWId57Dl5whjV9i888W', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 14),
+(6, 'gabrielle', '$2a$10$ARgEy3y3fYOzoupqwWRqzeASy5KllWKLixDWId57Dl5whjV9i888W', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 14),
 (7, 'holly', '$2a$10$nExDjhpB1s/c8TKAI3U5tuVQHMCI2vr7Z0vz4CKs/I.PV5lM16wmy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 16),
 (8, 'ike', '$2a$10$k5v48h9nA410N4ULAn.PnOZX2VudxIqR9I4FKUjn9qZIBlNqTqdwW', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 7),
 (9, 'jenny', '$2a$10$v0hqFIXP3PIUq1vx8wXGFehCjdah5qaCBO0sHgSTiZsVJBDze/lAy', 1, '2015/01/01 00:00:00', '2015/01/01 00:00:00', 0, 0, 2),
