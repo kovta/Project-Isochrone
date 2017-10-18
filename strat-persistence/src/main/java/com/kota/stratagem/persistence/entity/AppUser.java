@@ -42,6 +42,10 @@ import com.kota.stratagem.persistence.query.AppUserQuery;
 				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_TASK_ASSIGNMENTS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.tasks t WHERE u.id=:"
 				+ AppUserParameter.ID),
+		@NamedQuery(name = AppUserQuery.GET_BY_ID_WITH_SUPERVISED_TEAMS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.supervisedTeams WHERE u.id=:"
+				+ AppUserParameter.ID),
+		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_WITH_SUPERVISED_TEAMS, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.supervisedTeams WHERE u.name=:"
+				+ AppUserParameter.USERNAME),
 		@NamedQuery(name = AppUserQuery.GET_BY_ID_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t LEFT JOIN FETCH u.supervisedTeams LEFT JOIN FETCH u.teamMemberships LEFT JOIN FETCH u.notifications n WHERE u.id=:"
 				+ AppUserParameter.ID),
 		@NamedQuery(name = AppUserQuery.GET_BY_USERNAME_COMPLETE, query = "SELECT u FROM AppUser u LEFT JOIN FETCH u.accountModifier m LEFT JOIN FETCH u.objectives o LEFT JOIN FETCH u.projects p LEFT JOIN FETCH u.submodules sm LEFT JOIN FETCH u.tasks t LEFT JOIN FETCH u.supervisedTeams LEFT JOIN FETCH u.teamMemberships LEFT JOIN FETCH u.notifications n WHERE u.name=:"

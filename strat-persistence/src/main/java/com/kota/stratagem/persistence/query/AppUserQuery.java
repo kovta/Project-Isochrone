@@ -8,6 +8,8 @@ public class AppUserQuery {
 	public static final String GET_BY_USERNAME_WITH_NOTIFICATIONS = "AppUsers.getByUsernmaeWithNotifications";
 	public static final String GET_BY_ID_WITH_TASK_ASSIGNMENTS = "AppUsers.getByIdWithTaskAssignments";
 	public static final String GET_BY_USERNAME = "AppUsers.getByUsername";
+	public static final String GET_BY_ID_WITH_SUPERVISED_TEAMS = "AppUsers.getByIdWithSupervisedTeams";
+	public static final String GET_BY_USERNAME_WITH_SUPERVISED_TEAMS = "AppUsers.getByUsernameWithSupervisedTeams";
 	public static final String GET_BY_ID_COMPLETE = "AppUsers.getByIdComplete";
 	public static final String GET_BY_USERNAME_COMPLETE = "AppUsers.getByUsernameComplete";
 	public static final String GET_ALL_BY_ROLE = "AppUsers.getAllByRole";

@@ -22,6 +22,10 @@ public interface AppUserService {
 
 	AppUser readWithNotifications(String username);
 
+	AppUser readWithSupervisedTeams(Long id);
+
+	AppUser readWithSupervisedTeams(String username);
+
 	AppUser readComplete(Long id);
 
 	AppUser readComplete(String username);

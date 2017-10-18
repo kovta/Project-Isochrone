@@ -39,7 +39,7 @@ import com.kota.stratagem.persistence.query.TeamQuery;
 				+ TeamParameter.ID),
 		@NamedQuery(name = TeamQuery.GET_BY_ID_COMPLETE, query = "SELECT t FROM Team t LEFT JOIN FETCH t.leader l LEFT JOIN FETCH t.members tm LEFT JOIN FETCH t.objectives LEFT JOIN FETCH t.projects LEFT JOIN FETCH t.submodules LEFT JOIN FETCH t.tasks LEFT JOIN FETCH t.creator LEFT JOIN FETCH t.modifier WHERE t.id=:"
 				+ TeamParameter.ID),
-		@NamedQuery(name = TeamQuery.GET_ALL_TEAMS, query = "SELECT t FROM Team t LEFT JOIN FETCH t.leader l LEFT JOIN FETCH t.members tm LEFT JOIN FETCH t.objectives LEFT JOIN FETCH t.projects LEFT JOIN FETCH t.submodules LEFT JOIN FETCH t.tasks ORDER BY t.name"),
+		@NamedQuery(name = TeamQuery.GET_ALL_TEAMS, query = "SELECT t FROM Team t LEFT JOIN FETCH t.leader l LEFT JOIN FETCH t.members tm LEFT JOIN FETCH t.objectives LEFT JOIN FETCH t.projects LEFT JOIN FETCH t.submodules LEFT JOIN FETCH t.tasks LEFT JOIN FETCH t.creator LEFT JOIN FETCH t.modifier ORDER BY t.name"),
 		@NamedQuery(name = TeamQuery.REMOVE_BY_ID, query = "DELETE FROM Team t WHERE t.id=:" + TeamParameter.ID)
 		//
 })
