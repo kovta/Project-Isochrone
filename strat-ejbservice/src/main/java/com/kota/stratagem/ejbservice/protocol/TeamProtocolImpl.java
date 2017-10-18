@@ -82,35 +82,28 @@ public class TeamProtocolImpl implements TeamProtocol {
 	}
 
 	private <T extends AbstractTeamAssignmentRepresentor> List<TeamRepresentor> retrieveObjectRelatedTeamList(List<T> assignments) {
-		List<TeamRepresentor> allTeams = null, teamList = new ArrayList<>();
-		try {
-			allTeams = this.getAllTeams();
-			if (assignments.isEmpty()) {
-				teamList = allTeams;
-			} else {
-				final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
-				for (final TeamRepresentor team : allTeams) {
-					boolean subordinateLeader = false, contains = false;
-					for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
-							.getSubordinateRoles()) {
-						if (subordinateRole.toString().equals(team.getLeader().getRole().toString())) {
-							subordinateLeader = true;
-						}
-					}
-					for (final AbstractTeamAssignmentRepresentor assignment : assignments) {
-						if (team.equals(assignment.getRecipient())) {
-							contains = true;
-						}
-					}
-					if ((subordinateLeader || team.getLeader().getName().equals(operator) || team.getCreator().getName().equals(operator)) && !contains) {
-						teamList.add(team);
-					}
+		final List<TeamRepresentor> teamList = new ArrayList<>();
+		final List<TeamRepresentor> allTeams = (List<TeamRepresentor>) this.extensionManager
+				.prepareBatch(new ArrayList<TeamRepresentor>(this.converter.toSubComplete(this.teamService.readAll())));
+		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		for (final TeamRepresentor team : allTeams) {
+			boolean subordinateLeader = false, contains = false;
+			for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
+					.getSubordinateRoles()) {
+				if (subordinateRole.toString().equals(team.getLeader().getRole().toString())) {
+					subordinateLeader = true;
 				}
 			}
-			Collections.sort(teamList, new TeamNameComparator());
-		} catch (final AdaptorException e) {
-			e.printStackTrace();
+			for (final AbstractTeamAssignmentRepresentor assignment : assignments) {
+				if (team.equals(assignment.getRecipient())) {
+					contains = true;
+				}
+			}
+			if ((subordinateLeader || team.getLeader().getName().equals(operator) || team.getCreator().getName().equals(operator)) && !contains) {
+				teamList.add(team);
+			}
 		}
+		Collections.sort(teamList, new TeamNameComparator());
 		return teamList;
 	}
 

@@ -112,7 +112,7 @@ public class TaskProtocolImplTest extends AbstractMockTest {
 		convertedTasks.add(submoduleLevelTaskRepresentorC);
 		convertedTasks.add(submoduleLevelTaskRepresentorD);
 		convertedTasks.add(submoduleLevelTaskRepresentorE);
-		Mockito.when(this.taskConverter.toDispatchable(submoduleTasks)).thenReturn(convertedTasks);
+		Mockito.when(this.taskConverter.toElementary(submoduleTasks)).thenReturn(convertedTasks);
 		final List<TaskRepresentor> dependencyConfigurations = new ArrayList<>();
 		dependencyConfigurations.addAll(convertedTasks);
 		dependencyConfigurations.remove(taskParameter);

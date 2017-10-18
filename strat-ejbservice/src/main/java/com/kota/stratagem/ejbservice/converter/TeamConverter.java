@@ -16,11 +16,17 @@ public interface TeamConverter {
 
 	TeamRepresentor toSimplified(Team team);
 
+	TeamRepresentor toSubComplete(Team team);
+
 	TeamRepresentor toComplete(Team team);
 
 	Set<TeamRepresentor> toElementary(Set<Team> teams);
 
+	Set<TeamRepresentor> toSubSimplified(Set<Team> teams);
+
 	Set<TeamRepresentor> toSimplified(Set<Team> teams);
+
+	Set<TeamRepresentor> toSubComplete(Set<Team> teams);
 
 	Set<TeamRepresentor> toComplete(Set<Team> teams);
 

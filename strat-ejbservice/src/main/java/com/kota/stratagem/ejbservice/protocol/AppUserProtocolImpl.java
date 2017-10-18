@@ -3,6 +3,7 @@ package com.kota.stratagem.ejbservice.protocol;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserNameComparator;
 import com.kota.stratagem.ejbservice.context.EJBServiceConfiguration;
 import com.kota.stratagem.ejbservice.converter.AppUserConverter;
+import com.kota.stratagem.ejbservice.converter.TeamConverter;
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.interceptor.Regulated;
 import com.kota.stratagem.ejbservice.preparation.DTOExtensionManager;
@@ -24,9 +26,11 @@ import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TeamRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.catalog.RoleRepresentor;
+import com.kota.stratagem.persistence.entity.Team;
 import com.kota.stratagem.persistence.entity.trunk.Role;
 import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceException;
 import com.kota.stratagem.persistence.service.AppUserService;
+import com.kota.stratagem.persistence.service.TeamService;
 import com.kota.stratagem.security.context.SessionContextAccessor;
 import com.kota.stratagem.security.domain.RestrictionLevel;
 import com.kota.stratagem.security.encryption.PasswordGenerationService;
@@ -39,8 +43,14 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@EJB
 	private AppUserService appUserService;
 
+	@EJB
+	private TeamService teamService;
+
 	@Inject
-	private AppUserConverter converter;
+	private AppUserConverter appUserConverter;
+
+	@Inject
+	private TeamConverter teamConverter;
 
 	@EJB
 	private PasswordGenerationService passwordGenerator;
@@ -54,13 +64,13 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public int getAppUserNewNotificationCount(String username) throws AdaptorException {
-		final AppUserRepresentor representor = this.converter.toSimplified(this.appUserService.readWithNotifications(username));
+		final AppUserRepresentor representor = this.appUserConverter.toSimplified(this.appUserService.readWithNotifications(username));
 		return (representor.getNotifications().size() - representor.getNotificationViewCount());
 	}
 
 	@Override
 	public int getAppUserImageSelector(String username) throws AdaptorException {
-		return this.converter.toElementary(this.appUserService.readElementary(username)).getImageSelector();
+		return this.appUserConverter.toElementary(this.appUserService.readElementary(username)).getImageSelector();
 	}
 
 	@Override
@@ -70,7 +80,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
-		final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(id));
+		final AppUserRepresentor representor = this.appUserConverter.toComplete(this.appUserService.readComplete(id));
 		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
 			this.equalizeViewedNotifications(representor);
 		}
@@ -79,7 +89,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public AppUserRepresentor getAppUser(String username) throws AdaptorException {
-		final AppUserRepresentor representor = this.converter.toComplete(this.appUserService.readComplete(username));
+		final AppUserRepresentor representor = this.appUserConverter.toComplete(this.appUserService.readComplete(username));
 		if (this.isOperatorAccount(representor) && (representor.getNotifications().size() != representor.getNotificationViewCount())) {
 			this.equalizeViewedNotifications(representor);
 		}
@@ -89,7 +99,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	@Override
 	public List<AppUserRepresentor> getAllAppUsers() throws AdaptorException {
 		return (List<AppUserRepresentor>) this.extensionManager
-				.prepareBatch(new ArrayList<AppUserRepresentor>(this.converter.toSubComplete(this.appUserService.readAll())));
+				.prepareBatch(new ArrayList<AppUserRepresentor>(this.appUserConverter.toSubComplete(this.appUserService.readAll())));
 	}
 
 	@Override
@@ -115,27 +125,49 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {
 		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
 		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
+		final Set<Team> supervisedTeams = this.appUserService.readWithSupervisedTeams(operator).getSupervisedTeams();
+		final List<TeamRepresentor> supervisedTeamRepresentors = new ArrayList<>();
+		for (final Team team : supervisedTeams) {
+			supervisedTeamRepresentors.add(this.teamConverter.toSubSimplified(this.teamService.readWithLeaderAndMembers(team.getId())));
+		}
+		final List<AppUserRepresentor> supervisedTeamMembers = new ArrayList<>();
+		for (final TeamRepresentor supervisedTeam : supervisedTeamRepresentors) {
+			for (final AppUserRepresentor teamMember : supervisedTeam.getMembers()) {
+				if (!supervisedTeamMembers.contains(teamMember)) {
+					supervisedTeamMembers.add(teamMember);
+				}
+			}
+		}
+		final List<AppUserRepresentor> supervisedTeamMemberProxy = new ArrayList<>(supervisedTeamMembers);
 		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
 				.getSubordinateRoles()) {
 			final List<AppUserRepresentor> userList = new ArrayList<>(
-					this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
+					this.appUserConverter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
 			for (final T assignment : assignments) {
 				if (userList.contains(assignment.getRecipient())) {
 					userList.remove(assignment.getRecipient());
 				}
 			}
-			if (userList.size() > 0) {
+			for (final AppUserRepresentor supervisedTeamMember : supervisedTeamMembers) {
+				if (userList.contains(supervisedTeamMember)) {
+					supervisedTeamMemberProxy.remove(supervisedTeamMember);
+				}
+			}
+			if (!userList.isEmpty()) {
 				clusters.add(userList);
 			}
 		}
+		if (!supervisedTeamMemberProxy.isEmpty()) {
+			clusters.add(supervisedTeamMemberProxy);
+		}
 		final List<AppUserRepresentor> self = new ArrayList<>();
-		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		self.add(this.appUserConverter.toElementary(this.appUserService.readElementary(operator)));
 		for (final T assignment : assignments) {
 			if (self.contains(assignment.getRecipient())) {
 				self.remove(assignment.getRecipient());
 			}
 		}
-		if (self.size() > 0) {
+		if (!self.isEmpty()) {
 			clusters.add(self);
 		}
 		for (final List<AppUserRepresentor> cluster : clusters) {
@@ -151,7 +183,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
 				.getSubordinateRoles()) {
 			final List<AppUserRepresentor> userList = new ArrayList<>(
-					this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
+					this.appUserConverter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
 			for (final AppUserRepresentor user : team.getMembers()) {
 				if (userList.contains(user) || user.equals(team.getLeader())) {
 					userList.remove(user);
@@ -162,7 +194,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			}
 		}
 		final List<AppUserRepresentor> self = new ArrayList<>();
-		self.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+		self.add(this.appUserConverter.toElementary(this.appUserService.readElementary(operator)));
 		for (final AppUserRepresentor user : team.getMembers()) {
 			if (self.contains(user) || user.equals(team.getLeader())) {
 				self.remove(user);
@@ -183,10 +215,11 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
 		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
 				.getSubordinateRoles()) {
-			for (final AppUserRepresentor candidate : this.converter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName())))) {
+			for (final AppUserRepresentor candidate : this.appUserConverter
+					.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName())))) {
 				users.add(candidate);
 			}
-			users.add(this.converter.toElementary(this.appUserService.readElementary(operator)));
+			users.add(this.appUserConverter.toElementary(this.appUserService.readElementary(operator)));
 		}
 		Collections.sort(users, new AppUserNameComparator());
 		return users;
@@ -194,7 +227,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	@Override
 	public AppUserRepresentor saveAppUser(Long id, String name, String password, String email, RoleRepresentor role, String operator) throws AdaptorException {
-		return (AppUserRepresentor) this.extensionManager.prepare(this.converter.toComplete(((id != null) && this.appUserService.exists(id))
+		return (AppUserRepresentor) this.extensionManager.prepare(this.appUserConverter.toComplete(((id != null) && this.appUserService.exists(id))
 				? this.appUserService.update(id, name, password != null ? password : null, email, Role.valueOf(role.getName()), operator)
 				: this.appUserService.create(name, this.passwordGenerator.GenerateBCryptPassword(password), email, Role.valueOf(role.getName()))));
 	}

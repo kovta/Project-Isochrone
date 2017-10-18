@@ -80,6 +80,11 @@ public class TeamConverterImpl extends AbstractMonitoredEntityConverter implemen
 	}
 
 	@Override
+	public TeamRepresentor toSubComplete(Team team) {
+		return this.inculdeMonitoringFields(this.toElementary(team), team);
+	}
+
+	@Override
 	public TeamRepresentor toComplete(Team team) {
 		return this.inculdeMonitoringFields(this.toSimplified(team), team);
 	}
@@ -94,10 +99,28 @@ public class TeamConverterImpl extends AbstractMonitoredEntityConverter implemen
 	}
 
 	@Override
+	public Set<TeamRepresentor> toSubSimplified(Set<Team> teams) {
+		final Set<TeamRepresentor> representors = new HashSet<>();
+		for (final Team team : teams) {
+			representors.add(this.toSubSimplified(team));
+		}
+		return representors;
+	}
+
+	@Override
 	public Set<TeamRepresentor> toSimplified(Set<Team> teams) {
 		final Set<TeamRepresentor> representors = new HashSet<>();
 		for (final Team team : teams) {
 			representors.add(this.toSimplified(team));
+		}
+		return representors;
+	}
+
+	@Override
+	public Set<TeamRepresentor> toSubComplete(Set<Team> teams) {
+		final Set<TeamRepresentor> representors = new HashSet<>();
+		for (final Team team : teams) {
+			representors.add(this.toSubComplete(team));
 		}
 		return representors;
 	}

@@ -94,7 +94,7 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 		convertedSubmodules.add(projectLevelSubmoduleRepresentorB);
 		convertedSubmodules.add(projectLevelSubmoduleRepresentorC);
 		convertedSubmodules.add(projectLevelSubmoduleRepresentorD);
-		Mockito.when(this.submoduleConverter.toDispatchable(projectSubmodules)).thenReturn(convertedSubmodules);
+		Mockito.when(this.submoduleConverter.toElementary(projectSubmodules)).thenReturn(convertedSubmodules);
 		final List<SubmoduleRepresentor> dependencyConfigurations = new ArrayList<>();
 		dependencyConfigurations.addAll(convertedSubmodules);
 		dependencyConfigurations.remove(submoduleParameter);

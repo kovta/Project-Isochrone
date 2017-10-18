@@ -64,11 +64,11 @@ public class TaskProtocolImpl implements TaskProtocol {
 	public List<TaskRepresentor> getCompliantDependencyConfigurations(TaskRepresentor task) throws AdaptorException {
 		final List<TaskRepresentor> configurations = new ArrayList<>();
 		if (task.getObjective() != null) {
-			configurations.addAll(this.taskConverter.toDispatchable(this.objectiveService.readWithTasks(task.getObjective().getId()).getTasks()));
+			configurations.addAll(this.taskConverter.toElementary(this.objectiveService.readWithTasks(task.getObjective().getId()).getTasks()));
 		} else if (task.getProject() != null) {
-			configurations.addAll(this.taskConverter.toDispatchable(this.projectService.readWithTasks(task.getProject().getId()).getTasks()));
+			configurations.addAll(this.taskConverter.toElementary(this.projectService.readWithTasks(task.getProject().getId()).getTasks()));
 		} else if (task.getSubmodule() != null) {
-			configurations.addAll(this.taskConverter.toDispatchable(this.submoduleService.readWithTasks(task.getSubmodule().getId()).getTasks()));
+			configurations.addAll(this.taskConverter.toElementary(this.submoduleService.readWithTasks(task.getSubmodule().getId()).getTasks()));
 		}
 		configurations.remove(task);
 		for (final List<TaskRepresentor> dependencyLevel : task.getDependencyChain()) {

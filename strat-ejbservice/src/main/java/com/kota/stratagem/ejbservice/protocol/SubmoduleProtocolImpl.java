@@ -55,7 +55,7 @@ public class SubmoduleProtocolImpl implements SubmoduleProtocol {
 	@Override
 	public List<SubmoduleRepresentor> getCompliantDependencyConfigurations(SubmoduleRepresentor submodule) throws AdaptorException {
 		final List<SubmoduleRepresentor> configurations = new ArrayList<>();
-		configurations.addAll(this.submoduleConverter.toDispatchable(this.projectService.readWithSubmodules(submodule.getProject().getId()).getSubmodules()));
+		configurations.addAll(this.submoduleConverter.toElementary(this.projectService.readWithSubmodules(submodule.getProject().getId()).getSubmodules()));
 		configurations.remove(submodule);
 		for (final List<SubmoduleRepresentor> dependencyLevel : submodule.getDependencyChain()) {
 			for (final SubmoduleRepresentor dependency : dependencyLevel) {
