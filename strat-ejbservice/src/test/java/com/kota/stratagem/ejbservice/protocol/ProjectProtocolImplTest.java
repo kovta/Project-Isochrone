@@ -31,8 +31,6 @@ public class ProjectProtocolImplTest extends AbstractMockTest {
 
 	private static final String PROJECT_TITLE = "[TEST_PROJECT]-";
 
-	private static final String OBJECTIVE_TITLE = "[TEST_PROJECT]-";
-
 	@InjectMocks
 	private ProjectProtocolImpl protocol;
 
@@ -106,7 +104,6 @@ public class ProjectProtocolImplTest extends AbstractMockTest {
 
 	@Test
 	public void createOrUpdateProjectFromProperties() throws AdaptorException {
-		//Arrange
 		final Long createId = null;
 		final Long updateId = 32L;
 		Mockito.when(projectService.exists(createId)).thenReturn(false);
@@ -135,13 +132,11 @@ public class ProjectProtocolImplTest extends AbstractMockTest {
 		Mockito.when(extensionManager.prepare(convertedCreatedProject)).thenReturn(managedCreatedProject);
 		Mockito.when(extensionManager.prepare(convertedUpdatedProject)).thenReturn(managedUpdatedProject);
 
-		// Act
 		final ProjectRepresentor createdProjectRepresentor = this.protocol.saveProject(createId, managedName, managedDescription, managedStatusRepresentor, managedDeadline, managedConfidentiality,
 				TECHNICAL_USER, parentObjectiveId);
 		final ProjectRepresentor updatedProjectRepresentor = this.protocol.saveProject(updateId, managedName, managedDescription, managedStatusRepresentor, managedDeadline, managedConfidentiality,
 				TECHNICAL_USER, parentObjectiveId);
 
-		//Assert
 		Assert.assertEquals(createdProjectRepresentor.getName(), managedCreatedProject.getName());
 		Assert.assertEquals(createdProjectRepresentor.getDescription(), managedCreatedProject.getDescription());
 		Assert.assertEquals(createdProjectRepresentor.getStatus(), managedCreatedProject.getStatus());

@@ -63,13 +63,16 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 	}
 
 	@Test
-	public void createSubmoduleRepresentorList() throws AdaptorException {
-		final List<SubmoduleRepresentor> dependencyConfigurations = new ArrayList<>();
-		dependencyConfigurations.add(Mockito.mock(SubmoduleRepresentor.class));
-		dependencyConfigurations.add(Mockito.mock(SubmoduleRepresentor.class));
-		final SubmoduleRepresentor submoduleParameter = Mockito.mock(SubmoduleRepresentor.class);
+	public void createConfigurableSubmoduleRepresentorList() throws AdaptorException {
 		ProjectRepresentor parentProjectRepresentor = Mockito.mock(ProjectRepresentor.class);
-		Mockito.when(submoduleParameter.getProject()).thenReturn(parentProjectRepresentor);
+		final Long managedIdA = 21L;
+		final Long managedIdB = 22L;
+		final Long managedIdC = 23L;
+		final Long managedIdD = 24L;
+		final String managedName = SUBMODULE_TITLE + "2";
+		final String managedDescription = "Test 2";
+		final Date managedDeadline = new Date();
+		final SubmoduleRepresentor submoduleParameter = new SubmoduleRepresentor(managedIdA, managedName, managedDescription, managedDeadline, parentProjectRepresentor);
 		Mockito.when(parentProjectRepresentor.getId()).thenReturn(SUBMODULE_PARENT_PROJECT_ID);
 		Project parentProject = Mockito.mock(Project.class);
 		Mockito.when(projectService.readWithSubmodules(SUBMODULE_PARENT_PROJECT_ID)).thenReturn(parentProject);
@@ -77,31 +80,38 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 		projectSubmodules.add(Mockito.mock(Submodule.class));
 		projectSubmodules.add(Mockito.mock(Submodule.class));
 		projectSubmodules.add(Mockito.mock(Submodule.class));
+		projectSubmodules.add(Mockito.mock(Submodule.class));
 		Mockito.when(parentProject.getSubmodules()).thenReturn(projectSubmodules);
+		SubmoduleRepresentor projectLevelSubmoduleRepresentorB = new SubmoduleRepresentor(managedIdB, SUBMODULE_TITLE + 3, managedDescription, managedDeadline, parentProjectRepresentor);
+		SubmoduleRepresentor projectLevelSubmoduleRepresentorC = new SubmoduleRepresentor(managedIdC, SUBMODULE_TITLE + 4, managedDescription, managedDeadline, parentProjectRepresentor);
+		SubmoduleRepresentor projectLevelSubmoduleRepresentorD = new SubmoduleRepresentor(managedIdD, SUBMODULE_TITLE + 5, managedDescription, managedDeadline, parentProjectRepresentor);
 		final Set<SubmoduleRepresentor> convertedSubmodules = new HashSet<>();
-		convertedSubmodules.add(Mockito.mock(SubmoduleRepresentor.class));
-		convertedSubmodules.add(Mockito.mock(SubmoduleRepresentor.class));
-		convertedSubmodules.add(Mockito.mock(SubmoduleRepresentor.class));
+		convertedSubmodules.add(submoduleParameter);
+		convertedSubmodules.add(projectLevelSubmoduleRepresentorB);
+		convertedSubmodules.add(projectLevelSubmoduleRepresentorC);
+		convertedSubmodules.add(projectLevelSubmoduleRepresentorD);
 		Mockito.when(submoduleConverter.toDispatchable(projectSubmodules)).thenReturn(convertedSubmodules);
-
-		final List<SubmoduleRepresentor> parameterDependencies = new ArrayList<>();
-		parameterDependencies.add(Mockito.mock(SubmoduleRepresentor.class));
-		final List<SubmoduleRepresentor> parameterDependants = new ArrayList<>();
-		parameterDependants.add(Mockito.mock(SubmoduleRepresentor.class));
-
+		final List<SubmoduleRepresentor> dependencyConfigurations = new ArrayList<>();
+		dependencyConfigurations.addAll(convertedSubmodules);
+		dependencyConfigurations.remove(submoduleParameter);
+		final List<List<SubmoduleRepresentor>> parameterDependencies = new ArrayList<>();
+		List<SubmoduleRepresentor> dependencyLevel = new ArrayList<>();
+		dependencyLevel.add(projectLevelSubmoduleRepresentorB);
+		parameterDependencies.add(dependencyLevel);
+		final List<List<SubmoduleRepresentor>> parameterDependants = new ArrayList<>();
+		List<SubmoduleRepresentor> dependantLevel = new ArrayList<>();
+		dependencyLevel.add(projectLevelSubmoduleRepresentorC);
+		parameterDependencies.add(dependantLevel);
+		submoduleParameter.setDependantChain(parameterDependencies);
+		submoduleParameter.setDependantChain(parameterDependants);
 		final List<SubmoduleRepresentor> compliantConfigurations = new ArrayList<>();
-		SubmoduleRepresentor firstCompliantSubmodule = Mockito.mock(SubmoduleRepresentor.class);
-		SubmoduleRepresentor secondCompliantSubmodule = Mockito.mock(SubmoduleRepresentor.class);
-		compliantConfigurations.add(firstCompliantSubmodule);
-		compliantConfigurations.add(secondCompliantSubmodule);
-
+		compliantConfigurations.add(projectLevelSubmoduleRepresentorD);
 		Mockito.when(extensionManager.prepareBatch(dependencyConfigurations)).thenReturn(new ArrayList(compliantConfigurations));
 
 		final List<SubmoduleRepresentor> submoduleRepresentors = this.protocol.getCompliantDependencyConfigurations(submoduleParameter);
 
 		Assert.assertEquals(submoduleRepresentors.size(), compliantConfigurations.size());
-		Assert.assertEquals(submoduleRepresentors.get(0), firstCompliantSubmodule);
-		Assert.assertEquals(submoduleRepresentors.get(1), secondCompliantSubmodule);
+		Assert.assertEquals(submoduleRepresentors.get(0), projectLevelSubmoduleRepresentorD);
 	}
 
 	@Test
@@ -111,8 +121,8 @@ public class SubmoduleProtocolImplTest extends AbstractMockTest {
 		Mockito.when(submoduleService.exists(createId)).thenReturn(false);
 		Mockito.when(submoduleService.exists(updateId)).thenReturn(true);
 		final Long managedId = 33L;
-		final String managedName = SUBMODULE_TITLE + "2";
-		final String managedDescription = "Test 2";
+		final String managedName = SUBMODULE_TITLE + "3";
+		final String managedDescription = "Test 3";
 		final Date managedDeadline = new Date();
 		Long parentProjectId = 34L;
 		Submodule createdSubmodule = Mockito.mock(Submodule.class);
