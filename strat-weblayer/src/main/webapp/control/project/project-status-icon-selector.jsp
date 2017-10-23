@@ -8,7 +8,7 @@
 	<c:when test="${status == 'Under analysis'}"><i class="fa fa-pie-chart"></i></c:when>
 	<c:when test="${status == 'In design'}"><i class="fa fa-crop"></i></c:when>
 	<c:when test="${status == 'In development'}"><i class="fa fa-cogs"></i></c:when>
-	<c:when test="${status == 'Canceled'}"><i class="fa fa-stop-circle-o"></i></c:when>
+	<c:when test="${status == 'Canceled'}"><i class="fa fa-times"></i></c:when>
 	<c:when test="${status == 'Testing'}"><i class="fa fa-flask"></i></c:when>
 	<c:when test="${status == 'Validating'}"><i class="fa fa-bar-chart"></i></c:when>
 	<c:when test="${status == 'Deploying'}"><i class="fa fa-arrow-circle-o-up"></i></c:when>

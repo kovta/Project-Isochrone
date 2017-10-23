@@ -2,10 +2,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+<c:if test="${project.completion eq 100 or submodule.urgencyLevel eq 3}">
+	<br/>
+</c:if>
 <!--Card-->
 <div class="card wow fadeIn" data-wow-delay="0.2s">
     <!--Card content-->
 	<div class="card-block">
+		<c:if test="${project.completion eq 100}">
+			<div class="form-header success-color card-alert-header">
+		      	<i class="fa fa-check-circle"></i>
+		     </div>
+		</c:if>
 		<c:if test="${project.urgencyLevel eq 3}">
 			<div class="form-header danger-color card-alert-header">
 		       	<i class="fa fa-exclamation-triangle"></i>
