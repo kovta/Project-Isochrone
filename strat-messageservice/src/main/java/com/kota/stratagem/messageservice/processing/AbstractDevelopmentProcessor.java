@@ -70,8 +70,7 @@ public abstract class AbstractDevelopmentProcessor {
 		final Iterator<?> it = origin_attributes.entrySet().iterator();
 		while (it.hasNext()) {
 			final Map.Entry<?, ?> pair = (Map.Entry<?, ?>) it.next();
-			if (!Constants.DESCRIPTION_DATA_LABEL.equals(pair.getKey()) && !result_attributes.get(pair.getKey()).equals(pair.getValue())
-					&& !Constants.MODIFIER_ID_DATA_LABEL.equals(pair.getKey()) && !Constants.ID_DATA_LABEL.equals(pair.getKey())) {
+			if (!result_attributes.get(pair.getKey()).equals(pair.getValue()) && divergenceNotIgnored(pair.getKey())) {
 				if ((result_attributes.get(pair.getKey()) != null) && (pair.getValue() == null)) {
 					modificationItems += MessageAssembler.buildAddedAttributeMessage((String) pair.getKey(), result_attributes.get(pair.getKey()));
 				} else if ((result_attributes.get(pair.getKey()) == null) && (pair.getValue() != null)) {
@@ -84,6 +83,12 @@ public abstract class AbstractDevelopmentProcessor {
 			it.remove(); // avoids a ConcurrentModificationException
 		}
 		return modificationItems;
+	}
+
+	private boolean divergenceNotIgnored(Object key) {
+		return !Constants.DESCRIPTION_DATA_LABEL.equals(key) && !Constants.MODIFIER_ID_DATA_LABEL.equals(key) && !Constants.ID_DATA_LABEL.equals(key) 
+				&& !Constants.OBJECTIVE_ID_ATTRIBUTE_DATA_LABEL.equals(key) && !Constants.PROJECT_ID_ATTRIBUTE_DATA_LABEL.equals(key) 
+				&& !Constants.SUBMODULE_ID_ATTRIBUTE_DATA_LABEL.equals(key);
 	}
 
 	protected void handleCreationProperties(final Map<String, String> attributes, final String structureType, Set<AppUser> recipients) {
