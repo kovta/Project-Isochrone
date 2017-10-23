@@ -11,8 +11,8 @@ import com.kota.stratagem.persistence.exception.CoherentPersistenceServiceExcept
 @Local
 public interface TaskService {
 
-	Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective,
-			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic);
+	Task create(String name, String description, int priority, double completion, Date deadline, Boolean admittance, String creator, Long objective, Long project, Long submodule, Double duration,
+			Double pessimistic, Double realistic, Double optimistic);
 
 	Task readElementary(Long id);
 
@@ -30,8 +30,10 @@ public interface TaskService {
 
 	Set<Task> readAll();
 
-	Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String modifier, Long objective,
-			Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic);
+	Task update(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String modifier, Long objective, Long project, Long submodule,
+			Double duration, Double pessimistic, Double realistic, Double optimistic);
+
+	Task move(Long id, Long submodule, String modifier);
 
 	void delete(Long id) throws CoherentPersistenceServiceException;
 

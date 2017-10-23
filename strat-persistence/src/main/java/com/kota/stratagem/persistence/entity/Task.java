@@ -122,7 +122,7 @@ public class Task extends AbstractMonitoredEntity implements Serializable {
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Project project;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = Submodule.class)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = Submodule.class)
 	@JoinTable(name = "submodule_tasks", joinColumns = @JoinColumn(name = "submodule_task_task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "submodule_task_submodule_id", nullable = false))
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Submodule submodule;
@@ -306,6 +306,36 @@ public class Task extends AbstractMonitoredEntity implements Serializable {
 	public String toString() {
 		return "Task [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion=" + this.completion + ", deadline=" + this.deadline
 				+ ", duration=" + this.duration + ", admittance=" + this.admittance + ", estimation=" + this.estimation + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
+			return false;
+		}
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		Task other = (Task) obj;
+		if(id == null) {
+			if(other.id != null) {
+				return false;
+			}
+		} else if(!id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -43,7 +43,7 @@ import com.kota.stratagem.persistence.query.SubmoduleQuery;
 				+ SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_ASSIGNMENTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.assignedUsers au LEFT JOIN FETCH sm.assignedTeams at WHERE sm.id=:"
 				+ SubmoduleParameter.ID),
-		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t LEFT JOIN FETCH sm.creator WHERE sm.id=:" + SubmoduleParameter.ID),
+		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_TASKS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.tasks t WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DEPENDANTS, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:" + SubmoduleParameter.ID),
 		@NamedQuery(name = SubmoduleQuery.GET_BY_ID_WITH_DIRECT_DEPENDENCIES, query = "SELECT sm FROM Submodule sm LEFT JOIN FETCH sm.submoduleDependencies smd LEFT JOIN FETCH sm.dependantSubmodules dsm WHERE sm.id=:"
@@ -86,7 +86,7 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 	@Column(name = "submodule_deadline", nullable = true)
 	private Date deadline;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, targetEntity = Task.class)
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.REFRESH }, orphanRemoval = true, targetEntity = Task.class)
 	@JoinTable(name = "submodule_tasks", joinColumns = @JoinColumn(name = "submodule_task_submodule_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "submodule_task_task_id", nullable = false))
 	private Set<Task> tasks;
 
@@ -225,6 +225,36 @@ public class Submodule extends AbstractMonitoredEntity implements Serializable {
 
 	public void addTask(Task task) {
 		this.getTasks().add(task);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
+			return false;
+		}
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		Submodule other = (Submodule) obj;
+		if(id == null) {
+			if(other.id != null) {
+				return false;
+			}
+		} else if(!id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }

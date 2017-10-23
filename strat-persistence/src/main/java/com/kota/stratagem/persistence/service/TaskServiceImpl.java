@@ -124,7 +124,11 @@ public class TaskServiceImpl extends IntegrationDependencyContainer implements T
 		} else if(submodule != null) {
 			task.setSubmodule(this.submoduleService.readWithTasks(submodule));
 		}
-		if((pessimistic != null) || (realistic != null) || (optimistic != null)) {
+		if((task.getEstimation() != null) && ((pessimistic == null) && (realistic == null) && (optimistic == null))) {
+			this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
+		} else if((task.getDuration() != null) && (duration == null)) {
+			task.setDuration(duration);
+		} else if((pessimistic != null) && (realistic != null) && (optimistic != null)) {
 			if(task.getEstimation() != null) {
 				this.entityManager.createNamedQuery(TaskEstimationQuery.REMOVE_BY_TASK_ID).setParameter(TaskParameter.ID, id).executeUpdate();
 			}
@@ -139,6 +143,36 @@ public class TaskServiceImpl extends IntegrationDependencyContainer implements T
 			}
 		}
 		return this.entityManager.merge(task);
+	}
+
+	@Override
+	public Task move(Long id, Long submodule, String modifier) {
+		final Task task = this.readComplete(id);
+		final Submodule targetSubmodule = this.submoduleService.readWithTasks(submodule);
+		if(!task.getSubmodule().equals(targetSubmodule) && (targetSubmodule != null)) {
+			final Submodule parentSubmodule = this.submoduleService.readWithTasks(task.getSubmodule().getId());
+			final Set<Task> childTasks = new HashSet<Task>(parentSubmodule.getTasks());
+			childTasks.remove(task);
+			parentSubmodule.setTasks(childTasks);
+			AppUser operator = this.appUserService.readElementary(modifier);
+			task.setSubmodule(targetSubmodule);
+			if(task.getCreator().equals(operator)) {
+				operator = task.getCreator();
+			} else if(task.getModifier().equals(operator)) {
+				operator = task.getModifier();
+			} else if(targetSubmodule.getCreator().equals(operator)) {
+				operator = targetSubmodule.getCreator();
+			} else if(parentSubmodule.getCreator().equals(operator)) {
+				operator = parentSubmodule.getCreator();
+			}
+			task.setModifier(operator);
+			task.setDependantTasks(new HashSet());
+			task.setTaskDependencies(new HashSet());
+			task.setModificationDate(new Date());
+			this.entityManager.merge(task);
+			this.entityManager.flush();
+		}
+		return task;
 	}
 
 	@Override
