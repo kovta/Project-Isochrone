@@ -138,7 +138,7 @@ INSERT INTO projects (project_id, project_name, project_description, project_sta
 (6, 'Back-end training', 'Training for the future developers', 0, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (7, 'Codename -ISOCHRONE-', 'Recursive inlay of project system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (8, 'Test Project 1', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 5, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(9, 'Codename -CONLINK-', 'Mobile app for CPM system implementation', 6, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (10, 'Test Project 2', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (11, 'Test Project 3', '', 0, NULL, TRUE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('projects_project_id_seq', COALESCE(MAX(project_id), 0) ) FROM projects;
@@ -208,12 +208,16 @@ INSERT INTO submodules (submodule_id, submodule_name, submodule_description, sub
 (13, 'Native iOS platform implementation', 'Creation of iOS specific client app', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (14, 'Client testing', 'Developing testing scenarios for the mobile client', '2017/10/02 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (15, 'Service testing', 'Developing testing scenarios for the back-end service', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'), 	
-(16, 'Test Submodule 2', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(17, 'Test Submodule 3', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(18, 'Test Submodule 4', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(19, 'Test Submodule 5', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(20, 'Test Submodule 6', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(21, 'Test Submodule 7', '', '2017/09/25 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(16, 'Test Submodule 2', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(17, 'Test Submodule 3', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(18, 'Test Submodule 4', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(19, 'Test Submodule 5', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(20, 'Test Submodule 6', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(21, 'Test Submodule 7', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(22, 'Not started', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(23, 'In Progress', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(24, 'Validating', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(25, 'Finished', '', '2018/03/09 00:00:00', 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('submodules_submodule_id_seq', COALESCE(MAX(submodule_id), 0) ) FROM submodules;
 
 INSERT INTO project_submodules (project_submodule_project, project_submodule_submodule) VALUES 
@@ -238,7 +242,11 @@ INSERT INTO project_submodules (project_submodule_project, project_submodule_sub
 (8, 18),
 (8, 19),
 (10, 20),
-(10, 21);
+(10, 21),
+(11, 22),
+(11, 23),
+(11, 24),
+(11, 25);
 
 INSERT INTO submodule_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (6, 16),
@@ -300,20 +308,20 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (48, 'Submodule level test Task 3', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (49, 'Submodule level test Task 4', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (50, 'Discerning ongoing and completed assignemnts', 'At assignment listing based on structure completion state, the assignments should be ordered into 2 or 3 groups. (Unstarted, ongoing, completed)', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(51, 'Calculate remaining work days for submodule completion', 'If even one task completion time is given, be it estimated or not, it will be added to the submodule completion time. Expected duration in case of estimations. This value is the sum of all complete task durations, placed into contrast with the grand sum of all task durations in the cluster', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(51, 'Calculate remaining work days for submodule completion', 'If even one task completion time is given, be it estimated or not, it will be added to the submodule completion time. Expected duration in case of estimations. This value is the sum of all complete task durations, placed into contrast with the grand sum of all task durations in the cluster', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (52, 'Calculate critical completion time', 'Calculate submodule expected completion time with critical path method. If no dependency configurations are given. The generated start and finish tasks will connect all activities, making the longest task the critical time. Otherwise, dependency tree must bee traversed and processed', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (53, 'Estimate submodule duration with 95% confidence level', 'Using beta distribution, expected duration, variance and standard deviation, give reliable submodule duration estimate', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (54, 'Give probability of submodule finishing before given deadline', 'If submodule deadline is registered, produce probability with PERT methodology whether the remaining time is sufficient for completion', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (55, 'Implement adaptable model for duration, and pre-deadline completion estimations', 'Upon making both calculations the algorithm must adapt to the current level of progress. This involves excluding completed tasks from the dependency chain and building the network model with only the unfinished entries of the list', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (56, 'Estimation summary for higher level structures', 'Calculated durational estimates can be summed up for Project, and Objective levels', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (57, 'Present calculated values on respected views', 'Values to be added are: 1) Remaining work days and progression. 2) Critical/Expected completion date. 3) If values are estimated completion date estimation with high confidence level. 4) If deadline is registered pre-deadline finish forcasting. If values are set expected completion time subtracted from deadline. If value is negative we are behind schedule, otherwise we are ahead of schedule, in case of 0 we are on schedule. If values are estimates otherwise calculated chance of finishing before deadline must be given.', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(58, 'Development documentation', 'Full range detailed documentation of finished work', 1, 50, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(59, 'Investigate testing possibilities', 'The requested scope is Selenium, JUnit, integration and unit testing', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(58, 'Development documentation', 'Full range detailed documentation of finished work', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(59, 'Investigate testing possibilities', 'The requested scope is Selenium, JUnit, integration and unit testing', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (60, 'Implement service level Team management control functionality', 'Team control services and protocols must be implemented for web layer usage', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (61, 'Implement client views for team management', 'Control views must be added for team creation and member modification', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (62, 'User Role control implementation', 'Higher level managers must be able to assign authorization levels underneath theirs to defines user base', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(63, 'Evaluation view wrap up', 'Task level dependencies must be displayed on project and Objective levels', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(64, 'Evaluate time needed for Submodule level dependency configurations', 'Remaining Tasks retain higher priority, yet generic dependency evaluation would be a powerful documentation tool', 1, 0, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(63, 'Evaluation view wrap up', 'Task level dependencies must be displayed on project and Objective levels', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(64, 'Evaluate time needed for Submodule level dependency configurations', 'Remaining Tasks retain higher priority, yet generic dependency evaluation would be a powerful documentation tool', 1, 100, '2017/12/01 00:00:00', NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (65, 'Objective level test Task 2', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (66, 'Objective level test Task 3', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (67, 'Objective level test Task 4', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
@@ -329,7 +337,8 @@ INSERT INTO tasks (task_id, task_name, task_description, task_priority, task_com
 (77, 'Project level test Task 11', '', 10, 0, NULL, 3, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (78, 'Project level test Task 12', '', 10, 0, NULL, 2, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
 (79, 'Project level test Task 13', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
-(80, 'Project level test Task 14', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
+(80, 'Project level test Task 14', '', 10, 0, NULL, 1, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00'),
+(81, 'Phase tester', '', 10, 0, NULL, NULL, FALSE, 0, '2015/01/01 00:00:00', 0, '2015/01/01 00:00:00');
 SELECT SETVAL('tasks_task_id_seq', COALESCE(MAX(task_id), 0) ) FROM tasks;
 
 -- INSERT INTO task_alterations
@@ -419,7 +428,8 @@ INSERT INTO submodule_tasks (submodule_task_submodule_id, submodule_task_task_id
 (8, 61),
 (9, 62),
 (9, 63),
-(9, 64);
+(9, 64),
+(22, 81);
 
 INSERT INTO task_dependencies (dependency_satiator, dependency_maintainer) VALUES
 (23, 47),
