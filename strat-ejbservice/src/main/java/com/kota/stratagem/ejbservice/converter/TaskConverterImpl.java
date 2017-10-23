@@ -47,7 +47,17 @@ public class TaskConverterImpl extends AbstractMonitoredEntityConverter implemen
 
 	@Override
 	public TaskRepresentor toDispatchable(Task task) {
-		return this.inculdeMonitoringFields(this.toElementary(task), task);
+		final TaskRepresentor representor = this.toElementary(task);
+		if (task.getObjective() != null) {
+			representor.setObjective(this.objectiveConverter.toElementary(task.getObjective()));
+		}
+		if (task.getProject() != null) {
+			representor.setProject(this.projectConverter.toElementary(task.getProject()));
+		}
+		if (task.getSubmodule() != null) {
+			representor.setSubmodule(this.submoduleConverter.toElementary(task.getSubmodule()));
+		}
+		return this.inculdeMonitoringFields(representor, task);
 	}
 
 	@Override

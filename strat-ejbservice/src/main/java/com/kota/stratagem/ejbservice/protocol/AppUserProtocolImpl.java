@@ -124,8 +124,8 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 
 	private <T extends AbstractAppUserAssignmentRepresentor> List<List<AppUserRepresentor>> retrieveObjectRelatedClusterList(List<T> assignments) {
 		final List<List<AppUserRepresentor>> clusters = new ArrayList<>();
-		final String operator = this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName();
-		final Set<Team> supervisedTeams = this.appUserService.readWithSupervisedTeams(operator).getSupervisedTeams();
+		final AppUserRepresentor operator = this.appUserConverter.toElementary(this.appUserService.readElementary(this.sessionContextAccessor.getSessionContext().getCallerPrincipal().getName()));
+		final Set<Team> supervisedTeams = this.appUserService.readWithSupervisedTeams(operator.getName()).getSupervisedTeams();
 		final List<TeamRepresentor> supervisedTeamRepresentors = new ArrayList<>();
 		for (final Team team : supervisedTeams) {
 			supervisedTeamRepresentors.add(this.teamConverter.toSubSimplified(this.teamService.readWithLeaderAndMembers(team.getId())));
@@ -139,8 +139,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			}
 		}
 		final List<AppUserRepresentor> supervisedTeamMemberProxy = new ArrayList<>(supervisedTeamMembers);
-		for (final RoleRepresentor subordinateRole : RoleRepresentor.valueOf(this.appUserService.readElementary(operator).getRole().toString())
-				.getSubordinateRoles()) {
+		for (final RoleRepresentor subordinateRole : operator.getRole().getSubordinateRoles()) {
 			final List<AppUserRepresentor> userList = new ArrayList<>(
 					this.appUserConverter.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName()))));
 			for (final T assignment : assignments) {
@@ -149,7 +148,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 				}
 			}
 			for (final AppUserRepresentor supervisedTeamMember : supervisedTeamMembers) {
-				if (userList.contains(supervisedTeamMember)) {
+				if (userList.contains(supervisedTeamMember) || supervisedTeamMember.equals(operator)) {
 					supervisedTeamMemberProxy.remove(supervisedTeamMember);
 				}
 			}
@@ -161,7 +160,7 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 			clusters.add(supervisedTeamMemberProxy);
 		}
 		final List<AppUserRepresentor> self = new ArrayList<>();
-		self.add(this.appUserConverter.toElementary(this.appUserService.readElementary(operator)));
+		self.add(operator);
 		for (final T assignment : assignments) {
 			if (self.contains(assignment.getRecipient())) {
 				self.remove(assignment.getRecipient());

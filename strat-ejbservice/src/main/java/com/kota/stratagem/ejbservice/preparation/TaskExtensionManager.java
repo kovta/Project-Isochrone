@@ -12,18 +12,44 @@ import javax.inject.Inject;
 import com.kota.stratagem.ejbservice.comparison.dualistic.AppUserAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
+import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
+import com.kota.stratagem.ejbservice.converter.ProjectConverter;
+import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.converter.TaskConverter;
 import com.kota.stratagem.ejbservice.domain.TaskDependencyLayer;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.TaskOriented;
+import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
+import com.kota.stratagem.persistence.service.ObjectiveService;
+import com.kota.stratagem.persistence.service.ProjectService;
+import com.kota.stratagem.persistence.service.SubmoduleService;
 import com.kota.stratagem.persistence.service.TaskService;
 
 @TaskOriented
 public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	@EJB
+	private ObjectiveService objectiveService;
+
+	@EJB
+	private ProjectService projectService;
+
+	@EJB
+	private SubmoduleService submoduleService;
+
+	@EJB
 	private TaskService taskService;
+
+	@Inject
+	private ObjectiveConverter objectiveConverter;
+
+	@Inject
+	private ProjectConverter projectConverter;
+
+	@Inject
+	private SubmoduleConverter submoduleConverter;
 
 	@Inject
 	private TaskConverter taskConverter;
@@ -54,6 +80,7 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
+		this.prepareSuperComponents();
 		this.provideDependencyChain();
 		this.provideDependantCount();
 		this.provideDependencyCount();
@@ -63,6 +90,22 @@ public class TaskExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void addOwnerDependantProperties() {
 
+	}
+
+	private void prepareSuperComponents() {
+		if(this.representor.getObjective() != null) {
+			this.representor.setObjective(this.objectiveConverter.toDispatchable(this.objectiveService.readWithMonitoring(this.representor.getObjective().getId())));
+		} else if(this.representor.getProject() != null) {
+			ProjectRepresentor parentProject = this.projectConverter.toDispatchable(this.projectService.readWithMonitoring(this.representor.getProject().getId()));
+			parentProject.setObjective(this.objectiveConverter.toDispatchable(this.objectiveService.readWithMonitoring(parentProject.getObjective().getId())));
+			this.representor.setProject(parentProject);
+		} else if(this.representor.getSubmodule() != null) {
+			SubmoduleRepresentor parentSubmodule = this.submoduleConverter.toDispatchable(this.submoduleService.readWithMonitoring(this.representor.getSubmodule().getId()));
+			ProjectRepresentor parentProject = this.projectConverter.toDispatchable(this.projectService.readWithMonitoring(parentSubmodule.getProject().getId()));
+			parentProject.setObjective(this.objectiveConverter.toDispatchable(this.objectiveService.readWithMonitoring(parentProject.getObjective().getId())));
+			parentSubmodule.setProject(parentProject);
+			this.representor.setSubmodule(parentSubmodule);
+		}
 	}
 
 	@Override

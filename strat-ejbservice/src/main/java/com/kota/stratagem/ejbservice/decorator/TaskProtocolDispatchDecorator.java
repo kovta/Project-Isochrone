@@ -36,17 +36,24 @@ public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
 	private SessionContextAccessor sessionContextAccessor;
 
 	@Override
-	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance,
-			String operator, Long objective, Long project, Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic)
-			throws AdaptorException {
+	public TaskRepresentor saveTask(Long id, String name, String description, int priority, double completion, Date deadline, Boolean admittance, String operator, Long objective, Long project,
+			Long submodule, Double duration, Double pessimistic, Double realistic, Double optimistic) throws AdaptorException {
 		final TaskRepresentor origin = id == null ? null : this.converter.toDispatchable(this.taskService.readWithMonitoring(id));
-		final TaskRepresentor representor = this.protocol.saveTask(id, name, description, priority, completion, deadline, admittance, operator, objective,
-				project, submodule, duration, pessimistic, realistic, optimistic);
-		if (id != null) {
+		final TaskRepresentor representor = this.protocol.saveTask(id, name, description, priority, completion, deadline, admittance, operator, objective, project, submodule, duration, pessimistic,
+				realistic, optimistic);
+		if(id != null) {
 			this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
 		} else {
 			this.overseer.created(representor.toTextMessage());
 		}
+		return representor;
+	}
+
+	@Override
+	public TaskRepresentor moveTask(Long id, Long submodule) throws AdaptorException {
+		final TaskRepresentor origin = this.converter.toDispatchable(this.taskService.readWithMonitoring(id));
+		final TaskRepresentor representor = this.protocol.moveTask(id, submodule);
+		this.overseer.modified(origin.toTextMessage() + Constants.PAYLOAD_SEPARATOR + representor.toTextMessage());
 		return representor;
 	}
 
@@ -61,7 +68,7 @@ public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
 	@Override
 	public void saveTaskDependencies(Long source, Long[] dependencies) throws AdaptorException {
 		this.protocol.saveTaskDependencies(source, dependencies);
-		for (final Long dependency : dependencies) {
+		for(final Long dependency : dependencies) {
 			this.overseer.configured(this.converter.toDispatchable(this.taskService.readWithMonitoring(source)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
 					+ this.converter.toDispatchable(this.taskService.readWithMonitoring(dependency)).toTextMessage());
 		}
@@ -70,7 +77,7 @@ public abstract class TaskProtocolDispatchDecorator implements TaskProtocol {
 	@Override
 	public void saveTaskDependants(Long source, Long[] dependants) throws AdaptorException {
 		this.protocol.saveTaskDependants(source, dependants);
-		for (final Long dependant : dependants) {
+		for(final Long dependant : dependants) {
 			this.overseer.configured(this.converter.toDispatchable(this.taskService.readWithMonitoring(dependant)).toTextMessage() + Constants.PAYLOAD_SEPARATOR
 					+ this.converter.toDispatchable(this.taskService.readWithMonitoring(source)).toTextMessage());
 		}

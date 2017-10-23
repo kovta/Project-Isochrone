@@ -17,6 +17,7 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueSubmoduleComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
+import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
 import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
@@ -29,13 +30,20 @@ import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 import com.kota.stratagem.persistence.qualifier.SubmoduleFocused;
 import com.kota.stratagem.persistence.qualifier.TaskFocused;
+import com.kota.stratagem.persistence.service.ObjectiveService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
 
 @ProjectOriented
 public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	@EJB
+	private ObjectiveService objectiveService;
+
+	@EJB
 	private SubmoduleService submoduleService;
+
+	@Inject
+	private ObjectiveConverter objectiveConverter;
 
 	@Inject
 	private SubmoduleConverter submoduleConverter;
@@ -79,6 +87,7 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
+		this.prepareSuperComponents();
 		this.addOwnerDependantProperties();
 		this.provideCategorizedSubmodules();
 		this.provideCategorizedTasks();
@@ -104,7 +113,7 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	@Override
 	protected void sortJointCollection() {
 		Collections.sort(this.representors, new ObjectiveClusterComparator());
-		for (final ObjectiveRepresentor objective : this.representors) {
+		for(final ObjectiveRepresentor objective : this.representors) {
 			Collections.sort(objective.getProjects(), new ProjectSummaryComparator());
 		}
 	}
@@ -115,11 +124,15 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 		Collections.sort(this.representor.getAssignedTeams(), new TeamAssignmentRecipientNameComparator());
 	}
 
+	private void prepareSuperComponents() {
+		this.representor.setObjective(this.objectiveConverter.toDispatchable(this.objectiveService.readWithMonitoring(this.representor.getObjective().getId())));
+	}
+
 	private void prepareSubComponents() {
 		final List<SubmoduleRepresentor> submodules = new ArrayList<SubmoduleRepresentor>();
-		for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
-			submodules.add((SubmoduleRepresentor) this.extensionManager
-					.prepareForOwner(this.submoduleConverter.toSubComplete(this.submoduleService.readWithTasksAndDirectDependencies(submodule.getId()))));
+		for(final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
+			submodules.add(
+					(SubmoduleRepresentor) this.extensionManager.prepareForOwner(this.submoduleConverter.toSubComplete(this.submoduleService.readWithTasksAndDirectDependencies(submodule.getId()))));
 		}
 		this.representor.setSubmodules(submodules);
 	}
@@ -127,18 +140,18 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	private void provideProgressionDetials() {
 		int progressSum = 0, submoduleTaskCount = 0;
 		double durationSum = 0, completedDurationSum = 0;
-		for (final TaskRepresentor task : this.representor.getTasks()) {
+		for(final TaskRepresentor task : this.representor.getTasks()) {
 			progressSum += task.getCompletion();
-			if (task.isEstimated()) {
+			if(task.isEstimated()) {
 				final double expectedDuration = this.calculator.calculateExpectedDuration(task.getPessimistic(), task.getRealistic(), task.getOptimistic());
 				durationSum += expectedDuration;
 				completedDurationSum += expectedDuration * (task.getCompletion() / 100);
-			} else if (task.isDurationProvided()) {
+			} else if(task.isDurationProvided()) {
 				durationSum += task.getDuration();
 				completedDurationSum += task.getDuration() * (task.getCompletion() / 100);
 			}
 		}
-		for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
+		for(final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
 			progressSum += submodule.getCompletion();
 			submoduleTaskCount += submodule.getTasks().size();
 			durationSum += submodule.getDurationSum();
@@ -152,26 +165,26 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 	}
 
 	private void provideEvaluationDetails() {
-		if (!this.representor.isCompleted()) {
+		if(!this.representor.isCompleted()) {
 			Boolean estimated = false, configured = false;
 			final List<CPMNode> taskComponents = new ArrayList<>(), submoduleComponents = new ArrayList<>(), network = new ArrayList<>();
-			for (final TaskRepresentor task : this.representor.getTasks()) {
-				if (task.isEstimated() && !task.isCompleted()) {
+			for(final TaskRepresentor task : this.representor.getTasks()) {
+				if(task.isEstimated() && !task.isCompleted()) {
 					estimated = true;
 					configured = true;
 					this.provider.addCompletionAdaptedComponent(taskComponents, task);
-				} else if (task.isDurationProvided() && !task.isCompleted()) {
+				} else if(task.isDurationProvided() && !task.isCompleted()) {
 					configured = true;
 					this.provider.addCompletionAdaptedComponent(taskComponents, task);
 				}
 			}
-			for (final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
-				if (!submodule.isCompleted()) {
+			for(final SubmoduleRepresentor submodule : this.representor.getSubmodules()) {
+				if(!submodule.isCompleted()) {
 					configured = true;
 					submoduleComponents.add(submodule);
 				}
 			}
-			if (configured) {
+			if(configured) {
 				network.addAll(this.taskBasedCPMNodeConverter.to(taskComponents));
 				network.addAll(this.submoduleBasedCPMNodeConverter.to(submoduleComponents));
 				this.provider.provideEstimations(this.provider.evaluateDependencyNetwork(network, estimated), this.representor);
@@ -183,12 +196,12 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideCategorizedSubmodules() {
 		final List<SubmoduleRepresentor> overdueSubmodules = new ArrayList<>(), ongoingSubmodules = new ArrayList<>(), completedSubmodules = new ArrayList<>();
-		for (final SubmoduleRepresentor representor : this.representor.getSubmodules()) {
-			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
+		for(final SubmoduleRepresentor representor : this.representor.getSubmodules()) {
+			if((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
 				overdueSubmodules.add(representor);
-			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+			} else if((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
 				ongoingSubmodules.add(representor);
-			} else if (representor.isCompleted()) {
+			} else if(representor.isCompleted()) {
 				completedSubmodules.add(representor);
 			}
 		}
@@ -199,12 +212,12 @@ public class ProjectExtensionManager extends AbstractDTOExtensionManager {
 
 	private void provideCategorizedTasks() {
 		final List<TaskRepresentor> overdueTasks = new ArrayList<>(), ongoingTasks = new ArrayList<>(), completedTasks = new ArrayList<>();
-		for (final TaskRepresentor representor : this.representor.getTasks()) {
-			if ((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
+		for(final TaskRepresentor representor : this.representor.getTasks()) {
+			if((representor.getUrgencyLevel() == 3) && (!representor.isCompleted())) {
 				overdueTasks.add(representor);
-			} else if ((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
+			} else if((representor.getUrgencyLevel() != 3) && (!representor.isCompleted())) {
 				ongoingTasks.add(representor);
-			} else if (representor.isCompleted()) {
+			} else if(representor.isCompleted()) {
 				completedTasks.add(representor);
 			}
 		}

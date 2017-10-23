@@ -15,22 +15,39 @@ import com.kota.stratagem.ejbservice.comparison.dualistic.TaskCompletionComparat
 import com.kota.stratagem.ejbservice.comparison.dualistic.TaskNameComparator;
 import com.kota.stratagem.ejbservice.comparison.dualistic.TeamAssignmentRecipientNameComparator;
 import com.kota.stratagem.ejbservice.comparison.stagnated.OverdueTaskComparator;
+import com.kota.stratagem.ejbservice.converter.ObjectiveConverter;
+import com.kota.stratagem.ejbservice.converter.ProjectConverter;
 import com.kota.stratagem.ejbservice.converter.SubmoduleConverter;
 import com.kota.stratagem.ejbservice.converter.evaluation.CPMNodeConverter;
 import com.kota.stratagem.ejbservice.domain.SubmoduleDependencyLayer;
 import com.kota.stratagem.ejbservice.interceptor.Certified;
 import com.kota.stratagem.ejbservice.qualifier.SubmoduleOriented;
+import com.kota.stratagem.ejbserviceclient.domain.ProjectRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 import com.kota.stratagem.ejbserviceclient.domain.designation.CPMNode;
 import com.kota.stratagem.persistence.qualifier.TaskFocused;
+import com.kota.stratagem.persistence.service.ObjectiveService;
+import com.kota.stratagem.persistence.service.ProjectService;
 import com.kota.stratagem.persistence.service.SubmoduleService;
 
 @SubmoduleOriented
 public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@EJB
+	private ObjectiveService objectiveService;
+
+	@EJB
+	private ProjectService projectService;
+
+	@EJB
 	private SubmoduleService submoduleService;
+
+	@Inject
+	private ObjectiveConverter objectiveConverter;
+
+	@Inject
+	private ProjectConverter projectConverter;
 
 	@Inject
 	private SubmoduleConverter submoduleConverter;
@@ -65,6 +82,7 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 
 	@Override
 	protected void addRepresentorSpecificProperties() {
+		this.prepareSuperComponents();
 		this.addOwnerDependantProperties();
 		this.provideCategorizedTasks();
 		this.provideDependencyChain();
@@ -100,6 +118,12 @@ public class SubmoduleExtensionManager extends AbstractDTOExtensionManager {
 		for(final List<SubmoduleRepresentor> dependencyLevel : this.representor.getDependencyChain()) {
 			Collections.sort(dependencyLevel, new SubmoduleNameComparator());
 		}
+	}
+
+	private void prepareSuperComponents() {
+		ProjectRepresentor parentProject = this.projectConverter.toDispatchable(this.projectService.readWithMonitoring(this.representor.getProject().getId()));
+		parentProject.setObjective(this.objectiveConverter.toDispatchable(this.objectiveService.readWithMonitoring(parentProject.getObjective().getId())));
+		this.representor.setProject(parentProject);
 	}
 
 	private void provideProgressionDetials() {

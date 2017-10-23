@@ -7,6 +7,7 @@ import javax.ejb.Local;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbserviceclient.domain.SubmoduleRepresentor;
+import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
 
 @Local
 public interface SubmoduleProtocol {
@@ -14,6 +15,8 @@ public interface SubmoduleProtocol {
 	SubmoduleRepresentor getSubmodule(Long id) throws AdaptorException;
 
 	List<SubmoduleRepresentor> getCompliantDependencyConfigurations(SubmoduleRepresentor submodule) throws AdaptorException;
+
+	List<SubmoduleRepresentor> getPossibleDestinations(TaskRepresentor task) throws AdaptorException;
 
 	List<SubmoduleRepresentor> getAllSubmodules() throws AdaptorException;
 
