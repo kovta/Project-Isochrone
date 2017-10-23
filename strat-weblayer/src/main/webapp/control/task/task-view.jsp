@@ -65,6 +65,13 @@
 													    	<i class="fa fa-share-alt tile-icon"></i><span class="icon-companion">Configure Dependencies</span>
 														</button>
 													</td></tr>
+													<c:if test="${not empty task.submodule}">
+														<tr class="match-row"><td>
+															<button type="button" class="btn mdb-color ml-auto darken-1 full-width" data-target="#moveTask" data-toggle="modal">
+														    	<i class="fa fa-arrow-right tile-icon"></i><span class="icon-companion">Move Task</span>
+															</button>
+														</td></tr>
+													</c:if>
 												</c:if>
 												<c:if test="${task.admittance and not assigned}">
 													<c:set var="task" value="${requestScope.task}" scope="request" />
@@ -217,6 +224,7 @@
 			<jsp:include page="../assignment/assignment-create.jsp"></jsp:include>
 			<jsp:include page="task-delete.jsp"></jsp:include>
 			<jsp:include page="task-alert.jsp"></jsp:include>
+			<jsp:include page="task-move.jsp"></jsp:include>
 			<jsp:include page="task-dependency-create.jsp"></jsp:include>
 			<jsp:include page="task-participation.jsp"></jsp:include>
 			<jsp:include page="../assignment/assignment-alert.jsp"></jsp:include>

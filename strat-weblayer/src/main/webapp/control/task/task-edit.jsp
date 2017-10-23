@@ -46,7 +46,7 @@
 		                            </div>
 		                        </div>
 		                    </div>
-		                    <!--/.First row-->
+		                    <!--Second row-->
 		                    <c:choose>
 						    	<c:when test="${supervisor}">
 				                    <div class="row">
@@ -95,7 +95,7 @@
 			                        </div>
 		                    	</c:otherwise>
 						    </c:choose>
-						    <!--/.Second row-->
+						    <!--Third row-->
 		                    <div class="row">
 		                        <div class="col-md-6">
 		                        	<div class="md-form form-sm">
@@ -173,7 +173,7 @@
 				            		</div>
 								</div>
 							</div>
-							<!--/.Third row-->
+							<!--Fourth row-->
 		                    <div class="row">
 		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
@@ -186,7 +186,7 @@
 					                </div>
 								</div>
 							</div>
-   		                    <!--Fourth row-->
+   		                    <!--Fifth row-->
 		                    <div class="row">
 		                        <div class="col-md-12">
 		                        	<div class="md-form form-sm">
@@ -198,7 +198,7 @@
 		                            </div>
 		                        </div>
 		                    </div>
-		                    <!-- Fifth row -->
+		                    <!--Sixth row -->
 		                    <div class="row">
 		                        <div class="col-md-6 text-center">
 		                        	<a href="Task?id=<c:out value="${task.id}" />" class="btn btn-outline-info mr-auto full-form-footer-button">

@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.kota.stratagem.ejbservice.exception.AdaptorException;
 import com.kota.stratagem.ejbservice.protocol.AppUserProtocol;
+import com.kota.stratagem.ejbservice.protocol.SubmoduleProtocol;
 import com.kota.stratagem.ejbservice.protocol.TaskProtocol;
 import com.kota.stratagem.ejbservice.protocol.TeamProtocol;
 import com.kota.stratagem.ejbserviceclient.domain.TaskRepresentor;
@@ -41,6 +42,9 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 
 	@EJB
 	private TeamProtocol teamProtocol;
+
+	@EJB
+	private SubmoduleProtocol submoduleProtocol;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,6 +75,7 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 				request.setAttribute(ATTR_NEW_TASK, new TaskRepresentor());
 				request.setAttribute(ATTR_ASSIGNABLE_USERS, this.appUserProtocol.getAssignableAppUserClusters(task));
 				request.setAttribute(ATTR_ASSIGNABLE_TEAMS, this.teamProtocol.getAssignableTeams(task));
+				request.setAttribute(ATTR_POSSIBLE_DESTINATIONS, this.submoduleProtocol.getPossibleDestinations(task));
 				request.setAttribute(ATTR_CONFIGURABLE_DEPENDENCIES, this.taskProtocol.getCompliantDependencyConfigurations(task));
 			} catch(final AdaptorException e) {
 				LOGGER.error(e, e);
@@ -131,15 +136,17 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 			}
 			Double duration = null, pessimistic = null, realistic = null, optimistic = null;
 			if(!request.getParameter(DURATION_TYPE).equals("0") && (request.getParameter(DURATION_TYPE).equals("1") || isPartialEstimationProvided(request))) {
-				if(isCompleteEstimationProvided(request)) {
-					pessimistic = Double.parseDouble(request.getParameter(PESSIMISTIC_DURATION));
-					realistic = Double.parseDouble(request.getParameter(REALISTIC_DURATION));
-					optimistic = Double.parseDouble(request.getParameter(OPTIMISTIC_DURATION));
-				} else if(isPartialEstimationProvided(request)) {
-					LOGGER.info("Failed attempt to modify Task : (" + name + ")");
-					request.getSession().setAttribute(ATTR_ERROR, "Partial estimations not allowed");
-					final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, false);
-					this.forward(request, response, task, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
+				if(!isEmptyEstimationProvided(request)) {
+					if(isCompleteEstimationProvided(request)) {
+						pessimistic = Double.parseDouble(request.getParameter(PESSIMISTIC_DURATION));
+						realistic = Double.parseDouble(request.getParameter(REALISTIC_DURATION));
+						optimistic = Double.parseDouble(request.getParameter(OPTIMISTIC_DURATION));
+					} else if(isPartialEstimationProvided(request)) {
+						LOGGER.info("Failed attempt to modify Task : (" + name + ")");
+						request.getSession().setAttribute(ATTR_ERROR, "Partial estimations not allowed");
+						final TaskRepresentor task = new TaskRepresentor(name, description, priority, completion, deadline, null, false);
+						this.forward(request, response, task, false, returnPoint + (id != null ? GET_REQUEST_QUERY_EDIT_PARAMETER + TRUE_VALUE : ""), false);
+					}
 				}
 			} else {
 				if(this.notEmpty(request.getParameter(DURATION))) {
@@ -176,6 +183,10 @@ public class TaskActionController extends AbstractRefinerServlet implements Task
 
 	private boolean isPartialEstimationProvided(final HttpServletRequest request) {
 		return this.notEmpty(request.getParameter(PESSIMISTIC_DURATION)) || this.notEmpty(request.getParameter(REALISTIC_DURATION)) || this.notEmpty(request.getParameter(OPTIMISTIC_DURATION));
+	}
+
+	private boolean isEmptyEstimationProvided(final HttpServletRequest request) {
+		return !this.notEmpty(request.getParameter(PESSIMISTIC_DURATION)) && !this.notEmpty(request.getParameter(REALISTIC_DURATION)) && !this.notEmpty(request.getParameter(OPTIMISTIC_DURATION));
 	}
 
 }

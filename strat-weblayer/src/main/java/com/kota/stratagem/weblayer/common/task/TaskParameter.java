@@ -20,6 +20,7 @@ public interface TaskParameter {
 	public static final String OPTIMISTIC_DURATION = "optimisticDuration";
 
 	public static final String TASK = "taskId";
+	public static final String DESTINATION = "destination";
 	public static final String DEPENDENCIES = "dependencies";
 	public static final String DEPENDANTS = "dependants";
 
