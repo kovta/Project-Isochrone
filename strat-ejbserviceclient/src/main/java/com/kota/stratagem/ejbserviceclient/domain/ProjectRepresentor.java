@@ -21,7 +21,7 @@ public class ProjectRepresentor extends AbstractProgressionRepresentor implement
 	private final List<TeamProjectAssignmentRepresentor> assignedTeams;
 	private final List<AppUserProjectAssignmentRepresentor> assignedUsers;
 	private final List<ImpedimentRepresentor> impediments;
-	private final ObjectiveRepresentor objective;
+	private ObjectiveRepresentor objective;
 
 	private List<SubmoduleRepresentor> overdueSubmodules;
 	private List<SubmoduleRepresentor> ongoingSubmodules;
@@ -35,14 +35,12 @@ public class ProjectRepresentor extends AbstractProgressionRepresentor implement
 		this(null, "", "", ProjectStatusRepresentor.PROPOSED, new Date(), false, null);
 	}
 
-	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
-			ObjectiveRepresentor objective) {
+	public ProjectRepresentor(Long id, String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential, ObjectiveRepresentor objective) {
 		this(name, description, status, deadline, confidential, objective);
 		this.id = id;
 	}
 
-	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential,
-			ObjectiveRepresentor objective) {
+	public ProjectRepresentor(String name, String description, ProjectStatusRepresentor status, Date deadline, Boolean confidential, ObjectiveRepresentor objective) {
 		super(deadline);
 		this.name = name;
 		this.description = description;
@@ -108,6 +106,10 @@ public class ProjectRepresentor extends AbstractProgressionRepresentor implement
 		return this.objective;
 	}
 
+	public void setObjective(ObjectiveRepresentor objective) {
+		this.objective = objective;
+	}
+
 	public List<SubmoduleRepresentor> getOverdueSubmodules() {
 		return this.overdueSubmodules;
 	}
@@ -166,17 +168,16 @@ public class ProjectRepresentor extends AbstractProgressionRepresentor implement
 
 	@Override
 	public String toString() {
-		return "ProjectRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
-				+ this.deadline + ", confidential=" + this.confidential + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier="
-				+ this.modifier + ", modificationDate=" + this.modificationDate + ", submodules=" + this.submodules + ", tasks=" + this.tasks
-				+ ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments + ", objective="
-				+ this.objective + "]";
+		return "ProjectRepresentor [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline=" + this.deadline + ", confidential="
+				+ this.confidential + ", creator=" + this.creator + ", creationDate=" + this.creationDate + ", modifier=" + this.modifier + ", modificationDate=" + this.modificationDate
+				+ ", submodules=" + this.submodules + ", tasks=" + this.tasks + ", assignedTeams=" + this.assignedTeams + ", assignedUsers=" + this.assignedUsers + ", impediments=" + this.impediments
+				+ ", objective=" + this.objective + "]";
 	}
 
 	@Override
 	public String toTextMessage() {
-		return "ProjectRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", deadline="
-				+ this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate
+		return "ProjectRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + (((this.description != "") || (this.description != null)) ? this.description : "not_specified")
+				+ ", status=" + this.status + ", deadline=" + this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate
 				+ ", modifier_id=" + this.modifier.getId() + ", objective_id=" + this.objective.getId() + "]";
 	}
 

@@ -272,11 +272,12 @@ public class TaskRepresentor extends AbstractTimeConstraintRepresentor implement
 
 	@Override
 	public String toTextMessage() {
-		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority + ", completion=" + this.completion + ", deadline="
-				+ this.deadline + ", admittance=" + this.admittance + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId()
-				+ ", objective_id=" + (this.objective != null ? this.objective.getId().toString() : "null") + ", project_id=" + (this.project != null ? this.project.getId().toString() : "null")
-				+ ", submodule_id=" + (this.submodule != null ? this.submodule.getId().toString() : "null") + ", duration=" + this.duration + ", pessimistic=" + this.pessimistic + ", realistic="
-				+ this.realistic + ", optimistic=" + this.optimistic + "]";
+		return "TaskRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + (((this.description != "") || (this.description != null)) ? this.description : "not_specified")
+				+ ", priority=" + this.priority + ", completion=" + this.completion + ", deadline=" + this.deadline + ", admittance=" + this.admittance + ", creator_id=" + this.creator.getId()
+				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", objective_id=" + (this.objective != null ? this.objective.getId().toString() : "not_specified")
+				+ ", project_id=" + (this.project != null ? this.project.getId().toString() : "not_specified") + ", submodule_id="
+				+ (this.submodule != null ? this.submodule.getId().toString() : "not_specified") + ", parent_submodule=" + (this.submodule != null ? this.submodule.getName() : "not_specified")
+				+ ", duration=" + this.duration + ", pessimistic=" + this.pessimistic + ", realistic=" + this.realistic + ", optimistic=" + this.optimistic + "]";
 	}
 
 	@Override

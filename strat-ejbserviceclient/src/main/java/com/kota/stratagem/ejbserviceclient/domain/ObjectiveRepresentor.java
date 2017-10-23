@@ -182,7 +182,8 @@ public class ObjectiveRepresentor extends AbstractProgressionRepresentor impleme
 
 	@Override
 	public String toTextMessage() {
-		return "ObjectiveRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", priority=" + this.priority
+		return "ObjectiveRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" 
+				+ (((this.description != "") || (this.description != null)) ? this.description : "not_specified") + ", priority=" + this.priority
 				+ ", status=" + this.status + ", deadline=" + this.deadline + ", confidential=" + this.confidential + ", creator_id=" + this.creator.getId()
 				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + "]";
 	}

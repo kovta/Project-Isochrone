@@ -21,7 +21,7 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 	private final List<AppUserSubmoduleAssignmentRepresentor> assignedUsers;
 	private final List<SubmoduleRepresentor> dependantSubmodules;
 	private final List<SubmoduleRepresentor> submoduleDependencies;
-	private final ProjectRepresentor project;
+	private ProjectRepresentor project;
 
 	private List<TaskRepresentor> overdueTasks;
 	private List<TaskRepresentor> ongoingTasks;
@@ -103,6 +103,10 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 
 	public ProjectRepresentor getProject() {
 		return this.project;
+	}
+
+	public void setProject(ProjectRepresentor project) {
+		this.project = project;
 	}
 
 	public List<TaskRepresentor> getOverdueTasks() {
@@ -193,8 +197,9 @@ public class SubmoduleRepresentor extends AbstractProgressionRepresentor impleme
 
 	@Override
 	public String toTextMessage() {
-		return "SubmoduleRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", deadline=" + this.deadline + ", creator_id=" + this.creator.getId()
-				+ ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", project_id=" + this.project.getId() + "]";
+		return "SubmoduleRepresentor | [id=" + this.id + ", name=" + this.name + ", description=" + (((this.description != "") || (this.description != null)) ? this.description : "not_specified")
+				+ ", deadline=" + this.deadline + ", creator_id=" + this.creator.getId() + ", creationDate=" + this.creationDate + ", modifier_id=" + this.modifier.getId() + ", project_id="
+				+ this.project.getId() + "]";
 	}
 
 	@Override
