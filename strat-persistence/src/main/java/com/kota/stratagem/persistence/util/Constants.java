@@ -46,6 +46,7 @@ public class Constants {
 	public static final String DATA_SEPARATOR = "_";
 	public static final String CONCERN_ASSOCIATOR = "/";
 	public static final String NULL_ATTRIBUTE = "null";
+	public static final String UNSPECIFIED_ATTRIBUTE = "not_specified";
 
 	// Attribute
 	public static final String ID_DATA_LABEL = "id";
