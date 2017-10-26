@@ -218,8 +218,8 @@ public class AppUserProtocolImpl implements AppUserProtocol {
 					.toElementary(this.appUserService.readByRole(Role.valueOf(subordinateRole.getName())))) {
 				users.add(candidate);
 			}
-			users.add(this.appUserConverter.toElementary(this.appUserService.readElementary(operator)));
 		}
+		users.add(this.appUserConverter.toElementary(this.appUserService.readElementary(operator)));
 		Collections.sort(users, new AppUserNameComparator());
 		return users;
 	}
