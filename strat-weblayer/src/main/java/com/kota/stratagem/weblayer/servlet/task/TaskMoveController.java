@@ -32,6 +32,7 @@ public class TaskMoveController extends AbstractRefinerServlet implements TaskAt
 		try {
 			String origin = Page.ERROR.getUrl();
 			try {
+				LOGGER.info("Move Task (destination: " + request.getParameter(DESTINATION) + ", task: " + request.getParameter(TASK) + ")");
 				this.protocol.moveTask(Long.parseLong(request.getParameter(TASK)), Long.parseLong(request.getParameter(DESTINATION)));
 				origin = (Page.TASK_VIEW.getUrl() + GET_REQUEST_QUERY_APPENDER + request.getParameter(TASK));
 				request.getSession().setAttribute(ATTR_SUCCESS, "Task moved successfully!");
