@@ -22,7 +22,6 @@ public class AppUserRestServiceBean implements AppUserRestService {
 	@Override
 	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
 		LOGGER.info("Get AppUser by id: (" + id + ")");
-
 		return this.protocol.getAppUser(id);
 	}
 
