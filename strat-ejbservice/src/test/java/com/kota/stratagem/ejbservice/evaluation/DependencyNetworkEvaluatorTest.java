@@ -29,8 +29,8 @@ public class DependencyNetworkEvaluatorTest extends AbstractMockTest {
 		final EstimatedCPMNodeImpl nodeB = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 2, 7.33, 0.66); // C
 		final EstimatedCPMNodeImpl nodeC = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 3, 2.33, 0.66);
 		final EstimatedCPMNodeImpl nodeD = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 4, 3.50, 0.83); // C
-		final EstimatedCPMNodeImpl nodeE = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 5, 1.00, 0.33); // C
-		final EstimatedCPMNodeImpl nodeF = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 6, 8.83, 1.16);
+		final EstimatedCPMNodeImpl nodeE = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 5, 1.00, 0.33);
+		final EstimatedCPMNodeImpl nodeF = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 6, 8.83, 1.16); // C
 		final EstimatedCPMNodeImpl nodeG = new EstimatedCPMNodeImpl(NODE_ID_PREFIX + 7, 3.83, 0.83); // C
 		nodeA.addDependant(nodeB);
 		nodeA.addDependant(nodeC);
@@ -81,11 +81,10 @@ public class DependencyNetworkEvaluatorTest extends AbstractMockTest {
 		Mockito.when(networkEvaluator.calculateVariance(nodeG)).thenReturn(nodeG.getVariance());
 		Mockito.when(networkEvaluator.calculateExpectedDuration(endNode)).thenReturn(endNode.getExpectedDuration());
 		Mockito.when(networkEvaluator.calculateVariance(endNode)).thenReturn(endNode.getVariance());
-		final double resultDuration = nodeA.getExpectedDuration() + nodeB.getExpectedDuration() + nodeD.getExpectedDuration() + nodeE.getExpectedDuration()
+		final double resultDuration = nodeA.getExpectedDuration() + nodeB.getExpectedDuration() + nodeD.getExpectedDuration() + nodeF.getExpectedDuration()
 				+ nodeG.getExpectedDuration();
-		final double resultVariance = nodeA.getVariance() + nodeB.getVariance() + nodeD.getVariance() + nodeE.getVariance() + nodeG.getVariance();
+		final double resultVariance = nodeA.getVariance() + nodeB.getVariance() + nodeD.getVariance() + nodeF.getVariance() + nodeG.getVariance();
 		final CPMResult expectedResult = new CPMResult(resultDuration, Math.sqrt(resultVariance));
-		Mockito.when(networkEvaluator.evaluate(networkParameter)).thenReturn(expectedResult);
 
 		final CPMResult actualResult = networkEvaluator.evaluate(networkParameter);
 
