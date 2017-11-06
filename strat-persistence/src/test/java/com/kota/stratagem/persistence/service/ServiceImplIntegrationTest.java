@@ -44,7 +44,7 @@ public class ServiceImplIntegrationTest {
 	private TaskServiceImpl taskService;
 
 	@BeforeClass
-	private void setUp() {
+	private void setup() {
 		Thread.currentThread().setContextClassLoader(new ClassLoader() {
 			@Override
 			public Enumeration<URL> getResources(String name) throws IOException {

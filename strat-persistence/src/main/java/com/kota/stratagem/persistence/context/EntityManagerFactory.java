@@ -8,8 +8,8 @@ import javax.persistence.PersistenceContext;
 @ApplicationScoped
 public class EntityManagerFactory {
 
-	@PersistenceContext(unitName = PersistenceServiceConfiguration.PERSISTENCE_UNIT_NAME)
 	@Produces
+	@PersistenceContext(unitName = PersistenceServiceConfiguration.PERSISTENCE_UNIT_NAME)
 	private EntityManager entityManager;
 
 }
