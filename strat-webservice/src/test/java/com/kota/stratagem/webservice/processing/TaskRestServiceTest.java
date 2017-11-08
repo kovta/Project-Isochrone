@@ -6,26 +6,21 @@ import org.testng.annotations.Test;
 
 import com.kota.stratagem.webservice.core.AbstractEnpointTest;
 
-public class ObjectiveRestServiceTest extends AbstractEnpointTest {
+public class TaskRestServiceTest extends AbstractEnpointTest {
 
 	protected String path;
 
-	public ObjectiveRestServiceTest() {
-		this.path = AbstractEnpointTest.basePath + "/ObjectiveSet";
+	public TaskRestServiceTest() {
+		this.path = AbstractEnpointTest.basePath + "/TaskSet";
 	}
 
 	@Test
-	public void getListOfObjectives() {
-		given().auth().basic(TESTUSER, TESTPASS).when().get(this.path).then().statusCode(200);
-	}
-
-	@Test
-	public void getObjectiveById() {
+	public void getTaskById() {
 		given().auth().basic(TESTUSER, TESTPASS).when().get(this.path + "/1").then().statusCode(200);
 	}
 
 	@Test
-	public void getObjectiveByInvalidId() {
+	public void getTaskByInvalidId() {
 		given().auth().basic(TESTUSER, TESTPASS).when().get(this.path + "/-1").then().statusCode(500);
 	}
 

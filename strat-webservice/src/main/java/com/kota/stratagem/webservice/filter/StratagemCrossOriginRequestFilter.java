@@ -45,7 +45,7 @@ public class StratagemCrossOriginRequestFilter implements Filter {
 
 		final HttpServletResponse response = (HttpServletResponse) servletResponse;
 		response.setHeader(ALLOW_ORIGIN, "*");
-		response.setHeader(ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+		response.setHeader(ALLOW_METHODS, "GET, OPTIONS, HEAD");
 		response.setHeader(MAX_AGE, "1209600");
 		response.setHeader(ALLOW_HEADERS, "x-requested-with, origin, content-type, accept, X-Codingpedia, authorization");
 		response.setHeader(ALLOW_CREDENTIALS, "true");

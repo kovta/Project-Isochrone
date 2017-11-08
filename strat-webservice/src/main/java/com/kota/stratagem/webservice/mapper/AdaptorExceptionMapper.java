@@ -18,7 +18,7 @@ public class AdaptorExceptionMapper implements ExceptionMapper<AdaptorException>
 	public Response toResponse(final AdaptorException e) {
 		return Response.status(e.getErrorCode().getHttpStatusCode()).entity(e.build()) //
 				.header(StratagemCrossOriginRequestFilter.ALLOW_ORIGIN, "*") //
-				.header(StratagemCrossOriginRequestFilter.ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS, HEAD") //
+				.header(StratagemCrossOriginRequestFilter.ALLOW_METHODS, "GET, OPTIONS, HEAD") //
 				.header(StratagemCrossOriginRequestFilter.MAX_AGE, "1209600") //
 				.header(StratagemCrossOriginRequestFilter.ALLOW_HEADERS, "x-requested-with, origin, content-type, accept, X-Codingpedia, authorization") //
 				.header(StratagemCrossOriginRequestFilter.ALLOW_CREDENTIALS, "true") //

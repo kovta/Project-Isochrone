@@ -20,12 +20,6 @@ public class AppUserRestServiceBean implements AppUserRestService {
 	private AppUserProtocol protocol;
 
 	@Override
-	public AppUserRepresentor getAppUser(Long id) throws AdaptorException {
-		LOGGER.info("Get AppUser by id: (" + id + ")");
-		return this.protocol.getAppUser(id);
-	}
-
-	@Override
 	public List<AppUserRepresentor> getAppUsers() throws AdaptorException {
 		LOGGER.info("Get AppUsers");
 		return this.protocol.getAllAppUsers();

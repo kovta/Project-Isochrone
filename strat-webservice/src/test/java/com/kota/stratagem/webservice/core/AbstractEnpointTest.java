@@ -1,4 +1,4 @@
-package com.kota.stratagem.webservice.processing;
+package com.kota.stratagem.webservice.core;
 
 import static io.restassured.RestAssured.given;
 
@@ -9,11 +9,16 @@ import io.restassured.RestAssured;
 
 public abstract class AbstractEnpointTest {
 
-	protected String basePath;
+	protected static String basePath = "http://localhost:8080/stratagem-svc/api";
+
+	protected static String TESTUSER = "holly";
+	protected static String TESTPASS = "h123";
 
 	@BeforeClass
 	public void setup() {
-		basePath = "http://localhost:8080/stratagem-svc/api";
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 8080;
+		RestAssured.basePath = "/stratagem-svc/api";
 	}
 
 	public <T> T getResource(String locationHeader, Class<T> responseClass) {
