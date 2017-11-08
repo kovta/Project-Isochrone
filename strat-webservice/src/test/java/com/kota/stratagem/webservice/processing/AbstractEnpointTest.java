@@ -13,10 +13,7 @@ public abstract class AbstractEnpointTest {
 
 	@BeforeClass
 	public void setup() {
-		RestAssured.baseURI = "http://localhost";
-		RestAssured.port = 8080;
-		basePath = "/stratagem-svc/api";
-
+		basePath = "http://localhost:8080/stratagem-svc/api";
 	}
 
 	public <T> T getResource(String locationHeader, Class<T> responseClass) {

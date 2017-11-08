@@ -4,27 +4,27 @@ import static io.restassured.RestAssured.given;
 
 import org.testng.annotations.Test;
 
-import io.restassured.RestAssured;
-
 public class ObjectiveRestServiceTest extends AbstractEnpointTest {
 
+	protected String path;
+
 	public ObjectiveRestServiceTest() {
-		RestAssured.basePath = this.basePath + "/ObjectiveSet";
+		this.path = this.basePath + "/ObjectiveSet";
 	}
 
-	// @Test
-	// public void getListOfObjectives() {
-	// given().auth().basic("holly", "h123").when().get().then().statusCode(200);
-	// }
-	//
-	// @Test
-	// public void getObjectiveById() {
-	// given().auth().basic("holly", "h123").when().get("/1").then().statusCode(200);
-	// }
+	@Test
+	public void getListOfObjectives() {
+		given().auth().basic("holly", "h123").when().get(path).then().statusCode(200);
+	}
+
+	@Test
+	public void getObjectiveById() {
+		given().auth().basic("holly", "h123").when().get(path + "/1").then().statusCode(200);
+	}
 
 	@Test
 	public void getObjectiveByInvalidId() {
-		given().auth().basic("holly", "h123").when().get("/-1").then().statusCode(404);
+		given().auth().basic("holly", "h123").when().get(path + "/-1").then().statusCode(404);
 	}
 
 }

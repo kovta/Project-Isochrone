@@ -1,7 +1,7 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-
+	
 	<security-constraint>
 		<display-name>Stratagem protected security constraint</display-name>
 		<web-resource-collection>
@@ -15,13 +15,6 @@
 			<http-method>OPTIONS</http-method>
 			<http-method>TRACE</http-method>
 		</web-resource-collection>
-		<auth-constraint>
-			<role-name>pristine_user</role-name>
-			<role-name>general_user</role-name>
-			<role-name>general_manager</role-name>
-			<role-name>department_manager</role-name>
-			<role-name>central_manager</role-name>
-		</auth-constraint>
 		<user-data-constraint>
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
@@ -34,31 +27,20 @@
 			<url-pattern>/</url-pattern>
 		</web-resource-collection>
 	</security-constraint>	
-	
+
 	<login-config>
 		<auth-method>BASIC</auth-method>
 		<realm-name>strat-realm</realm-name>
 	</login-config>
 	
-	<security-role>
-		<description>Pristine user</description>
-		<role-name>pristine_user</role-name>
-	</security-role>
-	<security-role>
-		<description>General user</description>
-		<role-name>general_user</role-name>
-	</security-role>
-	<security-role>
-		<description>General manager</description>
-		<role-name>general_manager</role-name>
-	</security-role>
-	<security-role>
-		<description>Department manager</description>
-		<role-name>department_manager</role-name>
-	</security-role>
-	<security-role>
-		<description>Central manager</description>
-		<role-name>central_manager</role-name>
-	</security-role>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/Error</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/Error</location>
+	</error-page>
 
 </web-app>
