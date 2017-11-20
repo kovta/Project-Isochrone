@@ -8,8 +8,8 @@ dependencies {
 	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: servletapiVersion
 }
 
-test {
-	useTestNG {
-		suites 'src/test/resources/testng-endpoint.xml'
-	}
-}
+// test {
+// 	 useTestNG {
+//	   suites 'src/test/resources/testng-endpoint.xml'
+//	 }
+// }
