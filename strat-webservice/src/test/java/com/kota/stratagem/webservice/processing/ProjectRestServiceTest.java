@@ -15,7 +15,7 @@ public class ProjectRestServiceTest extends AbstractEnpointTest {
 	}
 
 	@Test
-	public void getListOfProject() {
+	public void getListOfProjects() {
 		given().auth().basic(TESTUSER, TESTPASS).when().get(this.path).then().statusCode(200);
 	}
 
